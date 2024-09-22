@@ -10,7 +10,8 @@ export class UserController {
         this.userService = new UserService();
     }
 
-    async registerUser(req: Request, res: Response): Promise<void> {
+    async registerUser(req: Request, res: Response):Promise<void> {
+        //The return type of an async function or method must be the global Promise<T> type.
         try {
             const result = await this.userService.registerUser(req.body);
             if (typeof result === "string") {
