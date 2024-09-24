@@ -1,33 +1,33 @@
+import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
-const AnimatedLogin: React.FC = () => {
+const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword,setShowPassword]=useState<boolean>(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle login logic here
         console.log("Login attempted with:", { email, password });
     };
 
-    return (
-        <div className="flex h-screen bg-gray-100">
-            {/* Left side - Image placeholder */}
-            <div className="hidden lg:flex lg:w-1/2 bg-cover bg-center" style={{ backgroundImage: "url('https://source.unsplash.com/random?nature')" }}></div>
+    const toggleVisibility=()=>{
+        setShowPassword(!showPassword);
+    }
 
-            {/* Right side - Login form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-12">
-                <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-md w-full space-y-8">
+    return (
+        <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
+            <div className="w-[32rem] h-[38rem] lg:w-12/12 flex items-center justify-center bg-white rounded-2xl">
+                <div className="max-w-md w-full space-y-8">
                     <div>
-                        <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }} className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                            Sign in to your account
-                        </motion.h2>
+                        <h2 className="mt-6 text-center text-xl font-bold  text-gray-700">Sign in to your account</h2>
                     </div>
                     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                         <input type="hidden" name="remember" defaultValue="true" />
-                        <div className="rounded-md shadow-sm space-y-2 ">
-                            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 0.5 }}>
+                        <div className="rounded-md shadow-sm space-y-2">
+                            <div>
                                 <label htmlFor="email-address" className="sr-only">
                                     Email address
                                 </label>
@@ -42,58 +42,77 @@ const AnimatedLogin: React.FC = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                            </motion.div>
-                            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7, duration: 0.5 }}>
+                            </div>
+                            <div className="relative">
                                 <label htmlFor="password" className="sr-only">
                                     Password
                                 </label>
                                 <input
                                     id="password"
                                     name="password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     autoComplete="current-password"
                                     required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  sm:text-sm"
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
-                            </motion.div>
+                                <button type="button" onClick={toggleVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                    {showPassword ? <Eye className="h-5 w-5 text-gray-500" /> : <EyeOff className="h-5 w-5 text-gray-500" />}
+                                </button>
+                            </div>
                         </div>
 
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-                                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                                <label htmlFor="remember-me" className="ml-2 text-xs block text-sm text-gray-900">
                                     Remember me
                                 </label>
                             </div>
 
-                            <div className="text-sm ">
-                                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                            <div className="text-sm">
+                                <Link to={"/"} className="font-normal text-xs text-orange-900 hover:text-orange-800">
                                     Forgot your password?
-                                </a>
+                                </Link>
                             </div>
                         </div>
 
-                        <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.5 }}>
+                        <div>
                             <button
                                 type="submit"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                    <svg className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <svg className="h-5 w-5 text-orange-900 group-hover:text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                                     </svg>
                                 </span>
                                 Sign in
                             </button>
-                        </motion.div>
+                            <br />
+                            <button
+                                type="submit"
+                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-300 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                <FcGoogle className="text-xl" />
+                                <span className="pl-3">Sign in with google</span>
+                            </button>
+                        </div>
                     </form>
-                </motion.div>
+                    <div className="text-center">
+                        <span className="text-sm text-gray-500 mt-10 ">
+                            don't have one?{"  "}
+                            <Link to={"/join"} className="text-gray-800">
+                                Signup
+                            </Link>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     );
 };
 
-export default AnimatedLogin;
+export default Login;

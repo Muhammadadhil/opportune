@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
-import Button from "./Button";
+import Button from "./ui/Button";
 import * as Dialog from "@radix-ui/react-dialog";
 
 interface NavItem {
@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
                         Sign in
                     </Link>
                     <Link
-                        to="/signup"
+                        to="/type"
                         className="px-6 py-2 rounded-full text-sm font-medium text-gray-700  bg-yellow-500 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
                     >
                         join
