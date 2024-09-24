@@ -3,15 +3,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { Radio } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setUserType } from "@/features/common/userSlice";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 
 const UserType: React.FC = () => {
     const [selectedValue, setSelectedValue] = useState<string>("");
+
+    const role = useSelector((state: RootState) => state.user.userType);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleChange = (type: string) => {
-        setSelectedValue(type);
         dispatch(setUserType(type));
     };
 
@@ -23,7 +26,7 @@ const UserType: React.FC = () => {
             <div className="flex w-[40rem] h=[32rem] justify-around">
                 <div className="form-radio w-56 h-20 bg-amber-400 flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400" onClick={() => handleChange("client")}>
                     {/* <input type="radio" name="role" value="client" /> */}
-                    <Radio checked={selectedValue === "client"} value="client" name="role" color="default" />
+                    <Radio checked={role === "client"} value="client" name="role" color="default" />
                     <span className="text-lg font-medium">Join as Client</span>
                 </div>
 
@@ -32,12 +35,12 @@ const UserType: React.FC = () => {
                     onClick={() => handleChange("freelancer")}
                 >
                     {/* <input type="radio" name="role" value="client" /> */}
-                    <Radio checked={selectedValue === "freelancer"} value="freelancer" name="role" color="default" />
+                    <Radio checked={role === "freelancer"} value="freelancer" name="role" color="default" />
                     <span className="text-lg font-medium">Join as Freelancer</span>
                 </div>
             </div>
-            <div className="mt-24 w-40 h-10 outline flex items-center justify-center rounded-2xl cursor-pointer select-none" onClick={() => (selectedValue ? navigate("/join") : null)}>
-                <span>{selectedValue ? `join as ${selectedValue}` : <span className="">create account</span>}</span>
+            <div className="mt-24 w-40 h-10 outline flex items-center justify-center rounded-2xl cursor-pointer select-none" onClick={() => (role ? navigate("/join") : null)}>
+                <span>{role ? `join as ${role}` : <span className="">create account</span>}</span>
             </div>
             <span className="text-sm text-gray-500 mt-10">
                 already have an account?{" "}
