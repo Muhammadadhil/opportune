@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
@@ -6,7 +5,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Eye, EyeOff } from "lucide-react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import apiClient from '../api/apiClient';
+import apiClient from "../api/apiClient";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SignUp: React.FC = () => {
     const [firstname, setFirstname] = useState<string>("");
@@ -17,8 +18,14 @@ const SignUp: React.FC = () => {
     const [country, setCountry] = useState<string>("");
     const [countries, setCountries] = useState<string[]>([]);
 
-    const role= useSelector((state: RootState) => state.user.userType);
+    const navigate = useNavigate();
+    const role = useSelector((state: RootState) => state.user.userType);
 
+    useEffect(() => {
+        if (!role) {
+            navigate("/type");
+        }
+    }, [role, navigate]);
 
     useEffect(() => {
         fetch("https://restcountries.com/v3.1/all")
@@ -30,19 +37,10 @@ const SignUp: React.FC = () => {
             .catch((error) => console.error("Error fetching countries:", error));
     }, []);
 
-        console.log("env:",import.meta.env);
-        const severapi = import.meta.env.VITE_SERVER_API;
-        console.log("serverapi:",severapi)
-
-
-    const handleSubmit =async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle signup logic here
-        console.log("Sign Up attempted with:", { firstname, lastname, email, password, country });
-
-        
         try {
-            const response = await apiClient.post("/user/register", {
+            await apiClient.post("/user/register", {
                 firstname,
                 lastname,
                 email,
@@ -50,9 +48,10 @@ const SignUp: React.FC = () => {
                 country,
                 role,
             });
-            console.log('response from backend:',response);
+            navigate("/");
         } catch (error) {
             console.log("error:", error);
+            toast.error(error?.response?.data?.message);
         }
     };
 

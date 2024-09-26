@@ -9,7 +9,7 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cors({origin:'http://localhost:5173'}))
-app.use('/api/user/',router)
+app.use('/api/user/',router);
 
 connectDB();
 

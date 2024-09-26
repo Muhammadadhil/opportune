@@ -2,20 +2,40 @@ import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import apiClient from "../api/apiClient";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [showPassword,setShowPassword]=useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Login attempted with:", { email, password });
     };
 
-    const toggleVisibility=()=>{
+    const toggleVisibility = () => {
         setShowPassword(!showPassword);
-    }
+    };
+
+    const handleLoginSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await apiClient.post("/user/login", {
+                email,
+                password,
+            });
+            navigate("/");
+        } catch (error) {
+            console.log("error:", error);
+            toast(error?.response?.data?.message);
+        }
+    };
 
     return (
         <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
@@ -83,6 +103,7 @@ const Login: React.FC = () => {
                             <button
                                 type="submit"
                                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                onClick={handleLoginSubmit}
                             >
                                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                                     <svg className="h-5 w-5 text-orange-900 group-hover:text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -104,7 +125,7 @@ const Login: React.FC = () => {
                     <div className="text-center">
                         <span className="text-sm text-gray-500 mt-10 ">
                             don't have one?{"  "}
-                            <Link to={"/join"} className="text-gray-800">
+                            <Link to={"/type"} className="text-gray-800">
                                 Signup
                             </Link>
                         </span>

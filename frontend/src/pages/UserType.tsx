@@ -7,8 +7,6 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 
 const UserType: React.FC = () => {
-    const [selectedValue, setSelectedValue] = useState<string>("");
-
     const role = useSelector((state: RootState) => state.user.userType);
 
     const navigate = useNavigate();
@@ -39,7 +37,7 @@ const UserType: React.FC = () => {
                     <span className="text-lg font-medium">Join as Freelancer</span>
                 </div>
             </div>
-            <div className="mt-24 w-40 h-10 outline flex items-center justify-center rounded-2xl cursor-pointer select-none" onClick={() => (role ? navigate("/join") : null)}>
+            <div className="mt-24 w-40 h-10 outline flex items-center justify-center rounded-2xl cursor-pointer select-none" onClick={() => (role ? navigate("/join", { replace: true }) : null)}>
                 <span>{role ? `join as ${role}` : <span className="">create account</span>}</span>
             </div>
             <span className="text-sm text-gray-500 mt-10">
