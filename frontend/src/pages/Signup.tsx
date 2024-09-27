@@ -5,9 +5,12 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Eye, EyeOff } from "lucide-react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import apiClient from "../api/apiClient";
+import apiClient from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+// import { signup } from "../api/userApi";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "@/features/common/userSlice";
 
 const SignUp: React.FC = () => {
     const [firstname, setFirstname] = useState<string>("");
@@ -19,6 +22,8 @@ const SignUp: React.FC = () => {
     const [countries, setCountries] = useState<string[]>([]);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const role = useSelector((state: RootState) => state.user.userType);
 
     useEffect(() => {
@@ -40,7 +45,8 @@ const SignUp: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await apiClient.post("/user/register", {
+            // await signup(firstname, lastname, email, password, country, role);
+            const response = await apiClient.post("/user/register", {
                 firstname,
                 lastname,
                 email,
@@ -48,6 +54,17 @@ const SignUp: React.FC = () => {
                 country,
                 role,
             });
+            console.log("register response:", response);
+            const userInfo = {
+                _id:response.data._id,
+                firstname,
+                lastname,
+                email,
+                country,
+                role,
+            };
+            console.log('userInfo:',userInfo)
+            dispatch(setCredentials(userInfo));
             navigate("/");
         } catch (error) {
             console.log("error:", error);

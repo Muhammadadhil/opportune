@@ -33,7 +33,7 @@ export class UserService {
 
         const newUser = await this.userRepository.createUser(userToCreate as IUser);
         console.log("newUser:", newUser);
-
+        
         const userId: string = newUser._id.toString();
         const role: string = newUser.role;
         const accessToken = generateAccessToken(userId, role);
@@ -48,10 +48,12 @@ export class UserService {
         if(!user){
             throw new Error('Invalid email or password');
         }
+
         const isPasswordValid = bcrypt.compareSync(password, user.password);
         if(!isPasswordValid){
             throw new Error('Invalid email or password');
         }
+        
         const userId: string = user._id.toString();
         const role: string = user.role;
         const accessToken = generateAccessToken(userId, role);

@@ -7,7 +7,7 @@ interface TokenPayload {
 
 export const generateAccessToken = (userId: string, role: string) => {
     const payload: TokenPayload = { userId, role };
-    return jwt.sign(payload, process.env.JWT_ACCESSTOKEN_SECRET!, { expiresIn: "15m" });
+    return jwt.sign(payload, process.env.JWT_ACCESSTOKEN_SECRET!, { expiresIn: "3m" });
 };
 
 export const generateRefreshToken = (userId: string, role: string) => {
