@@ -5,66 +5,73 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Eye, EyeOff } from "lucide-react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import apiClient from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // import { signup } from "../api/userApi";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/features/common/userSlice";
+import { signUp } from "@/api/userApi";
+import PasswordField from "@/components/ui/passwordField";
+import { getCountries } from "@/api/country";
 
 const SignUp: React.FC = () => {
-    const [firstname, setFirstname] = useState<string>("");
-    const [lastname, setLastname] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [country, setCountry] = useState<string>("");
+    const [formData, setFormData] = useState({
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
+        country: "",
+        role: "",
+    });
     const [countries, setCountries] = useState<string[]>([]);
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const role = useSelector((state: RootState) => state.user.userType);
-
     useEffect(() => {
         if (!role) {
             navigate("/type");
         }
     }, [role, navigate]);
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            role: role ?? "",
+            [name]: value,
+        });
+    };
+
+    const fetchCountries= async()=> {
+        try {
+            const response = await getCountries();
+            const data = response.data;
+            const countryNames = data.map((country: any) => country.name.common);
+            setCountries(countryNames);
+        } catch (error) {
+            console.error("Error fetching countries:", error);
+        }
+    };
     useEffect(() => {
-        fetch("https://restcountries.com/v3.1/all")
-            .then((response) => response.json())
-            .then((data) => {
-                const countryNames = data.map((country: any) => country.name.common);
-                setCountries(countryNames);
-            })
-            .catch((error) => console.error("Error fetching countries:", error));
+        fetchCountries();
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            // await signup(firstname, lastname, email, password, country, role);
-            const response = await apiClient.post("/user/register", {
-                firstname,
-                lastname,
-                email,
-                password,
-                country,
-                role,
-            });
+            const response = await signUp(formData);
             console.log("register response:", response);
-            const userInfo = {
-                _id:response.data._id,
-                firstname,
-                lastname,
-                email,
-                country,
-                role,
-            };
-            console.log('userInfo:',userInfo)
-            dispatch(setCredentials(userInfo));
+            // const userInfo = {
+            //     _id: response.data._id,
+            //     firstname,
+            //     lastname,
+            //     email,
+            //     country,
+            //     role,
+            // };
+            // console.log("userInfo:", userInfo);
+            // dispatch(setCredentials(userInfo));
             navigate("/");
         } catch (error) {
             console.log("error:", error);
@@ -72,12 +79,11 @@ const SignUp: React.FC = () => {
         }
     };
 
-    const toggleVisibility = () => {
-        setShowPassword(!showPassword);
-    };
-
     const handleCountryChange = (country: string) => {
-        setCountry(country);
+        setFormData({
+            ...formData,
+            country: country,
+        });
     };
 
     return (
@@ -102,8 +108,8 @@ const SignUp: React.FC = () => {
                                     required
                                     className="placeholder:text-xs appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                     placeholder="First Name"
-                                    value={firstname}
-                                    onChange={(e) => setFirstname(e.target.value)}
+                                    value={formData.firstname}
+                                    onChange={handleInputChange}
                                 />
                             </div>
 
@@ -118,8 +124,8 @@ const SignUp: React.FC = () => {
                                     required
                                     className="placeholder:text-xs appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                     placeholder="Last Name"
-                                    value={lastname}
-                                    onChange={(e) => setLastname(e.target.value)}
+                                    value={formData.lastname}
+                                    onChange={handleInputChange}
                                 />
                             </div>
 
@@ -135,32 +141,14 @@ const SignUp: React.FC = () => {
                                     required
                                     className="placeholder:text-xs appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                     placeholder="Email address"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={formData.email}
+                                    onChange={handleInputChange}
                                 />
                             </div>
+                            <PasswordField value={formData.password} onChange={handleInputChange} />
 
-                            <div className="relative">
-                                <label htmlFor="password" className="sr-only">
-                                    Password
-                                </label>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type={showPassword ? "text" : "password"}
-                                    autoComplete="current-password"
-                                    required
-                                    className="placeholder:text-xs appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                                <button type="button" onClick={toggleVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                    {showPassword ? <Eye className="h-5 w-5 text-gray-500" /> : <EyeOff className="h-5 w-5 text-gray-500" />}
-                                </button>
-                            </div>
                             <div>
-                                <Select onValueChange={handleCountryChange} value={country}>
+                                <Select onValueChange={handleCountryChange} value={formData.country}>
                                     <SelectTrigger className="w-[28rem]">
                                         <SelectValue placeholder="Select your country" />
                                     </SelectTrigger>

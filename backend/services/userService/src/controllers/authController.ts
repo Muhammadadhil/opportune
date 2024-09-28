@@ -13,7 +13,8 @@ export class AuthController {
   public refreshAccessToken = async (req: Request, res: Response): Promise<Response> => {
         // const refreshTokenName = req.body;
         const refreshToken = req.cookies["jwt-refresh"];
-
+        console.log('refresh token from cookies:',refreshToken);
+        
         if (!refreshToken) {
             return res.status(400).json({ message: "No Refresh token found" });
         }

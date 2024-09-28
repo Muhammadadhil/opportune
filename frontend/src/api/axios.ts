@@ -25,11 +25,15 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
     (response) => response,
+
     async (error) => {
         const originalRequest = error.config;
+        console.log("!!! response interceptor error !!");
 
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
+
+            console.log("!!! response sherikum intercepted !!");
 
             try {
                 const newAccessToken = await refreshToken();
@@ -41,6 +45,7 @@ apiClient.interceptors.response.use(
                 console.error("Refresh token failed", error);
             }
         }
+        return Promise.reject(error);
     }
 );
 

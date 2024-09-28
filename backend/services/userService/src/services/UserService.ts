@@ -3,8 +3,9 @@
 
 import { UserRepository } from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
-import { IUser } from "../schema/User";
+import IUser from "../interfaces/IUser";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt/generateToken";
+import { consumers } from "stream";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -27,6 +28,7 @@ export class UserService {
     async registerUser(userData: IUser): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
 
         console.log('Register user service');
+        console.log('register user Serive: userData:',userData);
         
         const hashedPassword = await bcrypt.hash(userData.password, 10);
         const userToCreate = { ...userData, password: hashedPassword };
@@ -38,8 +40,10 @@ export class UserService {
         const role: string = newUser.role;
         const accessToken = generateAccessToken(userId, role);
         const refreshToken = generateRefreshToken(userId, role);
+        
+        const { password, ...userWithoutPassword } = newUser.toObject();
 
-        return { user: newUser, accessToken, refreshToken };
+        return { user: userWithoutPassword, accessToken, refreshToken };
     }
 
     async login(email: string, password: string):Promise<{ user: IUser; accessToken: string; refreshToken: string }>{
@@ -49,15 +53,21 @@ export class UserService {
             throw new Error('Invalid email or password');
         }
 
+        console.log('user w/o password:',user)
+
+        console.log('checking password!!')
         const isPasswordValid = bcrypt.compareSync(password, user.password);
         if(!isPasswordValid){
             throw new Error('Invalid email or password');
         }
+        console.log(" password  checked !!");
         
         const userId: string = user._id.toString();
         const role: string = user.role;
         const accessToken = generateAccessToken(userId, role);
         const refreshToken = generateRefreshToken(userId, role);
+
+        
 
         return { user, accessToken, refreshToken };
     }

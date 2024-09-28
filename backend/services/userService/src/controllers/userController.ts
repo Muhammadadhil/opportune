@@ -12,14 +12,15 @@ export class UserController {
 
     public registerUser = async (req: Request, res: Response): Promise<Response> => {
         //The return type of an async function or method must be the global Promise<T> type.
+        console.log("sign up body:", req.body);
 
         try {
-            const userExists = await this.userService.userExist(req.body.email);
+            const userExists = await this.userService.userExist(req.body.formData.email);
             if (userExists) {
                 return res.status(400).json({ message: "user already exists" });
             }
-            const { user, accessToken, refreshToken } = await this.userService.registerUser(req.body);
-            console.log("cookie setting");
+            console.log("sending body!");
+            const { user, accessToken, refreshToken } = await this.userService.registerUser(req.body.formData);
 
             res.cookie("jwt-refresh", refreshToken, {
                 httpOnly: true,
@@ -28,10 +29,12 @@ export class UserController {
                 path: "/refresh-token",
             });
 
-            console.log('user Registered Successfully');
+            const { password, ...userWithoutPassword } = user.toObject();
+
+            console.log("user Registered Successfully");
             return res.status(201).json({
                 success: true,
-                data: user,
+                data: userWithoutPassword,
                 accessToken,
                 message: "User logged in successfully",
             });
@@ -51,9 +54,7 @@ export class UserController {
                 sameSite: "strict",
                 path: "/refresh-token",
             });
-
             // delete user.password;
-
             console.log("user login Successfully");
 
             return res.status(201).json({
@@ -62,12 +63,13 @@ export class UserController {
                 accessToken,
                 message: "User logged in successfully",
             });
-            
         } catch (error: any) {
+            console.log("login error:", error);
+
             if (error.message === "User already exists") {
-                return res.status(400).json({ message: error.message });
+                return res.status(400).json({ message: error });
             } else if (error.message.includes("Invalid email or password")) {
-                return res.status(401).json({ message: error.message });
+                return res.status(400).json({ message: error.message });
             }
 
             return res.status(500).json({ message: "Server error", error: error.message });

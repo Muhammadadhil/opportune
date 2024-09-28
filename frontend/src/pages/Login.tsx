@@ -1,42 +1,38 @@
-import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
-import apiClient from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { signIn } from "@/api/userApi";
+import PasswordField from "@/components/ui/passwordField";
 
 const Login: React.FC = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-
+    
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
     const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Login attempted with:", { email, password });
-    };
-
-    const toggleVisibility = () => {
-        setShowPassword(!showPassword);
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,   //dynamic key (ES6 syntax)
+        });
     };
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await apiClient.post("/user/login", {
-                email,
-                password,
-            });
+            await signIn(formData);
             navigate("/");
         } catch (error) {
-            console.log("error:", error);
             toast(error?.response?.data?.message);
         }
     };
-
+    
     return (
         <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
             <div className="w-[32rem] h-[38rem] lg:w-12/12 flex items-center justify-center bg-white rounded-2xl">
@@ -44,7 +40,7 @@ const Login: React.FC = () => {
                     <div>
                         <h2 className="mt-6 text-center text-xl font-bold  text-gray-700">Sign in to your account</h2>
                     </div>
-                    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    <form className="mt-8 space-y-6">
                         <input type="hidden" name="remember" defaultValue="true" />
                         <div className="rounded-md shadow-sm space-y-2">
                             <div>
@@ -59,30 +55,12 @@ const Login: React.FC = () => {
                                     required
                                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                     placeholder="Email address"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={formData.email}
+                                    onChange={handleInputChange}
                                 />
-                            </div>
-                            <div className="relative">
-                                <label htmlFor="password" className="sr-only">
-                                    Password
-                                </label>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type={showPassword ? "text" : "password"}
-                                    autoComplete="current-password"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  sm:text-sm"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                                <button type="button" onClick={toggleVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                    {showPassword ? <Eye className="h-5 w-5 text-gray-500" /> : <EyeOff className="h-5 w-5 text-gray-500" />}
-                                </button>
                             </div>
                         </div>
+                        <PasswordField value={formData.password} onChange={handleInputChange} />
 
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
