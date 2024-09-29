@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signIn } from "@/api/userApi";
+import { useGoogleLogin,googleLogout } from "@react-oauth/google";
 import PasswordField from "@/components/ui/passwordField";
+import axios from 'axios';
 
 const Login: React.FC = () => {
     
@@ -13,7 +15,11 @@ const Login: React.FC = () => {
         email: "",
         password: "",
     });
+
     const navigate = useNavigate();
+    
+    const [user,setUser]=useState([]);
+    const [profile,setProfile]=useState([]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -32,6 +38,38 @@ const Login: React.FC = () => {
             toast(error?.response?.data?.message);
         }
     };
+
+    const signInWithGoogle = useGoogleLogin({
+        onSuccess: (codeResponse) => setUser(codeResponse),
+        onError: (error) => console.log("Login Failed:", error),
+    });
+
+
+    useEffect(() => {
+        if (user) {
+             axios
+                 .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                     headers: {
+                         Authorization: `Bearer ${user.access_token}`,
+                         Accept: "application/json",
+                     },
+                 })
+                 .then((res) => {
+                     setProfile(res.data);
+                 })
+                 .catch((err) => console.log(err));
+         }
+     }, [user]);
+
+     console.log('user:',user);
+     console.log('profile:',profile);
+
+    // const responseMessage = (response) => {
+    //     console.log('response:',response);
+    // };
+    // const errorMessage = (error):void => {
+    //     console.log(error);
+    // };
     
     return (
         <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
@@ -94,12 +132,15 @@ const Login: React.FC = () => {
                             <button
                                 type="submit"
                                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-300 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                onClick={signInWithGoogle}
                             >
                                 <FcGoogle className="text-xl" />
                                 <span className="pl-3">Sign in with google</span>
                             </button>
                         </div>
+                        {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
                     </form>
+
                     <div className="text-center">
                         <span className="text-sm text-gray-500 mt-10 ">
                             don't have one?{"  "}

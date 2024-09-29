@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, EyeOff } from "lucide-react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +9,11 @@ import { toast } from "react-toastify";
 // import { signup } from "../api/userApi";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/features/common/userSlice";
-import { signUp } from "@/api/userApi";
+import { signUp, googleSignIn } from "@/api/userApi";
+import { getGoogleAuthTokens } from "@/api/auth";
 import PasswordField from "@/components/ui/passwordField";
 import { getCountries } from "@/api/country";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const SignUp: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -43,7 +44,7 @@ const SignUp: React.FC = () => {
         });
     };
 
-    const fetchCountries= async()=> {
+    const fetchCountries = async () => {
         try {
             const response = await getCountries();
             const data = response.data;
@@ -78,6 +79,40 @@ const SignUp: React.FC = () => {
             toast.error(error?.response?.data?.message);
         }
     };
+
+    // const handleGoogleSignup = useGoogleLogin({
+    //     onSuccess: async (response) => {
+    //         // setUser(codeResponse)
+    //         console.log("G-cloud response:", response);
+    //         const googleUserToken = response.access_token;
+    //         const backendRes = await googleSignIn(googleUserToken, role ?? "");
+    //         console.log("backendres:", backendRes);
+    //     },
+    //     onError: (error) => console.log("Login Failed:", error),
+    // });
+
+    // const handleGoogleSignup = useGoogleLogin({
+    //     flow: "auth-code",
+    //     onSuccess: async (codeResponse) => {
+    //         console.log(codeResponse);
+            // const tokens = await axios.post("http://localhost:3001/auth/google", {
+            //     code: codeResponse.code,
+            // });
+
+    //         // console.log(tokens);
+    //     },
+    //     onError: (errorResponse) => console.log(errorResponse),
+    // });
+
+    const handleGoogleSignup = useGoogleLogin({
+        flow: "auth-code",
+        onSuccess: async (codeResponse) => {
+            console.log(codeResponse);
+            const tokens = await getGoogleAuthTokens(codeResponse.code);
+            console.log("tokens:", tokens);
+        },
+        onError: (errorResponse) => console.log(errorResponse),
+    });
 
     const handleCountryChange = (country: string) => {
         setFormData({
@@ -197,6 +232,7 @@ const SignUp: React.FC = () => {
                             <button
                                 type="button"
                                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium text-white bg-gray-300 hover:bg-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                onClick={handleGoogleSignup}
                             >
                                 <FcGoogle className="text-xl" />
                                 <span className="pl-3">Sign up with Google</span>

@@ -17,16 +17,24 @@ const UserSchema: Schema = new Schema({
     },
     country: {
         type: String,
-        required: true,
+        required: function (this:any){
+            return !this.isOAuthUser;
+        },
     },
     password: {
         type: String,
-        required: true,
+        required: function(this:any){
+            return !this.isOAuthUser;
+        },
     },
     role: {
         type: String,
         required: true,
     },
+    isOAuthUser:{
+        type:Boolean,
+        default:false
+    }
 });
 
 export const User = mongoose.model<IUser>("User", UserSchema);

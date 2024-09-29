@@ -23,3 +23,11 @@ export const signUp = async (formData: SignUpFormData) => {
 export const signIn = async (formData: FormData) => {
     return await apiClient.post("/user/login", { email: formData.email, password: formData.password });
 };
+
+// export const googleSignIn = async (token: string, role?: string) => {
+//     return await apiClient.post("/user/google-login", {
+//         token,
+//         role,
+//     });
+// };
+

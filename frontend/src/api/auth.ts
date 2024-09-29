@@ -1,4 +1,5 @@
 import axios from "axios";
+import apiClient from "./axios";
 
 export const refreshToken = async (): Promise<string> => {
     try {
@@ -10,4 +11,12 @@ export const refreshToken = async (): Promise<string> => {
         console.error("Failed to refresh token", error);
         throw error;
     }
+};
+
+
+
+export const getGoogleAuthTokens = async (code: string) => {
+    return await apiClient.post("/user/auth/google", {
+        code,
+    });
 };
