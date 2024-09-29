@@ -31,7 +31,7 @@ const Login: React.FC = () => {
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
+        try {   
             await signIn(formData);
             navigate("/");
         } catch (error) {
