@@ -30,7 +30,7 @@ export class UserService {
         console.log('Register user service');
         console.log('register user Serive: userData:',userData);
         
-        const hashedPassword = await bcrypt.hash(userData.password, 10);
+        const hashedPassword = await bcrypt.hash(userData.password ?? '', 10);
         const userToCreate = { ...userData, password: hashedPassword };
 
         const newUser = await this.userRepository.createUser(userToCreate as IUser);
@@ -56,7 +56,7 @@ export class UserService {
         console.log('user w/o password:',user)
 
         console.log('checking password!!')
-        const isPasswordValid = bcrypt.compareSync(password, user.password);
+        const isPasswordValid = bcrypt.compareSync(password, user.password ?? '');
         if(!isPasswordValid){
             throw new Error('Invalid email or password');
         }

@@ -101,6 +101,7 @@ import { OAuth2Client } from "google-auth-library";
 import { User } from "../schema/User";
 
 const authService = new AuthService();
+const oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.GOOGLE_REDIRECT_URI);
 
 async function refreshAccessToken(req: Request, res: Response): Promise<Response> {
     const refreshToken = req.cookies["jwt-refresh"];
@@ -119,9 +120,6 @@ async function refreshAccessToken(req: Request, res: Response): Promise<Response
 }
 
 async function getGoogleAuthToken(req: Request, res: Response): Promise<void> {
-
-    const oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.GOOGLE_REDIRECT_URI);
-
     const { code } = req.body;
     console.log("code:", code);
     try {
@@ -138,28 +136,20 @@ async function getGoogleAuthToken(req: Request, res: Response): Promise<void> {
     // res.json(tokens);
 }
 
-async function googleAuth(req: Request, res: Response): Promise<void> {
+async function getGoogleUserInfo(req: Request, res: Response): Promise<Response> {
     try {
         const { token, role } = req.body;
-        console.log("token:", token + "role:" + role);
+        const userInfo = await authService.getUserInfo(token,role);
 
-        // const ticket = await oAuth2Client.verifyIdToken({ idToken: token, audience: process.env.GOOGLE_CLIENT_ID });
-
-        // const payload = ticket.getPayload();
-        // if (payload) {
-        //     const email = payload.email;
-        //     const name = payload.name;
-        //     const picture = payload.picture;
-
-        //     console.log(email, name, picture);
-        //     // Add logic to check if user exists and save if needed
-        // } else {
-        //     throw new Error("Failed to retrieve user information from Google.");
-        // }
+        console.log(userInfo); 
+        
+        return res.status(200).json({userInfo});
+        
     } catch (error) {
-        console.log("full error:", error);
+        console.log("Error fetching user info:", error);
+        return res.status(400).json({message:"Error fetching user info"});
     }
 }
 
 // Export the functions
-export { refreshAccessToken, getGoogleAuthToken, googleAuth };
+export { refreshAccessToken, getGoogleAuthToken, getGoogleUserInfo };

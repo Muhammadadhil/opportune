@@ -20,3 +20,11 @@ export const getGoogleAuthTokens = async (code: string) => {
         code,
     });
 };
+
+
+export const getUserDetails = async (token: string, role?: string) => {
+    return await apiClient.post("/user/google-login", {
+        token,
+        role,
+    });
+};

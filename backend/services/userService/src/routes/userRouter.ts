@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/userController";
-import { refreshAccessToken, getGoogleAuthToken, googleAuth } from "../controllers/authController";
+import { refreshAccessToken, getGoogleAuthToken, getGoogleUserInfo } from "../controllers/authController";
 
 const router = Router();
 const userController = new UserController();
@@ -12,7 +12,7 @@ router.post("/login", userController.login);
 router.get("/refreshToken", refreshAccessToken);
 
 //google sign in
-router.post("/google-login", googleAuth);
+router.post("/google-login", getGoogleUserInfo);
 router.post("/auth/google", getGoogleAuthToken);
 
 export default router;

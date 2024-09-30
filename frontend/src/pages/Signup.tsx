@@ -6,11 +6,10 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-// import { signup } from "../api/userApi";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/features/common/userSlice";
-import { signUp, googleSignIn } from "@/api/userApi";
-import { getGoogleAuthTokens } from "@/api/auth";
+import { signUp } from "@/api/userApi";
+import { getGoogleAuthTokens, getUserDetails } from "@/api/auth";
 import PasswordField from "@/components/ui/passwordField";
 import { getCountries } from "@/api/country";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -80,36 +79,12 @@ const SignUp: React.FC = () => {
         }
     };
 
-    // const handleGoogleSignup = useGoogleLogin({
-    //     onSuccess: async (response) => {
-    //         // setUser(codeResponse)
-    //         console.log("G-cloud response:", response);
-    //         const googleUserToken = response.access_token;
-    //         const backendRes = await googleSignIn(googleUserToken, role ?? "");
-    //         console.log("backendres:", backendRes);
-    //     },
-    //     onError: (error) => console.log("Login Failed:", error),
-    // });
-
-    // const handleGoogleSignup = useGoogleLogin({
-    //     flow: "auth-code",
-    //     onSuccess: async (codeResponse) => {
-    //         console.log(codeResponse);
-            // const tokens = await axios.post("http://localhost:3001/auth/google", {
-            //     code: codeResponse.code,
-            // });
-
-    //         // console.log(tokens);
-    //     },
-    //     onError: (errorResponse) => console.log(errorResponse),
-    // });
-
     const handleGoogleSignup = useGoogleLogin({
-        flow: "auth-code",
+        // flow: "auth-code",
         onSuccess: async (codeResponse) => {
             console.log(codeResponse);
-            const tokens = await getGoogleAuthTokens(codeResponse.code);
-            console.log("tokens:", tokens);
+            const details = await getUserDetails(codeResponse.access_token, role ?? "");
+            console.log(details);
         },
         onError: (errorResponse) => console.log(errorResponse),
     });
