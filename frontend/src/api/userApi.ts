@@ -1,4 +1,4 @@
-import apiClient from "../api/axios";
+import apiClient from "./apiClient/axios";
 
 interface FormData {
     email: string;

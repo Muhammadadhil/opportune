@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getAccessToken, setAccessToken } from "../services/authService";
-import { refreshToken } from "./auth";
+import { getAccessToken, setAccessToken } from "../../services/authService";
+import { refreshToken } from "../auth";
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_SERVER_API,

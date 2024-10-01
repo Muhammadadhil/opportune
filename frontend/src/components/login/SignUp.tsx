@@ -62,8 +62,8 @@ const SignUp: React.FC = () => {
         try {
             const response = await signUp(formData);
             console.log("register response:", response.data);
-            dispatch(setCredentials(response.data));
-            navigate("/");
+            dispatch(setCredentials(response.data.data));
+            navigate("/verify-email");
         } catch (error) {
             console.log("error:", error);
             toast.error(error?.response?.data?.message);
@@ -77,7 +77,7 @@ const SignUp: React.FC = () => {
             try {
                 const authType = "signup";
                 const response = await getUserDetails(codeResponse.access_token, role ?? "", authType);
-                console.log('response:',response);
+                console.log("response:", response);
                 dispatch(setCredentials(response.data.userInfo._doc));
                 navigate("/");
             } catch (error) {

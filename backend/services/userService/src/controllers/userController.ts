@@ -2,15 +2,18 @@
 
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
+import { OtpService } from "../services/OtpService";
 
 export class UserController {
     private userService: UserService;
+    private otpService: OtpService;
 
     constructor() {
         this.userService = new UserService();
+        this.otpService =new OtpService();
     }
 
-    public registerUser = async (req: Request, res: Response)=> {
+    public registerUser = async (req: Request, res: Response) => {
         //The return type of an async function or method must be the global Promise<T> type.
         console.log("sign up body:", req.body);
 
@@ -22,20 +25,22 @@ export class UserController {
             console.log("sending body!");
             const { user, accessToken, refreshToken } = await this.userService.registerUser(req.body.formData);
 
-            console.log('user in controller:',user);
+            console.log("user in controller:", user);
             res.cookie("jwt-refresh", refreshToken, {
-                httpOnly: true,
+                httpOnly: true, 
                 secure: true,
                 sameSite: "strict",
                 path: "/refresh-token",
             });
+
+            this.otpService.sendMail(user.email);
 
             console.log("user Registered Successfully");
             return res.status(201).json({
                 success: true,
                 data: user,
                 accessToken,
-                message: "User logged in successfully",
+                message: "User Registered in successfully",
             });
         } catch (error) {
             return res.status(500).json({ message: "Server error", error });

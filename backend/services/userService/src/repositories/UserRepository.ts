@@ -1,4 +1,3 @@
-// This layer interacts with the database directly. It will contain methods for data manipulation like create, find, etc.
 
 import { User } from "../schema/User";
 import IUser from "../interfaces/IUser";
@@ -14,4 +13,9 @@ export class UserRepository {
 
         return await User.findOne({ email }).lean(); // lean() will avoid the unwanted fields in mongoose doc
     }
+
+    async changeVerifiedStatus(email:string,status:boolean){
+        return await User.findByIdAndUpdate({ email }, { $set: { isVerified :status} });
+    }
+
 }
