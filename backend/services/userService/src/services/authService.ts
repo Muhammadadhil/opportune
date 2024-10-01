@@ -3,6 +3,7 @@ import { generateAccessToken } from "../utils/jwt/generateToken";
 import axios from "axios";
 import { UserRepository } from "../repositories/UserRepository";
 import IUser from "../interfaces/IUser";
+import { auth } from "google-auth-library";
 
 export class AuthService {
     private userRepository: UserRepository;
@@ -28,7 +29,9 @@ export class AuthService {
         }
     }
 
-    async getUserInfo(token: string , role?:string){
+    async getUserInfo(token: string,authType: string, role?: string, ) {
+        console.log("google get userInfo service!!");
+
         const response = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -37,17 +40,36 @@ export class AuthService {
         });
         const data = response.data;
         data.role = role;
-        console.log(data);
+        console.log("googleapi response data:", data);
 
         let user = await this.userRepository.findUserByEmail(data.email);
 
-        if (!user) {
-            user = await this.userRepository.createUser(data);
+        console.log('authType in userService:',authType);
+        
+        if(user && authType=='login'){
+            return user;
         }
 
-        console.log('typeof userobj:',typeof user)
-        const { password, ...userWithoutPassword } = user
-       
+        //for signup:user shouldnot exist 
+        if (user && authType!="login") {
+            return 'user already exists'
+        }
+
+        const googleUser: Partial<IUser> = {
+            firstname: data.given_name,
+            lastname: data.family_name,
+            email: data.email,
+            role: data.role,
+            isOAuthUser: true,
+        };
+
+        if(!user){
+            user = await this.userRepository.createUser(googleUser as IUser);
+        }
+
+        console.log("typeof userobj:", typeof user);
+        const { password, ...userWithoutPassword } = user;
+
         return userWithoutPassword;
     }
 }

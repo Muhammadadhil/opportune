@@ -1,19 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import UserTypeSelection from "./pages/UserType";
 import { ToastContainer } from "react-toastify";
+import UserRoute from "./routes/UserRouter";
+import AdminRoute from "./routes/UserRouter";
 
 function App() {
     return (
         <>
             <ToastContainer />
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/join" element={<Signup />} />
-                <Route path="/type" element={<UserTypeSelection />} />
+                <Route path="/*" element={<UserRoute />} />
+                <Route path="/admin*" element={<AdminRoute />} />
             </Routes>
         </>
     );

@@ -14,17 +14,16 @@ export const refreshToken = async (): Promise<string> => {
 };
 
 
-
 export const getGoogleAuthTokens = async (code: string) => {
     return await apiClient.post("/user/auth/google", {
         code,
     });
 };
 
-
-export const getUserDetails = async (token: string, role?: string) => {
+export const getUserDetails = async (token: string, role?: string, authType:string='login') => {
     return await apiClient.post("/user/google-login", {
         token,
         role,
+        authType,
     });
 };

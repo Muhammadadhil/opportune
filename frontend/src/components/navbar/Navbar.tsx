@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
-import Button from "./ui/Button";
+import Button from "../ui/Button";
 import * as Dialog from "@radix-ui/react-dialog";
 
 interface NavItem {
@@ -13,10 +13,9 @@ const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const menuItems: NavItem[] = [
-        { path: "/", label: "Home" },
-        { path: "/about", label: "About" },
-        { path: "/services", label: "Services" },
-        { path: "/contact", label: "Contact" },
+        { path: "/find-jobs", label: "Find Jobs" },
+        { path: "/hire-talents", label: "Hire Talents" },
+        { path: "/contact", label: "Discover" },
     ];
 
     return (

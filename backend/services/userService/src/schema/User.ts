@@ -8,7 +8,6 @@ const UserSchema: Schema = new Schema({
     },
     lastname: {
         type: String,
-        required: true,
     },
     email: {
         type: String,
@@ -34,7 +33,7 @@ const UserSchema: Schema = new Schema({
     isOAuthUser:{
         type:Boolean,
         default:false
-    }
+    },
 });
 
 export const User = mongoose.model<IUser>("User", UserSchema);

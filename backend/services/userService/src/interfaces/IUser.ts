@@ -5,7 +5,8 @@ export default interface IUser extends Document {
     firstname: string;
     lastname: string;
     email: string;
-    location: string;
+    country?: string;
     password?: string;
     role: string;
+    isOAuthUser?:boolean;
 }

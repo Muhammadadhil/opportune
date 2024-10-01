@@ -13,6 +13,6 @@ router.get("/refreshToken", refreshAccessToken);
 
 //google sign in
 router.post("/google-login", getGoogleUserInfo);
-router.post("/auth/google", getGoogleAuthToken);
+// router.post("/auth/google", getGoogleAuthToken);
 
 export default router;

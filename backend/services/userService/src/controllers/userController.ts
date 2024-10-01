@@ -10,7 +10,7 @@ export class UserController {
         this.userService = new UserService();
     }
 
-    public registerUser = async (req: Request, res: Response): Promise<Response> => {
+    public registerUser = async (req: Request, res: Response)=> {
         //The return type of an async function or method must be the global Promise<T> type.
         console.log("sign up body:", req.body);
 
@@ -22,6 +22,7 @@ export class UserController {
             console.log("sending body!");
             const { user, accessToken, refreshToken } = await this.userService.registerUser(req.body.formData);
 
+            console.log('user in controller:',user);
             res.cookie("jwt-refresh", refreshToken, {
                 httpOnly: true,
                 secure: true,
@@ -29,12 +30,10 @@ export class UserController {
                 path: "/refresh-token",
             });
 
-            const { password, ...userWithoutPassword } = user.toObject();
-
             console.log("user Registered Successfully");
             return res.status(201).json({
                 success: true,
-                data: userWithoutPassword,
+                data: user,
                 accessToken,
                 message: "User logged in successfully",
             });
