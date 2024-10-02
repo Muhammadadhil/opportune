@@ -50,10 +50,10 @@ const AdminLogin: React.FC = () => {
 
     return (
         <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
-            <div className="w-[32rem] h-[38rem] lg:w-12/12 flex items-center justify-center bg-white rounded-2xl">
+            <div className="w-[32rem] h-[28rem] lg:w-12/12 flex items-center justify-center bg-white rounded-2xl">
                 <div className="max-w-md w-full space-y-8">
                     <div>
-                        <h2 className="mt-6 text-center text-xl font-bold  text-gray-700">Welcome Admin !</h2>
+                        <h2 className="mt-6 text-center text-2xl font-bold  text-gray-700">Welcome Admin !</h2>
                     </div>
                     <form className="mt-8 space-y-6">
                         <input type="hidden" name="remember" defaultValue="true" />
@@ -77,41 +77,24 @@ const AdminLogin: React.FC = () => {
                         </div>
                         <PasswordField value={formData.password} onChange={handleInputChange} />
 
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-                                <label htmlFor="remember-me" className="ml-2 text-xs block text-sm text-gray-900">
-                                    Remember me
-                                </label>
-                            </div>
-
-                            <div className="text-sm">
-                                <Link to={"/"} className="font-normal text-xs text-orange-900 hover:text-orange-800">
-                                    Forgot your password?
-                                </Link>
-                            </div>
-                        </div>
+                        
 
                         <div>
                             <button
                                 type="submit"
-                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 onClick={handleLoginSubmit}
                             >
                                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                    <svg className="h-5 w-5 text-orange-900 group-hover:text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <svg className="h-5 w-5 text-slate-200 group-hover:text-slate-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                                     </svg>
                                 </span>
                                 Sign in
                             </button>
                             <br />
-                            
                         </div>
-                        
                     </form>
-
-                    
                 </div>
             </div>
         </div>

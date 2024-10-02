@@ -73,24 +73,29 @@ export class OtpService {
     async verifyOtp(otp: string, email: string) {
         console.log("verifyOtp service:", otp, email);
 
-        const userDetails = await this.userRepository.findUserByEmail(email);
-        if (!userDetails) {
-            return { success: false, message: "Error occurred. User email not found", status: 404 };
-        }
+        try {
+            const userDetails = await this.userRepository.findUserByEmail(email);
+            if (!userDetails) {
+                return { success: false, message: "Error occurred. User email not found", status: 404 };
+            }
 
-        const otpDetails = await this.otpRepository.findOtp(email);
-        if (!otpDetails) {
-            return { success: false, message: "Invalid OTP: Not found", status: 400 };
-        }
+            const otpDetails = await this.otpRepository.findOtp(email);
+            if (!otpDetails) {
+                return { success: false, message: "Invalid OTP", status: 400 };
+            }
 
-        const matchedOtp = await bcrypt.compare(otp, otpDetails.otp);
-        if (matchedOtp) {
-            await this.otpRepository.removeOtp(email);
-            console.log('going to change status!!')
-            await this.userRepository.changeVerifiedStatus(email,true);
-            return { success: true, message: "OTP verified!", status: 200 };
-        } else {
-            return { success: false, message: "Invalid OTP: Does not match", status: 400 };
+            const matchedOtp = await bcrypt.compare(otp, otpDetails.otp);
+            if (matchedOtp) {
+                await this.otpRepository.removeOtp(email);
+                console.log("going to change status!!");
+                await this.userRepository.changeVerifiedStatus(email, true);
+                return { success: true, message: "OTP verified!", status: 200 };
+            } else {
+                return { success: false, message: "Invalid OTP .", status: 400 };
+            }
+        } catch (error) {
+            console.log('Otp verify error:',error)
+            return { success: false, message: "Error verifying otp", status: 400 };
         }
     }
 }

@@ -38,11 +38,8 @@ export const verifyOtp = async (otp:string,email:string,userId:string)=>{
     });
 }
 
-
-
 export const resendOtp = async (email:string)=>{
     console.log("verify email api function : going to send req!!!");
-
     return await apiClient.post("/user/otp-resend", {
         email,
     });

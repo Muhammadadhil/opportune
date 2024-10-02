@@ -22,14 +22,17 @@ const UserType: React.FC = () => {
                 <h1>join as a client or freelancer</h1>
             </div>
             <div className="flex w-[40rem] h=[32rem] justify-around">
-                <div className="form-radio w-56 h-20 bg-amber-400 flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400" onClick={() => handleChange("client")}>
+                <div
+                    className="form-radio w-56 h-20  bg-yellow-400 hover:bg-yellow-300 flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400"
+                    onClick={() => handleChange("client")}
+                >
                     {/* <input type="radio" name="role" value="client" /> */}
                     <Radio checked={role === "client"} value="client" name="role" color="default" />
                     <span className="text-lg font-medium">Join as Client</span>
                 </div>
 
                 <div
-                    className="form-radio w-56 h-20 bg-amber-400 flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400"
+                    className="form-radio w-56 h-20  bg-yellow-400 hover:bg-yellow-300 flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400"
                     onClick={() => handleChange("freelancer")}
                 >
                     {/* <input type="radio" name="role" value="client" /> */}

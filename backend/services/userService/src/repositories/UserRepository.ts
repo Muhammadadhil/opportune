@@ -15,7 +15,7 @@ export class UserRepository {
     }
 
     async changeVerifiedStatus(email:string,status:boolean){
-        return await User.findByIdAndUpdate({ email }, { $set: { isVerified :status} });
+        return await User.findOneAndUpdate({ email }, { $set: { isVerified :true} });
     }
 
 }
