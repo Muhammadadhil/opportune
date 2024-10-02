@@ -23,6 +23,7 @@ const SignUp: React.FC = () => {
         country: "",
         role: "",
     });
+    const [errors, setErrors] = useState({} as { [key: string]: string });
     const [countries, setCountries] = useState<string[]>([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const SignUp: React.FC = () => {
             role: role ?? "",
             [name]: value,
         });
+        setErrors({ ...errors, [name]: "" });
     };
 
     const fetchCountries = async () => {
@@ -57,8 +59,33 @@ const SignUp: React.FC = () => {
         fetchCountries();
     }, []);
 
+    const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+
+        if (!formData.firstname.trim()) {
+            newErrors.firstname = "First name is required";
+        }
+        if (!formData.email.trim()) {
+            newErrors.email = "Email is required";
+        }
+        if (!formData.country.trim()) {
+            newErrors.country = "Country is required";
+        }
+        if (!formData.password) {
+            newErrors.password = "Password is required";
+        } else if (formData.password.length < 6 || !/[A-Z]/.test(formData.password) || !/[a-z]/.test(formData.password) || !/\d/.test(formData.password)) {
+            newErrors.password = "Password must be at least 6 characters and include uppercase, lowercase, and a number";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!validateForm()) {
+            return;
+        }
         try {
             const response = await signUp(formData);
             console.log("register response:", response.data);
@@ -71,7 +98,6 @@ const SignUp: React.FC = () => {
     };
 
     const handleGoogleSignup = useGoogleLogin({
-        // flow: "auth-code",
         onSuccess: async (codeResponse) => {
             console.log(codeResponse);
             try {
@@ -93,44 +119,36 @@ const SignUp: React.FC = () => {
             ...formData,
             country: country,
         });
+        setErrors({ ...errors, country: "" });
     };
 
     return (
         <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
-            {/* Right side - Sign Up form */}
             <div className="w-[32rem] h-[38rem] lg:w-12/12 flex items-center justify-center bg-white rounded-2xl">
                 <div className="max-w-md w-full space-y-8">
                     <div>
                         <h2 className="mt-6 text-center text-xl font-bold  text-gray-700">Sign up to unlock new opportunities</h2>
                     </div>
                     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                        <input type="hidden" name="remember" defaultValue="true" />
                         <div className="rounded-md shadow-sm space-y-2">
                             <div>
-                                <label htmlFor="firstname" className="sr-only">
-                                    First Name
-                                </label>
                                 <input
                                     id="firstname"
                                     name="firstname"
                                     type="text"
-                                    required
                                     className="placeholder:text-xs appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                     placeholder="First Name"
                                     value={formData.firstname}
                                     onChange={handleInputChange}
                                 />
+                                {errors.firstname && <p className="text-red-500 text-xs mt-1">{errors.firstname}</p>}
                             </div>
 
                             <div>
-                                <label htmlFor="lastname" className="sr-only">
-                                    Last Name
-                                </label>
                                 <input
                                     id="lastname"
                                     name="lastname"
                                     type="text"
-                                    required
                                     className="placeholder:text-xs appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                     placeholder="Last Name"
                                     value={formData.lastname}
@@ -139,22 +157,21 @@ const SignUp: React.FC = () => {
                             </div>
 
                             <div>
-                                <label htmlFor="email-address" className="sr-only">
-                                    Email address
-                                </label>
                                 <input
                                     id="email-address"
                                     name="email"
                                     type="email"
                                     autoComplete="email"
-                                    required
                                     className="placeholder:text-xs appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                     placeholder="Email address"
                                     value={formData.email}
                                     onChange={handleInputChange}
                                 />
+                                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                             </div>
+
                             <PasswordField value={formData.password} onChange={handleInputChange} />
+                            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
 
                             <div>
                                 <Select onValueChange={handleCountryChange} value={formData.country}>
@@ -172,21 +189,7 @@ const SignUp: React.FC = () => {
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-                                <label htmlFor="remember-me" className="ml-2 text-xs block text-sm text-gray-900">
-                                    Remember me
-                                </label>
-                            </div>
-
-                            <div className="text-sm">
-                                <Link to={"/"} className="font-normal text-xs text-orange-900 hover:text-orange-800">
-                                    Forgot your password?
-                                </Link>
+                                {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country}</p>}
                             </div>
                         </div>
 
@@ -195,11 +198,6 @@ const SignUp: React.FC = () => {
                                 type="submit"
                                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
-                                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                    <svg className="h-5 w-5 text-orange-900 group-hover:text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                                    </svg>
-                                </span>
                                 Sign up
                             </button>
                             <br />
@@ -215,9 +213,9 @@ const SignUp: React.FC = () => {
                     </form>
                     <div className="text-center">
                         <span className="text-sm text-gray-500 mt-10 ">
-                            already have an account?{" "}
+                            Already have an account?{" "}
                             <Link to={"/login"} className="text-gray-800">
-                                login
+                                Login
                             </Link>
                         </span>
                     </div>

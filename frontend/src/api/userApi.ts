@@ -25,4 +25,8 @@ export const signIn = async (formData: FormData) => {
 };
 
 
+export const logout=async()=>{
+    return await apiClient.patch('/user/logout');
+}
+
 

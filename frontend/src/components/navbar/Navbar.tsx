@@ -3,6 +3,22 @@ import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import Button from "../ui/Button";
 import * as Dialog from "@radix-ui/react-dialog";
+import { useSelector } from "react-redux";
+import { CgProfile } from "react-icons/cg";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useDispatch } from "react-redux";
+import { logout } from "@/features/common/userSlice";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface NavItem {
     path: string;
@@ -11,12 +27,20 @@ interface NavItem {
 
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const dispatch = useDispatch();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const menuItems: NavItem[] = [
         { path: "/find-jobs", label: "Find Jobs" },
         { path: "/hire-talents", label: "Hire Talents" },
         { path: "/contact", label: "Discover" },
     ];
+
+    const { userInfo } = useSelector((state) => state.user);
+
+    const handleLogout = () => {
+        dispatch(logout());
+    };
 
     return (
         <nav className="bg-white shadow-sm">
@@ -49,18 +73,68 @@ const Navbar: React.FC = () => {
                         <Button variant="ghost">Sign In</Button>
                         <Button>Sign Up</Button>
                     </div> */}
-                    <Link
-                        to="/login"
-                        className="px-3 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
-                    >
-                        Sign in
-                    </Link>
-                    <Link
-                        to="/type"
-                        className="px-6 py-2 rounded-full text-sm font-medium text-gray-700  bg-yellow-500 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
-                    >
-                        join
-                    </Link>
+                    {!userInfo ? (
+                        <div>
+                            <Link
+                                to="/login"
+                                className="px-3 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                            >
+                                Sign in
+                            </Link>
+                            <Link
+                                to="/type"
+                                className="px-6 py-2 rounded-full text-sm font-medium text-gray-700  bg-yellow-500 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                            >
+                                join
+                            </Link>
+                        </div>
+                    ) : (
+                        <div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <CgProfile className="text-2xl" />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="px-16 text-center">
+                                    <DropdownMenuLabel>{userInfo.firstname + " " + userInfo.lastname}</DropdownMenuLabel>
+                                    <p className="text-xs text-slate-800">{userInfo.role}</p>
+                                    <DropdownMenuSeparator className="px-16 text-center" />
+                                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className=""
+                                        onClick={() => {
+                                            // setIsDialogOpen(true);
+                                            handleLogout()
+                                        }}
+                                    >
+                                        logout
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    )}
+
+                    {/* <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogDescription>This action cannot be undone. This will log you out of your account.</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel
+                                    onClick={() => {
+                                        setIsDialogOpen(false); // Close the dialog if "Cancel" is clicked
+                                    }}
+                                >
+                                    Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={handleLogout} // Trigger the logout when "Continue" is clicked
+                                >
+                                    Continue
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog> */}
 
                     {/* Mobile menu */}
                     <div className="flex items-center md:hidden">

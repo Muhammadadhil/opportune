@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signIn } from "@/api/userApi";
-import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import PasswordField from "@/components/ui/passwordField";
-import axios from "axios";
-import { getUserDetails } from "@/api/auth";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/features/common/userSlice";
 
-const Login: React.FC = () => {
+const AdminLogin: React.FC = () => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -50,27 +46,14 @@ const Login: React.FC = () => {
         }
     };
 
-    const handleGoogleSignIn = useGoogleLogin({
-        // flow: "auth-code",
-        onSuccess: async (codeResponse) => {
-            console.log(codeResponse);
-            const response = await getUserDetails(codeResponse.access_token);
-            console.log("response:", response.data.userInfo);
-            dispatch(setCredentials(response.data.userInfo));
-            navigate("/");
-        },
-        onError: (errorResponse) => {
-            console.log(errorResponse);
-            toast.error("Error signin with Google");
-        },
-    });
+   
 
     return (
         <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
             <div className="w-[32rem] h-[38rem] lg:w-12/12 flex items-center justify-center bg-white rounded-2xl">
                 <div className="max-w-md w-full space-y-8">
                     <div>
-                        <h2 className="mt-6 text-center text-xl font-bold  text-gray-700">Sign in to your account</h2>
+                        <h2 className="mt-6 text-center text-xl font-bold  text-gray-700">Welcome Admin !</h2>
                     </div>
                     <form className="mt-8 space-y-6">
                         <input type="hidden" name="remember" defaultValue="true" />
@@ -123,30 +106,16 @@ const Login: React.FC = () => {
                                 Sign in
                             </button>
                             <br />
-                            <button
-                                type="submit"
-                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-300 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                onClick={handleGoogleSignIn}
-                            >
-                                <FcGoogle className="text-xl" />
-                                <span className="pl-3">Sign in with google</span>
-                            </button>
+                            
                         </div>
-                        {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
+                        
                     </form>
 
-                    <div className="text-center">
-                        <span className="text-sm text-gray-500 mt-10 ">
-                            don't have one?{"  "}
-                            <Link to={"/type"} className="text-gray-800">
-                                Signup
-                            </Link>
-                        </span>
-                    </div>
+                    
                 </div>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default AdminLogin;
