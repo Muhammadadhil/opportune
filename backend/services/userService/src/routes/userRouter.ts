@@ -10,6 +10,7 @@ const otpController= new OtpController();
 
 router.post("/register", userController.registerUser);
 router.post("/login", userController.login);
+router.patch("/logout",userController.logout);
 
 router.get("/refreshToken", refreshAccessToken);
 
