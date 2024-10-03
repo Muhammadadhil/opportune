@@ -29,7 +29,7 @@ export class AuthService {
         }
     }
 
-    async getUserInfo(token: string,authType: string, role?: string, ) {
+    async getUserInfo(token: string, authType: string, role?: string) {
         console.log("google get userInfo service!!");
 
         const response = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`, {
@@ -44,16 +44,16 @@ export class AuthService {
 
         let user = await this.userRepository.findUserByEmail(data.email);
 
-        console.log('authType in userService:',authType);
-        
-        if(user && authType=='login'){
+        console.log("authType in userService:", authType);
+
+        if (user) {
             return user;
         }
-
-        //for signup:user shouldnot exist 
-        if (user && authType!="login") {
-            return 'user already exists'
-        }
+        
+        //for signup:user shouldnot exist
+        // if (user && authType!="login") {
+        //     return 'user already exists'
+        // }
 
         const googleUser: Partial<IUser> = {
             firstname: data.given_name,
@@ -63,7 +63,7 @@ export class AuthService {
             isOAuthUser: true,
         };
 
-        if(!user){
+        if (!user) {
             user = await this.userRepository.createUser(googleUser as IUser);
         }
 

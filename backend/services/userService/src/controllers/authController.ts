@@ -46,10 +46,10 @@ async function getGoogleUserInfo(req: Request, res: Response): Promise<Response>
         console.log("google token:", token);
         const userInfo = await authService.getUserInfo(token, authType,role);
 
-        console.log("newUser:", userInfo);
-        if (typeof userInfo == "string" && authType!="login") {
-            return res.status(400).json({ message: "User already exists" });
-        }
+        console.log("new/existing User:", userInfo);
+        // if (typeof userInfo == "string" && authType!="login") {
+        //     return res.status(400).json({ message: "User already exists" });
+        // }
         return res.status(200).json({ userInfo });
     } catch (error) {
         console.log("Error fetching user info:", error);

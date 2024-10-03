@@ -23,16 +23,16 @@ const UserType: React.FC = () => {
             </div>
             <div className="flex w-[40rem] h=[32rem] justify-around">
                 <div
-                    className="form-radio w-56 h-20  bg-yellow-400 hover:bg-yellow-300 flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400"
+                    className="form-radio w-56 h-20  bg-green-700 hover:bg-green-800 text-white flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400"
                     onClick={() => handleChange("client")}
                 >
                     {/* <input type="radio" name="role" value="client" /> */}
-                    <Radio checked={role === "client"} value="client" name="role" color="default" />
-                    <span className="text-lg font-medium">Join as Client</span>
+                    <Radio  checked={role === "client"} value="client" name="role" color="default" />
+                    <span className="text-lg font-medium ">Join as Client</span>
                 </div>
 
                 <div
-                    className="form-radio w-56 h-20  bg-yellow-400 hover:bg-yellow-300 flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400"
+                    className="form-radio w-56 h-20  bg-green-700 hover:bg-green-800 text-white flex items-center justify-center rounded-2xl cursor-pointer select-none focus:ring-gray-400"
                     onClick={() => handleChange("freelancer")}
                 >
                     {/* <input type="radio" name="role" value="client" /> */}
