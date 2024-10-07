@@ -10,11 +10,11 @@ import PrivateRoute from "./PrivateRoute";
 import ClientPrivateRoute from "./ClientPrivateRoute";
 import DetailsClient from "../pages/ClientDetailsPage"
 
+
 function UserRoute() {
     return (
         <>
             <Routes>
-                
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/join" element={<Signup />} />

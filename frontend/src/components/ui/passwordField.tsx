@@ -11,7 +11,7 @@ const PasswordField: React.FC<{ value: string; onChange: (e: React.ChangeEvent<H
     };
     return (
         <div className="rounded-md shadow-sm space-y-2">
-            <Label htmlFor="email-address" className="text-gray-700">password</Label>
+            <Label htmlFor="email-address" className="text-gray-700">Password</Label>
 
             <div className="relative ">
                 <input

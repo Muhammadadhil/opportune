@@ -50,6 +50,7 @@ export class UserController {
     public login = async (req: Request, res: Response): Promise<Response> => {
         try {
             const { email, password } = req.body;
+            
             const { user, accessToken, refreshToken } = await this.userService.login(email, password);
 
             res.cookie("jwt-refresh", refreshToken, {

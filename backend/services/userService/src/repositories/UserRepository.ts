@@ -4,7 +4,10 @@ import IUser from "../interfaces/IUser";
 
 export class UserRepository {
     async createUser(userData: IUser): Promise<IUser> {
+
+        console.log('userData repo:',userData);
         const user = new User(userData);
+        console.log('user:',user)
         return await user.save();
     }
 
