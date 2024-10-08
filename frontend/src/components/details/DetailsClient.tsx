@@ -13,12 +13,9 @@ import MultiSelect from "../ui/MultiSelect";
 import makeAnimated from "react-select/animated";
 
 
-
-
 const DetailsClient: React.FC = () => {
     const [companyName, setCompanyName] = useState<string>("");
     const [companyDescription, setCompanyDescription] = useState<string>("");
-    // const [projectNeeds, setProjectNeeds] = useState<string>("");
     const [website, setWebsite] = useState<string>("");
     const [selectedProjectNeeds, setSelectedProjectNeeds] = useState<Option[]>([]);
 
@@ -33,7 +30,6 @@ const DetailsClient: React.FC = () => {
             const projectNeeds = selectedProjectNeeds;
             const clientData = { userId, companyName, companyDescription, projectNeeds, website };
             await saveClientDetails(clientData as IClientData);
-            console.log('handleSubmti')
             navigate('/');
         } catch (error) {
              console.log('Error in saving client details:',error);
@@ -46,9 +42,6 @@ const DetailsClient: React.FC = () => {
     const handleSelectionChange = (newSelectedOptions: Option[]) => {
         setSelectedProjectNeeds(newSelectedOptions);
     };
-
-    console.log("selectedProjectNeeds:", selectedProjectNeeds);
-
     return (
         <div className="max-w-[38rem] mx-auto mt-36 p-6 bg-white rounded-lg mb-3">
             <h1 className="text-3xl font-extrabold mb-4">Welcome to Opportune. </h1>
@@ -108,14 +101,6 @@ const DetailsClient: React.FC = () => {
                     <Label htmlFor="project-needs" className="block mb-2">
                         Project Needs
                     </Label>
-                    {/* <Input
-                        id="project-needs"
-                        placeholder="for what type of project you are seeking freelancer. eg: web development"
-                        value={projectNeeds}
-                        onChange={(e) => setProjectNeeds(e.target.value)}
-                        className="w-full placeholder:text-xs"
-                    /> */}
-
                     <MultiSelect options={options} maxSelections={5} onSelectionChange={handleSelectionChange} />
                 </div>
 
