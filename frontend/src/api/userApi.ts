@@ -1,4 +1,5 @@
 import apiClient from "./apiClient/axios";
+import IClientData from '../types/IClientData';
 
 interface FormData {
     email: string;
@@ -13,6 +14,7 @@ interface SignUpFormData {
     country: string;
     role: string;
 }
+ 
 
 export const signUp = async (formData: SignUpFormData) => {
     return await apiClient.post("/user/register", {
@@ -29,4 +31,9 @@ export const logout=async()=>{
     return await apiClient.patch('/user/logout');
 }
 
+export const saveClientDetails = async (clientData: IClientData) => {
+    return await apiClient.post("/user/save-client-details", {
+        clientData
+    });
+};
 

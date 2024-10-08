@@ -3,6 +3,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { OtpService } from "../services/OtpService";
+import IClientDetail from "../interfaces/IClientDetail";
 
 export class UserController {
     private userService: UserService;
@@ -11,6 +12,7 @@ export class UserController {
     constructor() {
         this.userService = new UserService();
         this.otpService = new OtpService();
+        this.saveClientDetails = this.saveClientDetails.bind(this);
     }
 
     public registerUser = async (req: Request, res: Response) => {
@@ -50,7 +52,6 @@ export class UserController {
     public login = async (req: Request, res: Response): Promise<Response> => {
         try {
             const { email, password } = req.body;
-            
             const { user, accessToken, refreshToken } = await this.userService.login(email, password);
 
             res.cookie("jwt-refresh", refreshToken, {
@@ -89,5 +90,17 @@ export class UserController {
 
         res.status(200).json({ message: "User logged out" });
 
+    }
+
+    async saveClientDetails(req:Request,res:Response) {
+        try {
+            const { userId, companyName, companyDescription, projectNeeds, website } = req.body.clientData;
+            // const details = req.body;
+            const savedClientData = await this.userService.clientDetail({ userId, companyName, companyDescription, projectNeeds, website } as IClientDetail);
+            res.status(201).json(savedClientData);
+        } catch (error) {
+            console.log('Error in saving Client data:',error);
+            return res.status(500).json({ message: "Server error", error });
+        }
     }
 }

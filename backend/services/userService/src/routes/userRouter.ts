@@ -12,6 +12,9 @@ router.post("/register", userController.registerUser);
 router.post("/login", userController.login);
 router.patch("/logout",userController.logout);
 
+//details 
+router.post('/save-client-details',userController.saveClientDetails)
+
 router.get("/refreshToken", refreshAccessToken);
 
 //google sign in

@@ -1,19 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Radio } from "@mui/material";
-// import { useDispatch } from "react-redux";
-// import { setUserType } from "@/features/common/userSlice";
-// import { useSelector } from "react-redux";
-// import type { RootState } from "../store/store";
 
-const UserType: React.FC = () => {
-    // const role = useSelector((state: RootState) => state.user.userType);
+const UserRole: React.FC = () => {
+    
     const [role, setRole] = useState("");
     const navigate = useNavigate();
-    // const dispatch = useDispatch();
 
     const handleChange = (type: string) => {
-        // dispatch(setUserType(type));
         setRole(type);
         console.log("role:userType:", role);
     };
@@ -58,4 +52,4 @@ const UserType: React.FC = () => {
     );
 };
 
-export default UserType;
+export default UserRole;

@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { verifyOtp } from "../../api/auth";
+import { resendOtp, verifyOtp } from "../../api/auth";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../loading/Loading";
+
 
 export default function OTPVerification() {
     const [otp, setOtp] = useState("");
     const [error, setError] = useState("");
     const [timer, setTimer] = useState(120); // 2 minutes in seconds
     const [canResend, setCanResend] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -32,10 +35,17 @@ export default function OTPVerification() {
 
     const handleVerify = async () => {
         try {
+            setIsLoading(true);
             const response = await verifyOtp(otp, userInfo.email, userInfo._id);
+            setIsLoading(false);
+            if (userInfo.role == "client") {
+                navigate("/cl/details");
+            } else {
+                navigate("/");
+            }
             console.log(response);
-            navigate("/");
         } catch (error) {
+            setIsLoading(false);
             console.log("error api response:", error);
             setError(error.response.data.message);
 
@@ -48,12 +58,10 @@ export default function OTPVerification() {
     };
 
     const handleResendOtp = async () => {
-        // Implement your resend OTP logic here
+        await resendOtp(userInfo.email);
         console.log("Resending OTP...");
-        // Reset timer and canResend state
         setTimer(120);
         setCanResend(false);
-        // You would typically call an API to resend the OTP here
     };
 
     const formatTime = (seconds) => {
@@ -64,33 +72,39 @@ export default function OTPVerification() {
 
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="max-w-md w-full space-y-8 p-8 ">
-                <h1 className="text-3xl font-bold text-center text-gray-900">Verify your OTP</h1>
-                <p className="mt-2 text-center text-gray-600">We've sent a one-time password to your email. Please enter the OTP below to verify your account.</p>
-                <div className="mt-5 space-y-4">
-                    <Input
-                        type="text"
-                        placeholder="Enter OTP"
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-                        maxLength={4}
-                    />
-                    <div className="flex justify-center">{error ? <p className="text-red-600 text-sm">{error}</p> : ""}</div>
-                    <div className="text-center text-sm text-gray-600">
-                        {canResend ? (
-                            <Button onClick={handleResendOtp} variant="link" className="text-blue-600">
-                                Resend OTP
-                            </Button>
-                        ) : (
-                            <p>Resend OTP in: {formatTime(timer)}</p>
-                        )}
+            {isLoading ? (
+                <LoadingSpinner />
+            ) : (
+                <div className="max-w-md w-full space-y-8 p-8 ">
+                    <h1 className="text-3xl font-bold text-center text-gray-900">Verify your OTP</h1>
+                    <p className="mt-2 text-center text-gray-600">
+                        We've sent a one-time password to <span className="text-slate-900 " >{userInfo.email}</span>. Please enter the OTP below to verify your account.
+                    </p>
+                    <div className="mt-5 space-y-4">
+                        <Input
+                            type="text"
+                            placeholder="Enter OTP"
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                            maxLength={4}
+                        />
+                        <div className="flex justify-center">{error ? <p className="text-red-600 text-sm">{error}</p> : ""}</div>
+                        <div className="text-center text-sm text-gray-600">
+                            {canResend ? (
+                                <Button onClick={handleResendOtp} variant="link" className="text-blue-600">
+                                    Resend OTP
+                                </Button>
+                            ) : (
+                                <p>Resend OTP in: {formatTime(timer)}</p>
+                            )}
+                        </div>
+                        <Button onClick={handleVerify} disabled={otp.length !== 4} className="w-full">
+                            Verify
+                        </Button>
                     </div>
-                    <Button onClick={handleVerify} disabled={otp.length !== 4} className="w-full">
-                        Verify
-                    </Button>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
