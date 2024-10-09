@@ -5,9 +5,10 @@ interface MultiSelectProps {
     options: string[];
     maxSelections?: number;
     onSelectionChange: (selectedOptions: string[]) => void;
+    error:string
 }
 
-export default function MultiSelect({ options, maxSelections = 5, onSelectionChange }: MultiSelectProps) {
+export default function MultiSelect({ options, maxSelections = 5, onSelectionChange ,error }: MultiSelectProps) {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState("");
     const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +49,7 @@ export default function MultiSelect({ options, maxSelections = 5, onSelectionCha
     return (
         <div className="w-full max-w-md">
             <div className="relative">
-                <div className="flex flex-wrap items-center gap-2 p-2 border rounded-md cursor-text" onClick={() => inputRef.current?.focus()}>
+                <div className={`flex flex-wrap items-center gap-2 p-2 border rounded-md cursor-text ${error ? "border-red-500" : "border-gray-300"}`} onClick={() => inputRef.current?.focus()}>
                     {selectedOptions.map((option) => (
                         <span key={option} className="flex items-center gap-1 px-2 py-1 text-sm bg-primary text-primary-foreground rounded-full">
                             {option}
@@ -70,7 +71,7 @@ export default function MultiSelect({ options, maxSelections = 5, onSelectionCha
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onFocus={() => setIsOpen(true)}
-                        className="flex-grow outline-none bg-transparent"
+                        className="flex-grow outline-none bg-transparent placeholder:text-xs"
                         placeholder="job fields"
                         aria-label="Search terms input"
                     />
@@ -89,7 +90,7 @@ export default function MultiSelect({ options, maxSelections = 5, onSelectionCha
                     </ul>
                 )}
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 text-xs text-muted-foreground">
                 {selectedOptions.length}/{maxSelections} tags maximum
             </p>
         </div>

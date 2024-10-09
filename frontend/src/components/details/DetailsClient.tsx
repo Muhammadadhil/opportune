@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import IClientData from "@/types/IClientData";
 import MultiSelect from "../ui/MultiSelect";
-import makeAnimated from "react-select/animated";
 
 
 const DetailsClient: React.FC = () => {
@@ -18,38 +17,43 @@ const DetailsClient: React.FC = () => {
     const [companyDescription, setCompanyDescription] = useState<string>("");
     const [website, setWebsite] = useState<string>("");
     const [selectedProjectNeeds, setSelectedProjectNeeds] = useState<Option[]>([]);
+    const [error, setError] = useState<string>("");
 
     const { userInfo } = useSelector((state) => state.user);
-    const navigate=useNavigate();
-
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (selectedProjectNeeds.length == 0) {
+            setError("error in selectprojectneeds");
+            return;
+        }
         try {
             const userId = userInfo._id;
             const projectNeeds = selectedProjectNeeds;
             const clientData = { userId, companyName, companyDescription, projectNeeds, website };
             await saveClientDetails(clientData as IClientData);
-            navigate('/');
+            navigate("/cl/dashboard");
         } catch (error) {
-             console.log('Error in saving client details:',error);
-             toast.error('Error while updating details!');
+            console.log("Error in saving client details:", error);
+            toast.error("Error while updating details!");
         }
     };
 
-   const options = ["web development","mobile app development","content writing", "graphic designing", "copy writing" ,"ui-ux designing"];
+    const options = ["web development", "mobile app development", "content writing", "graphic designing", "copy writing", "ui-ux designing"];
 
     const handleSelectionChange = (newSelectedOptions: Option[]) => {
         setSelectedProjectNeeds(newSelectedOptions);
     };
+
     return (
         <div className="max-w-[38rem] mx-auto mt-36 p-6 bg-white rounded-lg mb-3">
             <h1 className="text-3xl font-extrabold mb-4">Welcome to Opportune. </h1>
             <p className="mb-6 text-gray-600">Tell us about your business and you'll be on your way to connect with talent.</p>
 
             <form onSubmit={handleSubmit}>
-                <div className="mb-6">
-                    {/* <Label className="block mb-4">How many people are in your company?</Label>
+                {/* <div className="mb-6"> */}
+                {/* <Label className="block mb-4">How many people are in your company?</Label>
                     <RadioGroup value={companySize} onValueChange={setCompanySize}>
                         <div className="flex items-center space-x-2 mb-3">
                             <RadioGroupItem value="just-me" id="just-me" />
@@ -70,12 +74,13 @@ const DetailsClient: React.FC = () => {
                         </div>
                         
                     </RadioGroup> */}
-                </div>
+                {/* </div> */}
 
-                <div className="mb-4">
+                <div className="mb-4 relative">
                     <Label htmlFor="company-name" className="block mb-2">
                         Company Name
                     </Label>
+                    <span className="absolute right-0 text-xs text-gray-600"> *optional</span>
                     <Input id="company-name" placeholder="eg: opportune" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full placeholder:text-xs" />
                 </div>
                 <div className="mb-4">
@@ -91,17 +96,20 @@ const DetailsClient: React.FC = () => {
                     />
                 </div>
 
+                <div className="mb-4">
+                    <Label htmlFor="project-needs" className="block mb-2">
+                        Project Needs
+                    </Label>
+
+                    <MultiSelect options={options} maxSelections={5} onSelectionChange={handleSelectionChange} error={error} />
+                    {error ? <span className="text-xs text-red-500 mt-2">choose the project needs</span> : ""}
+                </div>
+
                 <div className="mb-6">
                     <Label htmlFor="website" className="block mb-2">
                         Website
                     </Label>
                     <Input id="website" placeholder="eg: www.opportune.com" value={website} onChange={(e) => setWebsite(e.target.value)} className="w-full placeholder:text-xs" />
-                </div>
-                <div className="mb-4">
-                    <Label htmlFor="project-needs" className="block mb-2">
-                        Project Needs
-                    </Label>
-                    <MultiSelect options={options} maxSelections={5} onSelectionChange={handleSelectionChange} />
                 </div>
 
                 <Button type="submit" className="w-full bg-green-800 hover:bg-green-900">

@@ -8,6 +8,7 @@ import VerifyEmail from "../pages/VerfiyEmail";
 import PrivateRoute from "./PrivateRoute";
 import ClientPrivateRoute from "./ClientPrivateRoute";
 import DetailsClient from "../pages/ClientDetailsPage"
+import ClientDashboard from '../pages/ClientDashboardPage';
 
 
 function UserRoute() {
@@ -28,8 +29,8 @@ function UserRoute() {
                     <Route path="/cl/details" element={<DetailsClient />} />
                 </Route>
 
-                
-                <Route path="cl/details" element={<DetailsClient />}/>
+                <Route path="cl/dashboard" element={<ClientDashboard />}></Route>
+                <Route path="cl/details" element={<DetailsClient />} />
             </Routes>
         </>
     );

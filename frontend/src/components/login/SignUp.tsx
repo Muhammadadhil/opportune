@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { setCredentials } from "@/features/common/userSlice";
 import { signUp } from "@/api/userApi";
@@ -15,6 +15,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import LoadingSpinner from "../loading/Loading";
+
+
 
 const validationSchema = z
     .object({
@@ -53,6 +55,14 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const { userInfo } = useSelector((state) => state.user);
+
+    useEffect(() => {
+        if (userInfo) {
+            navigate('/')
+        }
+    }, []);
 
     useEffect(() => {
         if (!role) {

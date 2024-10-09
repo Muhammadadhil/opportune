@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../loading/Loading";
 
-
 export default function OTPVerification() {
     const [otp, setOtp] = useState("");
     const [error, setError] = useState("");
@@ -15,10 +14,9 @@ export default function OTPVerification() {
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
-
     const { userInfo } = useSelector((state) => state.user);
 
-    console.log("userInfo from global state:", userInfo);
+    
 
     useEffect(() => {
         let interval = null;
@@ -37,6 +35,7 @@ export default function OTPVerification() {
         try {
             setIsLoading(true);
             const response = await verifyOtp(otp, userInfo.email, userInfo._id);
+
             setIsLoading(false);
             if (userInfo.role == "client") {
                 navigate("/cl/details");

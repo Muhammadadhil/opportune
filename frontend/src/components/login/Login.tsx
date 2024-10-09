@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signIn } from "@/api/userApi";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { setCredentials } from "@/features/common/userSlice";
 import { Button } from "@/components/ui/button"; 
 import { Input } from "@/components/ui/input"; 
@@ -24,6 +24,14 @@ const Login: React.FC = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const { userInfo } = useSelector((state) => state.user);
+
+    useEffect(() => {
+        if (userInfo) {
+            navigate("/");
+        }
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

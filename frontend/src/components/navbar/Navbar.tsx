@@ -113,7 +113,7 @@ const Navbar: React.FC = () => {
                         </div>
                     )}
 
-                    {/* <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
-                    </AlertDialog> */}
+                    </AlertDialog>
 
                     {/* Mobile menu */}
                     <div className="flex items-center md:hidden">
