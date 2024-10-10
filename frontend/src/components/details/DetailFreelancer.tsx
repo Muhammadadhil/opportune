@@ -21,7 +21,6 @@ const DetailFreelancer: React.FC = () => {
         e.preventDefault();
         try {
             const userId = userInfo._id;
-            
             const freelancerData = { userId, title };
             await saveFreelancerData(freelancerData );
             navigate("/fr/dashboard");
@@ -69,3 +68,8 @@ const DetailFreelancer: React.FC = () => {
 };
 
 export default DetailFreelancer;
+
+
+
+
+

@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
+import Home from "./pages/common/Home";
 import { ToastContainer } from "react-toastify";
 import UserRoute from "./routes/UserRouter";
 import AdminRoute from "./routes/AdminRouter";

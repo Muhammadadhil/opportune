@@ -1,5 +1,5 @@
 import React from "react";
-import SignUp from "../components/login/SignUp";
+import SignUp from "../../components/login/SignUp";
 import { useLocation } from "react-router-dom";
 
 const SignUpPage: React.FC = () => {

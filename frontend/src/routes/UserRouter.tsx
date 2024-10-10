@@ -1,15 +1,17 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
-import LoginPage from "../pages/Login";
-import Signup from "../pages/Signup";
+import Home from "../pages/common/Home";
+import LoginPage from "../pages/common/Login";
+import Signup from "../pages/common/Signup";
 import Profile from "../pages/ProfilePage";
-import UserTypeSelection from "../pages/UserRolePage";
-import VerifyEmail from "../pages/VerfiyEmail";
+import UserTypeSelection from "../pages/common/UserRolePage";
+import VerifyEmail from "../pages/common/VerfiyEmail";
 import PrivateRoute from "./PrivateRoute";
 import ClientPrivateRoute from "./ClientPrivateRoute";
-import DetailsClient from "../pages/ClientDetailsPage"
-import ClientDashboard from '../pages/ClientDashboardPage';
-
+import DetailsClient from "../pages/client/ClientDetailsPage";
+import ClientDashboard from "../pages/client/ClientDashboardPage";
+import FreelancerLayout from "@/layouts/FreelancerLayout";
+import FreelancerDashboard from "@/pages/freelancer/Dashboard";
+import FreelancerProtected from "@/components/freelancer/FreelancerProtected";
 
 function UserRoute() {
     return (
@@ -27,10 +29,15 @@ function UserRoute() {
 
                 <Route path="" element={<ClientPrivateRoute />}>
                     <Route path="/cl/details" element={<DetailsClient />} />
+                    <Route path="cl/dashboard" element={<ClientDashboard />}/>
+                    <Route path="cl/details" element={<DetailsClient />} />
                 </Route>
 
-                <Route path="cl/dashboard" element={<ClientDashboard />}></Route>
-                <Route path="cl/details" element={<DetailsClient />} />
+                <Route element={<FreelancerProtected />}>
+                    <Route element={<FreelancerLayout />}>
+                        <Route path="fr/dashboard" element={<FreelancerDashboard />} />
+                    </Route>
+                </Route>
             </Routes>
         </>
     );
