@@ -9,9 +9,10 @@ import PrivateRoute from "./PrivateRoute";
 import ClientPrivateRoute from "./ClientPrivateRoute";
 import DetailsClient from "../pages/client/ClientDetailsPage";
 import ClientDashboard from "../pages/client/ClientDashboardPage";
-import FreelancerLayout from "@/layouts/FreelancerLayout";
-import FreelancerDashboard from "@/pages/freelancer/Dashboard";
+import UsersLayout from "@/layouts/UsersLayout";
+import FreelancerDashboard from "@/pages/freelancer/DashboardPage";
 import FreelancerProtected from "@/components/freelancer/FreelancerProtected";
+import ProfilePage from "@/pages/freelancer/ProfilePage";
 
 function UserRoute() {
     return (
@@ -28,14 +29,16 @@ function UserRoute() {
                 </Route>
 
                 <Route path="" element={<ClientPrivateRoute />}>
-                    <Route path="/cl/details" element={<DetailsClient />} />
-                    <Route path="cl/dashboard" element={<ClientDashboard />}/>
+                    <Route element={<UsersLayout />}>
+                        <Route path="cl/dashboard" element={<ClientDashboard />} />
+                    </Route>
                     <Route path="cl/details" element={<DetailsClient />} />
                 </Route>
 
                 <Route element={<FreelancerProtected />}>
-                    <Route element={<FreelancerLayout />}>
+                    <Route element={<UsersLayout />}>
                         <Route path="fr/dashboard" element={<FreelancerDashboard />} />
+                        <Route path="fr/profile" element={<ProfilePage />} />
                     </Route>
                 </Route>
             </Routes>

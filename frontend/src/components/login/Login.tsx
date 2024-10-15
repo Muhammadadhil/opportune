@@ -55,7 +55,7 @@ const Login: React.FC = () => {
         try {
             const response = await signIn(formData);
             dispatch(setCredentials(response.data.data));
-            navigate("/");
+            navigate("/fr/dashboard");
         } catch (error) {
             toast.error(error?.response?.data?.message);
         }

@@ -39,8 +39,8 @@ export default function OTPVerification() {
             setIsLoading(false);
             if (userInfo.role == "client") {
                 navigate("/cl/details");
-            } else {
-                navigate("/");
+            } else if(userInfo.role == 'freelancer') {  
+                navigate("/fr/dashboard");
             }
             console.log(response);
         } catch (error) {

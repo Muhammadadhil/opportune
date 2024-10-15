@@ -21,6 +21,7 @@ export class UserController {
 
         try {
             const userExists = await this.userService.userExist(req.body.formData.email);
+            console.log('userExists:',userExists);
             if (userExists) {
                 return res.status(400).json({ message: "user already exists" });
             }

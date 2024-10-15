@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
 
 
-const FreelancerLayout = () => {
+const UsersLayout = () => {
     return (
         <div>
             {/* <div className="w-full xl:w-[1280px] mx-auto relative min-h-dvh max-md:w-screen"></div> */}
@@ -14,4 +14,4 @@ const FreelancerLayout = () => {
     );
 };
 
-export default FreelancerLayout;
+export default UsersLayout;

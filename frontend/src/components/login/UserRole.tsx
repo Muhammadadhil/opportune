@@ -9,7 +9,6 @@ const UserRole: React.FC = () => {
 
     const handleChange = (type: string) => {
         setRole(type);
-        console.log("role:userType:", role);
     };
 
     return (
