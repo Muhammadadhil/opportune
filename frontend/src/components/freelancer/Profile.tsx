@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { PencilIcon, MapPinIcon, ShareIcon, PlusIcon } from "lucide-react";
+import profilePicture from "@/assets/profilePicture.jpg";
+
 
 interface ProfileData {
     name: string;
@@ -10,6 +12,7 @@ interface ProfileData {
     hoursPerWeek: string;
     contractPreference: string;
     languages: { language: string; proficiency: string }[];
+    skills:string[];
 }
 
 export default function Profile() {
@@ -17,12 +20,12 @@ export default function Profile() {
         name: "Dark B.",
         location: "Calicut, India",
         hourlyRate: "$20.00/hr",
-        description:
-            "I am a passionate web developer specializing in the MERN stack",
+        description: "I am a passionate web developer specializing in the MERN stack",
         connects: 0,
         hoursPerWeek: "More than 30 hrs/week",
         contractPreference: "No contract-to-hire preference set",
         languages: [{ language: "English", proficiency: "Basic" }],
+        skills:['html','css','js','tailwindcss']
     });
 
     return (
@@ -31,7 +34,7 @@ export default function Profile() {
                 <div className="p-6 md:p-8">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                         <div className="flex items-center mb-4 md:mb-0">
-                            <img src="https://www.vecteezy.com/free-vector/profile-pic" alt="Profile" className="w-24 h-24 rounded-full mr-4 bg-gray-100" />
+                            <img src={profilePicture} alt="Profile" className="w-24 h-24 rounded-full mr-4 bg-gray-100" />
                             <div>
                                 <h1 className="text-2xl font-bold">{profileData.name}</h1>
                                 <p className="text-gray-600 flex items-center">
@@ -104,7 +107,7 @@ export default function Profile() {
                         <div className="w-full md:w-2/3">
                             <div className="mb-6">
                                 <div className="flex justify-between items-center mb-2">
-                                    <h2 className="text-xl font-bold">i will develop fast and reliable web app using MERN stack</h2>
+                                    <h2 className="text-xl ">{profileData.description}</h2>
                                     <PencilIcon className="w-4 h-4 text-green-800 cursor-pointer" />
                                 </div>
                                 <div className="flex justify-between items-center">
@@ -115,26 +118,25 @@ export default function Profile() {
                                 </div>
                             </div>
 
-                            <div className="mb-6">
-                                <div className="flex justify-between items-center mb-2">
-                                    <PencilIcon className="w-4 h-4 text-green-800 cursor-pointer" />
-                                </div>
-                                <p className="text-gray-700">{profileData.description}</p>
-                            </div>
-
                             <div>
+                                <div className="flex justify-between items-center mb-2 ">
+                                    <h2 className="text-xl font-semibold">Skills</h2>
+                                    <PlusIcon className="w-5 h-5 text-green-800 cursor-pointer" />
+                                </div>
+                                <div className="flex  items-center mb-2 ">
+                                    {profileData.skills.map((skill) => (
+                                        <div className="py-2 px-6 m-2  text-center bg-gray-100 rounded-md">{skill}</div>
+                                    ))}
+                                </div>
+
                                 <div className="flex justify-between items-center mb-2 ">
                                     <h2 className="text-xl font-semibold">Portfolio</h2>
                                     <PlusIcon className="w-5 h-5 text-green-800 cursor-pointer" />
                                 </div>
-                                <div className="flex space-x-4 mb-2">
-                                    <button className="px-3 py-1 bg-green-800 text-white rounded-md text-sm">Published</button>
-                                    <button className="px-3 py-1 text-gray-500 rounded-md text-sm">Drafts</button>
-                                </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                                    <div className="border rounded-md overflow-hidden">
-                                        <img src="/placeholder.svg?height=150&width=250" alt="Portfolio item" className="w-full h-32 object-cover" />
-                                        <p className="p-2 text-sm">portfolio website</p>
+                                    <div className="border rounded-md overflow-hidden ">
+                                        <img src="/placeholder.svg?height=150&width=250" alt="Portfolio item" className="w-full h-32 object-cover text-center" />
+                                        <p className="p-2 text-sm text-center">ecommerce platform</p>
                                     </div>
                                 </div>
                             </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
-import Button from "../ui/Button";
+import Button from "./Button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useSelector } from "react-redux";
 import { CgProfile } from "react-icons/cg";
@@ -74,7 +74,7 @@ const Navbar: React.FC = () => {
                         <Button>Sign Up</Button>
                     </div> */}
                     {!userInfo ? (
-                        <div>
+                        <div className="hidden md:block">
                             <Link
                                 to="/login"
                                 className="px-3 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
@@ -83,7 +83,7 @@ const Navbar: React.FC = () => {
                             </Link>
                             <Link
                                 to="/type"
-                                className="px-6 py-2 rounded-full text-sm font-medium text-gray-700  bg-yellow-500 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                                className="px-6 py-2 rounded-full text-sm font-medium text-white  bg-green-800  hover:bg-green-700 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
                             >
                                 join
                             </Link>
@@ -103,7 +103,7 @@ const Navbar: React.FC = () => {
                                         className=""
                                         onClick={() => {
                                             // setIsDialogOpen(true);
-                                            handleLogout()
+                                            handleLogout();
                                         }}
                                     >
                                         logout
@@ -159,8 +159,18 @@ const Navbar: React.FC = () => {
                                             </Link>
                                         ))}
                                         <div className="flex flex-col gap-2 mt-4">
-                                            <Button variant="ghost">Sign In</Button>
-                                            <Button>Sign Up</Button>
+                                            <Link
+                                                to="/login"
+                                                className="px-3 py-2 text-center  rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                                            >
+                                                Sign in
+                                            </Link>
+                                            <Link
+                                                to="/type"
+                                                className="px-6 py-2 text-center text-white  bg-green-800 hover:bg-gray-100  rounded-full text-sm font-medium hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                                            >
+                                                join
+                                            </Link>
                                         </div>
                                     </nav>
                                 </Dialog.Content>
