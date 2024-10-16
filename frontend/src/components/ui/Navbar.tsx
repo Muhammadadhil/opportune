@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Menu } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useSelector } from "react-redux";
@@ -17,7 +17,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 interface NavItem {
@@ -40,6 +39,12 @@ const Navbar: React.FC = () => {
 
     const handleLogout = () => {
         dispatch(logout());
+    };
+
+    const navigate = useNavigate();
+
+    const nvaigateToProfile = () => {
+        navigate(userInfo.role == "freelancer" ? "/fr/profile" : "/cl/profile");
     };
 
     return (
@@ -98,11 +103,10 @@ const Navbar: React.FC = () => {
                                     <DropdownMenuLabel>{userInfo.firstname + " " + userInfo.lastname}</DropdownMenuLabel>
                                     <p className="text-xs text-slate-800">{userInfo.role}</p>
                                     <DropdownMenuSeparator className="px-16 text-center" />
-                                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={nvaigateToProfile}>Profile</DropdownMenuItem>
                                     <DropdownMenuItem
                                         className=""
                                         onClick={() => {
-                                            // setIsDialogOpen(true);
                                             handleLogout();
                                         }}
                                     >

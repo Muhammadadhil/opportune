@@ -15,7 +15,6 @@ interface SignUpFormData {
     role: string;
 }
  
-
 export const signUp = async (formData: SignUpFormData) => {
     return await apiClient.post("/user/register", {
         formData,
@@ -37,3 +36,7 @@ export const saveClientDetails = async (clientData: IClientData) => {
     });
 };
 
+// freelancer
+export const completeProfle= async(formData)=>{
+    return await apiClient.post("/user/complete-profile",formData,{headers:{'Content-Type':'multipart/form-data'}})
+}

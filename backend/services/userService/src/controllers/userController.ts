@@ -21,7 +21,7 @@ export class UserController {
 
         try {
             const userExists = await this.userService.userExist(req.body.formData.email);
-            console.log('userExists:',userExists);
+            console.log("userExists:", userExists);
             if (userExists) {
                 return res.status(400).json({ message: "user already exists" });
             }
@@ -90,18 +90,29 @@ export class UserController {
         });
 
         res.status(200).json({ message: "User logged out" });
-
     }
 
-    async saveClientDetails(req:Request,res:Response) {
+    async saveClientDetails(req: Request, res: Response) {
         try {
             const { userId, companyName, companyDescription, projectNeeds, website } = req.body.clientData;
             // const details = req.body;
             const savedClientData = await this.userService.clientDetail({ userId, companyName, companyDescription, projectNeeds, website } as IClientDetail);
             res.status(201).json(savedClientData);
         } catch (error) {
-            console.log('Error in saving Client data:',error);
+            console.log("Error in saving Client data:", error);
             return res.status(500).json({ message: "Server error", error });
         }
     }
+
+    async saveFreelancerDetails(req: Request, res: Response){
+        try {
+            await this.userService.freelancerDetails(req.body);
+
+        } catch (error) {
+             console.log("Error in saving freelaner data:", error);
+             return res.status(500).json({ message: "Server error", error });
+        }
+    }
+
+    
 }

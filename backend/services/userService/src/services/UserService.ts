@@ -7,11 +7,16 @@ import IUser from "../interfaces/IUser";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt/generateToken";
 import IClientDetail from "../interfaces/IClientDetail";
 
+
 export class UserService {
     private userRepository: UserRepository;
+    
 
     constructor() {
         this.userRepository = new UserRepository();
+       
+
+
     }
 
     async userExist(email: string): Promise<IUser | null> {
@@ -67,9 +72,12 @@ export class UserService {
         return { user, accessToken, refreshToken };
     }
 
-    async clientDetail(details: IClientDetail){
-        console.log('client details in serivce:',details);
+    async clientDetail(details: IClientDetail) {
+        console.log("client details in serivce:", details);
         return await this.userRepository.saveClientDetails(details as IClientDetail);
+    }
 
-    };
+    async freelancerDetails(detail:any){
+        console.log('freelancer details as req.body:',detail);
+    }
 }

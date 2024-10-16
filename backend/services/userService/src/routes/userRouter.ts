@@ -2,18 +2,19 @@ import { Router } from "express";
 import { UserController } from "../controllers/userController";
 import { refreshAccessToken, getGoogleAuthToken, getGoogleUserInfo } from "../controllers/authController";
 import { OtpController } from "../controllers/OtpController";
+import multer from "multer";
 
 const router = Router();
 const userController = new UserController();
-const otpController= new OtpController();
+const otpController = new OtpController();
 // const authController = new AuthController();
 
 router.post("/register", userController.registerUser);
 router.post("/login", userController.login);
-router.patch("/logout",userController.logout);
+router.patch("/logout", userController.logout);
 
-//details 
-router.post('/save-client-details',userController.saveClientDetails)
+//details
+router.post("/save-client-details", userController.saveClientDetails);
 
 router.get("/refreshToken", refreshAccessToken);
 
@@ -24,5 +25,14 @@ router.post("/google-login", getGoogleUserInfo);
 //otp
 router.post("/otp-verify", otpController.verifyOtp);
 router.post("/otp-resend", otpController.resendOtp);
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+console.log('storage:',storage);
+console.log('upload:',upload);
+
+
+router.post("/complete-profile",upload.single('profileImage'),userController.saveFreelancerDetails);
 
 export default router;

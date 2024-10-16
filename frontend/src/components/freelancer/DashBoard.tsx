@@ -1,25 +1,3 @@
-// import Sidebar from './Sidebar';
-// import JobList from './Joblist'
-// import { Input } from "@/components/ui/input";
-
-// const Dashboard = () => {
-//     return (
-//         <>
-//             <div className="mt-14 md:mx-64 flex flex-col ">
-//                 <div className='flex  justify-center'>
-//                     <Input id="firstname" type="text" placeholder="search jobs" className="w-[43rem] placeholder:text-xs" />
-//                 </div>
-//                 <div className="flex md:flex-row mt-14">
-//                     <JobList />
-//                     <Sidebar />
-//                 </div>
-//             </div>
-//         </>
-//     );
-// };
-
-// export default Dashboard;
-
 
 import Sidebar from "./Sidebar";
 import JobList from './Joblist'
