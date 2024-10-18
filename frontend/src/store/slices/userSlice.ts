@@ -3,9 +3,10 @@ import { userState } from "../../interfaces/user";
 
 const initialState: userState = {
     userInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo") as string) : null,
+    freelancerData: {},
 };
 
-export const userTypeSlice = createSlice({
+export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
@@ -13,13 +14,17 @@ export const userTypeSlice = createSlice({
             state.userInfo = action.payload;
             localStorage.setItem("userInfo", JSON.stringify(action.payload));
         },
+        setFreelancerData: (state, action) => {
+            state.freelancerData = action.payload;
+        },
         logout: (state) => {
             state.userInfo = null;
+            state.freelancerData = {};
             localStorage.removeItem("userInfo");
         },
     },
 });
 
-export const { setCredentials, logout } = userTypeSlice.actions;
+export const { setCredentials, logout, setFreelancerData } = userSlice.actions;
 
-export default userTypeSlice.reducer;
+export default userSlice.reducer;

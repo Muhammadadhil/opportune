@@ -1,5 +1,6 @@
 export interface userState {
     userInfo: userInfo | null;
+    freelancerData:
 }
 
 export interface userInfo {
@@ -9,4 +10,12 @@ export interface userInfo {
     email: string;
     role: string;
     country: string;
+}
+
+export interface IFreelancer {
+    userId: string;
+    title: string;
+    skills: string[];
+    accounts: any; 
+    image: string; 
 }
