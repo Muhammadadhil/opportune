@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PencilIcon, MapPinIcon, ShareIcon, PlusIcon } from "lucide-react";
 import profilePicture from "@/assets/profilePicture.jpg";
-
+import { getProfileData } from "@/api/userApi";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 interface ProfileData {
     name: string;
@@ -12,7 +14,7 @@ interface ProfileData {
     hoursPerWeek: string;
     contractPreference: string;
     languages: { language: string; proficiency: string }[];
-    skills:string[];
+    skills: string[];
 }
 
 export default function Profile() {
@@ -25,8 +27,24 @@ export default function Profile() {
         hoursPerWeek: "More than 30 hrs/week",
         contractPreference: "No contract-to-hire preference set",
         languages: [{ language: "English", proficiency: "Basic" }],
-        skills:['html','css','js','tailwindcss']
+        skills: ["html", "css", "js", "tailwindcss"],
     });
+
+    const { userInfo } = useSelector((state: any) => state.user);
+    const[profileImage,setProfileImage]=useState('');
+
+    async function getData() {
+        const response = await getProfileData(userInfo._id);
+        console.log("profile data res:", response);
+        const imgUrl = response.data.imageUrl;
+        console.log(imgUrl)
+        setProfileImage(imgUrl);
+
+    }
+
+    useEffect(() => {
+        getData();
+    }, []);
 
     return (
         <div className="min-h-screen p-4">
@@ -34,7 +52,7 @@ export default function Profile() {
                 <div className="p-6 md:p-8">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                         <div className="flex items-center mb-4 md:mb-0">
-                            <img src={profilePicture} alt="Profile" className="w-24 h-24 rounded-full mr-4 bg-gray-100" />
+                            <img src={profileImage} alt="Profile" className="w-24 h-24 rounded-full mr-4 bg-gray-100" />
                             <div>
                                 <h1 className="text-2xl font-bold">{profileData.name}</h1>
                                 <p className="text-gray-600 flex items-center">
@@ -147,4 +165,3 @@ export default function Profile() {
         </div>
     );
 }
-

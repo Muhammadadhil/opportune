@@ -23,22 +23,18 @@ const s3Client = new S3Client({
     },
 });
 
-console.log("bucketName:", bucketName);
-console.log("region:", region);
-console.log("accessKeyId:", accessKeyId);
-console.log("secretAccessKey:", secretAccessKey);
-
 const randomFileName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 
 export const uploadTosS3 = async (fileBuffer: Buffer, mimeType: string): Promise<string> => {
     try {
         const fileName = randomFileName();
 
+        const newMimeType='image/jpeg';
         const uploadParams = {
             Bucket: bucketName,
             Key: fileName,
             Body: fileBuffer,
-            contentType: mimeType,
+            contentType: newMimeType,
         };
 
         const command = new PutObjectCommand(uploadParams);
@@ -53,7 +49,6 @@ export const uploadTosS3 = async (fileBuffer: Buffer, mimeType: string): Promise
 export const getSignedImageURL = async (image: string): Promise<string> => {
     const command = new GetObjectCommand({ Bucket: bucketName, Key: image });
     const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-    console.log('the signed url from aws:',signedUrl);
     return signedUrl;
 };
 

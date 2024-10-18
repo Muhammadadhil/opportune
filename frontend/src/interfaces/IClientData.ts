@@ -1,4 +1,3 @@
-
 export default interface IClientData {
     userId: string;
     companyName?: string;
