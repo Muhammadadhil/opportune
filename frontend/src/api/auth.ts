@@ -13,6 +13,9 @@ export const refreshToken = async (): Promise<string> => {
     }
 };
 
+export const getCountries = () => {
+    return axios.get("https://restcountries.com/v3.1/all");
+};
 
 export const getGoogleAuthTokens = async (code: string) => {
     return await apiClient.post("/user/auth/google", {

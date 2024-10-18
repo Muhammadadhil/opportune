@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { CgProfile } from "react-icons/cg";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useDispatch } from "react-redux";
-import { logout } from "@/features/common/userSlice";
+import { logout } from "@/store/slices/userSlice";
 import {
     AlertDialog,
     AlertDialogAction,

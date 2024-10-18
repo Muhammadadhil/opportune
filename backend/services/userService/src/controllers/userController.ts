@@ -13,6 +13,8 @@ export class UserController {
         this.userService = new UserService();
         this.otpService = new OtpService();
         this.saveClientDetails = this.saveClientDetails.bind(this);
+        this.saveFreelancerDetails = this.saveFreelancerDetails.bind(this);
+        this.getFreelancerData = this.getFreelancerData.bind(this);
     }
 
     public registerUser = async (req: Request, res: Response) => {
@@ -95,7 +97,6 @@ export class UserController {
     async saveClientDetails(req: Request, res: Response) {
         try {
             const { userId, companyName, companyDescription, projectNeeds, website } = req.body.clientData;
-            // const details = req.body;
             const savedClientData = await this.userService.clientDetail({ userId, companyName, companyDescription, projectNeeds, website } as IClientDetail);
             res.status(201).json(savedClientData);
         } catch (error) {
@@ -104,15 +105,30 @@ export class UserController {
         }
     }
 
-    async saveFreelancerDetails(req: Request, res: Response){
+    async saveFreelancerDetails(req: Request, res: Response) {
         try {
-            await this.userService.freelancerDetails(req.body);
+            const file = req.file;
+            const { userId, title, skills, accounts } = req.body;
 
+            if (!file) {
+                return res.status(400).json({ message: "No file uploaded" });
+            }
+            const savedData = await this.userService.saveFreelancerDetails(file, JSON.parse(userId), title, JSON.parse(skills), JSON.parse(accounts));
+            res.json(savedData);
         } catch (error) {
-             console.log("Error in saving freelaner data:", error);
-             return res.status(500).json({ message: "Server error", error });
+            console.log("Error in saving freelaner data:", error);
+            return res.status(500).json({ message: "Server error", error });
         }
     }
 
-    
+    async getFreelancerData(req: Request, res: Response) {
+        try {
+            const { userId } = req.body;
+            const profile = await this.userService.getFreelancerProfile(userId);
+            res.status(200).json(profile);
+        } catch (error) {
+            console.log("Error in fetching profile :", error);
+            return res.status(500).json({ message: "Server error", error });
+        }
+    }
 }

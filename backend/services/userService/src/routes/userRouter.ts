@@ -7,7 +7,6 @@ import multer from "multer";
 const router = Router();
 const userController = new UserController();
 const otpController = new OtpController();
-// const authController = new AuthController();
 
 router.post("/register", userController.registerUser);
 router.post("/login", userController.login);
@@ -32,7 +31,7 @@ const upload = multer({ storage: storage });
 console.log('storage:',storage);
 console.log('upload:',upload);
 
-
-router.post("/complete-profile",upload.single('profileImage'),userController.saveFreelancerDetails);
+router.post("/complete-profile",upload.single('image'),userController.saveFreelancerDetails);
+router.post("/freelancer-profile", userController.getFreelancerData);
 
 export default router;

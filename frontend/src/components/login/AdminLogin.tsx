@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { signIn } from "@/api/userApi";
 import PasswordField from "@/components/ui/passwordField";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "@/features/common/userSlice";
+import { setCredentials } from "@/store/slices/userSlice";
 
 const AdminLogin: React.FC = () => {
     const [formData, setFormData] = useState({

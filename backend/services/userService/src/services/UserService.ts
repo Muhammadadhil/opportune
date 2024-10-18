@@ -6,17 +6,16 @@ import bcrypt from "bcrypt";
 import IUser from "../interfaces/IUser";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt/generateToken";
 import IClientDetail from "../interfaces/IClientDetail";
-
+import IFreelancer from "../interfaces/IFreelancer";
+import IAccounts from "../interfaces/IAccounts";
+import { uploadTosS3,getSignedImageURL } from "../repositories/s3Repository";
+import sharp from "sharp";
 
 export class UserService {
     private userRepository: UserRepository;
-    
 
     constructor() {
         this.userRepository = new UserRepository();
-       
-
-
     }
 
     async userExist(email: string): Promise<IUser | null> {
@@ -77,7 +76,29 @@ export class UserService {
         return await this.userRepository.saveClientDetails(details as IClientDetail);
     }
 
-    async freelancerDetails(detail:any){
-        console.log('freelancer details as req.body:',detail);
+    async saveFreelancerDetails(file: Express.Multer.File, userId: string, title: string, skills: string[], accounts: IAccounts) {
+        const buffer = await sharp(file.buffer).resize({ height: 1080, width: 1080, fit: "contain" }).toBuffer();
+        const image = await uploadTosS3(buffer, file.mimetype);
+
+        console.log("image successfullly uplaod to s3 !! :", image);
+        return await this.userRepository.saveFreelancerData({ userId, title, skills, accounts, image } as IFreelancer);
+    }
+
+    async getFreelancerProfile(userId: string) {
+        const freelancerDetails = await this.userRepository.getFreelancerDetails(userId);
+        console.log("freelancerDetails in service : ", freelancerDetails);
+        const imageName=freelancerDetails?.image;
+
+        console.log('imageName:',imageName);
+
+        if(!imageName){
+            throw new Error('No image in database!');
+        }
+        const imageUrl=await getSignedImageURL(imageName);
+        console.log('imageUrl:',imageUrl);
+
+        freelancerDetails.imageUrl=imageUrl;
+        return freelancerDetails;
+
     }
 }

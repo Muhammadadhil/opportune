@@ -25,19 +25,14 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
     (response) => response,
-
+    
     async (error) => {
         const originalRequest = error.config;
-        console.log("!!! response interceptor error !!");
-
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
-            console.log("!!! response sherikum intercepted !!");
-
             try {
                 const newAccessToken = await refreshToken();
-                console.log("newAccesstoken:", newAccessToken);
                 setAccessToken(newAccessToken);
                 originalRequest.headers["Authorisation"] = `Bearer ${newAccessToken}`;
                 return apiClient(originalRequest);

@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { signIn } from "@/api/userApi";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useDispatch, useSelector } from "react-redux";
-import { setCredentials } from "@/features/common/userSlice";
+import { setCredentials } from "@/store/slices/userSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
