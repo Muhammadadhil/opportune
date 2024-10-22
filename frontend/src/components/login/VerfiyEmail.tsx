@@ -5,6 +5,9 @@ import { resendOtp, verifyOtp } from "../../api/auth";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../loading/Loading";
+import { useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "@/store/slices/userSlice";
 
 export default function OTPVerification() {
     const [otp, setOtp] = useState("");
@@ -14,9 +17,23 @@ export default function OTPVerification() {
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
-    const { userInfo } = useSelector((state) => state.user);
+    const location = useLocation();
+    const dispatch = useDispatch();
 
-    
+    const { userInfo } = useSelector((state) => state.user);
+    const { newUserInfo } = location.state || {};
+
+    useEffect(()=>{
+        console.log('userIfnfo:',userInfo)
+
+        if(userInfo){  //redirect only when user come back after after verifying otp
+            if(userInfo.role=='client'){
+                navigate('/cl/dashboard');
+            }else{
+                navigate('/fr/dashboard');
+            }
+        }
+    },[])
 
     useEffect(() => {
         let interval = null;
@@ -34,12 +51,17 @@ export default function OTPVerification() {
     const handleVerify = async () => {
         try {
             setIsLoading(true);
-            const response = await verifyOtp(otp, userInfo.email, userInfo._id);
+            const response = await verifyOtp(otp, newUserInfo?.data?.email);
+
+            newUserInfo.data.isVerified=true;
+            dispatch(setCredentials(newUserInfo.data));
+            
+            localStorage.setItem("token",newUserInfo.accessToken);
 
             setIsLoading(false);
-            if (userInfo.role == "client") {
+            if (newUserInfo.data.role == "client") {
                 navigate("/cl/details");
-            } else if(userInfo.role == 'freelancer') {  
+            } else if (newUserInfo.data.role == "freelancer") {
                 navigate("/fr/dashboard");
             }
             console.log(response);
@@ -57,7 +79,7 @@ export default function OTPVerification() {
     };
 
     const handleResendOtp = async () => {
-        await resendOtp(userInfo.email);
+        await resendOtp(newUserInfo.data.email);
         console.log("Resending OTP...");
         setTimer(120);
         setCanResend(false);
@@ -77,7 +99,7 @@ export default function OTPVerification() {
                 <div className="max-w-md w-full space-y-8 p-8 ">
                     <h1 className="text-3xl font-bold text-center text-gray-900">Verify your OTP</h1>
                     <p className="mt-2 text-center text-gray-600">
-                        We've sent a one-time password to <span className="text-slate-900 " >{userInfo.email}</span>. Please enter the OTP below to verify your account.
+                        We've sent a one-time password to <span className="text-slate-900 ">{newUserInfo?.data?.email}</span>. Please enter the OTP below to verify your account.
                     </p>
                     <div className="mt-5 space-y-4">
                         <Input

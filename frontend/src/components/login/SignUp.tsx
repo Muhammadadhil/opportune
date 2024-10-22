@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,8 +8,8 @@ import { signUp } from "@/api/userApi";
 import { getCountries } from "@/api/auth";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +17,6 @@ import { Label } from "@/components/ui/label";
 import { getUserDetails } from "@/api/auth";
 import LoadingSpinner from "../loading/Loading";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-
 
 const validationSchema = z
     .object({
@@ -62,7 +60,11 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
 
     useEffect(() => {
         if (userInfo) {
-            navigate("/");
+            if (userInfo.role == "client") {
+                navigate("/cl/dashboard");
+            } else {
+                navigate("/fr/dashboard");
+            }
         }
     }, []);
 
@@ -73,14 +75,15 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
     }, [role, navigate]);
 
     const onSubmit: SubmitHandler<ValidationSchema> = async (data) => {
-        console.log('submitting!!')
+        console.log("submitting!!");
         try {
             setIsLoading(true);
             const response = await signUp({ ...data, role: role ?? "" });
-            console.log("register response:", response.data);
-            dispatch(setCredentials(response.data.data));
+
+            console.log("register response:", response.data.data);
+            // dispatch(setCredentials(response.data.data));
             setIsLoading(false);
-            navigate("/verify-email");
+            navigate("/verify-email", { state: { newUserInfo: response.data } });
         } catch (error) {
             setIsLoading(false);
             console.log("error:", error);

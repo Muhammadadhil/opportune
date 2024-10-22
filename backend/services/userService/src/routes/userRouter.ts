@@ -3,6 +3,7 @@ import { UserController } from "../controllers/userController";
 import { refreshAccessToken, getGoogleAuthToken, getGoogleUserInfo } from "../controllers/authController";
 import { OtpController } from "../controllers/OtpController";
 import multer from "multer";
+import protect from "../middleware/protect";
 
 const router = Router();
 const userController = new UserController();
@@ -32,6 +33,6 @@ console.log('storage:',storage);
 console.log('upload:',upload);
 
 router.post("/complete-profile",upload.single('image'),userController.saveFreelancerDetails);
-router.post("/freelancer-profile", userController.getFreelancerData);
+router.post("/freelancer-profile",protect,userController.getFreelancerData);
 
 export default router;

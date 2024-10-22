@@ -23,9 +23,9 @@ function UserRoute() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/join" element={<Signup />} />
                 <Route path="/type" element={<UserTypeSelection />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
 
                 <Route path="" element={<PrivateRoute />}>
-                    <Route path="/verify-email" element={<VerifyEmail />} />
                     <Route path="/profile" element={<Profile />} />
                 </Route>
 

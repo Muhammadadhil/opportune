@@ -8,7 +8,7 @@ import { saveClientDetails } from "@/api/userApi";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import IClientData from "@/interfaces/IClientData";
+import IClientData from "@/types/IClientData";
 import MultiSelect from "../ui/MultiSelect";
 
 

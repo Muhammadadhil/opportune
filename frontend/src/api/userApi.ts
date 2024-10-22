@@ -1,5 +1,5 @@
 import apiClient from "./apiClient/axios";
-import IClientData from "../interfaces/IClientData";
+import IClientData from "../types/IClientData";
 
 interface FormData {
     email: string;

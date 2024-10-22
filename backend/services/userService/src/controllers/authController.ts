@@ -9,7 +9,9 @@ const authService = new AuthService();
 const oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.GOOGLE_REDIRECT_URI);
 
 async function refreshAccessToken(req: Request, res: Response): Promise<Response> {
-    const refreshToken = req.cookies["jwt-refresh"];
+    console.log('cookeis::',req.cookies);
+    
+    const refreshToken = req.cookies.jwtRefresh;
     console.log("refresh token from cookies:", refreshToken);
 
     if (!refreshToken) {

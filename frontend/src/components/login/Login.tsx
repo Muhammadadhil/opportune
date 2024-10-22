@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PasswordField from "@/components/ui/passwordField";
 import LoadingSpinner from "../loading/Loading";
+import { setAccessToken } from "@/services/authService";
 
 // import { SubmitHandler, useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,7 +49,7 @@ const Login: React.FC = () => {
         if (!formData.email) {
             toast.error("Please enter your email");
             return;
-        }
+        }   
         if (!formData.password) {
             toast.error("Please enter your password");
             return;
@@ -57,11 +58,18 @@ const Login: React.FC = () => {
         try {
             setIsLoading(true);
             const response = await signIn(formData);
+            console.log('response:',response);
             dispatch(setCredentials(response.data.data));
             setIsLoading(false);
-            navigate("/fr/dashboard");
+            setAccessToken(response.data.accessToken)
+            if(response.data.data.role =='freelancer'){
+                navigate("/fr/dashboard");
+            }else{
+                navigate("/cl/dashboard");
+
+            }
         } catch (error) {
-            setIsLoading(true);
+            setIsLoading(false);
             toast.error(error?.response?.data?.message);
         }
     };
@@ -91,7 +99,7 @@ const Login: React.FC = () => {
                                 <Label htmlFor="email-address" className="text-gray-700">
                                     Email address
                                 </Label>
-                                <Input id="email-address" name="email" type="email" value={formData.email} onChange={handleInputChange} className="w-full" placeholder="Enter your email" required />
+                                <Input id="email-address" name="email" type="email" value={formData.email} onChange={handleInputChange} className="w-full" placeholder="Enter your email"  />
                             </div>
 
                             <PasswordField value={formData.password} onChange={handleInputChange} />

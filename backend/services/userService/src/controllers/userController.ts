@@ -31,16 +31,20 @@ export class UserController {
             const { user, accessToken, refreshToken } = await this.userService.registerUser(req.body.formData);
 
             console.log("user in controller:", user);
-            res.cookie("jwt-refresh", refreshToken, {
+            res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
-                secure: true,
-                sameSite: "strict",
-                path: "/refresh-token",
+                secure: process.env.NODE_ENV === "production", // true in production
+                sameSite: "strict", // Use 'none' in production with secure: true
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                path: "/", // Ensure cookie is available on all paths
             });
+
+
 
             this.otpService.sendMail(user.email);
 
             console.log("user Registered Successfully");
+
             return res.status(201).json({
                 success: true,
                 data: user,
@@ -57,12 +61,18 @@ export class UserController {
             const { email, password } = req.body;
             const { user, accessToken, refreshToken } = await this.userService.login(email, password);
 
-            res.cookie("jwt-refresh", refreshToken, {
+            console.log('refresh token :',refreshToken);
+            
+
+            res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
-                secure: true,
-                sameSite: "strict",
-                path: "/refresh-token",
+                secure: false, // true in production
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                path: "/", // Ensure cookie is available on all paths
             });
+
+
             // delete user.password;
             console.log("user login Successfully");
 
@@ -123,7 +133,7 @@ export class UserController {
 
     async getFreelancerData(req: Request, res: Response) {
         try {
-            const { userId } = req.body;
+;            const { userId } = req.body;
             const profile = await this.userService.getFreelancerProfile(userId);
             res.status(200).json(profile);
         } catch (error) {

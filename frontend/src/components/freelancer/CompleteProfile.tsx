@@ -11,18 +11,49 @@ import { RootState } from "@/store/store";
 import LoadingSpinner from "../loading/Loading";
 import { useNavigate } from "react-router-dom";
 
-const CompleteProfile = () => {
-    const [image, setImage] = useState<File | string>("");
-    const [title, setTitle] = useState("");
-    const [skills, setSkills] = useState<string[]>([]);
-    const [accounts, setAccounts] = useState({
-        linkedin: "",
-        github: "",
-        other: "",
-    });
-    const [newSkill, setNewSkill] = useState("");
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { z } from "zod";
+
+const completeProfileSchema = z.object({
+    title: z.string().min(1, { message: "Title is required" }).max(50, { message: "Maximum 50 characters allowed" }),
+    skills: z.array(z.string()).min(1, { message: "At least one skill is required" }).max(10, { message: "No more than 10 skills" }),
+    accounts: z.object({
+        linkedin: z.string().url({ message: "Must be a valid URL" }).optional(),
+        github: z.string().url({ message: "Must be a valid URL" }).optional(),
+        other: z.string().url({ message: "Must be a valid URL" }).optional(),
+    }),
+    image: z
+        .instanceof(File)
+        .refine((file) => ["image/jpeg", "image/png"].includes(file.type), { message: "File must be a valid image (jpg or png)" })
+        .optional(),
+});
+
+// Define TypeScript types for the form data based on the Zod schema
+type CompleteProfileForm = z.infer<typeof completeProfileSchema>;
+// exactly same
+// type CompleteProfileForm = {
+//     title: string;
+//     skills: string[];
+//     linkedin: string;
+//     github: string;
+//     other: string;
+//     image: File | string;
+// };
+
+const CompleteProfile = () => {
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm<CompleteProfileForm>({ resolver: zodResolver(completeProfileSchema) });
+
+    const [image, setImage] = useState<File | string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [skills, setSkills] = useState<string[]>([]);
+    const [newSkill, setNewSkill] = useState("");
     const { userInfo } = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
 
@@ -30,39 +61,32 @@ const CompleteProfile = () => {
 
     const addSkill = () => {
         if (newSkill && skills.length < 10) {
-            setSkills([...skills, newSkill]);
+            const updatedSkills = [...skills, newSkill];
+            setSkills(updatedSkills);
             setNewSkill("");
+            setValue("skills", updatedSkills);
         }
-    };
-
-    const addLinks = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setAccounts({
-            ...accounts,
-            [name]: value,
-        });
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             // setImage(URL.createObjectURL(e.target.files[0])); //?URL is the global object provided by browser : part of webapi
             setImage(e.target.files[0]);
+            setValue("image", e.target.files[0]);
         }
     };
 
-    const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.preventDefault();
+    const onSubmit = async (data: any) => {
         try {
             const formData = new FormData();
-            formData.append("image", image);
-            formData.append("title", title);
-            formData.append("skills", JSON.stringify(skills));
-            formData.append("accounts", JSON.stringify(accounts));
+            formData.append("image", data.image);
+            formData.append("title", data.title);
+            formData.append("skills", JSON.stringify(data.skills));
+            formData.append("accounts", JSON.stringify(data.accounts));
             formData.append("userId", JSON.stringify(userInfo?._id));
 
             setIsLoading(true);
             const response = await completeProfle(formData);
-            // is there any need to store the data in redux ?
             setIsLoading(false);
             navigate("/fr/dashboard");
         } catch (error) {
@@ -80,12 +104,16 @@ const CompleteProfile = () => {
                         <h2 className="text-xl font-bold">Complete your profile</h2>
                     </div>
 
-                    <div className="space-y-6  mt-4">
+                    <form className="space-y-6  mt-4" onSubmit={handleSubmit(onSubmit)}>
                         <h2 className="font-bold text-slate-800 mb-2">Add Profile Image</h2>
                         <div className="flex justify-center">
                             <div className="relative w-52">
-                                <input type="file" id="imageInput" hidden accept="image/*" onChange={handleImageChange} />
-                                <img src={profilePicture} alt="Profile" className="shadow-sm w-44 md:w-52 rounded-full mr-4 bg-gray-100 object-cover" />
+                                <input type="file" id="imageInput" {...register("image")} hidden accept="image/*" onChange={handleImageChange} />
+                                <img
+                                    src={typeof image === "string" ? profilePicture : URL.createObjectURL(image)}
+                                    alt="Profile"
+                                    className="shadow-sm w-44 md:w-52 rounded-full mr-4 bg-gray-100 object-cover"
+                                />
                                 <label
                                     htmlFor="imageInput"
                                     className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-sm font-semibold opacity-0 hover:opacity-100 rounded-full transition-opacity"
@@ -94,18 +122,13 @@ const CompleteProfile = () => {
                                 </label>
                             </div>
                         </div>
-                        <img src={image} alt="" />
+                        <div>{errors.image && <p className="text-red-500 text-xs">{errors.image.message}</p>}</div>
 
                         <div>
                             <h2 className="font-bold text-slate-800 mb-2">Title / Description</h2>
-                            <Textarea
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Describe your professional title and a brief description."
-                                className=" md:w-[40rem]"
-                                maxLength={50}
-                            />
+                            <Textarea {...register("title")} placeholder="Describe your professional title and a brief description." className=" md:w-[40rem]" maxLength={50} />
                             <p className="text-sm text-gray-500 mt-1">Maximum 50 words</p>
+                            {errors.title && <p className="text-red-500 text-xs">{errors.title.message}</p>}
                         </div>
 
                         {/* Skills Section */}
@@ -138,37 +161,40 @@ const CompleteProfile = () => {
                                 ))}
                                 <p className="text-sm text-gray-500 mt-1 justify-end">{10 - skills.length}/10 left</p>
                             </div>
+                            {errors.skills && <p className="text-red-500 text-xs">{errors.skills.message}</p>}
                         </div>
 
                         {/* Portfolio Section */}
                         {/* <div>
-                    <h2 className="font-bold text-slate-800 mb-2">Portfolio</h2>
-                    <Button onClick={() => setShowPortfolioInputs(!showPortfolioInputs)}>{showPortfolioInputs ? "Hide Portfolio Inputs" : "Add Portfolio Item"}</Button>
-                    {showPortfolioInputs && (
-                        <div className="mt-4 space-y-4">
-                            <Input type="text" placeholder="Project Title" className="w-full" />
-                            <Textarea placeholder="Project Description" className="w-full" />
-                            <Input type="text" placeholder="Skills Used " className="w-full" />
-                            <Input type="file" className="w-full" />
-                        </div>
-                    )}
-                </div> */}
+                        <h2 className="font-bold text-slate-800 mb-2">Portfolio</h2>
+                        <Button onClick={() => setShowPortfolioInputs(!showPortfolioInputs)}>{showPortfolioInputs ? "Hide Portfolio Inputs" : "Add Portfolio Item"}</Button>
+                        {showPortfolioInputs && (
+                            <div className="mt-4 space-y-4">
+                                <Input type="text" placeholder="Project Title" className="w-full" />
+                                <Textarea placeholder="Project Description" className="w-full" />
+                                <Input type="text" placeholder="Skills Used " className="w-full" />
+                                <Input type="file" className="w-full" />
+                            </div>
+                        )}
+                        </div> */}
 
                         {/* Linked Accounts Section */}
                         <div className="">
                             <h2 className="font-bold text-slate-800 mb-2">Linked Accounts</h2>
-                            <Input type="text" name="linkedin" value={accounts.linkedin} onChange={addLinks} placeholder="LinkedIn profile URL" className=" md:w-[35rem] mb-2" />
-                            <Input type="text" name="github" value={accounts.github} onChange={addLinks} placeholder="GitHub profile URL" className="md:w-[35rem] mb-2" />
-                            <Input type="text" name="other" value={accounts.other} onChange={addLinks} placeholder="Other social media profile URL" className="md:w-[35rem]" />
+                            <Input type="text" {...register("accounts.linkedin")} placeholder="LinkedIn profile URL" className=" md:w-[35rem] mb-2" />
+                            {errors.accounts?.linkedin && <p className="text-red-500 text-xs">{errors.accounts.linkedin.message}</p>}
+                            <Input type="text" {...register("accounts.github")} placeholder="GitHub profile URL" className="md:w-[35rem] mb-2" />
+                            {errors.accounts?.github && <p className="text-red-500 text-xs">{errors.accounts.github.message}</p>}
+                            <Input type="text" {...register("accounts.other")} placeholder="Other social media profile URL" className="md:w-[35rem]" />
                         </div>
-                    </div>
 
-                    {/* Save Profile Button */}
-                    <div className="flex justify-center mt-11">
-                        <Button className="w-[500px] bg-green-900" onClick={handleSubmit}>
-                            Save Profile
-                        </Button>
-                    </div>
+                        {/* Save Profile Button */}
+                        <div className="flex justify-center mt-11">
+                            <Button className="w-[500px] bg-green-900" type="submit">
+                                Save Profile
+                            </Button>
+                        </div>
+                    </form>
                 </div>
             )}
         </div>

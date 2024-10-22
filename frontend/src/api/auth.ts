@@ -4,7 +4,7 @@ import apiClient from "./apiClient/axios";
 export const refreshToken = async (): Promise<string> => {
     try {
         console.log("refresh token api:", import.meta.env.VITE_SERVER_API + "user/refreshToken");
-        const response = await axios.get(import.meta.env.VITE_SERVER_API + "user/refreshToken");
+        const response = await apiClient.get(import.meta.env.VITE_SERVER_API + "user/refreshToken");
         return response.data.accessToken;
 
     } catch (error) {
@@ -31,13 +31,12 @@ export const getUserDetails = async (token: string, role?: string, authType:stri
     });
 };
 
-export const verifyOtp = async (otp:string,email:string,userId:string)=>{
+export const verifyOtp = async (otp:string,email:string)=>{
     console.log("verify email api function : going to send req!!!");
 
     return await apiClient.post("/user/otp-verify", {
         otp,
         email,
-        userId,
     });
 }
 

@@ -18,6 +18,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { RootState } from "@/store/store";
 
 interface NavItem {
     path: string;
@@ -35,7 +36,7 @@ const Navbar: React.FC = () => {
         { path: "/contact", label: "Discover" },
     ];
 
-    const { userInfo } = useSelector((state) => state.user);
+    const { userInfo } = useSelector((state: RootState) => state.user);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -44,7 +45,7 @@ const Navbar: React.FC = () => {
     const navigate = useNavigate();
 
     const nvaigateToProfile = () => {
-        navigate(userInfo.role == "freelancer" ? "/fr/profile" : "/cl/profile");
+        navigate(userInfo?.role == "freelancer" ? "/fr/profile" : "/cl/profile");
     };
 
     return (
@@ -99,10 +100,10 @@ const Navbar: React.FC = () => {
                                 <DropdownMenuTrigger>
                                     <CgProfile className="text-2xl" />
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="px-16 text-center">
+                                <DropdownMenuContent className="pt-5 pb-4 text-center">
                                     <DropdownMenuLabel>{userInfo.firstname + " " + userInfo.lastname}</DropdownMenuLabel>
                                     <p className="text-xs text-slate-800">{userInfo.role}</p>
-                                    <DropdownMenuSeparator className="px-16 text-center" />
+                                    <DropdownMenuSeparator className="px-16 " />
                                     <DropdownMenuItem onClick={nvaigateToProfile}>Profile</DropdownMenuItem>
                                     <DropdownMenuItem
                                         className=""
