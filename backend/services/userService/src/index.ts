@@ -1,6 +1,5 @@
 import express from "express";
 import userRouter from "./routes/userRouter";
-import adminRouter from "./routes/adminRouter";
 
 import connectDB from "./config/connectDB";
 import dotenv from 'dotenv';
@@ -16,7 +15,6 @@ app.use(express.json());
 
 
 app.use("/api/user/", userRouter);
-app.use("/api/admin/", adminRouter);
 
 connectDB();
 
