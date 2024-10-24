@@ -4,6 +4,7 @@ import { userState } from "../../types/user";
 const initialState: userState = {
     userInfo: null,
     freelancerData: {},
+    isAdminAuthenticated:false
 };
 
 export const userSlice = createSlice({
@@ -22,9 +23,12 @@ export const userSlice = createSlice({
             state.freelancerData = {};
             localStorage.removeItem("token");
         },
+        setAdminAuthStatus:(state)=>{
+            state.isAdminAuthenticated=true
+        }
     },
 });
 
-export const { setCredentials, logout, setFreelancerData } = userSlice.actions;
+export const { setCredentials, logout, setFreelancerData, setAdminAuthStatus } = userSlice.actions;
 
 export default userSlice.reducer;

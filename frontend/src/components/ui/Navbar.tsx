@@ -8,16 +8,7 @@ import { CgProfile } from "react-icons/cg";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/slices/userSlice";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { RootState } from "@/store/store";
 
 interface NavItem {
@@ -36,7 +27,16 @@ const Navbar: React.FC = () => {
         { path: "/contact", label: "Discover" },
     ];
 
-    const { userInfo } = useSelector((state: RootState) => state.user);
+    const freelancerMenu: NavItem[] = [
+        { path: "/find-jobs", label: "Post a project" },
+        { path: "/hire-talents", label: "find jobs" },
+    ];
+
+    const clientMenu: NavItem[] = [
+        { path: "/find-jobs", label: "Post a requirement" },
+        { path: "/hire-talents", label: "find talents" },
+    ];
+    const { userInfo, isAdminAuthenticated } = useSelector((state: RootState) => state.user);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -62,17 +62,45 @@ const Navbar: React.FC = () => {
                     </div>
 
                     {/* Navigation links in the center */}
-                    <div className="hidden md:flex justify-center flex-1">
-                        {menuItems.map((item) => (
-                            <Link
-                                to={item.path}
-                                key={item.path}
-                                className="px-3 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
-                    </div>
+                    {userInfo?.role == "freelancer" ? (
+                        <div className="hidden md:flex justify-center flex-1">
+                            {freelancerMenu.map((item) => (
+                                <Link
+                                    to={item.path}
+                                    key={item.path}
+                                    className="px-3 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    ) : userInfo?.role === "client" ? (
+                        <div className="hidden md:flex justify-center flex-1">
+                            {clientMenu.map((item) => (
+                                <Link
+                                    to={item.path}
+                                    key={item.path}
+                                    className="px-3 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    ) : userInfo?.role === "admin" ? (
+                        <div className="hidden md:flex justify-center flex-1"></div>
+                    ) : (
+                        <div className="hidden md:flex justify-center flex-1">
+                            {menuItems.map((item) => (
+                                <Link
+                                    to={item.path}
+                                    key={item.path}
+                                    className="px-3 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Sign-up and Sign-in buttons on the right */}
                     {/* <div className="hidden md:flex items-center space-x-2">
@@ -89,12 +117,28 @@ const Navbar: React.FC = () => {
                             </Link>
                             <Link
                                 to="/type"
-                                className="px-6 py-2 rounded-full text-sm font-medium text-white  bg-green-800  hover:bg-green-700 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
+                                className="px-6 py-2 rounded-full text-sm font-medium text-white bg-green-800 hover:bg-green-700 focus:outline-none focus:text-gray-900 focus:bg-gray-100 transition duration-150 ease-in-out"
                             >
-                                join
+                                Join
                             </Link>
                         </div>
+                    ) : isAdminAuthenticated ? (
+                        // Admin-specific dropdown menu
+                        <div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <CgProfile className="text-2xl" />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="pt-5 pb-4 text-center">
+                                    <DropdownMenuLabel>admin</DropdownMenuLabel>
+                                    <DropdownMenuSeparator className="px-16 " />
+                                    {/* <DropdownMenuItem onClick={navigateToAdminDashboard}>Admin Dashboard</DropdownMenuItem> */}
+                                    {/* <DropdownMenuItem onClick={handleAdminLogout}>Logout</DropdownMenuItem> */}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     ) : (
+                        // Normal user dropdown menu
                         <div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
@@ -104,15 +148,8 @@ const Navbar: React.FC = () => {
                                     <DropdownMenuLabel>{userInfo.firstname + " " + userInfo.lastname}</DropdownMenuLabel>
                                     <p className="text-xs text-slate-800">{userInfo.role}</p>
                                     <DropdownMenuSeparator className="px-16 " />
-                                    <DropdownMenuItem onClick={nvaigateToProfile}>Profile</DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className=""
-                                        onClick={() => {
-                                            handleLogout();
-                                        }}
-                                    >
-                                        logout
-                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={navigateToProfile}>Profile</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>

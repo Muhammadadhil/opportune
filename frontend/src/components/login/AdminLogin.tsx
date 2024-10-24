@@ -1,104 +1,74 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { signIn } from "@/api/userApi";
-import PasswordField from "@/components/ui/passwordField";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { LockIcon } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "@/store/slices/userSlice";
+import {useNavigate} from 'react-router-dom';
+import { setAdminAuthStatus } from "@/store/slices/userSlice"; 
 
-const AdminLogin: React.FC = () => {
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-    });
+// Assume this function is imported from your API utilities
+import { loginAdmin } from "@/api/admin";
 
-    const navigate = useNavigate();
+export default function AdminLogin() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value, //dynamic key (ES6 syntax)
-        });
-    };
-
-    const handleLoginSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.email) {
-            toast.error("Please enter your email");
-            return;
-        }
-        if (!formData.password) {
-            toast.error("Please enter your password");
-            return;
-        }
+        setError("");
+        setIsLoading(true);
 
         try {
-            const response = await signIn(formData);
-            console.log("login response:", response.data);
-            dispatch(setCredentials(response.data.data));
-            navigate("/");
-        } catch (error) {
-            toast.error(error?.response?.data?.message);
+            const response = await loginAdmin(email, password);
+            console.log("Login successful", response);
+            dispatch(setAdminAuthStatus());
+            navigate('/admin/dashboard');
+        } catch (err) {
+            console.log(err);
+            setError("Invalid email or password. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
-
-   
 
     return (
         <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
-            <div className="w-[32rem] h-[28rem] lg:w-12/12 flex items-center justify-center bg-white rounded-2xl">
-                <div className="max-w-md w-full space-y-8">
-                    <div>
-                        <h2 className="mt-6 text-center text-2xl font-bold  text-gray-700">Welcome Admin !</h2>
-                    </div>
-                    <form className="mt-8 space-y-6">
-                        <input type="hidden" name="remember" defaultValue="true" />
-                        <div className="rounded-md shadow-sm space-y-2">
-                            <div>
-                                <label htmlFor="email-address" className="sr-only">
-                                    Email address
-                                </label>
-                                <input
-                                    id="email-address"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                    placeholder="Email address"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
+            <Card className="w-full max-w-md">
+                <CardHeader className="space-y-1">
+                    <CardTitle className="text-2xl font-bold text-center">Welcome Admin</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input id="email" type="email" placeholder="admin@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                         </div>
-                        <PasswordField value={formData.password} onChange={handleInputChange} />
-
-                        
-
-                        <div>
-                            <button
-                                type="submit"
-                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                onClick={handleLoginSubmit}
-                            >
-                                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                    <svg className="h-5 w-5 text-slate-200 group-hover:text-slate-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                                    </svg>
+                        <div className="space-y-2">
+                            <Label htmlFor="password">Password</Label>
+                            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        </div>
+                        {error && <p className="text-sm text-red-500">{error}</p>}
+                        <Button className="w-full" type="submit" disabled={isLoading}>
+                            {isLoading ? (
+                                <span className="flex items-center justify-center">
+                                    <LockIcon className="mr-2 h-4 w-4 animate-spin" />
+                                    Signing in...
                                 </span>
-                                Sign in
-                            </button>
-                            <br />
-                        </div>
+                            ) : (
+                                "Sign in"
+                            )}
+                        </Button>
                     </form>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
-};
-
-export default AdminLogin;
+}

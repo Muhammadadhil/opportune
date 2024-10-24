@@ -20,15 +20,11 @@ export default function Profile() {
 
         const imgUrl = response.data.imageUrl;
         setProfileImage(imgUrl);
-        // dispatch(setFreelancerData(response.data));
     }
 
     useEffect(() => {
-        // console.log("freelancerData from redux:", freelancerData);
-        // if (Object.keys(freelancerData).length==0){
-        // console.log('going to fetch data!!!')
+        
         getData();
-        // }
     }, []);
 
     return (
@@ -40,8 +36,8 @@ export default function Profile() {
                             <img src={freelancerData.imageUrl ? freelancerData.imageUrl : profilePicture} alt="hi" className="w-24 h-24 rounded-full " />
                         </div>
                         <h2 className="mt-4 text-xl font-semibold">{userInfo.firstname + userInfo.lastname}</h2>
-                        <p className="text-sm text-slate-500 mb-3">freelancer</p>
-                        <p className="text-gray-600">{freelancerData.title}</p>
+                        <p className="text-sm text-slate-500 mb-3">{userInfo.role}</p>
+                        <p className="text-gray-600 text-sm text-center">{freelancerData.title}</p>
 
                     </div>
                     <div className="mt-6 flex justify-center">
