@@ -2,19 +2,27 @@ import express from "express";
 import userRouter from "./routes/userRouter";
 
 import connectDB from "./config/connectDB";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 const app = express();
 dotenv.config();
 
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:5174", credentials: true })); // Allow cookies to be sent across origins
+
+app.use(
+    cors({
+        origin: "http://localhost:5173", 
+        credentials: true,
+    })
+);
+
 app.use(express.json());
+app.use(morgan("dev"));
 
-
-app.use("/user/", userRouter);
+app.use("/", userRouter);
 
 connectDB();
 

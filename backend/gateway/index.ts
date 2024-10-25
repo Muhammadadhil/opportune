@@ -3,6 +3,8 @@ import cors from "cors";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -13,16 +15,16 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:5173",
-    credentials: true, // Allows cookies and other credentials
+    credentials: true, 
   })
 );
 
-console.log(process.env.USER_API_BASE_URL);
+app.use(helmet()); 
+app.use(morgan("combined"));
 
 const targets = {
     user: process.env.USER_API_BASE_URL,
-    manage: process.env.MANAGE_API_BASE_URL,
-    
+    manage: process.env.MANAGE_API_BASE_URL, 
 };
 
 app.use(
@@ -30,9 +32,6 @@ app.use(
     createProxyMiddleware({
         target: targets.user,
         changeOrigin: true,
-        pathRewrite: {
-            "^/user": "/",
-        },
     })
 );
 app.use(
@@ -40,9 +39,6 @@ app.use(
     createProxyMiddleware({
         target: targets.manage,
         changeOrigin: true,
-        pathRewrite: {
-            "^/manage": "/",
-        },
     })
 );
 

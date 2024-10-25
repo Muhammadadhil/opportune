@@ -1,9 +1,12 @@
-import axios from 'axios'
+import apiClient from "./apiClient/axios";
 
-
-export const loginAdmin = async (email: string,password:string) => {
-    return await axios.post("http://localhost:3010/api/login", {
+export const loginAdmin = async (email: string, password: string) => {
+    return await apiClient.post("manage/login", {
         email,
         password,
     });
+};
+
+export const logoutAdmin = async () => {
+    return await apiClient.patch("manage/logout");
 };

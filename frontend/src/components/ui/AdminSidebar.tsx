@@ -2,23 +2,23 @@ import { Briefcase, CreditCard, Settings, Users } from "lucide-react";
 import Button from "./Button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
-
+import { logoutAdmin } from "@/api/admin";
+import toast from "react-hot-toast";
 
 const AdminSidebar = () => {
     const [open, setOpen] = useState(false);
 
-
-const handleLogout = () => {
-    try {
-        
-        
-    } catch (error) {
-        console.error("Logout error:", error);
-        // Optionally, show an error message to the user
-    } finally {
-        setOpen(false);
-    }
-};
+    const handleLogout = async () => {
+        try {
+            const response = await logoutAdmin();
+            console.log("logoutresponse:", response);
+        } catch (error) {
+            console.error("Logout error:", error);
+            toast.error("Error while logging out");
+        } finally {
+            setOpen(false);
+        }
+    };
 
     return (
         <aside className="w-64 bg-gray-800 text-white p-4 hidden md:flex flex-col justify-between min-h-screen">
@@ -42,16 +42,14 @@ const handleLogout = () => {
             </nav>
 
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger>logout </DialogTrigger>
+                <DialogTrigger className="py-3 rounded-xl hover:bg-gray-100 hover:text-gray-800 transition  duration-300 ease-in-out">logout </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Confirm Logout?</DialogTitle>
                         <DialogDescription>Are you sure want to logout?</DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button onClick={() => setOpen(false)}>
-                            Cancel
-                        </Button>
+                        <Button onClick={() => setOpen(false)}>Cancel</Button>
                         <Button className="bg-red-400 px-3 py-2 rounded-lg" onClick={handleLogout}>
                             Logout
                         </Button>

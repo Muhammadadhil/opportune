@@ -79,15 +79,14 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
         try {
             setIsLoading(true);
             const response = await signUp({ ...data, role: role ?? "" });
-
-            console.log("register response:", response.data.data);
-            // dispatch(setCredentials(response.data.data));
-            setIsLoading(false);
+            console.log("register response:", response);
+            dispatch(setCredentials(response.data.data));
             navigate("/verify-email", { state: { newUserInfo: response.data } });
         } catch (error) {
-            setIsLoading(false);
             console.log("error:", error);
             toast.error(error?.response?.data?.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 

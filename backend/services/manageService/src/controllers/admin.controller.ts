@@ -3,15 +3,16 @@ import { AdminService } from "../services/admin.services";
 import Admin from "../schema/admin.schema";
 
 export class AdminController {
-    private adminService:AdminService
+    private adminService: AdminService;
 
     constructor() {
         this.adminService = new AdminService();
         this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
+
     }
     async login(req: Request, res: Response) {
         try {
-
             const { email, password } = req.body;
             const { admin, accessToken, refreshToken } = await this.adminService.login(email, password);
 
@@ -44,5 +45,17 @@ export class AdminController {
 
             return res.status(500).json({ message: "Server error", error: error.message });
         }
-    };
+    }
+
+    async logout(req: Request, res: Response) {
+
+        console.log('admin logout!!!!')
+
+        res.cookie("jwt-refresh", {
+            httpOnly: true,
+            expires: new Date(0),
+        });
+
+         res.status(200).json({ message: "Admin logged out" });
+    }
 }

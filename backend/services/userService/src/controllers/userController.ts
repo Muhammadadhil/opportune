@@ -58,6 +58,9 @@ export class UserController {
 
     public login = async (req: Request, res: Response): Promise<Response> => {
         try {
+
+            console.log('!!!!!!!!!!! in login !!!!!!!!!!!!!!!11')
+
             const { email, password } = req.body;
             const { user, accessToken, refreshToken } = await this.userService.login(email, password);
 

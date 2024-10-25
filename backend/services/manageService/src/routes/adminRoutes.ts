@@ -8,4 +8,6 @@ router.post("/login",(req,res)=> {
     adminController.login(req, res);
 });
 
+router.patch("/logout", (req, res) => adminController.logout(req, res));
+
 export default router;

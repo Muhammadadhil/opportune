@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
         { path: "/find-jobs", label: "Post a requirement" },
         { path: "/hire-talents", label: "find talents" },
     ];
-    const { userInfo, isAdminAuthenticated } = useSelector((state: RootState) => state.user);
+    const { userInfo } = useSelector((state: RootState) => state.user);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
 
     const navigate = useNavigate();
 
-    const nvaigateToProfile = () => {
+    const navigateToProfile = () => {
         navigate(userInfo?.role == "freelancer" ? "/fr/profile" : "/cl/profile");
     };
 
@@ -121,21 +121,6 @@ const Navbar: React.FC = () => {
                             >
                                 Join
                             </Link>
-                        </div>
-                    ) : isAdminAuthenticated ? (
-                        // Admin-specific dropdown menu
-                        <div>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <CgProfile className="text-2xl" />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="pt-5 pb-4 text-center">
-                                    <DropdownMenuLabel>admin</DropdownMenuLabel>
-                                    <DropdownMenuSeparator className="px-16 " />
-                                    {/* <DropdownMenuItem onClick={navigateToAdminDashboard}>Admin Dashboard</DropdownMenuItem> */}
-                                    {/* <DropdownMenuItem onClick={handleAdminLogout}>Logout</DropdownMenuItem> */}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
                         </div>
                     ) : (
                         // Normal user dropdown menu
