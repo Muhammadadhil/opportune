@@ -32,6 +32,7 @@ function UserRoute() {
                 <Route path="" element={<ClientPrivateRoute />}>
                     <Route element={<UsersLayout />}>
                         <Route path="cl/dashboard" element={<ClientDashboard />} />
+                        <Route path="cl/profile" element={<ProfilePage />} />
                     </Route>
                     <Route path="cl/details" element={<DetailsClient />} />
                 </Route>

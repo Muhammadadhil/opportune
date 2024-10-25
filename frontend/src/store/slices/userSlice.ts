@@ -4,7 +4,8 @@ import { userState } from "../../types/user";
 const initialState: userState = {
     userInfo: null,
     freelancerData: {},
-    isAdminAuthenticated:false
+    clientData: {},
+    isAdminAuthenticated: false,
 };
 
 export const userSlice = createSlice({
@@ -18,17 +19,20 @@ export const userSlice = createSlice({
         setFreelancerData: (state, action) => {
             state.freelancerData = action.payload;
         },
+        setClientData: (state, action) => {
+            state.clientData = action.payload;
+        },
         logout: (state) => {
             state.userInfo = null;
             state.freelancerData = {};
             localStorage.removeItem("token");
         },
-        setAdminAuthStatus:(state)=>{
-            state.isAdminAuthenticated=true
-        }
+        setAdminAuthStatus: (state) => {
+            state.isAdminAuthenticated = true;
+        },
     },
 });
 
-export const { setCredentials, logout, setFreelancerData, setAdminAuthStatus } = userSlice.actions;
+export const { setCredentials, logout, setFreelancerData, setClientData, setAdminAuthStatus } = userSlice.actions;
 
 export default userSlice.reducer;

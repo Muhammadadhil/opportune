@@ -15,6 +15,7 @@ export class UserController {
         this.saveClientDetails = this.saveClientDetails.bind(this);
         this.saveFreelancerDetails = this.saveFreelancerDetails.bind(this);
         this.getFreelancerData = this.getFreelancerData.bind(this);
+        this.getClientData = this.getClientData.bind(this);
     }
 
     public registerUser = async (req: Request, res: Response) => {
@@ -39,8 +40,6 @@ export class UserController {
                 path: "/", // Ensure cookie is available on all paths
             });
 
-
-
             this.otpService.sendMail(user.email);
 
             console.log("user Registered Successfully");
@@ -58,14 +57,12 @@ export class UserController {
 
     public login = async (req: Request, res: Response): Promise<Response> => {
         try {
-
-            console.log('!!!!!!!!!!! in login !!!!!!!!!!!!!!!11')
+            console.log("!!!!!!!!!!! in login !!!!!!!!!!!!!!!11");
 
             const { email, password } = req.body;
             const { user, accessToken, refreshToken } = await this.userService.login(email, password);
 
-            console.log('refresh token :',refreshToken);
-            
+            console.log("refresh token :", refreshToken);
 
             res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
@@ -74,7 +71,6 @@ export class UserController {
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
                 path: "/", // Ensure cookie is available on all paths
             });
-
 
             // delete user.password;
             console.log("user login Successfully");
@@ -114,7 +110,7 @@ export class UserController {
             res.status(201).json(savedClientData);
         } catch (error) {
             console.log("Error in saving Client data:", error);
-            return res.status(500).json({ message: "Server error", error });
+            return res.status(500).json({ error });
         }
     }
 
@@ -136,8 +132,19 @@ export class UserController {
 
     async getFreelancerData(req: Request, res: Response) {
         try {
-;            const { userId } = req.body;
+            const { userId } = req.body;
             const profile = await this.userService.getFreelancerProfile(userId);
+            res.status(200).json(profile);
+        } catch (error) {
+            console.log("Error in fetching profile :", error);
+            return res.status(500).json({ message: "Server error", error });
+        }
+    }
+
+    async getClientData(req: Request, res: Response) {
+        try {
+            const { userId } = req.body;
+            const profile = await this.userService.getClientProfile(userId);
             res.status(200).json(profile);
         } catch (error) {
             console.log("Error in fetching profile :", error);

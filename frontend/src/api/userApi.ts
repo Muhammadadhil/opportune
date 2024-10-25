@@ -43,3 +43,8 @@ export const completeProfle = async (formData) => {
 export const getProfileData = async (userId: string) => {
     return await apiClient.post("/user/freelancer-profile", { userId });
 };
+
+
+export const getClientProfileData = async (userId: string) => {
+    return await apiClient.post("/user/client-profile", { userId });
+};

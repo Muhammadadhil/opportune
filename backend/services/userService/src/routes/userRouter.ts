@@ -13,9 +13,6 @@ router.post("/register", userController.registerUser);
 router.post("/login", userController.login);
 router.patch("/logout", userController.logout);
 
-//details
-router.post("/save-client-details", userController.saveClientDetails);
-
 router.get("/refreshToken", refreshAccessToken);
 
 //google sign in
@@ -31,6 +28,12 @@ const upload = multer({ storage: storage });
 
 console.log('storage:',storage);
 console.log('upload:',upload);
+
+
+//details
+router.post("/save-client-details", userController.saveClientDetails);
+router.post("/client-profile", protect, userController.getClientData);
+
 
 router.post("/complete-profile",upload.single('image'),userController.saveFreelancerDetails);
 router.post("/freelancer-profile",protect,userController.getFreelancerData);

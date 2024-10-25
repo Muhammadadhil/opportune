@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import { setCredentials } from "@/store/slices/userSlice";
 import { signUp } from "@/api/userApi";
 import { getCountries } from "@/api/auth";
@@ -17,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { getUserDetails } from "@/api/auth";
 import LoadingSpinner from "../loading/Loading";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import toast from "react-hot-toast";
 
 const validationSchema = z
     .object({
@@ -75,12 +75,10 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
     }, [role, navigate]);
 
     const onSubmit: SubmitHandler<ValidationSchema> = async (data) => {
-        console.log("submitting!!");
         try {
             setIsLoading(true);
             const response = await signUp({ ...data, role: role ?? "" });
-            console.log("register response:", response);
-            dispatch(setCredentials(response.data.data));
+            // dispatch(setCredentials(response.data.data));
             navigate("/verify-email", { state: { newUserInfo: response.data } });
         } catch (error) {
             console.log("error:", error);

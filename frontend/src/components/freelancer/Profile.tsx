@@ -1,30 +1,43 @@
-
-import { Heart, Menu, Lightbulb, MapPin, Mail } from "lucide-react";
+import { Menu, Lightbulb, MapPin, Mail, Briefcase, Globe, Building2 } from "lucide-react";
 import { useEffect, useState } from "react";
-// import { PencilIcon, MapPinIcon, ShareIcon, PlusIcon } from "lucide-react";
 import profilePicture from "@/assets/profilePicture.jpg";
-import { getProfileData } from "@/api/userApi";
+import { getClientProfileData, getProfileData } from "@/api/userApi";
 import { useSelector, useDispatch } from "react-redux";
-// import { setFreelancerData } from "@/store/slices/userSlice";
-
+import { setClientData } from "@/store/slices/userSlice";
 
 export default function Profile() {
-    const { userInfo, freelancerData } = useSelector((state: any) => state.user);
-    const dispatch = useDispatch();
 
+    const { userInfo, freelancerData, clientData } = useSelector((state: any) => state.user);
     const [profileImage, setProfileImage] = useState("");
 
-    async function getData() {
-        const response = await getProfileData(userInfo._id);
-        console.log("profile data res:", response);
+    const dispatch = useDispatch();
 
-        const imgUrl = response.data.imageUrl;
-        setProfileImage(imgUrl);
+    async function getData() {
+        try {
+            const response = await getProfileData(userInfo._id);
+            // console.log("profile data res:", response);
+            const imgUrl = response.data.imageUrl;
+            setProfileImage(imgUrl);
+        } catch (error) {
+            console.log("error fetching profile data:", error);
+        }
     }
 
+    const getClientData = async () => {
+        try {
+            const response = await getClientProfileData(userInfo._id);
+            dispatch(setClientData(response.data));
+        } catch (error) {
+            console.log("error fetching profile data:", error);
+        }
+    };
+
     useEffect(() => {
-        
-        getData();
+        if (userInfo.role == "freelancer") {
+            getData();
+        } else {
+            getClientData();
+        }
     }, []);
 
     return (
@@ -38,7 +51,6 @@ export default function Profile() {
                         <h2 className="mt-4 text-xl font-semibold">{userInfo.firstname + userInfo.lastname}</h2>
                         <p className="text-sm text-slate-500 mb-3">{userInfo.role}</p>
                         <p className="text-gray-600 text-sm text-center">{freelancerData.title}</p>
-
                     </div>
                     <div className="mt-6 flex justify-center">
                         <button className="bg-green-800 text-white px-4 py-2 rounded-md hover:bg-green-900 transition-colors">Edit profile</button>
@@ -50,24 +62,55 @@ export default function Profile() {
                             </svg>
                             {userInfo.country}
                         </p>
-                        <p className="flex items-center">
+                        <p className="flex items-center ">
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <Mail />
                             </svg>
                             {userInfo.email}
                         </p>
-                        <p className="flex items-center">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <Lightbulb />
-                            </svg>
-                            <div className="flex  items-center mb-2 ">
-                                {freelancerData?.skills?.map((skill) => (
-                                    <div className="">
-                                        <p> {skill} .</p>
+
+                        {userInfo.role == "freelancer" ? (
+                            <p className="flex items-center">
+                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <Lightbulb />
+                                </svg>
+                                <div className="flex  items-center mb-2 ">
+                                    {freelancerData?.skills?.map((skill) => (
+                                        <div className="">
+                                            <p> {skill} .</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </p>
+                        ) : (
+                            <p className="mt-16 cursor-pointer">
+                                <div className="flex items-start mt-5">
+                                    <Building2 className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0 mt-0.5" />
+                                    <div>
+                                        <h3 className="font-medium text-gray-900">{clientData.companyName}</h3>
+                                        <p>{clientData.companyDescription}</p>
                                     </div>
-                                ))}
-                            </div>
-                        </p>
+                                </div>
+                                <div className="flex items-start mt-4">
+                                    <Briefcase className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0 mt-0.5" />
+                                    <div>
+                                        <h3 className="font-medium text-gray-900">Project Needs</h3>
+                                        <p>
+                                            {clientData.projectNeeds.map((need: string, index: number) => (
+                                                <span key={index}>
+                                                    {need}
+                                                    {index < clientData.projectNeeds.length - 1 && <span className="font-bold mx-2">&bull;</span>}
+                                                </span>
+                                            ))}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center mt-4">
+                                    <Globe className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
+                                    <h3 className="font-medium text-gray-900 cursor-pointer">{clientData.website}</h3>
+                                </div>
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import MultiSelect from "../ui/MultiSelect";
 
 const DetailFreelancer: React.FC = () => {
+    
     const [title, setTitle] = useState<string>("");
     const [selectedProjectNeeds, setSelectedProjectNeeds] = useState<Option[]>([]);
     const [error, setError] = useState<string>("");

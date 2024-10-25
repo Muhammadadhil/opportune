@@ -5,9 +5,6 @@ export default async (req: Request & Partial<{ user: jwt.JwtPayload }>, res: Res
     const header = req.headers['authorization'] as string; 
     console.log('header:',header);
 
-            // console.log("req.cookkies:", req.cookies);
-
-
     if (!header || !header.startsWith("Bearer ")) {
         return res.status(401).json({ message: "Authorization header is missing or malformed" });
     }

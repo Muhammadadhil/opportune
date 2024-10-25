@@ -73,6 +73,10 @@ export class UserService {
 
     async clientDetail(details: IClientDetail) {
         console.log("client details in serivce:", details);
+        const existClientDetail = await this.userRepository.findClientDetail(details.userId);
+        if (existClientDetail) {
+            throw new Error("Detail already exists");
+        }
         return await this.userRepository.saveClientDetails(details as IClientDetail);
     }
 
@@ -86,19 +90,28 @@ export class UserService {
 
     async getFreelancerProfile(userId: string) {
         const freelancerDetails = await this.userRepository.getFreelancerDetails(userId);
-        console.log("freelancerDetails in service : ", freelancerDetails);
-        const imageName=freelancerDetails?.image;
 
-        console.log('imageName:',imageName);
+        const imageName = freelancerDetails?.image;
 
-        if(!imageName){
-            throw new Error('No image in database!');
+        console.log("imageName:", imageName);
+
+        if (!imageName) {
+            throw new Error("No image in database!");
         }
-        const imageUrl=await getSignedImageURL(imageName);
-        console.log('imageUrl:',imageUrl);
+        const imageUrl = await getSignedImageURL(imageName);
+        console.log("imageUrl:", imageUrl);
 
-        freelancerDetails.imageUrl=imageUrl;
+        freelancerDetails.imageUrl = imageUrl;
         return freelancerDetails;
+    }
 
+    async getClientProfile(userId: string) {
+        const freelancerDetails = await this.userRepository.findClientDetail(userId);
+        if(!freelancerDetails){
+            throw new Error('No details available');
+        }
+
+        return freelancerDetails;
+        
     }
 }

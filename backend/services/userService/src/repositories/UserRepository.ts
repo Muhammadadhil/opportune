@@ -4,6 +4,7 @@ import { FreelancerDetails } from "../schema/FreelancerDetails";
 import IUser from "../interfaces/IUser";
 import IClientDetail from "../interfaces/IClientDetail";
 import IFreelancer from "../interfaces/IFreelancer";
+import { ObjectId } from "mongoose";
 
 export class UserRepository {
     async createUser(userData: IUser): Promise<IUser> {
@@ -24,6 +25,7 @@ export class UserRepository {
         return await newClient.save();
     }
 
+    
     async saveFreelancerData(details: IFreelancer) {
         const newFreelancer = new FreelancerDetails(details);
         return await newFreelancer.save();
@@ -37,13 +39,28 @@ export class UserRepository {
         }
 
         const freelancer: IFreelancer = {
-            userId: freelancerData.userId as string, 
+            userId: freelancerData.userId as string,
             title: freelancerData.title as string,
-            skills: freelancerData.skills as string[], 
+            skills: freelancerData.skills as string[],
             accounts: freelancerData.accounts as { linkedin: string; github: string; other: string },
             image: freelancerData.image as string,
         };
 
         return freelancer;
+    }
+    
+    async findClientDetail(userId: ObjectId | string) {
+        const data= await ClientDetail.findOne({ userId });
+        if(!data){
+            return null;
+        }
+
+        const client = {
+            companyName: data.companyName,
+            companyDescription: data.companyDescription,
+            projectNeeds: data.projectNeeds,
+            website:data.website
+        };
+        return client;
     }
 }
