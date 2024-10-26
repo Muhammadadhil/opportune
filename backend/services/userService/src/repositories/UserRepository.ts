@@ -54,7 +54,7 @@ export class UserRepository {
         if(!data){
             return null;
         }
-
+        
         const client = {
             companyName: data.companyName,
             companyDescription: data.companyDescription,

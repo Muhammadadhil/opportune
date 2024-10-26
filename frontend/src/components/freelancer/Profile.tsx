@@ -4,13 +4,15 @@ import profilePicture from "@/assets/profilePicture.jpg";
 import { getClientProfileData, getProfileData } from "@/api/userApi";
 import { useSelector, useDispatch } from "react-redux";
 import { setClientData } from "@/store/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+import Button from "../ui/Button";
 
 export default function Profile() {
-
     const { userInfo, freelancerData, clientData } = useSelector((state: any) => state.user);
     const [profileImage, setProfileImage] = useState("");
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     async function getData() {
         try {
@@ -52,9 +54,17 @@ export default function Profile() {
                         <p className="text-sm text-slate-500 mb-3">{userInfo.role}</p>
                         <p className="text-gray-600 text-sm text-center">{freelancerData.title}</p>
                     </div>
+
                     <div className="mt-6 flex justify-center">
-                        <button className="bg-green-800 text-white px-4 py-2 rounded-md hover:bg-green-900 transition-colors">Edit profile</button>
+                        {!freelancerData ? (
+                            <button className="bg-green-800 text-white px-4 py-2 rounded-md hover:bg-green-900 transition-colors text-sm" onClick={() => navigate("/fr/complete-profile")}>
+                                Complete your profile
+                            </button>
+                        ) : (
+                            <button className="bg-green-800 text-white px-4 py-2 rounded-md hover:bg-green-900 transition-colors">Edit profile</button>
+                        )}
                     </div>
+
                     <div className="mt-6 space-y-2 text-sm text-gray-600">
                         <p className="flex items-center">
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,18 +80,25 @@ export default function Profile() {
                         </p>
 
                         {userInfo.role == "freelancer" ? (
-                            <p className="flex items-center">
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <Lightbulb />
-                                </svg>
-                                <div className="flex  items-center mb-2 ">
-                                    {freelancerData?.skills?.map((skill) => (
-                                        <div className="">
-                                            <p> {skill} .</p>
+                            <div className="flex items-center">
+                                {freelancerData ? (
+                                    <div>
+                                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <Lightbulb />
+                                        </svg>
+                                        <div className="flex  items-center mb-2 ">
+                                            {freelancerData?.skills?.map((skill,index) => (
+                                                <span key={index}>
+                                                    {skill}
+                                                    {index < clientData.projectNeeds.length - 1 && <span className="font-bold mx-2">&bull;</span>}
+                                                </span>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
-                            </p>
+                                    </div>
+                                ) : (
+                                    ""
+                                )}
+                            </div>
                         ) : (
                             <p className="mt-16 cursor-pointer">
                                 <div className="flex items-start mt-5">

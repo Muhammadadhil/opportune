@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LoadingSpinner from "../loading/Loading";
 import { useNavigate } from "react-router-dom";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -30,17 +29,8 @@ const completeProfileSchema = z.object({
         .optional(),
 });
 
-// Define TypeScript types for the form data based on the Zod schema
+
 type CompleteProfileForm = z.infer<typeof completeProfileSchema>;
-// exactly same
-// type CompleteProfileForm = {
-//     title: string;
-//     skills: string[];
-//     linkedin: string;
-//     github: string;
-//     other: string;
-//     image: File | string;
-// };
 
 const CompleteProfile = () => {
     const {
@@ -87,8 +77,10 @@ const CompleteProfile = () => {
 
             setIsLoading(true);
             const response = await completeProfle(formData);
+            console.log('response: complete profile:',response);
+
             setIsLoading(false);
-            navigate("/fr/dashboard");
+            navigate(-1);
         } catch (error) {
             console.log("error in complete-profile:", error);
         }
