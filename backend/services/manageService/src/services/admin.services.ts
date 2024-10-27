@@ -11,7 +11,6 @@ export class AdminService {
 
     async login(email: string, password: string) {
 
-        // const bcrypt = require("bcrypt");
         const password1 = "aadhi1234";
         const hash = bcrypt.hashSync(password1, 10);
         console.log("Use this hash in MongoDB:", hash);
