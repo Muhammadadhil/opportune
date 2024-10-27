@@ -1,4 +1,3 @@
-
 import express from "express"; 
 import connectDB from "./config/db/connect";
 import router from './routes/gig.routes';
@@ -15,11 +14,11 @@ app.use(
         credentials: true,
     })
 );
+
 app.use(express.json());
 app.use(morgan('dev'));
 
 app.use("/", router);
-
 
 connectDB();    
 

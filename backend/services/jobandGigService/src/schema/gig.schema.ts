@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 import { IGig } from "../interfaces/IGig";
 
-const adminSchema = new Schema<IGig>({
-    freelancer_id: {
+const gigSchema = new Schema<IGig>({
+    freelancerId: {
         type: Schema.Types.ObjectId,
         required: true,
     },
@@ -26,6 +26,10 @@ const adminSchema = new Schema<IGig>({
         type: String,
         required: true,
     },
+    isActive:{
+        type:Boolean,
+        default:true,
+    },
     deliveryTime: {
         type: Date,
         required: true,
@@ -42,5 +46,5 @@ const adminSchema = new Schema<IGig>({
     },
 });
 
-const Admin = mongoose.model<IGig>("Gig", adminSchema);
-export default Admin;
+const Gig = mongoose.model<IGig>("Gig", gigSchema);
+export default Gig;

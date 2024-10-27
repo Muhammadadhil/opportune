@@ -29,6 +29,7 @@ const UserSchema: Schema = new Schema({
     role: {
         type: String,
         required: true,
+        // enum:['client','freelancer','admin']
     },
     isOAuthUser:{
         type:Boolean,
