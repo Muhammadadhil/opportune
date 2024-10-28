@@ -20,7 +20,7 @@ export class GigRepository extends BaseRepository<IGig> implements IGigRepositoy
         }
         gig.isActive = !gig.isActive;
         return await gig.save();
-    }
+    } 
 
 
 

@@ -82,11 +82,11 @@ const Login: React.FC = () => {
     });
 
     return (
-        <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
+        <div className="flex w-full h-screen min-h-screen bg-gradient-to-b from-green-50 to-white items-center justify-center">
             {isLoading ? (
                 <LoadingSpinner />
             ) : (
-                <div className="w-[32rem] h-[38rem] lg:w-12/12 flex items-center justify-center bg-white rounded-2xl shadow-md">
+                <div className="w-[32rem] h-[38rem] lg:w-12/12 bg-white flex items-center justify-center rounded-2xl shadow-md">
                     <div className="max-w-md w-full space-y-8">
                         <h2 className="mt-6 text-center text-2xl font-semibold text-gray-700">Sign in to your account</h2>
 
@@ -95,7 +95,7 @@ const Login: React.FC = () => {
                                 <Label htmlFor="email-address" className="text-gray-700">
                                     Email address
                                 </Label>
-                                <Input id="email-address" name="email" type="email" value={formData.email} onChange={handleInputChange} className="w-full" placeholder="Enter your email"  />
+                                <Input id="email-address" name="email" type="email" value={formData.email} onChange={handleInputChange} className="w-full" placeholder="Enter your email" />
                             </div>
 
                             <PasswordField value={formData.password} onChange={handleInputChange} />
