@@ -82,7 +82,7 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
             navigate("/verify-email", { state: { newUserInfo: response.data } });
         } catch (error) {
             console.log("error:", error);
-            toast.error(error?.response?.data?.message);
+            toast.error('Error while signup');
         } finally {
             setIsLoading(false);
         }

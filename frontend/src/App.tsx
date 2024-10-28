@@ -8,9 +8,7 @@ function App() {
     return (
         <>
             <ToastContainer />
-
-            <Toaster />
-
+            <Toaster/>
             <Routes>
                 <Route path="/*" element={<UserRoute />} />
                 <Route path="/admin/*" element={<AdminRoute />} />

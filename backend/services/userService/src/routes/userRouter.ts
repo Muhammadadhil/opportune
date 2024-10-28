@@ -26,10 +26,6 @@ router.post("/otp-resend", otpController.resendOtp);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-console.log('storage:',storage);
-console.log('upload:',upload);
-
-
 //details
 router.post("/save-client-details", userController.saveClientDetails);
 router.post("/client-profile", protect, userController.getClientData);

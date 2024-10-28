@@ -1,8 +1,9 @@
 import { GigService } from "../services/implementation/gig.services";
 import { Request, Response } from "express";
+import { IGigService } from "../services/interfaces/IGigService";
 
 export class GigController {
-    private gigService: GigService;
+    private gigService: IGigService;
 
     constructor() {
         this.gigService = new GigService();

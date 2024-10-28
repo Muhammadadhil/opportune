@@ -1,14 +1,16 @@
 import { IGig } from "../../interfaces/IGig";
 import { GigRepository } from "../../repositories/implementation/gig.repository";
+import { IGigRepositoy } from "../../repositories/interfaces/IGigRepository";
+import { IGigService } from "../interfaces/IGigService";
 
-export class GigService {
-    private gigRepository: GigRepository;
+export class GigService implements IGigService {
+    private gigRepository: IGigRepositoy;
 
     constructor() {
         this.gigRepository = new GigRepository();
     }
 
-    async saveGig(data: IGig): Promise<IGig> {
+    async saveGig(data: IGig): Promise<IGig | null> {
         return await this.gigRepository.create(data);
     }
 

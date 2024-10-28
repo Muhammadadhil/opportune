@@ -45,4 +45,4 @@ app.use(
 const port = process.env.APIGATEWAY_PORT;
 
 
-app.listen(port, () => console.log(`server running on http://localhost:${port}`));
+app.listen(port, () => console.log(`APIGateway server running on http://localhost:${port}`));

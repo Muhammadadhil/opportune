@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import AdminLogin from "../pages/admin/AdminLogin";
-import UsersLayout from "@/layouts/UsersLayout";
 import AdminDashboardPage from "@/pages/admin/Dashboard";
 
 function AdminRoute() {
@@ -8,7 +7,6 @@ function AdminRoute() {
         <>
             <Routes>
                 <Route path="/" element={<AdminLogin />} />
-
                 <Route path="/dashboard" element={<AdminDashboardPage />} />
             </Routes>
         </>

@@ -1,6 +1,5 @@
 import { Request, Response,NextFunction } from "express";
 import { AdminService } from "../services/admin.services";
-import Admin from "../schema/admin.schema";
 
 export class AdminController {
     private adminService: AdminService;
@@ -16,14 +15,12 @@ export class AdminController {
             const { email, password } = req.body;
             const { admin, accessToken, refreshToken } = await this.adminService.login(email, password);
 
-            console.log("refresh token :", refreshToken);
-
             res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
-                secure: false, // true in production
+                secure: false,
                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-                path: "/", // Ensure cookie is available on all paths
+                path: "/", 
             });
 
             console.log("user login Successfully");
