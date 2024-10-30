@@ -40,7 +40,7 @@ export default function PostProject() {
             case 0:
                 return <Overview onNext={nextStep} />;
             case 1:
-                return <Description />;
+                return <Description onNext={nextStep} onPrev={prevStep} />;
             case 2:
                 return <Publish />;
             default:

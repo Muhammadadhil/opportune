@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IoIosClose } from "react-icons/io";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { OverviewData } from "@/types/IPostOverview";
+import { OverviewData } from "@/types/IProjectPost";
 import { RootState } from "@/store/store";
 import { updatePostFormData } from "@/store/slices/freelancerSlice";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,7 +18,7 @@ export const Overview: React.FC<OverviewProps> = React.memo(({ onNext }) => {
     const [keywords, setKeywords] = useState<string[]>([]);
     const [keywordError, setKeywordError] = useState("");
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch(); 
     const { formData } = useSelector((state: RootState) => state.freelancer);
 
     const {
@@ -26,7 +26,6 @@ export const Overview: React.FC<OverviewProps> = React.memo(({ onNext }) => {
         handleSubmit,
         control,
         setValue,
-        trigger,
         formState: { errors },
     } = useForm<OverviewData>({
         defaultValues: formData,

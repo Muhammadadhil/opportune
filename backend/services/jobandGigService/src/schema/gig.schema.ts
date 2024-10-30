@@ -26,9 +26,9 @@ const gigSchema = new Schema<IGig>({
         type: String,
         required: true,
     },
-    isActive:{
-        type:Boolean,
-        default:true,
+    isActive: {
+        type: Boolean,
+        default: true,
     },
     deliveryTime: {
         type: Date,
@@ -44,7 +44,18 @@ const gigSchema = new Schema<IGig>({
         type: [String],
         required: true,
     },
+    images: {
+        type: [String],
+        validate: [arrayLimit, "{PATH} exceeds the limit of 3"], // Limit images to 3
+    },
+    requirements:{
+        type:[String]
+    }
 });
+
+function arrayLimit(val: string[]) {
+    return val.length <= 3;
+}
 
 const Gig = mongoose.model<IGig>("Gig", gigSchema);
 export default Gig;
