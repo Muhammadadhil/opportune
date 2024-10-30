@@ -56,7 +56,7 @@ const Sidebar = () => {
             </div>
 
             <div className="w-full border shadow-sm p-4 md:p-6 rounded-md mb-4 md:mb-5">
-                <Button variant="outline" className="w-full" onClick={() => navigate("/fr/post-project")}>
+                <Button  className="w-full text-white bg-green-800 hover:bg-green-900" onClick={() => navigate("/fr/post-project")}>
                     Post a project
                 </Button>
                 <p className="text-xs mt-3 ">post a project and get works through the post.</p>
