@@ -3,15 +3,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ImagePlus } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { DescriptionData } from "@/types/IProjectPost";
 import { updatePostFormData } from "@/store/slices/freelancerSlice";
+import DescriptionDataSchema from "@/schemas/postDescriptoinSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { fileToBase64 } from "@/helpers/Base64";
+import { IoIosClose } from "react-icons/io";
+
 
 export default function Component({ onNext, onPrev }) {
-    const [images, setImages] = useState<File[]>([]);
+    const [images, setImages] = useState<string[]>([]);
     const [requirements, setRequirements] = useState([""]);
 
     const { formData } = useSelector((state: RootState) => state.freelancer);
@@ -19,22 +24,33 @@ export default function Component({ onNext, onPrev }) {
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const file = e.target.files?.[0];
+        console.log("Image index:", index);
         if (file) {
+            const base64: string = (await fileToBase64(file)) as string;
             const newImages = [...images];
-            newImages[index] = file;
+            newImages[index] = base64;
             setImages(newImages);
-            setValue("images", images);
-            
+            console.log("New: images array?:", newImages);
+            setValue("images", newImages);
+            dispatch(updatePostFormData({ ...formData, images: newImages }));
         }
     };
+
+    useEffect(() => {
+        setImages(formData?.images);
+        setRequirements(formData?.requirements)
+    }, []);
 
     const addRequirement = async () => {
         if (requirements.length < 3) {
             setRequirements([...requirements, ""]);
             setValue("requirements", requirements);
-            await trigger("images");
-
         }
+    };
+    const deleteRequirement = (index: number) => {
+        const updatedReq = requirements.filter((_, i) => i !== index);
+        setRequirements(updatedReq);
+        setValue("requirements", updatedReq);
     };
 
     const {
@@ -42,20 +58,24 @@ export default function Component({ onNext, onPrev }) {
         handleSubmit,
         control,
         setValue,
-        clearErrors,
-        trigger,
         formState: { errors },
     } = useForm<DescriptionData>({
+        resolver: zodResolver(DescriptionDataSchema),
         defaultValues: formData,
     });
+
+    console.log("Error from react-hook-form:", errors);
 
     const onSubmit = (data: DescriptionData) => {
         console.log("submitting");
         console.log("data:", data);
-        dispatch(updatePostFormData(data));
-        clearErrors('images');
-
+        dispatch(
+            updatePostFormData({ ...formData, images: data.images, deliveryTime: data.deliveryTime, description: data.description, price: data.price, requirements: requirements })
+        );
+        onNext();
     };
+
+    console.log("formData.images?.[index]:", formData.images?.[0]);
 
     return (
         <div className="flex flex-col gap-8 bg-gray-50 p-12 rounded-md">
@@ -68,16 +88,14 @@ export default function Component({ onNext, onPrev }) {
                             <div className="grid grid-cols-3 gap-4">
                                 {[0, 1, 2].map((index) => (
                                     <div key={index} className="h-40 border-2 border-dashed rounded-lg flex items-center justify-center relative bg-gray-50 hover:bg-gray-100 transition-colors group">
-                                        <input
-                                            {...register("images", { required: "Select Images" })}
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => handleImageUpload(e, index)}
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
-                                        />
-                                        {images[index] ? (
+                                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, index)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
+                                        {images[index] || formData.images?.[index] ? (
                                             <div className="relative w-full h-full">
-                                                <img src={URL.createObjectURL(images[index])} alt={`Upload ${index + 1}`} className="w-full h-full object-cover rounded-lg" />
+                                                <img
+                                                    src={formData.images?.[index] ? formData.images?.[index] : images[index]}
+                                                    alt={`Upload ${index + 1}`}
+                                                    className="w-full h-full object-cover rounded-lg"
+                                                />
                                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg z-10">
                                                     <span className="text-white font-medium">Change image</span>
                                                 </div>
@@ -125,19 +143,25 @@ export default function Component({ onNext, onPrev }) {
                             </Label>
                             <div className="space-y-3">
                                 {requirements.map((req, index) => (
-                                    <Input
-                                        key={index}
-                                        placeholder={`Requirement ${index + 1}`}
-                                        onChange={(e) => {
-                                            const newReqs = [...requirements];
-                                            newReqs[index] = e.target.value;
-                                            setRequirements(newReqs);
-                                        }}
-                                    />
+                                    <div>
+                                        <Input
+                                            className="absolute"
+                                            key={index}
+                                            placeholder={`Requirement ${index + 1}`}
+                                            value={req}
+                                            onChange={(e) => {
+                                                const newReqs = [...requirements];
+                                                newReqs[index] = e.target.value;
+                                                setRequirements(newReqs);
+                                            }}
+                                        />
+                                        <IoIosClose className="ml-2 cursor-pointer relative " onClick={() => deleteRequirement(index)} />
+                                    </div>
                                 ))}
+
                                 {requirements.length < 3 && (
                                     <Button type="button" variant="outline" size="sm" onClick={addRequirement}>
-                                        Add Requirement
+                                        Add New Requirement
                                     </Button>
                                 )}
                             </div>
@@ -145,14 +169,7 @@ export default function Component({ onNext, onPrev }) {
 
                         <div className="mb-8">
                             <Label htmlFor="description">Description</Label>
-                            <Textarea
-                                {...register("description", {
-                                    required: "Description is required",
-                                })}
-                                id="description"
-                                placeholder="Write about your work experience"
-                                className="min-h-[150px]"
-                            />
+                            <Textarea {...register("description")} id="description" placeholder="Write about your work experience" className="min-h-[150px]" />
                             {errors.description && <p className="text-red-700 text-sm">{errors.description.message}</p>}
                         </div>
 
@@ -160,17 +177,7 @@ export default function Component({ onNext, onPrev }) {
                             <Label htmlFor="price">Price of your project</Label>
                             <div className="relative">
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                                <Input
-                                    {...register("price", {
-                                        required: "Price is required",
-                                    })}
-                                    id="price"
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    className="pl-8"
-                                    placeholder="0.00"
-                                />
+                                <Input {...register("price")} id="price" type="number" min="0" step="0.01" className="pl-8" placeholder="0.00" />
                             </div>
                             {errors.price && <p className="text-red-700 text-sm">{errors.price.message}</p>}
                             <p className="text-sm text-gray-500 mt-1">Specify the price you'll charge for the work</p>

@@ -7,7 +7,7 @@ export interface OverviewData {
 }
 
 export interface DescriptionData {
-    images: File[];
+    images: string[];
     deliveryTime: string;
     description: string;
     price: string;
