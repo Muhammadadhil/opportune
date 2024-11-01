@@ -1,4 +1,4 @@
-import Profile from "../../components/freelancer/Profile";
+import Profile from "../../components/common/Profile";
 
 const ProfilePage = () => {
     return (

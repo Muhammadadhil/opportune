@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+
+
 export default {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -14,7 +16,9 @@ export default {
         },
         fontFamily: {
             Poppins: ["Poppins", "sans-serif"],
-            Inter: ["Inter","sans-serif"],
+            Inter: ["Inter", "sans-serif"],
+            Nunito: ["Nunito", "sans-serif"],
+            Montserrat: ["Montserrat", "sans-serif"],
         },
     },
     plugins: [require("tailwindcss-animate")],

@@ -95,6 +95,9 @@ export class UserController {
     };
 
     async logout(req: Request, res: Response) {
+
+        console.log('Going to logout the user !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1');
+
         res.cookie("jwt-refresh", {
             httpOnly: true,
             expires: new Date(0),
@@ -126,7 +129,7 @@ export class UserController {
             res.json(savedData);
         } catch (error) {
             console.log("Error in saving freelaner data:", error);
-            return res.status(500).json({ message: "Server error", error });
+            return res.status(500).json({ error });
         }
     }
 

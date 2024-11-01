@@ -81,6 +81,11 @@ export class UserService {
     }
 
     async saveFreelancerDetails(file: Express.Multer.File, userId: string, title: string, skills: string[], accounts: IAccounts) {
+        const existDetail = await this.userRepository.getFreelancerDetails(userId);
+        if (existDetail) {
+            throw new Error("Detail already exists");
+        }
+
         const buffer = await sharp(file.buffer).resize({ height: 1080, width: 1080, fit: "contain" }).toBuffer();
         const image = await uploadTosS3(buffer, file.mimetype);
 
@@ -106,12 +111,12 @@ export class UserService {
     }
 
     async getClientProfile(userId: string) {
-        const freelancerDetails = await this.userRepository.findClientDetail(userId);
-        if(!freelancerDetails){
-            throw new Error('No details available');
+        const clientDetails = await this.userRepository.findClientDetail(userId);
+        if (!clientDetails) {
+            throw new Error("No details available");
         }
 
-        return freelancerDetails;
+        return clientDetails;
         
     }
 }

@@ -50,7 +50,9 @@ export class UserRepository {
     }
     
     async findClientDetail(userId: ObjectId | string) {
-        const data= await ClientDetail.findOne({ userId });
+        const data= await ClientDetail.findOne({userId });
+        console.log('client data:',data)
+
         if(!data){
             return null;
         }

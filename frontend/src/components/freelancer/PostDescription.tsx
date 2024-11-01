@@ -1,9 +1,9 @@
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useEffect } from "react";
 import { ImagePlus } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,24 +13,30 @@ import DescriptionDataSchema from "@/schemas/postDescriptoinSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fileToBase64 } from "@/helpers/Base64";
 import { IoIosClose } from "react-icons/io";
+import { RootState } from "@/store/store";
 
+interface IDescriptionProps {
+    onPrev: () => void;
+    onNext: () => void;
+}
 
-export default function Component({ onNext, onPrev }) {
+export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext, onPrev }) => {
     const [images, setImages] = useState<string[]>([]);
     const [requirements, setRequirements] = useState([""]);
 
-    const { formData } = useSelector((state: RootState) => state.freelancer);
+    const { formData } = useSelector((state: RootState) => state.post);
+
     const dispatch = useDispatch();
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const file = e.target.files?.[0];
-        console.log("Image index:", index);
+        // console.log("Image index:", index);
         if (file) {
             const base64: string = (await fileToBase64(file)) as string;
             const newImages = [...images];
             newImages[index] = base64;
             setImages(newImages);
-            console.log("New: images array?:", newImages);
+            // console.log("New: images array?:", newImages);
             setValue("images", newImages);
             dispatch(updatePostFormData({ ...formData, images: newImages }));
         }
@@ -38,7 +44,7 @@ export default function Component({ onNext, onPrev }) {
 
     useEffect(() => {
         setImages(formData?.images);
-        setRequirements(formData?.requirements)
+        setRequirements(formData?.requirements);
     }, []);
 
     const addRequirement = async () => {
@@ -67,11 +73,7 @@ export default function Component({ onNext, onPrev }) {
     console.log("Error from react-hook-form:", errors);
 
     const onSubmit = (data: DescriptionData) => {
-        console.log("submitting");
-        console.log("data:", data);
-        dispatch(
-            updatePostFormData({ ...formData, images: data.images, deliveryTime: data.deliveryTime, description: data.description, price: data.price, requirements: requirements })
-        );
+        dispatch(updatePostFormData({ ...formData, images: data.images, deliveryTime: data.deliveryTime, description: data.description, price: data.price, requirements: requirements }));
         onNext();
     };
 
@@ -139,14 +141,13 @@ export default function Component({ onNext, onPrev }) {
 
                         <div className="mb-8">
                             <Label className="">
-                                Requirements <span className="text-gray-400 flex justify-end">* optional</span>
+                                Requirements <span className="text-gray-400 m-5"> * optional</span>
                             </Label>
                             <div className="space-y-3">
                                 {requirements.map((req, index) => (
-                                    <div>
+                                    <div key={index} className="flex items-center">
                                         <Input
-                                            className="absolute"
-                                            key={index}
+                                            className="flex-1" // Allow input to take available space
                                             placeholder={`Requirement ${index + 1}`}
                                             value={req}
                                             onChange={(e) => {
@@ -155,7 +156,10 @@ export default function Component({ onNext, onPrev }) {
                                                 setRequirements(newReqs);
                                             }}
                                         />
-                                        <IoIosClose className="ml-2 cursor-pointer relative " onClick={() => deleteRequirement(index)} />
+                                        <IoIosClose
+                                            className="ml-2 cursor-pointer text-gray-500 text-2xl hover:text-gray-800"
+                                            onClick={() => deleteRequirement(index)} // Fix to delete the specific index
+                                        />
                                     </div>
                                 ))}
 
@@ -196,4 +200,4 @@ export default function Component({ onNext, onPrev }) {
             </div>
         </div>
     );
-}
+});

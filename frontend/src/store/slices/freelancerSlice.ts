@@ -15,7 +15,7 @@ const initialState: RootState = {
     },
 };
 
-export const freelancerSlice = createSlice({
+export const postSlice = createSlice({
     name: "freelancer",
     initialState,
     reducers: {
@@ -26,6 +26,6 @@ export const freelancerSlice = createSlice({
     },
 });
 
-export const { updatePostFormData } = freelancerSlice.actions;
+export const { updatePostFormData } = postSlice.actions;
 
-export default freelancerSlice.reducer;
+export default postSlice.reducer;

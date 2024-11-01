@@ -20,7 +20,7 @@ app.use(
 );
 
 app.use(helmet()); 
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 
 const targets = {
     user: process.env.USER_API_BASE_URL,

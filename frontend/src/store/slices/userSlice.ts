@@ -22,9 +22,10 @@ export const userSlice = createSlice({
         setClientData: (state, action) => {
             state.clientData = action.payload;
         },
-        logout: (state) => {
+        logoutUser: (state) => {
             state.userInfo = null;
             state.freelancerData = {};
+            state.clientData = {};
             localStorage.removeItem("token");
         },
         setAdminAuthStatus: (state) => {
@@ -33,6 +34,6 @@ export const userSlice = createSlice({
     },
 });
 
-export const { setCredentials, logout, setFreelancerData, setClientData, setAdminAuthStatus } = userSlice.actions;
+export const { setCredentials, logoutUser, setFreelancerData, setClientData, setAdminAuthStatus } = userSlice.actions;
 
 export default userSlice.reducer;

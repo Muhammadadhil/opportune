@@ -52,7 +52,7 @@ export default function Profile() {
                         </div>
                         <h2 className="mt-4 text-xl font-semibold">{userInfo.firstname + userInfo.lastname}</h2>
                         <p className="text-sm text-slate-500 mb-3">{userInfo.role}</p>
-                        <p className="text-gray-600 text-sm text-center">{freelancerData.title}</p>
+                        <p className="text-gray-600 text-sm text-center">{freelancerData?.title}</p>
                     </div>
 
                     <div className="mt-6 flex justify-center">
@@ -90,7 +90,7 @@ export default function Profile() {
                                             {freelancerData?.skills?.map((skill,index) => (
                                                 <span key={index}>
                                                     {skill}
-                                                    {index < clientData.projectNeeds.length - 1 && <span className="font-bold mx-2">&bull;</span>}
+                                                    {index < clientData?.projectNeeds?.length - 1 && <span className="font-bold mx-2">&bull;</span>}
                                                 </span>
                                             ))}
                                         </div>
@@ -113,10 +113,10 @@ export default function Profile() {
                                     <div>
                                         <h3 className="font-medium text-gray-900">Project Needs</h3>
                                         <p>
-                                            {clientData.projectNeeds.map((need: string, index: number) => (
+                                            {clientData?.projectNeeds?.map((need: string, index: number) => (
                                                 <span key={index}>
                                                     {need}
-                                                    {index < clientData.projectNeeds.length - 1 && <span className="font-bold mx-2">&bull;</span>}
+                                                    {index < clientData?.projectNeeds?.length - 1 && <span className="font-bold mx-2">&bull;</span>}
                                                 </span>
                                             ))}
                                         </p>

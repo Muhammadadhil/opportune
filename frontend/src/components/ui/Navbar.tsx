@@ -7,9 +7,10 @@ import { useSelector } from "react-redux";
 import { CgProfile } from "react-icons/cg";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useDispatch } from "react-redux";
-import { logout } from "@/store/slices/userSlice";
+import { logoutUser } from "@/store/slices/userSlice";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { RootState } from "@/store/store";
+import { logout } from "@/api/userApi";
 
 interface NavItem {
     path: string;
@@ -28,6 +29,7 @@ const Navbar: React.FC = () => {
     ];
 
     const freelancerMenu: NavItem[] = [
+        { path: "/fr/dashboard", label: "Dashboard" },
         { path: "/find-jobs", label: "Post a project" },
         { path: "/hire-talents", label: "find jobs" },
     ];
@@ -38,8 +40,9 @@ const Navbar: React.FC = () => {
     ];
     const { userInfo } = useSelector((state: RootState) => state.user);
 
-    const handleLogout = () => {
-        dispatch(logout());
+    const handleLogout = async () => {
+        dispatch(logoutUser());
+        await logout();
     };
 
     const navigate = useNavigate();

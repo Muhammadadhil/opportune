@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,24 +13,9 @@ import LoadingSpinner from "../loading/Loading";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-const completeProfileSchema = z.object({
-    title: z.string().min(1, { message: "Title is required" }).max(50, { message: "Maximum 50 characters allowed" }),
-    skills: z.array(z.string()).min(1, { message: "At least one skill is required" }).max(10, { message: "No more than 10 skills" }),
-    accounts: z.object({
-        linkedin: z.string().url({ message: "Must be a valid URL" }).optional(),
-        github: z.string().url({ message: "Must be a valid URL" }).optional(),
-        other: z.string().url({ message: "Must be a valid URL" }).optional(),
-    }),
-    image: z
-        .instanceof(File)
-        .refine((file) => ["image/jpeg", "image/png"].includes(file.type), { message: "File must be a valid image (jpg or png)" })
-        .optional(),
-});
-
-
-type CompleteProfileForm = z.infer<typeof completeProfileSchema>;
+import { completeProfileSchema } from "@/schemas/completeProfileSchema";
+import { CompleteProfileForm } from "@/schemas/completeProfileSchema";
+import { toast } from "react-hot-toast";
 
 const CompleteProfile = () => {
     const {
@@ -76,12 +62,26 @@ const CompleteProfile = () => {
 
             setIsLoading(true);
             const response = await completeProfle(formData);
-            console.log('response: complete profile:',response);
+            console.log("response: complete profile:", response);
 
-            setIsLoading(false);
-            navigate(-1);
+            // navigate(-1);
         } catch (error) {
-            console.log("error in complete-profile:", error);
+            const axiosError = error as AxiosError; 
+            console.log("error in complete-profile:", axiosError);
+
+            if (axiosError.response) {
+                if (axiosError.response.status === 504) {
+                    toast.error("Internal Server Error. Please try again later.");
+                } else if (axiosError.response.status === 500) {
+                    toast.error("Detail already exists.");
+                } else if (axiosError.response.status === 409) {
+                    toast.error("Request timed out. Please check your network and try again.");
+                } else {
+                    toast.error(`Error: ${axiosError.response.statusText}`);
+                }
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -98,12 +98,14 @@ const CompleteProfile = () => {
                     <form className="space-y-6  mt-4" onSubmit={handleSubmit(onSubmit)}>
                         <h2 className="font-bold text-slate-800 mb-2">Add Profile Image</h2>
                         <div className="flex justify-center">
-                            <div className="relative w-52">
+                            <div className="relative w-52 h-52">
+                                {" "}
+                                {/* Ensure square container for circular cropping */}
                                 <input type="file" id="imageInput" {...register("image")} hidden accept="image/*" onChange={handleImageChange} />
                                 <img
                                     src={typeof image === "string" ? profilePicture : URL.createObjectURL(image)}
                                     alt="Profile"
-                                    className="shadow-sm w-44 md:w-52 rounded-full mr-4 bg-gray-100 object-cover"
+                                    className="shadow-sm w-full h-full rounded-full bg-gray-100 object-cover" // Ensures circular shape with object-cover
                                 />
                                 <label
                                     htmlFor="imageInput"
@@ -113,6 +115,7 @@ const CompleteProfile = () => {
                                 </label>
                             </div>
                         </div>
+
                         <div>{errors.image && <p className="text-red-500 text-xs">{errors.image.message}</p>}</div>
 
                         <div>

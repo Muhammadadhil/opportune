@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import { signIn } from "@/api/userApi";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -54,10 +54,9 @@ const Login: React.FC = () => {
         try {
             setIsLoading(true);
             const response = await signIn(formData);
-            console.log('response:',response);
             dispatch(setCredentials(response.data.data));
             setIsLoading(false);
-            setAccessToken(response.data.accessToken)
+            setAccessToken(response.data.accessToken);
             if(response.data.data.role =='freelancer'){
                 navigate("/fr/dashboard");
             }else{
@@ -66,6 +65,7 @@ const Login: React.FC = () => {
             }
         } catch (error) {
             setIsLoading(false);
+            console.log('login error:',error);
             toast.error(error?.response?.data?.message);
         }
     };

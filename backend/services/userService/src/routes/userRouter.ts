@@ -31,7 +31,7 @@ router.post("/save-client-details", userController.saveClientDetails);
 router.post("/client-profile", protect, userController.getClientData);
 
 
-router.post("/complete-profile",upload.single('image'),userController.saveFreelancerDetails);
+router.post("/complete-profile",protect,upload.single('image'),userController.saveFreelancerDetails);
 router.post("/freelancer-profile",protect,userController.getFreelancerData);
 
 export default router;
