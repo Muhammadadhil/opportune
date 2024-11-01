@@ -2,8 +2,8 @@ import { Router } from "express";
 import { UserController } from "../controllers/userController";
 import { refreshAccessToken, getGoogleAuthToken, getGoogleUserInfo } from "../controllers/authController";
 import { OtpController } from "../controllers/OtpController";
-import multer from "multer";
 import protect from "../middleware/protect";
+import upload from "../utils/multerConfig";
 
 const router = Router();
 const userController = new UserController();
@@ -23,8 +23,8 @@ router.post("/google-login", getGoogleUserInfo);
 router.post("/otp-verify", otpController.verifyOtp);
 router.post("/otp-resend", otpController.resendOtp);
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage: storage });
 
 //details
 router.post("/save-client-details", userController.saveClientDetails);

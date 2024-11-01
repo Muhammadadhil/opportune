@@ -8,7 +8,7 @@ import { ImagePlus } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { DescriptionData } from "@/types/IProjectPost";
-import { updatePostFormData } from "@/store/slices/freelancerSlice";
+import { updatePostFormData } from "@/store/slices/postSlice";
 import DescriptionDataSchema from "@/schemas/postDescriptoinSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fileToBase64 } from "@/helpers/Base64";
@@ -21,7 +21,7 @@ interface IDescriptionProps {
 }
 
 export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext, onPrev }) => {
-    const [images, setImages] = useState<string[]>([]);
+    const [images, setImages] = useState<File[]>([]);
     const [requirements, setRequirements] = useState([""]);
 
     const { formData } = useSelector((state: RootState) => state.post);
@@ -32,9 +32,9 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
         const file = e.target.files?.[0];
         // console.log("Image index:", index);
         if (file) {
-            const base64: string = (await fileToBase64(file)) as string;
+            // const base64: string = (await fileToBase64(file)) as string;
             const newImages = [...images];
-            newImages[index] = base64;
+            newImages[index] = file;
             setImages(newImages);
             // console.log("New: images array?:", newImages);
             setValue("images", newImages);
@@ -70,13 +70,14 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
         defaultValues: formData,
     });
 
-    console.log("Error from react-hook-form:", errors);
-
+    
     const onSubmit = (data: DescriptionData) => {
         dispatch(updatePostFormData({ ...formData, images: data.images, deliveryTime: data.deliveryTime, description: data.description, price: data.price, requirements: requirements }));
         onNext();
     };
 
+    console.log("Error from react-hook-form:", errors);
+    
     console.log("formData.images?.[index]:", formData.images?.[0]);
 
     return (
@@ -93,11 +94,11 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
                                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, index)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
                                         {images[index] || formData.images?.[index] ? (
                                             <div className="relative w-full h-full">
-                                                <img
-                                                    src={formData.images?.[index] ? formData.images?.[index] : images[index]}
+                                                {/* <img
+                                                    src={formData.images?.[index] ? URL.createObjectURL(formData.images?.[index]) : URL.createObjectURL(images[index])}
                                                     alt={`Upload ${index + 1}`}
                                                     className="w-full h-full object-cover rounded-lg"
-                                                />
+                                                /> */}
                                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg z-10">
                                                     <span className="text-white font-medium">Change image</span>
                                                 </div>

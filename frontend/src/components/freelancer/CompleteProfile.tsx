@@ -100,12 +100,11 @@ const CompleteProfile = () => {
                         <div className="flex justify-center">
                             <div className="relative w-52 h-52">
                                 {" "}
-                                {/* Ensure square container for circular cropping */}
                                 <input type="file" id="imageInput" {...register("image")} hidden accept="image/*" onChange={handleImageChange} />
                                 <img
                                     src={typeof image === "string" ? profilePicture : URL.createObjectURL(image)}
                                     alt="Profile"
-                                    className="shadow-sm w-full h-full rounded-full bg-gray-100 object-cover" // Ensures circular shape with object-cover
+                                    className="shadow-sm w-full h-full rounded-full bg-gray-100 object-cover" 
                                 />
                                 <label
                                     htmlFor="imageInput"

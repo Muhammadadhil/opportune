@@ -8,6 +8,7 @@ import { CgProfile } from "react-icons/cg";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/store/slices/userSlice";
+import { clearPostFormData } from "@/store/slices/postSlice";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { RootState } from "@/store/store";
 import { logout } from "@/api/userApi";
@@ -42,6 +43,7 @@ const Navbar: React.FC = () => {
 
     const handleLogout = async () => {
         dispatch(logoutUser());
+        dispatch(clearPostFormData());
         await logout();
     };
 

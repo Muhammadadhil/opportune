@@ -6,7 +6,7 @@ import { IoIosClose } from "react-icons/io";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { OverviewData } from "@/types/IProjectPost";
 import { RootState } from "@/store/store";
-import { updatePostFormData } from "@/store/slices/freelancerSlice";
+import { updatePostFormData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 interface OverviewProps {
@@ -34,19 +34,19 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
     const addKeyword = useCallback(() => {
         if (newKeyword && keywords.length < 10) {
             setKeywords((prev) => [...prev, newKeyword]);
-            setNewKeyword("");
-            setValue("keywords", [...keywords, newKeyword]);
+            setNewKeyword("");  
+            setValue("searchTags", [...keywords, newKeyword]);
         }
     }, [newKeyword, keywords, dispatch, formData]);
 
     const removeKeyword = (index: number) => {
         const updatedKeywords = keywords.filter((_, i) => i !== index);
         setKeywords(updatedKeywords);
-        setValue("keywords", updatedKeywords);
+        setValue("searchTags", updatedKeywords);
     };
 
     useEffect(() => {
-        setKeywords(formData.keywords || []);
+        setKeywords(formData.searchTags || []);
     }, []);
 
     const onSubmit = (data: OverviewData) => {
@@ -77,13 +77,13 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                         </label>
                         <Input
                             id="workTitle"
-                            {...register("workTitle", {
+                            {...register("title", {
                                 required: "Work title is required",
                                 minLength: { value: 5, message: "Title must be at least 5 characters" },
                             })}
                             placeholder="I will do something really good at..."
                         />
-                        {errors.workTitle && <p className="text-red-700 text-sm text-sm">{errors.workTitle.message}</p>}
+                        {errors.title && <p className="text-red-700 text-sm text-sm">{errors.title.message}</p>}
                     </div>
 
                     <div className="flex space-x-4">
@@ -176,7 +176,7 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                                 </span>
                             ))}
                         </div>
-                        {errors.keywords && <p className="text-red-700 text-sm">{errors.keywords.message}</p>}
+                        {errors.searchTags && <p className="text-red-700 text-sm">{errors.searchTags.message}</p>}
 
                         {keywordError && <p className="text-red-600 text-sm">{keywordError}</p>}
                     </div>

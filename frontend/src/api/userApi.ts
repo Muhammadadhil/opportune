@@ -44,6 +44,10 @@ export const getProfileData = async (userId: string) => {
     return await apiClient.post("/user/freelancer-profile", { userId });
 };
 
+export const saveProjectPost = async (formData) => {
+    console.log("sending this Data:", formData);
+    return await apiClient.post("/post/postaGig", formData, { headers: { "Content-Type": "multipart/form-data" } });
+};
 
 export const getClientProfileData = async (userId: string) => {
     return await apiClient.post("/user/client-profile", { userId });

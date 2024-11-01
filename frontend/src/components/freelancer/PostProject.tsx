@@ -5,21 +5,20 @@ import Publish from "./PostPublish";
 import Button from "../ui/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { saveProjectPost } from "@/api/userApi";
+import convertToFormData from "@/helpers/convertToFormData";
 
 const steps = ["Title & Category", "Description & Pricing", "Overview"];
 
 export default function PostProject() {
     const [step, setStep] = useState(0);
     const { formData } = useSelector((state: RootState) => state.post);
+    const { freelancerData } = useSelector((state: RootState) => state.user);
 
-    useEffect(() => {
-        console.log("Current step:", step);
-        console.log("formData in parent:", formData);
-    }, [step, formData]);
 
     const nextStep = () => {
         console.log("Moving to next step");
-        setStep((prev) => prev + 1);
+        setStep((prev) => Math.min(prev + 1, 2));
     };
 
     const prevStep = () => {
@@ -27,10 +26,16 @@ export default function PostProject() {
         setStep((prev) => Math.max(prev - 1, 0));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         try {
-            const finalData = { ...formData };
-            console.log("Submitting finalData:", finalData);
+            const data = { ...formData };
+
+            console.log('data going to send as Formdata:',data);
+            
+            const formData1 = await convertToFormData(data);
+            formData1.append("freelancerId", freelancerData?.userId);
+            await saveProjectPost(formData1);
+            console.log("Submitting finalData:", data);
             alert("Form submitted successfully!");
         } catch (error) {
             console.error("Error submitting form:", error);

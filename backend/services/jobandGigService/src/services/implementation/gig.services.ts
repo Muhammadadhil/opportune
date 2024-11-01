@@ -10,7 +10,7 @@ export class GigService implements IGigService {
         this.gigRepository = new GigRepository();
     }
 
-    async saveGig(data: IGig): Promise<IGig | null> {
+    async saveGig( data: IGig): Promise<IGig | null> {
         return await this.gigRepository.create(data);
     }
 

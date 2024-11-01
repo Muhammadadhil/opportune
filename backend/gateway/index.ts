@@ -24,7 +24,8 @@ app.use(morgan("dev"));
 
 const targets = {
     user: process.env.USER_API_BASE_URL,
-    manage: process.env.MANAGE_API_BASE_URL, 
+    manage: process.env.MANAGE_API_BASE_URL,
+    jobandGig: process.env.JOBANDGIG_BASE_URL,
 };
 
 app.use(
@@ -38,6 +39,14 @@ app.use(
     "/manage",
     createProxyMiddleware({
         target: targets.manage,
+        changeOrigin: true,
+    })
+);
+
+app.use(
+    "/post",
+    createProxyMiddleware({
+        target: targets.jobandGig,
         changeOrigin: true,
     })
 );

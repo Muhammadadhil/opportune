@@ -1,13 +1,13 @@
 
 export interface OverviewData {
-    workTitle: string;
+    title: string;
     category: string;
     subCategory: string;
-    keywords: string[];
+    searchTags: string[];
 }
 
 export interface DescriptionData {
-    images: string[];
+    images: File[];
     deliveryTime: string;
     description: string;
     price: string;
