@@ -8,7 +8,6 @@ import { OverviewData } from "@/types/IProjectPost";
 import { RootState } from "@/store/store";
 import { updatePostFormData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
-
 interface OverviewProps {
     onNext: () => void;
 }
@@ -163,7 +162,7 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                                     }
                                 }}
                             />
-                            <Button className="bg-green-800 hover:bg-green-900" onClick={addKeyword}>
+                            <Button variant="outline" onClick={addKeyword}>
                                 Add
                             </Button>
                         </div>

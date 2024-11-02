@@ -64,7 +64,7 @@ const CompleteProfile = () => {
             const response = await completeProfle(formData);
             console.log("response: complete profile:", response);
 
-            // navigate(-1);
+            navigate(-1);
         } catch (error) {
             const axiosError = error as AxiosError; 
             console.log("error in complete-profile:", axiosError);
@@ -119,8 +119,8 @@ const CompleteProfile = () => {
 
                         <div>
                             <h2 className="font-bold text-slate-800 mb-2">Title / Description</h2>
-                            <Textarea {...register("title")} placeholder="Describe your professional title and a brief description." className=" md:w-[40rem]" maxLength={50} />
-                            <p className="text-sm text-gray-500 mt-1">Maximum 50 words</p>
+                            <Textarea {...register("title")} placeholder="Describe your professional title and a brief description." className=" md:w-[40rem]" maxLength={100} />
+                            <p className="text-sm text-gray-500 mt-1">Maximum 100 characters</p>
                             {errors.title && <p className="text-red-500 text-xs">{errors.title.message}</p>}
                         </div>
 
@@ -133,9 +133,15 @@ const CompleteProfile = () => {
                                     placeholder="Add a skill"
                                     value={newSkill}
                                     onChange={(e) => setNewSkill(e.target.value)}
-                                    onKeyDown={(e) => (e.key == "Enter" ? addSkill() : "")}
+                                    onKeyDown={(e) => {
+                                        if(e.key == "Enter" ){
+                                            e.preventDefault();
+                                            addSkill()
+                                        }
+                                    }}
                                     className="w-[30rem]"
                                 />
+                                <Button variant='outline' onClick={addSkill}>add</Button>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {skills.map((skill, index) => (

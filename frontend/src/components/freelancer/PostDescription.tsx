@@ -30,7 +30,6 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const file = e.target.files?.[0];
-        // console.log("Image index:", index);
         if (file) {
             // const base64: string = (await fileToBase64(file)) as string;
             const newImages = [...images];
@@ -44,6 +43,7 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
 
     useEffect(() => {
         setImages(formData?.images);
+        console.log("check when refresh formData.images:", formData?.images);
         setRequirements(formData?.requirements);
     }, []);
 
@@ -70,15 +70,14 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
         defaultValues: formData,
     });
 
-    
     const onSubmit = (data: DescriptionData) => {
         dispatch(updatePostFormData({ ...formData, images: data.images, deliveryTime: data.deliveryTime, description: data.description, price: data.price, requirements: requirements }));
         onNext();
     };
 
     console.log("Error from react-hook-form:", errors);
-    
-    console.log("formData.images?.[index]:", formData.images?.[0]);
+
+    console.log("formData.images?.[index]:", formData.images);
 
     return (
         <div className="flex flex-col gap-8 bg-gray-50 p-12 rounded-md">
@@ -94,11 +93,17 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
                                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, index)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
                                         {images[index] || formData.images?.[index] ? (
                                             <div className="relative w-full h-full">
-                                                {/* <img
-                                                    src={formData.images?.[index] ? URL.createObjectURL(formData.images?.[index]) : URL.createObjectURL(images[index])}
+                                                <img
+                                                    src={
+                                                        formData.images?.[index] instanceof File
+                                                            ? URL.createObjectURL(formData.images?.[index])
+                                                            : images[index] instanceof File
+                                                            ? URL.createObjectURL(images[index])
+                                                            : ""
+                                                    }
                                                     alt={`Upload ${index + 1}`}
                                                     className="w-full h-full object-cover rounded-lg"
-                                                /> */}
+                                                />
                                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg z-10">
                                                     <span className="text-white font-medium">Change image</span>
                                                 </div>

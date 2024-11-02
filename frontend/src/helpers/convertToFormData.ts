@@ -1,13 +1,11 @@
-
-
 export default async function convertToFormData(data) {
     const formData = new FormData();
 
     for (const key in data) {
         if (Object.prototype.hasOwnProperty.call(data, key)) {
-            if (key === "images") {
-                data[key].forEach((file:File, index:number) => {
-                    formData.append(`images`, file);
+            if (Array.isArray(data[key])) {
+                data[key].forEach((item) => {
+                    formData.append(key, item);
                 });
             } else {
                 formData.append(key, data[key]);
@@ -17,4 +15,3 @@ export default async function convertToFormData(data) {
 
     return formData;
 }
- 

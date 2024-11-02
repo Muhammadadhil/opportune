@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "@/store/slices/userSlice";
 import postReducer from "@/store/slices/postSlice";
+import appSlice from '@/store/slices/appSlice'
 
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -22,14 +23,15 @@ const persistedPostReducer = persistReducer(freelancerPersistConfig, postReducer
 const rootReducer = combineReducers({
     user: persistedUserReducer,
     post: persistedPostReducer,
+    app: appSlice,
 });
 
 export const store = configureStore({
     reducer: rootReducer,
-    // middleware: (getDefaultMiddleware) =>
-    //     getDefaultMiddleware({
-    //         serializableCheck: false, // Necessary to avoid warnings with non-serializable data
-    //     }),
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false, // Necessary to avoid warnings with non-serializable data
+        }),
 });
 
 export const persistor = persistStore(store);

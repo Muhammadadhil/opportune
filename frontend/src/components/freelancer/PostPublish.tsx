@@ -26,7 +26,7 @@ const Description: React.FC<IPublishProps> = React.memo(({ onPrev, handleSubmit 
                     <CardContent className="p-6 space-y-8">
                         {/* Title */}
                         <div>
-                            <h2 className="text-2xl font-semibold mb-2">{formData.workTitle}</h2>
+                            <h2 className="text-2xl font-semibold mb-2">{formData?.workTitle}</h2>
                             <div className="flex gap-2 text-sm text-muted-foreground">
                                 <span>{formData.category}</span>
                                 {formData.subCategory && (
@@ -74,11 +74,11 @@ const Description: React.FC<IPublishProps> = React.memo(({ onPrev, handleSubmit 
                                 )} */}
 
                                 {/* Tags */}
-                                {formData.keywords?.length > 0 && (
+                                {formData.searchTags?.length > 0 && (
                                     <div>
                                         <h3 className="text-lg font-semibold mb-2">Tags</h3>
                                         <div className="flex flex-wrap gap-2">
-                                            {formData.keywords.map((keyword, index) => (
+                                            {formData.searchTags.map((keyword, index) => (
                                                 <Badge key={index} variant="secondary" className="flex items-center gap-1">
                                                     <Tag className="w-3 h-3" />
                                                     {keyword}

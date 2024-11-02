@@ -1,23 +1,25 @@
-import { Menu, Lightbulb, MapPin, Mail, Briefcase, Globe, Building2 } from "lucide-react";
+import { Menu, Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 import profilePicture from "@/assets/profilePicture.jpg";
 import { getClientProfileData, getProfileData } from "@/api/userApi";
 import { useSelector, useDispatch } from "react-redux";
 import { setClientData } from "@/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import Button from "../ui/Button";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RootState } from "@/store/store";
+
 
 export default function Profile() {
     const { userInfo, freelancerData, clientData } = useSelector((state: any) => state.user);
+    const {  theme } = useSelector((state: RootState) => state.app);
     const [profileImage, setProfileImage] = useState("");
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     async function getData() {
         try {
             const response = await getProfileData(userInfo._id);
-            // console.log("profile data res:", response);
             const imgUrl = response.data.imageUrl;
             setProfileImage(imgUrl);
         } catch (error) {
@@ -43,95 +45,106 @@ export default function Profile() {
     }, []);
 
     return (
-        <div className="md:w-8/12 mx-auto mt-10 flex">
-            <div className="min-w-[20rem] bg-white rounded-lg shadow-md overflow-hidden ">
-                <div className="p-4">
-                    <div className="flex flex-col items-center mt-12">
-                        <div className="relative">
-                            <img src={freelancerData.imageUrl ? freelancerData.imageUrl : profilePicture} alt="hi" className="w-24 h-24 rounded-full " />
+        <div className={`container mx-auto px-4 py-8 ${theme === "dark" ? "bg-gray-900 text-white" : " text-gray-900"}`}>
+            <div className="flex flex-col lg:flex-row gap-8">
+                <Card className={`lg:w-1/3 ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white"}`}>
+                    <CardContent className="p-6">
+                        <div className="flex flex-col items-center">
+                            <div className="relative mb-4">
+                                <img
+                                    src={freelancerData.imageUrl ? freelancerData.imageUrl : profilePicture}
+                                    alt="Profile"
+                                    className={`w-32 h-32 rounded-full object-cover border-4 ${theme === "dark" ? "border-gray-700" : "border-white"}`}
+                                />
+                            </div>
+                            <h2 className="text-2xl font-bold">
+                                {userInfo.firstname} {userInfo.lastname}
+                            </h2>
+                            <p className={`text-sm mb-2 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{userInfo.role}</p>
+                            <p className="text-sm text-center">{freelancerData?.title}</p>
                         </div>
-                        <h2 className="mt-4 text-xl font-semibold">{userInfo.firstname + userInfo.lastname}</h2>
-                        <p className="text-sm text-slate-500 mb-3">{userInfo.role}</p>
-                        <p className="text-gray-600 text-sm text-center">{freelancerData?.title}</p>
-                    </div>
 
-                    <div className="mt-6 flex justify-center">
-                        {!freelancerData ? (
-                            <button className="bg-green-800 text-white px-4 py-2 rounded-md hover:bg-green-900 transition-colors text-sm" onClick={() => navigate("/fr/complete-profile")}>
-                                Complete your profile
-                            </button>
-                        ) : (
-                            <button className="bg-green-800 text-white px-4 py-2 rounded-md hover:bg-green-900 transition-colors">Edit profile</button>
-                        )}
-                    </div>
+                        <div className="mt-6 flex justify-center">
+                            {!freelancerData ? (
+                                <Button className="w-full" onClick={() => navigate("/fr/complete-profile")} variant={theme === "dark" ? "secondary" : "default"}>
+                                    Complete your profile
+                                </Button>
+                            ) : (
+                                <Button className="w-44" variant={theme === "dark" ? "secondary" : "outline"}>
+                                    <Edit className="mr-2 h-4 w-4" /> Edit profile
+                                </Button>
+                            )}
+                        </div>
 
-                    <div className="mt-6 space-y-2 text-sm text-gray-600">
-                        <p className="flex items-center">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <MapPin />
-                            </svg>
-                            {userInfo.country}
-                        </p>
-                        <p className="flex items-center ">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <Mail />
-                            </svg>
-                            {userInfo.email}
-                        </p>
-
-                        {userInfo.role == "freelancer" ? (
+                        <div className="mt-6 space-y-3 text-sm">
                             <div className="flex items-center">
-                                {freelancerData ? (
-                                    <div>
-                                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <Lightbulb />
-                                        </svg>
-                                        <div className="flex  items-center mb-2 ">
-                                            {freelancerData?.skills?.map((skill,index) => (
-                                                <span key={index}>
-                                                    {skill}
-                                                    {index < clientData?.projectNeeds?.length - 1 && <span className="font-bold mx-2">&bull;</span>}
-                                                </span>
-                                            ))}
+                                <MapPin className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                <span>{userInfo.country}</span>
+                            </div>
+                            <div className="flex items-center">
+                                <Mail className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                <span>{userInfo.email}</span>
+                            </div>
+
+                            {userInfo.role == "freelancer" && freelancerData?.skills && (
+                                <div className="flex items-start">
+                                    <Lightbulb className={`w-4 h-4 mr-2 mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                    <div className="flex flex-wrap">
+                                        {freelancerData.skills.map((skill, index) => (
+                                            <span key={index} className={`rounded-full px-2 py-1 text-sm mr-2 mb-2 ${theme === "dark" ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-700"}`}>
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {userInfo.role == "client" && (
+                                <>
+                                    <div className="flex items-start">
+                                        <Building2 className={`w-4 h-4 mr-2 mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                        <div>
+                                            <h3 className="font-medium">{clientData.companyName}</h3>
+                                            <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{clientData.companyDescription}</p>
                                         </div>
                                     </div>
-                                ) : (
-                                    ""
-                                )}
-                            </div>
-                        ) : (
-                            <p className="mt-16 cursor-pointer">
-                                <div className="flex items-start mt-5">
-                                    <Building2 className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0 mt-0.5" />
-                                    <div>
-                                        <h3 className="font-medium text-gray-900">{clientData.companyName}</h3>
-                                        <p>{clientData.companyDescription}</p>
+                                    <div className="flex items-start">
+                                        <Briefcase className={`w-4 h-4 mr-2 mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                        <div>
+                                            <h3 className="font-medium">Project Needs</h3>
+                                            <div className="flex flex-wrap mt-1">
+                                                {clientData?.projectNeeds?.map((need: string, index: number) => (
+                                                    <span
+                                                        key={index}
+                                                        className={`rounded-full px-2 py-1 text-xs mr-2 mb-2 ${theme === "dark" ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-700"}`}
+                                                    >
+                                                        {need}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex items-start mt-4">
-                                    <Briefcase className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0 mt-0.5" />
-                                    <div>
-                                        <h3 className="font-medium text-gray-900">Project Needs</h3>
-                                        <p>
-                                            {clientData?.projectNeeds?.map((need: string, index: number) => (
-                                                <span key={index}>
-                                                    {need}
-                                                    {index < clientData?.projectNeeds?.length - 1 && <span className="font-bold mx-2">&bull;</span>}
-                                                </span>
-                                            ))}
-                                        </p>
+                                    <div className="flex items-center">
+                                        <Globe className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                        <a href={clientData.website} target="_blank" rel="noopener noreferrer" className={`hover:underline ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`}>
+                                            {clientData.website}
+                                        </a>
                                     </div>
-                                </div>
-                                <div className="flex items-center mt-4">
-                                    <Globe className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
-                                    <h3 className="font-medium text-gray-900 cursor-pointer">{clientData.website}</h3>
-                                </div>
-                            </p>
-                        )}
-                    </div>
-                </div>
+                                </>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card className={`lg:w-2/3 ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white"}`}>
+                    <CardHeader>
+                        <CardTitle>Your Posts</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p>
+                    </CardContent>
+                </Card>
             </div>
-            <div className="md:w-full md:ml-5 h-auto rounded-md bg-gray-100 "></div>
         </div>
     );
 }

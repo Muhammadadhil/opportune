@@ -48,9 +48,9 @@ const gigSchema = new Schema<IGig>({
         type: [String],
         validate: [arrayLimit, "{PATH} exceeds the limit of 3"], // Limit images to 3
     },
-    requirements:{
-        type:[String]
-    }
+    requirements: {
+        type: [{ type: String }],
+    },
 });
 
 function arrayLimit(val: string[]) {
