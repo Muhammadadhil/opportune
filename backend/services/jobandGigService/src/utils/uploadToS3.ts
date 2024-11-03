@@ -2,7 +2,7 @@ import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3
 import crypto from "crypto";
 import dotenv from "dotenv";
 import { ObjectId } from "mongoose";
-// import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 dotenv.config();
 
@@ -46,8 +46,8 @@ export const uploadTosS3 = async (fileBuffer: Buffer, mimeType: string): Promise
     }
 };
 
-// export const getSignedImageURL = async (image: string): Promise<string> => {
-//     const command = new GetObjectCommand({ Bucket: bucketName, Key: image });
-//     const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-//     return signedUrl;
-// };
+export const getSignedImageURL = async (image: string): Promise<string> => {
+    const command = new GetObjectCommand({ Bucket: bucketName, Key: image });
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    return signedUrl;
+};

@@ -2,7 +2,7 @@ import { IGig } from "../../interfaces/IGig";
 import { GigRepository } from "../../repositories/implementation/gig.repository";
 import { IGigRepositoy } from "../../repositories/interfaces/IGigRepository";
 import { IGigService } from "../interfaces/IGigService";
-import { uploadTosS3 } from "../../utils/uploadToS3";
+import { getSignedImageURL, uploadTosS3 } from "../../utils/uploadToS3";
 import IUploadFile from "../../interfaces/IUploadFile";
 
 export class GigService implements IGigService {
@@ -34,5 +34,22 @@ export class GigService implements IGigService {
 
     async changeGigStatus(id: string): Promise<IGig | null> {
         return await this.gigRepository.updateActiveStatus(id);
+    }
+
+    async getGigs(id: string): Promise<IGig[] | null> {
+        const gigDatas = await this.gigRepository.find({ freelancerId: id });
+        for (const gig of gigDatas) {
+
+        const imageUrls = await Promise.all(
+            gig.images.map(async (image) => {
+                return await getSignedImageURL(image);
+            })
+        );
+
+        gig.imageUrls = imageUrls;
+    }
+    
+    return gigDatas;
+
     }
 }

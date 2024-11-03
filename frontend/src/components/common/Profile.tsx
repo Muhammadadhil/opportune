@@ -1,4 +1,4 @@
-import { Menu, Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit } from "lucide-react";
+import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 import profilePicture from "@/assets/profilePicture.jpg";
 import { getClientProfileData, getProfileData } from "@/api/userApi";
@@ -8,12 +8,16 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RootState } from "@/store/store";
-
+import GigCard from "../freelancer/GigCard";
+import { fetchGigs } from "@/api/userApi";
+import { IGig } from "@/types/IGig";
 
 export default function Profile() {
-    const { userInfo, freelancerData, clientData } = useSelector((state: any) => state.user);
-    const {  theme } = useSelector((state: RootState) => state.app);
+    const { userInfo, freelancerData, clientData } = useSelector((state: RootState) => state.user);
+    const { theme } = useSelector((state: RootState) => state.app);
     const [profileImage, setProfileImage] = useState("");
+    const [gigs, setGigs] = useState<IGig[]>([]);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -44,10 +48,31 @@ export default function Profile() {
         }
     }, []);
 
+    const fetchProjects = async () => {
+        const response = await fetchGigs(freelancerData.userId);
+        console.log("gigs response:", response.data);
+        // const date = formatDate(response.data.deliveryTime);
+        // const updatedGigs = { ...response.data ,date};
+        setGigs(response.data);
+    };
+
+    useEffect(() => {
+        console.log("calling to gigs!!");
+        fetchProjects();
+    }, []);
+
+    const formatDate = (date: Date) => {
+        return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        });
+    };
+
     return (
-        <div className={`container mx-auto px-4 py-8 ${theme === "dark" ? "bg-gray-900 text-white" : " text-gray-900"}`}>
+        <div className={`container mx-auto px-4 py-8 ${theme === "dark" ? " text-white" : " text-gray-900"}`}>
             <div className="flex flex-col lg:flex-row gap-8">
-                <Card className={`lg:w-1/3 ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white"}`}>
+                <Card className={`lg:w-1/3 ${theme === "dark" ? "bg-gray-900 border-gray-800" : "bg-white"}`}>
                     <CardContent className="p-6">
                         <div className="flex flex-col items-center">
                             <div className="relative mb-4">
@@ -57,11 +82,11 @@ export default function Profile() {
                                     className={`w-32 h-32 rounded-full object-cover border-4 ${theme === "dark" ? "border-gray-700" : "border-white"}`}
                                 />
                             </div>
-                            <h2 className="text-2xl font-bold">
+                            <h2 className={`text-2xl font-bold ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>
                                 {userInfo.firstname} {userInfo.lastname}
                             </h2>
                             <p className={`text-sm mb-2 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{userInfo.role}</p>
-                            <p className="text-sm text-center">{freelancerData?.title}</p>
+                            <p className={`text-sm text-center ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>{freelancerData?.title}</p>
                         </div>
 
                         <div className="mt-6 flex justify-center">
@@ -83,7 +108,7 @@ export default function Profile() {
                             </div>
                             <div className="flex items-center">
                                 <Mail className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
-                                <span>{userInfo.email}</span>
+                                <span className={theme === "dark" ? "text-gray-300" : "text-gray-600"}>{userInfo.email}</span>
                             </div>
 
                             {userInfo.role == "freelancer" && freelancerData?.skills && (
@@ -136,12 +161,27 @@ export default function Profile() {
                     </CardContent>
                 </Card>
 
-                <Card className={`lg:w-2/3 ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white"}`}>
+                <Card className={`lg:w-2/3 ${theme === "dark" ? "bg-gray-900 border-gray-800" : "bg-white"}`}>
                     <CardHeader>
-                        <CardTitle>Your Posts</CardTitle>
+                        <CardTitle className={theme === "dark" ? "text-gray-200" : "text-gray-600"}>Your Posts</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p>
+                    <CardContent className="flex gap-4">
+                        {/* <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p> */}
+
+                        {gigs.map((item) => {
+                            return (
+                                <GigCard
+                                    title={item.title}
+                                    description={item.description}
+                                    deliveryTime={`${item.deliveryTime}days delivery`}
+                                    price={item.price}
+                                    category={item.category}
+                                    subcategory={item.subCategory}
+                                    theme={theme}
+                                    imageUrls={item.imageUrls}
+                                />
+                            );
+                        })}
                     </CardContent>
                 </Card>
             </div>

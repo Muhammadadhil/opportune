@@ -1,11 +1,14 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 
 const UsersLayout = () => {
+    const { theme } = useSelector((state: RootState) => state.app);
+
     return (
-        <div>
-            {/* <div className="w-full xl:w-[1280px] mx-auto relative min-h-dvh max-md:w-screen"></div> */}
+        <div >
             <Navbar />
             <main>
                 <Outlet />

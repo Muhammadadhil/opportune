@@ -1,11 +1,9 @@
-import { Document, ObjectId } from "mongoose";
-
-export interface IGig extends Document {
-    freelancerId: ObjectId;
+export interface IGig {
+    freelancerId: string;
     title: string;
     description: string;
     images: string[];
-    price: string;
+    price: number;
     category: string;
     subCategory: string;
     isActive: boolean;
@@ -14,5 +12,5 @@ export interface IGig extends Document {
     averageRating: number;
     searchTags: string[];
     requirements: string[];
-    imageUrls?: string[];
+    imageUrls:string[];
 }

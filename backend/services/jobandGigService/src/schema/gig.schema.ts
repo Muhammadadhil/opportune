@@ -51,6 +51,9 @@ const gigSchema = new Schema<IGig>({
     requirements: {
         type: [{ type: String }],
     },
+    imageUrls:{
+        type:[String],
+    }
 });
 
 function arrayLimit(val: string[]) {

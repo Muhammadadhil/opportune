@@ -16,7 +16,6 @@ import ProfilePage from "@/pages/freelancer/ProfilePage";
 import CompleteProfile from "@/components/freelancer/CompleteProfile"
 import PostProject from "@/pages/freelancer/PostProjectPage";
 
-
 function UserRoute() {
     return (
         <>

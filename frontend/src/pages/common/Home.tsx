@@ -11,6 +11,7 @@ import { RootState } from "@/store/store";
 const Home: React.FC = () => {
     const { isLoading, theme } = useSelector((state: RootState) => state.app);
 
+
     return (
         <div className={`min-h-screen ${theme === "dark" ? "dark" : ""}`}>
             <div className="min-h-screen  dark:bg-black ">

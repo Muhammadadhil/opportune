@@ -23,7 +23,7 @@ export class GigController {
 
             console.log("Going to save post data !!!!!!");
 
-            const savedGigData = await this.gigService.saveGig(files,req.body);
+            const savedGigData = await this.gigService.saveGig(files, req.body);
             res.status(200).json(savedGigData);
         } catch (error) {
             res.status(500).json({ message: "Error saving gig", error });
@@ -45,6 +45,17 @@ export class GigController {
             const id = req.params.id;
             await this.gigService.changeGigStatus(id);
             res.status(200).json({ message: "status updated successfully!" });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    };
+
+    getGigs = async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+            console.log('FreelancerId to fetch gigs:',id);
+            const gigs=await this.gigService.getGigs(id);
+            res.status(200).json(gigs);
         } catch (error) {
             res.status(500).json(error);
         }
