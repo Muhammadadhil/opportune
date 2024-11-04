@@ -2,43 +2,37 @@ import { Star, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ImageCarousal } from "@/components/common/ImageCarousel";
-
-interface GigCardProps {
-    title: string;
-    description: string;
-    deliveryTime: string;
-    price: number;
-    category: string;
-    subcategory: string;
-    rating?: number;
-    reviews?: number;
-    theme?: string;
-    imageUrls:string[];
-}
+// import Button from "../ui/Button";
+import EditGig from "./EditGig";
+import { GigCardProps } from "@/types/IGigCard";
 
 const GigCard: React.FC<GigCardProps> = ({
     title = "Modern Flat Design Illustration",
     description = "I will create modern flat design illustration for your project",
     deliveryTime = "2 days delivery",
     price = 883,
-    category = "Graphics & Design",
-    subcategory = "Illustration",
+    category,
+    subcategory,
     rating,
     reviews,
     theme,
     imageUrls,
+    isProfile,
+    requirements,
+    searchTags,
 }) => {
-
-    console.log('imageUrls:',imageUrls);
+    console.log("imageUrls:", imageUrls);
 
     return (
         <Card className={`max-w-64 overflow-hidden group ${theme == "dark" ? "bg-gray-900 border-gray-800" : "bg-white"}`}>
             <div className="relative aspect-[2/1] overflow-hidden">
                 {/* <Image src={imageUrl} alt={title} className="object-cover transition-transform group-hover:scale-105" fill /> */}
                 <ImageCarousal array={imageUrls} />
-                <button className="absolute top-3 right-3 p-1.5 bg-white rounded-full hover:bg-gray-100">
-                    <Heart className="w-4 h-4" />
-                </button>
+                {!isProfile && (
+                    <button className="absolute top-3 right-3 p-1.5 bg-white rounded-full hover:bg-gray-100">
+                        <Heart className="w-4 h-4" />
+                    </button>
+                )}
             </div>
             <CardContent className="p-4 space-y-4">
                 <div className="space-y-2">
@@ -59,13 +53,29 @@ const GigCard: React.FC<GigCardProps> = ({
                         <Badge variant="secondary">{category}</Badge>
                         <Badge variant="outline">{subcategory}</Badge>
                     </div>
-                    <p className="text-muted-foreground">{deliveryTime}</p>
+                    <p className="text-muted-foreground">delivery time</p>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t">
-                    <span className="text-xs text-muted-foreground">Starting at</span>
-                    <span className="font-semibold">₹{price}</span>
-                </div>
+                {isProfile ? (
+                    <div className="flex items-center justify-center pt-2 border-t">
+                        <EditGig
+                            imageUrls={imageUrls}
+                            category={category}
+                            subcategory={subcategory}
+                            deliveryTime={deliveryTime}
+                            description={description}
+                            price={price}
+                            requirements={requirements}
+                            searchTags={searchTags}
+                            title={title}
+                        />
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-between pt-2 border-t">
+                        <span className="text-xs text-muted-foreground">Starting at</span>
+                        <span className="font-semibold">₹{price}</span>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

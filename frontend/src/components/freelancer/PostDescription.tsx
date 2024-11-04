@@ -11,7 +11,7 @@ import { DescriptionData } from "@/types/IProjectPost";
 import { updatePostFormData } from "@/store/slices/postSlice";
 import DescriptionDataSchema from "@/schemas/postDescriptoinSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { fileToBase64 } from "@/helpers/Base64";
+// import { fileToBase64 } from "@/helpers/Base64";
 import { IoIosClose } from "react-icons/io";
 import { RootState } from "@/store/store";
 
@@ -35,7 +35,6 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
             const newImages = [...images];
             newImages[index] = file;
             setImages(newImages);
-            // console.log("New: images array?:", newImages);
             setValue("images", newImages);
             dispatch(updatePostFormData({ ...formData, images: newImages }));
         }

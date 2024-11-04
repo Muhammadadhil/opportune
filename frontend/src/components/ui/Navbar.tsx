@@ -68,9 +68,11 @@ const Navbar: React.FC = () => {
                             {/* Logo on the left */}
                             <div className="flex-shrink-0">
                                 <a className="flex items-center">
-                                    <h2 className={`font-Poppins text-2xl font-extrabold ${theme === "dark" ? "text-white" : "text-slate-800"}`}>
-                                        Opportune <span className="text-amber-500">.</span>
-                                    </h2>
+                                    <Link to={'/'}>
+                                        <h2 className={`font-Poppins text-2xl font-extrabold ${theme === "dark" ? "text-white" : "text-slate-800"}`}>
+                                            Opportune <span className="text-amber-500">.</span>
+                                        </h2>
+                                    </Link>
                                 </a>
                             </div>
 
@@ -221,7 +223,7 @@ const Navbar: React.FC = () => {
                                                             </Link>
                                                         ))}
                                                     </div>
-                                                ) : userInfo?.role == "client" ?(
+                                                ) : userInfo?.role == "client" ? (
                                                     <div className="flex flex-col gap-4">
                                                         {freelancerMenu.map((item) => (
                                                             <Link
@@ -236,8 +238,8 @@ const Navbar: React.FC = () => {
                                                             </Link>
                                                         ))}
                                                     </div>
-                                                )  : (
-                                                        <div className="flex flex-col gap-4">
+                                                ) : (
+                                                    <div className="flex flex-col gap-4">
                                                         {menuItems.map((item) => (
                                                             <Link
                                                                 key={item.path}

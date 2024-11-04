@@ -39,17 +39,14 @@ export class GigService implements IGigService {
     async getGigs(id: string): Promise<IGig[] | null> {
         const gigDatas = await this.gigRepository.find({ freelancerId: id });
         for (const gig of gigDatas) {
-
-        const imageUrls = await Promise.all(
-            gig.images.map(async (image) => {
-                return await getSignedImageURL(image);
-            })
-        );
-
-        gig.imageUrls = imageUrls;
-    }
-    
-    return gigDatas;
-
+            const imageUrls = await Promise.all(
+                gig.images.map(async (image) => {
+                    return await getSignedImageURL(image);
+                })
+            );
+            gig.imageUrls = imageUrls;
+        }
+        
+        return gigDatas;
     }
 }

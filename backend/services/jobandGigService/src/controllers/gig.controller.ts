@@ -53,7 +53,6 @@ export class GigController {
     getGigs = async (req: Request, res: Response) => {
         try {
             const id = req.params.id;
-            console.log('FreelancerId to fetch gigs:',id);
             const gigs=await this.gigService.getGigs(id);
             res.status(200).json(gigs);
         } catch (error) {

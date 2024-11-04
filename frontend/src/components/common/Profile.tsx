@@ -165,12 +165,13 @@ export default function Profile() {
                     <CardHeader>
                         <CardTitle className={theme === "dark" ? "text-gray-200" : "text-gray-600"}>Your Posts</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex gap-4">
-                        {/* <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p> */}
+                    <CardContent className="flex gap-4 ">
+                        {gigs.length < 1 && <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p>}
 
-                        {gigs.map((item) => {
+                        {gigs.map((item, index) => {
                             return (
                                 <GigCard
+                                    key={index}
                                     title={item.title}
                                     description={item.description}
                                     deliveryTime={`${item.deliveryTime}days delivery`}
@@ -179,6 +180,9 @@ export default function Profile() {
                                     subcategory={item.subCategory}
                                     theme={theme}
                                     imageUrls={item.imageUrls}
+                                    isProfile={true}
+                                    searchTags={item.searchTags}
+                                    requirements={item.requirements}
                                 />
                             );
                         })}
