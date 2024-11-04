@@ -4,10 +4,11 @@ export interface GigCardProps {
     deliveryTime: string;
     price: number;
     category: string;
-    subcategory: string;
+    subCategory: string;
     rating?: number;
     reviews?: number;
     theme?: string;
+    images:string[];
     imageUrls: string[];
     isProfile?: boolean;
     searchTags: string[];

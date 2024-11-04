@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -13,31 +11,25 @@ import { Textarea } from "../ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DescriptionDataSchema from "@/schemas/postDescriptoinSchema";
 import { overViewSchema } from "@/schemas/postOverviewSchema";
-
+import KeywordInput from "../common/KeywordInput";
 
 export default function EditGig({
-    title = "Modern Flat Design Illustration",
-    description = "I will create modern flat design illustration for your project",
-    price = 883,
-    deliveryTime = "2 days",
-    category = "Graphics & Design",
-    subcategory = "Illustration",
-    searchTags = [],
-    requirements = [],
-    theme = "light",
+    title,
+    description,
+    price,
+    deliveryTime ,
+    category ,
+    subCategory,
+    searchTags,
+    images,
     imageUrls,
+    requirements,
+    theme = "light",
 }: GigCardProps) {
-    const [editedTitle, setEditedTitle] = useState(title);
-    const [editedDescription, setEditedDescription] = useState(description);
-    const [editedPrice, setEditedPrice] = useState(price);
-    const [editedDeliveryTime, setEditedDeliveryTime] = useState(deliveryTime);
-    const [editedCategory, setEditedCategory] = useState(category);
-    const [editedSubcategory, setEditedSubcategory] = useState(subcategory);
-    const [editedSearchTags, setEditedSearchTags] = useState(searchTags);
-    const [editedRequirements, setEditedRequirements] = useState(requirements);
-    const [newTag, setNewTag] = useState("");
-    const [newRequirement, setNewRequirement] = useState("");
-
+    
+    const [newKeyword, setNewKeyword] = useState("");
+    const [keywords, setKeywords] = useState<string[]>(searchTags);
+    
     const gigSchema = overViewSchema.merge(DescriptionDataSchema);
 
     const {
@@ -54,49 +46,34 @@ export default function EditGig({
             price,
             deliveryTime,
             category,
-            subcategory,
+            subCategory,
             searchTags,
             requirements,
             imageUrls,
         },
     });
 
-    const handleAddTag = () => {
-        if (newTag && !editedSearchTags.includes(newTag)) {
-            setEditedSearchTags([...editedSearchTags, newTag]);
-            setNewTag("");
-        }
-    };
-
-    const handleRemoveTag = (tag: string) => {
-        setEditedSearchTags(editedSearchTags.filter((t) => t !== tag));
-    };
-
-    const handleAddRequirement = () => {
-        if (newRequirement && !editedRequirements.includes(newRequirement)) {
-            setEditedRequirements([...editedRequirements, newRequirement]);
-            setNewRequirement("");
-        }
-    };
-
-    const handleRemoveRequirement = (req: string) => {
-        setEditedRequirements(editedRequirements.filter((r) => r !== req));
+    const removeKeyword = (index: number) => {
+        const updatedKeywords = keywords.filter((_, i) => i !== index);
+        setKeywords(updatedKeywords);
+        setValue("searchTags", updatedKeywords);
     };
 
     const handleSave = () => {
-        console.log("Saving changes:", {
-            title: editedTitle,
-            description: editedDescription,
-            price: editedPrice,
-            deliveryTime: editedDeliveryTime,
-            category: editedCategory,
-            subcategory: editedSubcategory,
-            searchTags: editedSearchTags,
-            requirements: editedRequirements,
-        });
+        console.log("!!! Saving changes !!!!");
     };
 
-    const handleImageUpload = (event, index) => {};
+    const handleImageUpload = (event, index) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const newImages = [...images];
+            newImages[index] = file;
+            setImages(newImages);
+            setValue("images", newImages);
+        }
+    };
+
+    console.log('rhf errors:',errors)
 
     return (
         <Dialog>
@@ -139,6 +116,7 @@ export default function EditGig({
                             </div>
                         </div>
                         <div className="grid gap-2">
+                            <Label htmlFor="description">Description</Label>
                             <Textarea {...register("description")} id="description" placeholder="Write about your work experience" className="min-h-[75px]" />
                             {errors.description && <p className="text-red-800 text-sm">{errors.description.message}</p>}
                         </div>
@@ -168,9 +146,9 @@ export default function EditGig({
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="subcategory">Subcategory</Label>
+                                <Label htmlFor="subcategory">Sub Category</Label>
                                 <Controller
-                                    name="subcategory"
+                                    name="subCategory"
                                     control={control}
                                     render={({ field }) => (
                                         <Select {...field} onValueChange={field.onChange}>
@@ -179,7 +157,7 @@ export default function EditGig({
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Categories</SelectLabel>
+                                                    <SelectLabel>Sub categories</SelectLabel>
                                                     <SelectItem value="a">Apple</SelectItem>
                                                     <SelectItem value="banana">Banana</SelectItem>
                                                     <SelectItem value="blueberry">Blueberry</SelectItem>
@@ -194,72 +172,57 @@ export default function EditGig({
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="deliveryTime">Work Delivery time period (Day)</Label>
-
-                            {/* <Input id="deliveryTime" value={editedDeliveryTime} onChange={(e) => setEditedDeliveryTime(e.target.value)} /> */}
-                            <Select>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Select delivery time" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="1">1 day</SelectItem>
-                                    <SelectItem value="2">2 days</SelectItem>
-                                    <SelectItem value="3">3 days</SelectItem>
-                                    <SelectItem value="7">1 week</SelectItem>
-                                    <SelectItem value="14">2 weeks</SelectItem>
-                                    <SelectItem value="30">1 month</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="grid gap-2">
-                            {/* <Controller
-                            name="deliveryTime"
-                            // control={control}
-                            rules={{ required: "Delivery time is required" }}
-                            render={({ field }) => (
-                                <Select {...field} onValueChange={field.onChange}>
-                                    <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder="Select delivery time" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="1">1 day</SelectItem>
-                                        <SelectItem value="2">2 days</SelectItem>
-                                        <SelectItem value="3">3 days</SelectItem>
-                                        <SelectItem value="7">1 week</SelectItem>
-                                        <SelectItem value="14">2 weeks</SelectItem>
-                                        <SelectItem value="30">1 month</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            )}
-                        /> */}
-                            {/* {errors.deliveryTime && <p className="text-red-700 text-sm">{errors.deliveryTime.message}</p>} */}
+                            <Controller
+                                name="deliveryTime"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select {...field} onValueChange={field.onChange}>
+                                        <SelectTrigger className="w-[180px]">
+                                            <SelectValue placeholder="Select delivery time" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1">1 day</SelectItem>
+                                            <SelectItem value="2">2 days</SelectItem>
+                                            <SelectItem value="3">3 days</SelectItem>
+                                            <SelectItem value="7">1 week</SelectItem>
+                                            <SelectItem value="14">2 weeks</SelectItem>
+                                            <SelectItem value="30">1 month</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                            {errors.deliveryTime && <p className="text-red-700 text-sm">{errors.deliveryTime.message}</p>}
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="searchTags">Search Tags</Label>
 
                             <div className="flex gap-2">
-                                <Input id="newTag" value={newTag} onChange={(e) => setNewTag(e.target.value)} placeholder="Add new tag" />
-                                <Button onClick={handleAddTag}>Add</Button>
+                                <KeywordInput formFieldName="searchTags" keywords={keywords} setKeywords={setKeywords} newKeyword={newKeyword} setNewKeyword={setNewKeyword} setValue={setValue} />
                             </div>
+                            {errors.searchTags && <p className="text-red-700 text-sm">{errors.searchTags.message}</p>}
+
                             <div className="flex flex-wrap gap-2">
-                                {editedSearchTags.map((tag) => (
-                                    <div key={tag} className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md">
-                                        {tag}
-                                        <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => handleRemoveTag(tag)}>
+                                {keywords.map((keyword, index) => (
+                                    <div key={index} className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md">
+                                        {keyword}
+                                        <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => removeKeyword(index)}>
                                             <X className="h-3 w-3" />
                                         </Button>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="grid gap-2">
+                        {/* <div className="grid gap-2">
                             <Label htmlFor="requirements">Requirements</Label>
 
                             <div className="flex gap-2">
-                                <Input id="newRequirement" value={newRequirement} onChange={(e) => setNewRequirement(e.target.value)} placeholder="Add new requirement" />
+                                <Input id="newRequirement" placeholder="Add new requirement" {...register("requirements")} />
                                 <Button onClick={handleAddRequirement}>Add</Button>
                             </div>
+                            {errors.requirements && <p className="text-red-700 text-sm">{errors.requirements.message}</p>}
+
                             <div className="flex flex-col gap-2">
-                                {editedRequirements.map((req) => (
+                                {requirements.map((req) => (
                                     <div key={req} className="flex items-center gap-2 bg-secondary text-secondary-foreground px-2 py-1 rounded-md">
                                         {req}
                                         <Button variant="ghost" size="icon" className="h-4 w-4 ml-auto" onClick={() => handleRemoveRequirement(req)}>
@@ -268,7 +231,7 @@ export default function EditGig({
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <DialogFooter>
                         <Button type="submit">Save changes</Button>

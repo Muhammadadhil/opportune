@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { OverviewData } from "@/types/IProjectPost";
 import { RootState } from "@/store/store";
 import { updatePostFormData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
+import KeywordInput from "../common/KeywordInput";
 
 
 interface OverviewProps {
@@ -32,13 +33,13 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
         defaultValues: formData,
     });
 
-    const addKeyword = useCallback(() => {
-        if (newKeyword && keywords.length < 10) {
-            setKeywords((prev) => [...prev, newKeyword]);
-            setNewKeyword("");  
-            setValue("searchTags", [...keywords, newKeyword]);
-        }
-    }, [newKeyword, keywords, dispatch, formData]);
+    // const addKeyword = useCallback(() => {
+    //     if (newKeyword && keywords.length < 10) {
+    //         setKeywords((prev) => [...prev, newKeyword]);
+    //         setNewKeyword("");  
+    //         setValue("searchTags", [...keywords, newKeyword]);
+    //     }
+    // }, [newKeyword, keywords, dispatch, formData]);
 
     const removeKeyword = (index: number) => {
         const updatedKeywords = keywords.filter((_, i) => i !== index);
@@ -151,8 +152,8 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                         <label htmlFor="searchTags" className="block text-sm font-medium text-gray-700">
                             Search Tags
                         </label>
-                        <div className="flex space-x-2 mb-2">
-                            <Input
+                        <div >
+                            {/* <Input
                                 type="text"
                                 placeholder="Add a keyword"
                                 value={newKeyword}
@@ -166,7 +167,9 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                             />
                             <Button variant="outline" onClick={addKeyword}>
                                 Add
-                            </Button>
+                            </Button> */}
+
+                            <KeywordInput formFieldName="searchTags" keywords={keywords} setKeywords={setKeywords} newKeyword={newKeyword} setNewKeyword={setNewKeyword} setValue={setValue}/>
                         </div>
                         <p className="text-sm text-gray-500 mt-1 text-end mr-5">{10 - keywords.length}/10 left</p>
                         <div className="flex flex-wrap gap-2">
@@ -185,7 +188,7 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                     <div className="flex justify-end">
                         <Button className="bg-green-800 hover:bg-green-900" type="submit">
                             Save & Continue
-                        </Button>
+                        </Button>   
                     </div>
                 </form>
             </div>

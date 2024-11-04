@@ -152,7 +152,7 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
                                 {requirements.map((req, index) => (
                                     <div key={index} className="flex items-center">
                                         <Input
-                                            className="flex-1" // Allow input to take available space
+                                            className="flex-1"
                                             placeholder={`Requirement ${index + 1}`}
                                             value={req}
                                             onChange={(e) => {

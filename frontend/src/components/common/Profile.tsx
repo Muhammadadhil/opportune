@@ -18,6 +18,7 @@ export default function Profile() {
     const [profileImage, setProfileImage] = useState("");
     const [gigs, setGigs] = useState<IGig[]>([]);
 
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -177,8 +178,9 @@ export default function Profile() {
                                     deliveryTime={`${item.deliveryTime}days delivery`}
                                     price={item.price}
                                     category={item.category}
-                                    subcategory={item.subCategory}
+                                    subCategory={item.subCategory}
                                     theme={theme}
+                                    images={item.images}
                                     imageUrls={item.imageUrls}
                                     isProfile={true}
                                     searchTags={item.searchTags}

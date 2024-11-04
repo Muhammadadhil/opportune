@@ -12,10 +12,11 @@ const GigCard: React.FC<GigCardProps> = ({
     deliveryTime = "2 days delivery",
     price = 883,
     category,
-    subcategory,
+    subCategory,
     rating,
     reviews,
     theme,
+    images,
     imageUrls,
     isProfile,
     requirements,
@@ -51,7 +52,7 @@ const GigCard: React.FC<GigCardProps> = ({
                 <div className="space-y-2 text-sm">
                     <div className="flex gap-2">
                         <Badge variant="secondary">{category}</Badge>
-                        <Badge variant="outline">{subcategory}</Badge>
+                        <Badge variant="outline">{subCategory}</Badge>
                     </div>
                     <p className="text-muted-foreground">delivery time</p>
                 </div>
@@ -59,9 +60,10 @@ const GigCard: React.FC<GigCardProps> = ({
                 {isProfile ? (
                     <div className="flex items-center justify-center pt-2 border-t">
                         <EditGig
+                            images={images}
                             imageUrls={imageUrls}
                             category={category}
-                            subcategory={subcategory}
+                            subCategory={subCategory}
                             deliveryTime={deliveryTime}
                             description={description}
                             price={price}
