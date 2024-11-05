@@ -32,7 +32,7 @@ const gigSchema = new Schema<IGig>(
             default: true,
         },
         deliveryTime: {
-            type: Date,
+            type: String,
             required: true,
         },
         reviewsCount: {
@@ -47,7 +47,6 @@ const gigSchema = new Schema<IGig>(
         },
         images: {
             type: [String],
-            validate: [arrayLimit, "{PATH} exceeds the limit of 3"], // Limit images to 3
         },
         requirements: {
             type: [{ type: String }],

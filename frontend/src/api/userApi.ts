@@ -51,13 +51,11 @@ export const getClientProfileData = async (userId: string) => {
 
 
 export const saveProjectPost = async (formData) => {
-    console.log("sending this Data:", formData);
     return await apiClient.post("/post/postaGig", formData, { headers: { "Content-Type": "multipart/form-data" } });
 };
 
 export const editGigPost = async (gigData) => {
-    console.log("Edit gig Data:", gigData);
-    return await apiClient.post("/post/editGig", { gigData });
+    return await apiClient.post("/post/editGig", gigData );
 };
 
 export const fetchGigs = async (fId:string) => {

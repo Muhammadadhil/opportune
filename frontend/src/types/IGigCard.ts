@@ -1,4 +1,5 @@
 export interface GigCardProps {
+    freelancerId?:string;
     title: string;
     description: string;
     deliveryTime: string;
@@ -8,7 +9,7 @@ export interface GigCardProps {
     rating?: number;
     reviews?: number;
     theme?: string;
-    images:string[];
+    images:string[] | File[];
     imageUrls: string[];
     isProfile?: boolean;
     searchTags: string[];

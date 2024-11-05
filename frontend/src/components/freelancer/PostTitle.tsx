@@ -153,22 +153,6 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                             Search Tags
                         </label>
                         <div >
-                            {/* <Input
-                                type="text"
-                                placeholder="Add a keyword"
-                                value={newKeyword}
-                                onChange={(e) => setNewKeyword(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key == "Enter") {
-                                        e.preventDefault();
-                                        addKeyword();
-                                    }
-                                }}
-                            />
-                            <Button variant="outline" onClick={addKeyword}>
-                                Add
-                            </Button> */}
-
                             <KeywordInput formFieldName="searchTags" keywords={keywords} setKeywords={setKeywords} newKeyword={newKeyword} setNewKeyword={setNewKeyword} setValue={setValue}/>
                         </div>
                         <p className="text-sm text-gray-500 mt-1 text-end mr-5">{10 - keywords.length}/10 left</p>

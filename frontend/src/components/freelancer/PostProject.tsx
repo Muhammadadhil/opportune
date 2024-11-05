@@ -39,6 +39,7 @@ export default function PostProject() {
     const handleSubmit = async () => {
         try {
             const data = { ...formData };
+            console.log('data in post gig:',data);
             setLoading(true);
             const formData1 = await convertToFormData(data);
             formData1.append("freelancerId", freelancerData?.userId);

@@ -11,7 +11,7 @@ const router = Router();
 const gigController = new GigController();
 
 router.post("/postaGig", upload.array("images", 3), gigController.postAGig);
-router.post("/editGig", checkSchema(editGigValidator()), validateEntry,gigController.editGig);
+router.post("/editGig", upload.array("images", 3),gigController.editGig);
 router.delete("/deleteGig/:id", deleteGigValidator, gigController.changeStatus);
 
 router.get('/getGigs/:id',gigController.getGigs);

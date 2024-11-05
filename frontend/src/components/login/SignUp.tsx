@@ -6,7 +6,7 @@ import { setCredentials } from "@/store/slices/userSlice";
 import { signUp } from "@/api/userApi";
 import { getCountries } from "@/api/auth";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";

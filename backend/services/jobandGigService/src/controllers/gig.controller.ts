@@ -14,7 +14,7 @@ export class GigController {
         try {
             console.log("req.file using multer:", req.files);
             console.log("req.body:", req.body);
-
+            
             const files = req.files as IUploadFile[];
 
             if (!files) {
@@ -32,11 +32,19 @@ export class GigController {
 
     editGig = async (req: Request, res: Response) => {
         try {
-            const { userId, data } = req.body;
-            const updatedData = await this.gigService.editGig(userId, data);
+            console.log('req.boby Edit:',req.body)
+            
+            const updatedData = await this.gigService.editGig(req.body.freelancerId, req.body);
+            console.log('updateData:',updatedData);
+
+            if(!updatedData){
+                return res.status(404).json({ message: "Error editing gig. no Database response" });
+            }
+
             res.status(200).json(updatedData);
         } catch (error) {
-            res.status(500).json({ message: "Error editinzg gig", error });
+            console.log('Error in edit gig:',error)
+            res.status(500).json({ message: "Error editing gig", error });
         }
     };
 

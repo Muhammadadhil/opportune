@@ -13,7 +13,6 @@ export class GigService implements IGigService {
     }
 
     async saveGig(files: IUploadFile[], data: IGig): Promise<IGig | null> {
-        // call method to the save the image in s3
         // const buffer = await sharp(file.buffer).resize({ height: 1080, width: 1080, fit: "contain" }).toBuffer();
         // const image = await uploadTosS3(buffer, file.mimetype);
         const images: string[] = await Promise.all(
@@ -22,13 +21,17 @@ export class GigService implements IGigService {
                 return await uploadTosS3(file.buffer, file.mimetype);
             })
         );
-
+        console.log('data & images:',data,images)
         const newGig = await this.gigRepository.create({ ...data, images } as IGig);
+        console.log("newGig:",newGig);
+
+
 
         return newGig;
     }
 
     async editGig(userId: string, data: IGig): Promise<IGig | null> {
+        console.log('data in service:',data);
         return await this.gigRepository.updateGigUsingFreelancerId(userId, data);
     }
 

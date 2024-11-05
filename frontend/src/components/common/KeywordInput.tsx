@@ -15,15 +15,18 @@ type KeywordInputProps<T extends FieldValues> = {
 
 const KeywordInput = <T extends FieldValues>({ newKeyword, setNewKeyword, keywords, setKeywords, formFieldName, setValue }: KeywordInputProps<T>) => {
 
-    const addKeyword = useCallback((e) => {
-        e.preventDefault()
-        if (newKeyword && keywords.length < 10) {
-            const updatedKeywords = [...keywords, newKeyword];
-            setKeywords(updatedKeywords);
-            setNewKeyword("");
-            setValue(formFieldName, updatedKeywords as PathValue<T, Path<T>>);
-        }
-    }, [newKeyword, keywords]);
+    const addKeyword = useCallback(
+        (event) => {
+            event.preventDefault();
+            if (newKeyword && keywords.length < 10) {
+                const updatedKeywords = [...keywords, newKeyword];
+                setKeywords(updatedKeywords);
+                setNewKeyword("");
+                setValue(formFieldName, updatedKeywords as PathValue<T, Path<T>>);
+            }
+        },
+        [newKeyword, keywords]
+    );
 
     return (
         <div className="flex space-x-2 mb-2">
@@ -34,7 +37,6 @@ const KeywordInput = <T extends FieldValues>({ newKeyword, setNewKeyword, keywor
                 onChange={(e) => setNewKeyword(e.target.value)}
                 onKeyDown={(e) => {
                     if (e.key == "Enter") {
-                        e.preventDefault();
                         addKeyword(newKeyword);
                     }
                 }}
