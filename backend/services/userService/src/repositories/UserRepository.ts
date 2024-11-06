@@ -6,7 +6,9 @@ import IClientDetail from "../interfaces/IClientDetail";
 import IFreelancer from "../interfaces/IFreelancer";
 import { ObjectId } from "mongoose";
 
+
 export class UserRepository {
+
     async createUser(userData: IUser): Promise<IUser> {
         const user = new User(userData);
         return await user.save();

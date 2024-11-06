@@ -1,21 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { addCategory, addSubCategory } from "@/api/admin";
-
-// Mock data for categories and subcategories
-const mockData = [
-    { id: 1, name: "Electronics", subcategories: ["Phones", "Laptops", "Tablets"] },
-    { id: 2, name: "Clothing", subcategories: ["Men", "Women", "Kids"] },
-    { id: 3, name: "Books", subcategories: ["Fiction", "Non-fiction", "Educational"] },
-];
+import { addCategory, addSubCategory, getCategories } from "@/api/admin";
+import toast from "react-hot-toast";
 
 const Categories: React.FC = () => {
-    const [categories, setCategories] = useState(mockData);
+    const [categories, setCategories] = useState([]);
     const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
     const [isAddSubcategoryOpen, setIsAddSubcategoryOpen] = useState(false);
 
@@ -24,27 +18,34 @@ const Categories: React.FC = () => {
 
     const handleAddCategory = async () => {
         if (newCategory) {
-            await addCategory(newCategory);
-            setCategories([...categories, { id: categories.length + 1, name: newCategory, subcategories: [] }]);
-            setNewCategory("");
-            setIsAddCategoryOpen(false);
+            try {
+                await addCategory(newCategory);
+                setNewCategory("");
+                setIsAddCategoryOpen(false);
+                getAllCategories(); 
+            } catch (error) {
+                console.log("Error in add category:", error);
+                toast.error(error.response.data.message);
+            }
         }
     };
 
-    // const addCategories = async () => {
-    //     // await addCategory(newCategory, newSubcategory);
-    // };
+    const getAllCategories = async () => {
+        const response = await getCategories();
+        // console.log("response.data.data", response);
+        setCategories(response.data); 
+    };
 
-    // useEffect(() => {
-    //     addCategories();
-    // }, [categories]);
+    useEffect(() => {
+        getAllCategories();
+    }, []); 
 
-    const handleAddSubcategory = () => {
+    const handleAddSubcategory = async () => {
         if (newSubcategory.category && newSubcategory.name) {
-            addSubCategory(newSubcategory);
-            setCategories(categories.map((cat) => (cat.name === newSubcategory.category ? { ...cat, subcategories: [...cat.subcategories, newSubcategory.name] } : cat)));
+            await addSubCategory(newSubcategory);
             setNewSubcategory({ category: "", name: "" });
             setIsAddSubcategoryOpen(false);
+            getAllCategories(); 
         }
     };
 
@@ -92,8 +93,8 @@ const Categories: React.FC = () => {
                                         onChange={(e) => setNewSubcategory({ ...newSubcategory, category: e.target.value })}
                                     >
                                         <option value="">Select a category</option>
-                                        {categories.map((cat) => (
-                                            <option key={cat.id} value={cat.name}>
+                                        {categories?.map((cat) => (
+                                            <option key={cat._id} value={cat.name}>
                                                 {cat.name}
                                             </option>
                                         ))}
@@ -116,7 +117,7 @@ const Categories: React.FC = () => {
                     </Dialog>
                 </div>
             </div>
-            <Table className="">
+            <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Category</TableHead>
@@ -124,10 +125,10 @@ const Categories: React.FC = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {categories.map((category) => (
-                        <TableRow key={category.id}>
-                            <TableCell className="font-medium">{category.name}</TableCell>
-                            <TableCell>{category.subcategories.join(", ")}</TableCell>
+                    {categories?.map((category) => (
+                        <TableRow key={category?._id}>
+                            <TableCell className="font-medium">{category?.name}</TableCell>
+                            <TableCell>{category?.subCategory.map((sub: { name: string }) => sub.name).join(", ")}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

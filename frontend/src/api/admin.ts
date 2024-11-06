@@ -23,3 +23,7 @@ export const addCategory = async (category: string) => {
 export const addSubCategory = async (subCategory: subCategory) => {
     return await apiClient.post("manage/category/add", { subCategory });
 };
+
+export const getCategories = async () => {
+    return await apiClient.get("manage/category/getCategories");
+};

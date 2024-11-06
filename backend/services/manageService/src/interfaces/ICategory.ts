@@ -1,7 +1,8 @@
 import { Document } from "mongoose";
 
 export interface ISubCategory {
-    name:string;
+    category: string;
+    name: string;
 }
 
 export interface ICategory extends Document {
