@@ -1,6 +1,6 @@
 import { AdminRepository } from "../../repositories/admin.repository";
 import bcrypt from "bcrypt";
-import { generateAccessToken, generateRefreshToken } from "../../utils/jwt/generateToken";
+import { generateAccessToken, generateRefreshToken } from "../../utils/generateToken";
 
 export class AdminService {
     private adminRepository;

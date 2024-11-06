@@ -5,6 +5,7 @@ import router from './routes/adminRoutes';
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 dotenv.config();
@@ -19,6 +20,8 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.use("/", router);
+
+app.use(errorHandler);
 
 
 connectDB();    

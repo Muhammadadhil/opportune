@@ -10,3 +10,8 @@ export const loginAdmin = async (email: string, password: string) => {
 export const logoutAdmin = async () => {
     return await apiClient.patch("manage/logout");
 };
+
+
+export const addCategory=async ()=>{
+    return await apiClient.post("manage/addCategory");
+}

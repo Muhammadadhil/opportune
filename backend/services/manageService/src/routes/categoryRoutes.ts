@@ -1,10 +1,8 @@
 import { Router } from "express";
-import { CategoryController } from "../controllers/category.controller";
+import { categoryController } from "../controllers/category.controller";
 
 const router = Router();
-const categoryController = new CategoryController();
 
-
-router.post("/add-category", categoryController.addCategory);
+router.post("/add-category", (req, res, next) => categoryController.addCategory(req, res, next));
 
 export default router;
