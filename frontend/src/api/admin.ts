@@ -1,5 +1,10 @@
 import apiClient from "./apiClient/axios";
 
+type subCategory = {
+    category: string;
+    name: string;
+};
+
 export const loginAdmin = async (email: string, password: string) => {
     return await apiClient.post("manage/login", {
         email,
@@ -11,7 +16,10 @@ export const logoutAdmin = async () => {
     return await apiClient.patch("manage/logout");
 };
 
+export const addCategory = async (category: string) => {
+    return await apiClient.post("manage/category/add", { category });
+};
 
-export const addCategory=async ()=>{
-    return await apiClient.post("manage/addCategory");
-}
+export const addSubCategory = async (subCategory: subCategory) => {
+    return await apiClient.post("manage/category/add", { subCategory });
+};

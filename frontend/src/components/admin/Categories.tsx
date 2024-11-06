@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { addCategory, addSubCategory } from "@/api/admin";
 
 // Mock data for categories and subcategories
 const mockData = [
@@ -21,20 +22,26 @@ const Categories: React.FC = () => {
     const [newCategory, setNewCategory] = useState("");
     const [newSubcategory, setNewSubcategory] = useState({ category: "", name: "" });
 
-    const handleAddCategory = () => {
+    const handleAddCategory = async () => {
         if (newCategory) {
+            await addCategory(newCategory);
             setCategories([...categories, { id: categories.length + 1, name: newCategory, subcategories: [] }]);
             setNewCategory("");
             setIsAddCategoryOpen(false);
         }
     };
 
-    // useEffect(() => {
+    // const addCategories = async () => {
+    //     // await addCategory(newCategory, newSubcategory);
+    // };
 
+    // useEffect(() => {
+    //     addCategories();
     // }, [categories]);
 
     const handleAddSubcategory = () => {
         if (newSubcategory.category && newSubcategory.name) {
+            addSubCategory(newSubcategory);
             setCategories(categories.map((cat) => (cat.name === newSubcategory.category ? { ...cat, subcategories: [...cat.subcategories, newSubcategory.name] } : cat)));
             setNewSubcategory({ category: "", name: "" });
             setIsAddSubcategoryOpen(false);
@@ -109,7 +116,7 @@ const Categories: React.FC = () => {
                     </Dialog>
                 </div>
             </div>
-            <Table>
+            <Table className="">
                 <TableHeader>
                     <TableRow>
                         <TableHead>Category</TableHead>

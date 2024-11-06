@@ -1,7 +1,7 @@
 import express from "express";
-
 import connectDB from "./config/db/connect";
 import router from './routes/adminRoutes';
+import categoryRouter from './routes/categoryRoutes';
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
@@ -20,6 +20,8 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.use("/", router);
+app.use("/category", categoryRouter);
+
 
 app.use(errorHandler);
 

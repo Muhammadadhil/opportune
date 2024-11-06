@@ -1,4 +1,4 @@
-import { AdminRepository } from "../../repositories/admin.repository";
+import { AdminRepository } from "../../repositories/implementation/admin.repository";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../../utils/generateToken";
 

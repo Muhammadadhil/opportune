@@ -1,4 +1,4 @@
-import Admin from "../schema/admin.schema"
+import Admin from "../../schema/admin.schema"
 
 
 export class AdminRepository {

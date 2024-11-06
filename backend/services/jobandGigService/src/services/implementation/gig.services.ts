@@ -25,8 +25,6 @@ export class GigService implements IGigService {
         const newGig = await this.gigRepository.create({ ...data, images } as IGig);
         console.log("newGig:",newGig);
 
-
-
         return newGig;
     }
 

@@ -1,15 +1,26 @@
+import { ICategory, ISubCategory,ICategoryData } from "../../interfaces/ICategory";
+import { categoryRepository } from "../../repositories/implementation/category.repository";
+
 export class categoryService {
-    // private categoryService: 
+
+    private categoryRepository;
 
     constructor() {
-        
+        this.categoryRepository = new categoryRepository();
     }
 
-    async addCategory(req: Request, res: Response) {
-        try {
+    async addCategory(category: string, subCategory: ISubCategory) {
 
-        } catch (error) {
-            
+        if (category && !subCategory) {
+
+            const item: ICategoryData = {
+                name: category,
+                subCategory: [],
+            };
+
+            this.categoryRepository.create(item);
+        }else{
+
         }
     }
 }
