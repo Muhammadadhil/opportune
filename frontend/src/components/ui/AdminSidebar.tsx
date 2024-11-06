@@ -4,14 +4,17 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useState } from "react";
 import { logoutAdmin } from "@/api/admin";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setAdminAuthStatus } from "@/store/slices/userSlice";
 
 const AdminSidebar = () => {
     const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
 
     const handleLogout = async () => {
         try {
-            const response = await logoutAdmin();
-            console.log("logoutresponse:", response);
+            await logoutAdmin();
+            dispatch(setAdminAuthStatus());
         } catch (error) {
             console.error("Logout error:", error);
             toast.error("Error while logging out");

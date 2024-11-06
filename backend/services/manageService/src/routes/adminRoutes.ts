@@ -7,4 +7,6 @@ const adminController = new AdminController();
 router.post("/login",adminController.login);
 router.patch("/logout",adminController.logout);
 
+
+
 export default router;

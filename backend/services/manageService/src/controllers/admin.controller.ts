@@ -1,5 +1,5 @@
 import { Request, Response,NextFunction } from "express";
-import { AdminService } from "../services/admin.services";
+import { AdminService } from "../services/implementation/admin.services";
 
 export class AdminController {
     private adminService: AdminService;
@@ -53,6 +53,6 @@ export class AdminController {
             expires: new Date(0),
         });
 
-         res.status(200).json({ message: "Admin logged out" });
+        res.status(200).json({ message: "Admin logged Out Successfully" });
     }
 }

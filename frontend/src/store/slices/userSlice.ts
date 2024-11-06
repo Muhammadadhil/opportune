@@ -6,7 +6,7 @@ const initialState: userState = {
     freelancerData: {
         userId: "",
         title: "",
-        skils: [],
+        skills: [],
         accounts: {},
         image: "",
         imageUrl:""
@@ -30,12 +30,18 @@ export const userSlice = createSlice({
         },
         logoutUser: (state) => {
             state.userInfo = null;
-            state.freelancerData = {};
+            state.freelancerData = {
+                userId:"",
+                title:"",
+                accounts:"",
+                image:"",
+                skills:[]
+            };
             state.clientData = {};
             localStorage.removeItem("token");
         },
         setAdminAuthStatus: (state) => {
-            state.isAdminAuthenticated = true;
+            state.isAdminAuthenticated = !state.isAdminAuthenticated;
         },
     },
 });

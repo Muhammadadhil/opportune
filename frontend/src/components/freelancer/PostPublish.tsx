@@ -94,7 +94,7 @@ const Description: React.FC<IPublishProps> = React.memo(({ onPrev, handleSubmit 
                                 {/* Price */}
                                 <div className="bg-muted p-4 rounded-lg">
                                     <div className="text-sm text-muted-foreground mb-1">Starting at</div>
-                                    <div className="text-2xl font-bold">${formData.price || "0"}</div>
+                                    <div className="text-2xl font-bold">₹{formData.price || "0"}</div>
                                 </div>
 
                                 {/* Delivery Time */}

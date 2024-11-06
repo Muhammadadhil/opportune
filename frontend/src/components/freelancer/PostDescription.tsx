@@ -185,7 +185,7 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
                         <div className="mb-8">
                             <Label htmlFor="price">Price of your project</Label>
                             <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
                                 <Input {...register("price")} id="price" type="number" min="0" step="0.01" className="pl-8" placeholder="0.00" />
                             </div>
                             {errors.price && <p className="text-red-700 text-sm">{errors.price.message}</p>}

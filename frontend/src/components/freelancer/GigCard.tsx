@@ -6,24 +6,7 @@ import { ImageCarousal } from "@/components/common/ImageCarousel";
 import EditGig from "./EditGig";
 import { GigCardProps } from "@/types/IGigCard";
 
-const GigCard: React.FC<GigCardProps> = ({
-    title = "Modern Flat Design Illustration",
-    description = "I will create modern flat design illustration for your project",
-    deliveryTime = "2 days delivery",
-    price = 883,
-    category,
-    subCategory,
-    rating,
-    reviews,
-    theme,
-    images,
-    imageUrls,
-    isProfile,
-    requirements,
-    searchTags,
-}) => {
-    console.log("imageUrls:", imageUrls);
-
+const GigCard: React.FC<GigCardProps> = ({ title, description, deliveryTime, price, category, subCategory, rating, reviews, theme, images, imageUrls, isProfile, requirements, searchTags }) => {
     return (
         <Card className={`max-w-64 overflow-hidden group ${theme == "dark" ? "bg-gray-900 border-gray-800" : "bg-white"}`}>
             <div className="relative aspect-[2/1] overflow-hidden">

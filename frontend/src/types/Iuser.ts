@@ -18,6 +18,7 @@ export interface IFreelancer {
     userId: string;
     title: string;
     skills: string[];
-    accounts: any; 
-    image: string; 
+    accounts: any;
+    image: string;
+    imageUrl?:string;
 }

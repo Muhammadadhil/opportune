@@ -25,6 +25,8 @@ export default function EditGig({ title, description, price, deliveryTime, categ
     const gigSchema = overViewSchema.merge(DescriptionDataSchema);
     const { freelancerData } = useSelector((state: RootState) => state.user);
 
+    console.log('deliveryTime in edit:',deliveryTime);
+
     const {
         register,
         handleSubmit,
