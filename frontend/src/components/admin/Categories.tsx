@@ -116,7 +116,7 @@ const Categories: React.FC = () => {
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
-                    <Dialog open={isEditCategoryOpen} onOpenChange={setIsEditCategoryOpen}>
+                    {/* <Dialog open={isEditCategoryOpen} onOpenChange={setIsEditCategoryOpen}>
                         <DialogTrigger asChild>
                             <Button>
                                 <Plus className="mr-2 h-4 w-4" /> Edit Category
@@ -132,7 +132,7 @@ const Categories: React.FC = () => {
                                 <Button onClick={handleAddCategory}>Add Category</Button>
                             </DialogFooter>
                         </DialogContent>
-                    </Dialog>
+                    </Dialog> */}
                 </div>
             </div>
             <Table>

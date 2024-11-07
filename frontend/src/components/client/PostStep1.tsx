@@ -9,12 +9,27 @@ import { RootState } from "@/store/store";
 import { updateJobData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
 import KeywordInput from "../common/KeywordInput";
+import { getCategories } from "@/api/admin";
 
 interface OverviewProps {
     onNext: () => void;
 }
 
+interface Category{
+    _id:string,
+    name:string,
+    subCategory:string[]
+}
+
+interface SubCategory{
+    _id:string,
+    name:string
+}
+
 export const PostStep1: React.FC<OverviewProps> = React.memo(({ onNext }) => {
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+    
     const [newKeyword, setNewKeyword] = useState("");
     const [keywords, setKeywords] = useState<string[]>([]);
     const [keywordError, setKeywordError] = useState("");
@@ -27,10 +42,19 @@ export const PostStep1: React.FC<OverviewProps> = React.memo(({ onNext }) => {
         handleSubmit,
         control,
         setValue,
+        watch,
         formState: { errors },
     } = useForm<TitleData>({
         defaultValues: jobData,
     });
+
+    const selectedCategoryName = watch("category");
+
+    useEffect(() => {
+        const category = categories.find((cat) => cat.name === selectedCategoryName);
+        console.log('category selected',category);
+        setSubCategories(category?.subCategory || []);
+    }, [selectedCategoryName]);
 
     const removeSkills = (index: number) => {
         const updatedKeywords = keywords.filter((_, i) => i !== index);
@@ -38,8 +62,15 @@ export const PostStep1: React.FC<OverviewProps> = React.memo(({ onNext }) => {
         setValue("skillsRequired", updatedKeywords);
     };
 
+    const fetchCategories = async () => {
+        const categories = await getCategories();
+        // console.log("categories fetched:", categories.data);
+        setCategories(categories.data);
+    };
+
     useEffect(() => {
         setKeywords(jobData.skillsRequired || []);
+        fetchCategories();
     }, []);
 
     const onSubmit = (data: TitleData) => {
@@ -50,6 +81,8 @@ export const PostStep1: React.FC<OverviewProps> = React.memo(({ onNext }) => {
         dispatch(updateJobData(data));
         onNext();
     };
+
+    console.log("subCategories:", subCategories);
 
     return (
         <div className="container flex flex-col md:flex-row gap-8 bg-gray-50 p-12 rounded-md w-[70rem]">
@@ -89,11 +122,11 @@ export const PostStep1: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Categories</SelectLabel>
-                                                    <SelectItem value="a">Apple</SelectItem>
-                                                    <SelectItem value="banana">Banana</SelectItem>
-                                                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                                                    <SelectItem value="grapes">Grapes</SelectItem>
-                                                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                                                    {categories.map((cat) => (
+                                                        <SelectItem key={cat._id} value={cat?.name}>
+                                                            {cat?.name}
+                                                        </SelectItem>
+                                                    ))}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -115,11 +148,11 @@ export const PostStep1: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Categories</SelectLabel>
-                                                    <SelectItem value="a">Apple</SelectItem>
-                                                    <SelectItem value="banana">Banana</SelectItem>
-                                                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                                                    <SelectItem value="grapes">Grapes</SelectItem>
-                                                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                                                    {subCategories.map((cat) => (
+                                                        <SelectItem key={cat._id} value={cat?.name}>
+                                                            {cat?.name}
+                                                        </SelectItem>
+                                                    ))}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>

@@ -11,13 +11,14 @@ import { RootState } from "@/store/store";
 import GigCard from "../freelancer/GigCard";
 import { fetchGigs } from "@/api/userApi";
 import { IGig } from "@/types/IGig";
+import JobCard from "../client/JobCard";
 
 export default function Profile() {
     const { userInfo, freelancerData, clientData } = useSelector((state: RootState) => state.user);
     const { theme } = useSelector((state: RootState) => state.app);
     const [profileImage, setProfileImage] = useState("");
     const [gigs, setGigs] = useState<IGig[]>([]);
-
+    const [jobs, setJobs] = useState();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -52,10 +53,14 @@ export default function Profile() {
     const fetchProjects = async () => {
         const response = await fetchGigs(freelancerData.userId);
         console.log("gigs response:", response.data);
-        // const date = formatDate(response.data.deliveryTime);
-        // const updatedGigs = { ...response.data ,date};
         setGigs(response.data);
     };
+
+    // const fetchJobs = async () => {
+    //     const response = await fetchGigs(freelancerData.userId);
+    //     console.log("gigs response:", response.data);
+    //     setGigs(response.data);
+    // };
 
     useEffect(() => {
         console.log("calling to gigs!!");
@@ -166,29 +171,35 @@ export default function Profile() {
                     <CardHeader>
                         <CardTitle className={theme === "dark" ? "text-gray-200" : "text-gray-600"}>Your Posts</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex gap-4 ">
-                        {gigs.length < 1 && <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p>}
+                    {userInfo.role == "freelancer" ? (
+                        <CardContent className="flex gap-4 ">
+                            {gigs.length < 1 && <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p>}
 
-                        {gigs.map((item, index) => {
-                            return (
-                                <GigCard
-                                    key={index}
-                                    title={item.title}
-                                    description={item.description}
-                                    deliveryTime={`${item.deliveryTime}days delivery`}
-                                    price={item.price}
-                                    category={item.category}
-                                    subCategory={item.subCategory}
-                                    theme={theme}
-                                    images={item.images}
-                                    imageUrls={item.imageUrls}
-                                    isProfile={true}
-                                    searchTags={item.searchTags}
-                                    requirements={item.requirements}
-                                />
-                            );
-                        })}
-                    </CardContent>
+                            {gigs.map((item, index) => {
+                                return (
+                                    <GigCard
+                                        key={index}
+                                        title={item.title}
+                                        description={item.description}
+                                        deliveryTime={`${item.deliveryTime}days delivery`}
+                                        price={item.price}
+                                        category={item.category}
+                                        subCategory={item.subCategory}
+                                        theme={theme}
+                                        images={item.images}
+                                        imageUrls={item.imageUrls}
+                                        isProfile={true}
+                                        searchTags={item.searchTags}
+                                        requirements={item.requirements}
+                                    />
+                                );
+                            })}
+                        </CardContent>
+                    ) : (
+                        <CardContent className="flex gap-4 ">
+                            <JobCard />
+                        </CardContent>
+                    )}
                 </Card>
             </div>
         </div>

@@ -9,7 +9,7 @@ import { RootState } from "@/store/store";
 import { updatePostFormData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
 import KeywordInput from "../common/KeywordInput";
-
+import { getCategories } from "@/api/admin";
 
 interface OverviewProps {
     onNext: () => void;
@@ -20,6 +20,9 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
     const [keywords, setKeywords] = useState<string[]>([]);
     const [keywordError, setKeywordError] = useState("");
 
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+
     const dispatch = useDispatch();
     const { formData } = useSelector((state: RootState) => state.post);
 
@@ -28,18 +31,28 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
         handleSubmit,
         control,
         setValue,
+        watch,
         formState: { errors },
     } = useForm<OverviewData>({
         defaultValues: formData,
     });
 
-    // const addKeyword = useCallback(() => {
-    //     if (newKeyword && keywords.length < 10) {
-    //         setKeywords((prev) => [...prev, newKeyword]);
-    //         setNewKeyword("");  
-    //         setValue("searchTags", [...keywords, newKeyword]);
-    //     }
-    // }, [newKeyword, keywords, dispatch, formData]);
+    const selectedCategoryName = watch("category");
+
+    useEffect(() => {
+        const category = categories.find((cat) => cat.name === selectedCategoryName);
+        console.log("category selected", category);
+        setSubCategories(category?.subCategory || []);
+    }, [selectedCategoryName]);
+
+    const fetchCategories = async () => {
+        const categories = await getCategories();
+        setCategories(categories.data);
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
 
     const removeKeyword = (index: number) => {
         const updatedKeywords = keywords.filter((_, i) => i !== index);
@@ -105,11 +118,11 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Categories</SelectLabel>
-                                                <SelectItem value="a">Apple</SelectItem>
-                                                <SelectItem value="banana">Banana</SelectItem>
-                                                <SelectItem value="blueberry">Blueberry</SelectItem>
-                                                <SelectItem value="grapes">Grapes</SelectItem>
-                                                <SelectItem value="pineapple">Pineapple</SelectItem>
+                                                {categories.map((cat) => (
+                                                    <SelectItem key={cat._id} value={cat?.name}>
+                                                        {cat?.name}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
@@ -134,11 +147,11 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Categories</SelectLabel>
-                                                <SelectItem value="a">Apple</SelectItem>
-                                                <SelectItem value="banana">Banana</SelectItem>
-                                                <SelectItem value="blueberry">Blueberry</SelectItem>
-                                                <SelectItem value="grapes">Grapes</SelectItem>
-                                                <SelectItem value="pineapple">Pineapple</SelectItem>
+                                                {subCategories.map((cat) => (
+                                                    <SelectItem key={cat._id} value={cat?.name}>
+                                                        {cat?.name}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
@@ -152,8 +165,8 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                         <label htmlFor="searchTags" className="block text-sm font-medium text-gray-700">
                             Search Tags
                         </label>
-                        <div >
-                            <KeywordInput formFieldName="searchTags" keywords={keywords} setKeywords={setKeywords} newKeyword={newKeyword} setNewKeyword={setNewKeyword} setValue={setValue}/>
+                        <div>
+                            <KeywordInput formFieldName="searchTags" keywords={keywords} setKeywords={setKeywords} newKeyword={newKeyword} setNewKeyword={setNewKeyword} setValue={setValue} />
                         </div>
                         <p className="text-sm text-gray-500 mt-1 text-end mr-5">{10 - keywords.length}/10 left</p>
                         <div className="flex flex-wrap gap-2">
@@ -172,7 +185,7 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
                     <div className="flex justify-end">
                         <Button className="bg-green-800 hover:bg-green-900" type="submit">
                             Save & Continue
-                        </Button>   
+                        </Button>
                     </div>
                 </form>
             </div>

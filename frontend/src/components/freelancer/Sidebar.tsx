@@ -18,6 +18,9 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
+        console.log('freelancerDAta:',freelancerData)
+        console.log("Object.keys(freelancerData).length:", Object.keys(freelancerData).length);
+
         if (Object.keys(freelancerData).length == 0) {
             getData();
         }
@@ -30,7 +33,7 @@ const Sidebar = () => {
             <div className="w-full border shadow-sm p-4 md:p-6 rounded-md mb-4 md:mb-5 ">
                 <div className="mb-4 md:mb-8">
                     <div className="flex flex-col md:flex-row items-center md:items-start space-y-2 md:space-y-0 md:space-x-4 cursor-pointer" onClick={() => navigate("/fr/profile")}>
-                        <img src={freelancerData.imageUrl ? freelancerData.imageUrl : profilePicture} alt="Profile" className="h-16 w-16 md:h-12 md:w-20 md:h-20 rounded-full" />
+                        <img src={freelancerData.imageUrl ? freelancerData.imageUrl : profilePicture} alt="Profile" className="h-16 w-16 md:w-20 md:h-20 rounded-full" />
                         <div className="text-center md:text-left">
                             <h4 className="font-bold">{userInfo?.firstname + " " + userInfo?.lastname || "User Name"}</h4>
                             <h5 className="text-gray-500  text-sm">{userInfo?.role}</h5>
@@ -39,7 +42,7 @@ const Sidebar = () => {
                         </div>
                     </div>
                     <div className="mt-4">
-                        {Object.keys(freelancerData).length == 0 ? (
+                        {freelancerData?.userId !=="" ? (
                             <div>
                                 <Button variant="outline" className="w-full" onClick={() => navigate("/fr/complete-profile")}>
                                     Complete your profile
@@ -56,7 +59,7 @@ const Sidebar = () => {
             </div>
 
             <div className="w-full border shadow-sm p-4 md:p-6 rounded-md mb-4 md:mb-5">
-                <Button  className="w-full text-white bg-green-800 hover:bg-green-900" onClick={() => navigate("/fr/post-project")}>
+                <Button className="w-full text-white bg-green-800 hover:bg-green-900" onClick={() => navigate("/fr/post-project")}>
                     Post a project
                 </Button>
                 <p className="text-xs mt-3 ">post a project and get works through the post.</p>
