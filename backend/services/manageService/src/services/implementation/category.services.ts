@@ -24,7 +24,6 @@ export class categoryService {
             };
             await this.categoryRepository.createCategory(item);
         } else if (subCategory) {
-            console.log("addding SubCategoryyyyyyyyyyyyyyyyyyyyyyyyy");
             await this.categoryRepository.addSubCategory(subCategory);
         }
     }

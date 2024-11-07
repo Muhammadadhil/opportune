@@ -61,8 +61,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange }) => {
                         <DialogDescription>Are you sure you want to logout?</DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button onClick={() => setOpen(false)}>Cancel</Button>
-                        <Button variant="destructive" onClick={handleLogout}>
+                        <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                        <Button variant="default" onClick={handleLogout}>
                             Logout
                         </Button>
                     </DialogFooter>

@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 const Categories: React.FC = () => {
     const [categories, setCategories] = useState([]);
     const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
+    const [isEditCategoryOpen, setIsEditCategoryOpen] = useState(false);
     const [isAddSubcategoryOpen, setIsAddSubcategoryOpen] = useState(false);
 
     const [newCategory, setNewCategory] = useState("");
@@ -23,7 +24,7 @@ const Categories: React.FC = () => {
                 setNewCategory("");
                 setIsAddCategoryOpen(false);
                 getAllCategories(); 
-            } catch (error) {
+            } catch (error:any) {
                 console.log("Error in add category:", error);
                 toast.error(error.response.data.message);
             }
@@ -115,6 +116,23 @@ const Categories: React.FC = () => {
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
+                    <Dialog open={isEditCategoryOpen} onOpenChange={setIsEditCategoryOpen}>
+                        <DialogTrigger asChild>
+                            <Button>
+                                <Plus className="mr-2 h-4 w-4" /> Edit Category
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Edit Category</DialogTitle>
+                                <DialogDescription>Enter the name of the new category.</DialogDescription>
+                            </DialogHeader>
+                            <Input value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="Category name" />
+                            <DialogFooter>
+                                <Button onClick={handleAddCategory}>Add Category</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
             <Table>
@@ -122,6 +140,7 @@ const Categories: React.FC = () => {
                     <TableRow>
                         <TableHead>Category</TableHead>
                         <TableHead>Subcategories</TableHead>
+                        <TableHead>actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -129,10 +148,48 @@ const Categories: React.FC = () => {
                         <TableRow key={category?._id}>
                             <TableCell className="font-medium">{category?.name}</TableCell>
                             <TableCell>{category?.subCategory.map((sub: { name: string }) => sub.name).join(", ")}</TableCell>
+                            <TableCell className="font-medium">
+                                <Button variant="outline">Edit</Button>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+            <Dialog open={isEditCategoryOpen} onOpenChange={setIsEditCategoryOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Edit Category</DialogTitle>
+                        <DialogDescription>Update the category name and manage subcategories.</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="categoryName" className="text-right">
+                                Name
+                            </Label>
+                            
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="newSubcategory" className="text-right">
+                                New Subcategory
+                            </Label>
+                            
+                        </div>
+                        <Button  className="ml-auto">
+                            Add Subcategory
+                        </Button>
+                        <div className="mt-4">
+                            <h4 className="mb-2 font-semibold">Subcategories:</h4>
+                            <ul className="space-y-2">
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button>Save changes</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 };
