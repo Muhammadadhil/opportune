@@ -13,6 +13,15 @@ const initialState: RootState = {
         price: "",
         requirements: [],
     },
+    jobData: {
+        jobTitle: "",
+        category: "",
+        subCategory: "",
+        skillsRequired: [],
+        description: "",
+        budget:"",
+        searchTags: [],
+    },
 };
 
 export const postSlice = createSlice({

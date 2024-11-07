@@ -12,20 +12,27 @@ export interface DescriptionData {
     description: string;
     price: string;
     requirements?:string[];
-    
 }
-
-// export interface FormData {
-//     overview: OverviewData;
-//     descriptionData: DescriptonData;
-// }
-
-// export interface RootState {
-//     formData: FormData;
-// }
 
 export type FormData = OverviewData & DescriptionData;
 
+export interface TitleData {
+    jobTitle: string;
+    category: string;
+    subCategory: string;
+    skillsRequired:string[]
+}
+
+export interface BudgetData {
+    description: string;
+    budget: string;
+    searchTags: string[];
+}
+
+export type JobData = TitleData & BudgetData;
+
+
 export interface RootState {
     formData: FormData;
+    jobData: JobData;
 }

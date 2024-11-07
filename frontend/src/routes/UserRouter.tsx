@@ -15,6 +15,7 @@ import FreelancerProtected from "@/components/freelancer/FreelancerProtected";
 import ProfilePage from "@/pages/freelancer/ProfilePage";
 import CompleteProfile from "@/components/freelancer/CompleteProfile"
 import PostProject from "@/pages/freelancer/PostProjectPage";
+import PostJobPage from "@/pages/client/PostJobPage";
 
 function UserRoute() {
     return (
@@ -34,6 +35,7 @@ function UserRoute() {
                     <Route element={<UsersLayout />}>
                         <Route path="cl/dashboard" element={<ClientDashboard />} />
                         <Route path="cl/profile" element={<ProfilePage />} />
+                        <Route path="cl/postjob" element={<PostJobPage />} />
                     </Route>
                     <Route path="cl/details" element={<DetailsClient />} />
                 </Route>

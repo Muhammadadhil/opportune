@@ -1,46 +1,49 @@
 import React from "react";
-import { Card, CardTitle, CardContent } from "../ui/card";
-
+import { Card, CardTitle } from "../ui/card";
+import { Link } from "react-router-dom";
 
 const jobs = [
-        {
-            title: "Web Socket MERN Stack",
-            description: "I need someone to configure Socket.io...",
-            skills: ["Node.js", "React", "ExpressJS", "MongoDB"],
-            price: "$10",
-            proposals: "10 to 15",
-        },
-        {
-            title: "React/React Native Developer",
-            description: "Looking for a developer for mobile and web...",
-            skills: ["React", "React Native", "TypeScript"],
-            price: "$700 ",
-            proposals: "5 to 10",
-        },
-        {
-            title: "Flutter Developer",
-            description: "Looking for a developer for mobile and web...",
-            skills: ["Flutter", "Dart", "Firebase"],
-            price: "$700 ",
-            proposals: "5 to 10",
-        },
-        {
-            title: "PHP Developer",
-            description: "Looking for a developer for mobile and web...",
-            skills: ["PHP", "MySQL", "Laravel"],
-            price: "$700 ",
-            proposals: "5 to 10",
-        },
-    ];
+    {
+        title: "Web Socket MERN Stack",
+        description: "I need someone to configure Socket.io...",
+        skills: ["Node.js", "React", "ExpressJS", "MongoDB"],
+        price: "$10",
+        proposals: "10 to 15",
+    },
+    {
+        title: "React/React Native Developer",
+        description: "Looking for a developer for mobile and web...",
+        skills: ["React", "React Native", "TypeScript"],
+        price: "$700 ",
+        proposals: "5 to 10",
+    },
+    {
+        title: "Flutter Developer",
+        description: "Looking for a developer for mobile and web...",
+        skills: ["Flutter", "Dart", "Firebase"],
+        price: "$700 ",
+        proposals: "5 to 10",
+    },
+    {
+        title: "PHP Developer",
+        description: "Looking for a developer for mobile and web...",
+        skills: ["PHP", "MySQL", "Laravel"],
+        price: "$700 ",
+        proposals: "5 to 10",
+    },
+];
 
 const ClientDashboard: React.FC = () => {
     return (
         <div className="">
             <div className="flex md:px-36 container flex-col md:flex-row  mt-16">
-                <Card className="min-w-80 max-w-80 h-28 hover:shadow-lg hover:bg-gray-100 bg-gray-50 rounded-xl mr-9 shadow-md  border flex flex-col items-center justify-center">
-                    <CardTitle className="text-xl font-bold text-center text-gray-700 static">Post a job</CardTitle>
-                    <p className="text-sm mt-3">Connect with talents and collaborate</p>
-                </Card>
+                <Link to="/cl/postjob">
+                    <Card className="min-w-80 max-w-80 h-28 hover:shadow-lg hover:bg-gray-100 bg-gray-50 rounded-xl mr-9 shadow-md  border flex flex-col items-center justify-center">
+                        <CardTitle className="text-xl font-bold text-center text-gray-700 static">Post a job</CardTitle>
+
+                        <p className="text-sm mt-3">Connect with talents and collaborate</p>
+                    </Card>
+                </Link>
 
                 <Card className="min-w-80 max-w-80 h-28 hover:shadow-lg hover:bg-gray-100 bg-gray-50 rounded-xl mr-9 shadow-md border flex flex-col items-center justify-center">
                     <CardTitle className="text-xl font-bold text-center text-gray-700">Hire talents directly</CardTitle>
