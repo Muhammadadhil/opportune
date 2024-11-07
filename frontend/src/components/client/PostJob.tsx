@@ -1,24 +1,21 @@
 import { useState } from "react";
 import { PostStep1 } from "./PostStep1";
-// import { PostDescription } from "./PostDescription";
-// import Publish from "./PostPublish";
-// import Button from "../ui/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { saveProjectPost } from "@/api/userApi";
-import convertToFormData from "@/helpers/convertToFormData";
+import { saveJobPost, saveProjectPost } from "@/api/userApi";
 import LoadingBars from "@/components/loading/Loading";
 import { setIsLoading } from "@/store/slices/appSlice";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { clearPostFormData } from "@/store/slices/postSlice";
+import { clearJobData } from "@/store/slices/postSlice";
+import { PostStep2 } from "./PostStep2";
 
-const steps = ["Title & Category", "Description & Pricing", "Overview"];
+const steps = ["Job Title & Category", "Budget & Description"];
 
 export default function PostJob() {
     const [step, setStep] = useState(0);
     const { jobData } = useSelector((state: RootState) => state.post);
-    // const { freelancerData } = useSelector((state: RootState) => state.user);
+    const { userInfo } = useSelector((state: RootState) => state.user);
     const { isLoading } = useSelector((state: RootState) => state.app);
 
     const dispatch = useDispatch();
@@ -38,18 +35,16 @@ export default function PostJob() {
 
     const handleSubmit = async () => {
         try {
-            const data = { ...formData };
-            console.log("data in post gig:", data);
+            const data = { ...jobData, clientId: userInfo?._id };
+            console.log("data jobPost:", data);
             setLoading(true);
-            const formData1 = await convertToFormData(data);
-            formData1.append("freelancerId", freelancerData?.userId);
-            const response = await saveProjectPost(formData1);
+            const response = await saveJobPost(data);
             console.log("gig Response:", response);
-            dispatch(clearPostFormData());
+            dispatch(clearJobData());
             navigate("/cl/dashboard");
         } catch (error) {
             console.error("Error submitting form:", error);
-            toast.error("Error in saving project");
+            toast.error("Error whille updating job post");
         } finally {
             setLoading(false);
         }
@@ -59,10 +54,8 @@ export default function PostJob() {
         switch (step) {
             case 0:
                 return <PostStep1 onNext={nextStep} />;
-            // case 1:
-            //     return <PostDescription onNext={nextStep} onPrev={prevStep} />;
-            // case 2:
-            //     return <Publish onPrev={prevStep} handleSubmit={handleSubmit} />;
+            case 1:
+                return <PostStep2 handleSubmitForm={handleSubmit} onPrev={prevStep} />;
             default:
                 return null;
         }

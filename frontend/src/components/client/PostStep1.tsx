@@ -6,7 +6,7 @@ import { IoIosClose } from "react-icons/io";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TitleData } from "@/types/IProjectPost";
 import { RootState } from "@/store/store";
-import { updatePostFormData } from "@/store/slices/postSlice";
+import { updateJobData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
 import KeywordInput from "../common/KeywordInput";
 
@@ -47,7 +47,7 @@ export const PostStep1: React.FC<OverviewProps> = React.memo(({ onNext }) => {
             setKeywordError("Please add at least one keyword.");
             return;
         }
-        dispatch(updatePostFormData(data));
+        dispatch(updateJobData(data));
         onNext();
     };
 

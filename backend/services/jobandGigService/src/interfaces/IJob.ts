@@ -2,7 +2,7 @@ import { Document, ObjectId } from "mongoose";
 
 export interface IJob extends Document {
     clientId: ObjectId;
-    title: string;
+    jobTitle: string;
     description: string;
     category: string;
     subCategory: string;

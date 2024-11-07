@@ -19,7 +19,7 @@ const initialState: RootState = {
         subCategory: "",
         skillsRequired: [],
         description: "",
-        budget:"",
+        budget: "",
         searchTags: [],
     },
 };
@@ -45,9 +45,23 @@ export const postSlice = createSlice({
                 requirements: [],
             };
         },
+        updateJobData: (state, action) => {
+            state.jobData = action.payload;
+        },
+        clearJobData: (state) => {
+            state.jobData = {
+                jobTitle: "",
+                category: "",
+                subCategory: "",
+                skillsRequired: [],
+                description: "",
+                budget: "",
+                searchTags: [],
+            };
+        },
     },
 });
 
-export const { updatePostFormData, clearPostFormData } = postSlice.actions;
+export const { updatePostFormData, clearPostFormData, updateJobData, clearJobData } = postSlice.actions;
 
 export default postSlice.reducer;

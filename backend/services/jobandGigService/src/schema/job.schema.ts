@@ -7,7 +7,7 @@ const jobSchema = new Schema<IJob>(
             type: Schema.Types.ObjectId,
             required: true,
         },
-        title: {
+        jobTitle: {
             type: String,
             required: true,
         },
@@ -36,9 +36,9 @@ const jobSchema = new Schema<IJob>(
             default: true,
         },
         searchTags: {
-            type:[String],
-            required:true
-        }
+            type: [String],
+            required: true,
+        },
     },
     { timestamps: true }
 );

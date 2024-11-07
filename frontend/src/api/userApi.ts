@@ -1,5 +1,6 @@
 import apiClient from "./apiClient/axios";
 import IClientData from "../types/IClientData";
+import { JobData } from "@/types/IProjectPost";
 
 interface FormData {
     email: string;
@@ -44,20 +45,22 @@ export const getProfileData = async (userId: string) => {
     return await apiClient.post("/user/freelancer-profile", { userId });
 };
 
-
 export const getClientProfileData = async (userId: string) => {
     return await apiClient.post("/user/client-profile", { userId });
 };
-
 
 export const saveProjectPost = async (formData) => {
     return await apiClient.post("/post/postaGig", formData, { headers: { "Content-Type": "multipart/form-data" } });
 };
 
 export const editGigPost = async (gigData) => {
-    return await apiClient.post("/post/editGig", gigData );
+    return await apiClient.post("/post/editGig", gigData);
 };
 
-export const fetchGigs = async (fId:string) => {
+export const fetchGigs = async (fId: string) => {
     return await apiClient.get(`/post/getGigs/${fId}`);
+};
+
+export const saveJobPost = async (data: JobData) => {
+    return await apiClient.post("/post/job/postAJob", data);
 };
