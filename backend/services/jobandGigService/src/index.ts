@@ -1,7 +1,6 @@
 import express from "express"; 
 import connectDB from "./config/db/connect";
-import router from './routes/gig.routes';
-import jobRouter from "./routes/job.routes";
+import router from './routes/router';
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
@@ -21,8 +20,6 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.use("/", router);
-app.use("/job/", jobRouter);
-
 
 app.use(errorHandler);
 

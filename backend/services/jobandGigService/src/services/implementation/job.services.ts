@@ -3,15 +3,24 @@ import { JobRepository } from "../../repositories/implementation/job.repositoty"
 
 
 export class JobService {
-
     private jobRepository;
 
     constructor() {
-        this.jobRepository=new JobRepository();
+        this.jobRepository = new JobRepository();
     }
 
-    async saveJob(data:IJob): Promise<IJob | null> {
-        
+    async getJobs(): Promise<IJob[] | null> {
+        const jobs = await this.jobRepository.find();
+        return jobs;
+    }
+
+    async getJobsByClient(id:string): Promise<IJob[] | null> {
+        console.log('clientId:',id);
+        const jobs = await this.jobRepository.find({ clientId: id });
+        return jobs;
+    }
+
+    async saveJob(data: IJob): Promise<IJob | null> {
         const newJob = await this.jobRepository.create(data);
         console.log("newGig:", newJob);
 

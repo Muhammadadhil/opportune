@@ -1,23 +1,40 @@
-import React from "react";
-
-interface LoadingBarsProps {
+interface LoadingDotsProps {
     color?: string;
     size?: "small" | "medium" | "large";
     text?: string;
 }
 
-const LoadingBars: React.FC<LoadingBarsProps> = ({ color = "green-600", size = "large", text }) => {
+const Loading: React.FC<LoadingDotsProps> = ({ color = "green-600", size = "large", text }) => {
     const sizeClasses = {
-        small: "h-3 w-1 mx-0.5",
-        medium: "h-5 w-1.5 mx-1",
-        large: "h-8 w-2 mx-1.5",
+        small: "size-1.5",
+        medium: "size-2",
+        large: "size-3.5",
+    };
+
+    const containerClasses = {
+        small: "gap-1",
+        medium: "gap-1.5",
+        large: "gap-2",
     };
 
     return (
         <div className="flex flex-col items-center justify-center space-y-2">
-            <div className="flex items-end">
-                {[...Array(5)].map((_, index) => (
-                    <div key={index} className={`${sizeClasses[size]} bg-${color} animate-pulse`} style={{ animationDelay: `${index * 0.15}s` }}></div>
+            <div className={`flex items-center ${containerClasses[size]}`}>
+                {[0, 1, 2].map((index) => (
+                    <div
+                        key={index}
+                        className={`
+              ${sizeClasses[size]} 
+              rounded-full 
+              bg-${color} 
+              animate-bounce9
+              ${index === 1 ? "!size-3" : ""}
+            `}
+                        style={{
+                            animationDelay: `${index * 0.1}s`,
+                            animationDuration: "0.6s",
+                        }}
+                    />
                 ))}
             </div>
             {text && <p className={`text-sm text-${color} font-medium mt-2`}>{text}</p>}
@@ -25,4 +42,4 @@ const LoadingBars: React.FC<LoadingBarsProps> = ({ color = "green-600", size = "
     );
 };
 
-export default LoadingBars;
+export default Loading;

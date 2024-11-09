@@ -49,6 +49,7 @@ export const getClientProfileData = async (userId: string) => {
     return await apiClient.post("/user/client-profile", { userId });
 };
 
+// gigs
 export const saveProjectPost = async (formData) => {
     return await apiClient.post("/post/postaGig", formData, { headers: { "Content-Type": "multipart/form-data" } });
 };
@@ -61,6 +62,20 @@ export const fetchGigs = async (fId: string) => {
     return await apiClient.get(`/post/getGigs/${fId}`);
 };
 
+export const fetchAllGigs = async () => {
+    return await apiClient.get(`/post/getAllGigs`);
+};
+
+// jobs
 export const saveJobPost = async (data: JobData) => {
-    return await apiClient.post("/post/job/postAJob", data);
+    return await apiClient.post("/post/job", data);
+};
+
+export const getJobs = async (CId: string) => {
+    console.log('cid:',CId)
+    return await apiClient.get(`/post/jobs/${CId}`);
+};
+
+export const fetchAllJobs = async () => {
+    return await apiClient.get(`/post/jobs`);
 };

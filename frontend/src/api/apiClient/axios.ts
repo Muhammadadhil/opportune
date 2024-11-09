@@ -12,11 +12,8 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
-        //config- request config object
-        
-        const token = getAccessToken();
 
-        console.log('access token in interceptor request sending::',token);
+        const token = getAccessToken();
         if (token) {
             config.headers["authorization"] = `Bearer ${token}`;
         }
@@ -30,14 +27,13 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
-        const originalRequest = error.config;   
+        const originalRequest = error.config;
 
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
             try {
-
-                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!Going to get the new access token with refresh token !!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!Going to get the new access token with refresh token !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 const newAccessToken = await refreshToken();
                 setAccessToken(newAccessToken);
                 originalRequest.headers["Authorisation"] = `Bearer ${newAccessToken}`;

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PasswordField from "@/components/ui/passwordField";
-import LoadingBars from "../loading/Loading";
+import Loading from "../loading/Loading";
 import { setAccessToken } from "@/services/authService";
 import { RootState } from "@/store/store";
 import { getUserDetails } from "@/api/auth";
@@ -87,7 +87,7 @@ const Login: React.FC = () => {
     return (
         <div className="flex w-full h-screen min-h-screen bg-gradient-to-b from-green-50 to-white items-center justify-center">
             {isLoading ? (
-                <LoadingBars />
+                <Loading />
             ) : (
                 <div className="w-[32rem] h-[38rem] lg:w-12/12 bg-white flex items-center justify-center rounded-2xl shadow-md">
                     <div className="max-w-md w-full space-y-8">

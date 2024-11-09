@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { saveProjectPost } from "@/api/userApi";
 import convertToFormData from "@/helpers/convertToFormData";
-import LoadingBars from "@/components/loading/Loading";
+import Loading from "@/components/loading/Loading";
 import { setIsLoading } from "@/store/slices/appSlice";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -72,7 +72,7 @@ export default function PostProject() {
         <>
             {isLoading ? (
                 <div className="flex w-full h-screen items-center justify-center">
-                    <LoadingBars />
+                    <Loading />
                 </div>
             ) : (
                 <div className="max-w-[70rem] mx-auto mt-12 flex flex-col items-center">

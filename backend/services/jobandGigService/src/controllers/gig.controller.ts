@@ -14,7 +14,7 @@ export class GigController {
         try {
             console.log("req.file using multer:", req.files);
             console.log("req.body:", req.body);
-            
+
             const files = req.files as IUploadFile[];
 
             if (!files) {
@@ -32,18 +32,18 @@ export class GigController {
 
     editGig = async (req: Request, res: Response) => {
         try {
-            console.log('req.boby Edit:',req.body)
-            
-            const updatedData = await this.gigService.editGig(req.body.freelancerId, req.body);
-            console.log('updateData:',updatedData);
+            console.log("req.boby Edit:", req.body);
 
-            if(!updatedData){
+            const updatedData = await this.gigService.editGig(req.body.freelancerId, req.body);
+            console.log("updateData:", updatedData);
+
+            if (!updatedData) {
                 return res.status(404).json({ message: "Error editing gig. no Database response" });
             }
 
             res.status(200).json(updatedData);
         } catch (error) {
-            console.log('Error in edit gig:',error)
+            console.log("Error in edit gig:", error);
             res.status(500).json({ message: "Error editing gig", error });
         }
     };
@@ -61,7 +61,16 @@ export class GigController {
     getGigs = async (req: Request, res: Response) => {
         try {
             const id = req.params.id;
-            const gigs=await this.gigService.getGigs(id);
+            const gigs = await this.gigService.getGigs(id);
+            res.status(200).json(gigs);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    };
+
+    getAllGigs = async (req: Request, res: Response) => {
+        try {
+            const gigs = await this.gigService.getAllGigs();
             res.status(200).json(gigs);
         } catch (error) {
             res.status(500).json(error);

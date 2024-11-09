@@ -1,5 +1,7 @@
 import { IJob } from "../../interfaces/IJob";
 
 export interface IJobService {
-    saveJob(data:IJob):Promise<IJob | null>;
+    saveJob(data: IJob): Promise<IJob | null>;
+    getJobs(): Promise<IJob[] | null>;
+    getJobsByClient(id: string): Promise<IJob[] | null>;
 }

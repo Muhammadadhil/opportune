@@ -1,19 +1,69 @@
+// {
+//     "files": [],
+//     "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+//     "compilerOptions": {
+//         "baseUrl": ".",
+//         "paths": {
+//             "@/*": ["./src/*"]
+//         },
+//         "jsx": "react-jsx",
+//         "esModuleInterop": true,
+//         "allowSyntheticDefaultImports": true,
+//         "strict": true,
+//         "noUnusedLocals": true,
+//         "moduleResolution": "Node",
+//         "resolveJsonModule": true,
+//         "lib": ["DOM", "DOM.Iterable", "ESNext"],
+//         "types": ["react", "react-dom"]
+//     }
+// }
+
 {
     "files": [],
     "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
     "compilerOptions": {
+        // Base configuration
         "baseUrl": ".",
         "paths": {
             "@/*": ["./src/*"]
         },
+
+        // React specific
         "jsx": "react-jsx",
+        "jsxImportSource": "react",
+
+        // Module resolution
+        "moduleResolution": "Node",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+
+        // Strict type checking
         "strict": true,
         "noUnusedLocals": true,
-        "moduleResolution": "Node",
-        "resolveJsonModule": true,
+        "noUnusedParameters": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+
+        // Modern JavaScript features
+        "target": "ES2020",
+        "module": "ESNext",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "types": ["react", "react-dom"]
-    }
+
+        // Type definitions
+        "types": ["react", "react-dom", "node"],
+
+        // Build options
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+
+        // Source map and declaration options
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "build", "dist", "**/*.spec.ts"]
 }

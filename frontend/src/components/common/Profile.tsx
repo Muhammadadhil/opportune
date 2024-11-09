@@ -1,7 +1,7 @@
 import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 import profilePicture from "@/assets/profilePicture.jpg";
-import { getClientProfileData, getProfileData } from "@/api/userApi";
+import { getClientProfileData, getJobs, getProfileData } from "@/api/userApi";
 import { useSelector, useDispatch } from "react-redux";
 import { setClientData } from "@/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -12,13 +12,16 @@ import GigCard from "../freelancer/GigCard";
 import { fetchGigs } from "@/api/userApi";
 import { IGig } from "@/types/IGig";
 import JobCard from "../client/JobCard";
+import { IJob } from "@/types/IJob";
 
 export default function Profile() {
     const { userInfo, freelancerData, clientData } = useSelector((state: RootState) => state.user);
     const { theme } = useSelector((state: RootState) => state.app);
     const [profileImage, setProfileImage] = useState("");
     const [gigs, setGigs] = useState<IGig[]>([]);
-    const [jobs, setJobs] = useState();
+    const [jobs, setJobs] = useState<IJob[]>();
+
+    const visibleJobs = jobs?.slice(0, 2);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -56,15 +59,21 @@ export default function Profile() {
         setGigs(response.data);
     };
 
-    // const fetchJobs = async () => {
-    //     const response = await fetchGigs(freelancerData.userId);
-    //     console.log("gigs response:", response.data);
-    //     setGigs(response.data);
-    // };
+    const fetchJobs = async () => {
+        console.log("fetching jobs !!!");
+
+        const response = await getJobs(userInfo?._id as string);
+        console.log("jobs response:", response.data);
+        setJobs(response.data);
+    };
 
     useEffect(() => {
-        console.log("calling to gigs!!");
-        fetchProjects();
+        console.log("calling to  gigs | jobs !");
+        if (userInfo?.role == "freelancer") {
+            fetchProjects();
+        } else if (userInfo?.role == "client") {
+            fetchJobs();
+        }
     }, []);
 
     const formatDate = (date: Date) => {
@@ -196,8 +205,17 @@ export default function Profile() {
                             })}
                         </CardContent>
                     ) : (
-                        <CardContent className="flex gap-4 ">
-                            <JobCard />
+                        <CardContent className="flex gap-2 flex-wrap ">
+                            {visibleJobs?.map((job,index) => {
+                                return <JobCard job={job} key={index}/>;
+                            })}
+                            {jobs?.length > 2 ? (
+                                <button className="text-blue-600 hover:underline mt-2">
+                                    See all
+                                </button>
+                            ) : (
+                                ""
+                            )}
                         </CardContent>
                     )}
                 </Card>

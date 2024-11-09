@@ -2,11 +2,10 @@ import { Routes, Route } from "react-router-dom";
 import Home from "../pages/common/Home";
 import LoginPage from "../pages/common/Login";
 import Signup from "../pages/common/Signup";
-import Profile from "../pages/ProfilePage";
 import UserTypeSelection from "../pages/common/UserRolePage";
 import VerifyEmail from "../pages/common/VerfiyEmail";
-import PrivateRoute from "./PrivateRoute";
-import ClientPrivateRoute from "./ClientPrivateRoute";
+// import ClientPrivateRoute from "./ClientPrivateRoute";
+import ClientProtected from '@/components/client/ClientProtected';
 import DetailsClient from "../pages/client/ClientDetailsPage";
 import ClientDashboard from "../pages/client/ClientDashboardPage";
 import UsersLayout from "@/layouts/UsersLayout";
@@ -27,11 +26,11 @@ function UserRoute() {
                 <Route path="/type" element={<UserTypeSelection />} />
                 <Route path="/verify-email" element={<VerifyEmail />} />
 
-                <Route path="" element={<PrivateRoute />}>
+                {/* <Route path="" element={<PrivateRoute />}>
                     <Route path="/profile" element={<Profile />} />
-                </Route>
+                </Route> */}
 
-                <Route path="" element={<ClientPrivateRoute />}>
+                <Route path="" element={<ClientProtected />}>
                     <Route element={<UsersLayout />}>
                         <Route path="cl/dashboard" element={<ClientDashboard />} />
                         <Route path="cl/profile" element={<ProfilePage />} />

@@ -6,4 +6,5 @@ export interface IGigService {
     editGig(userId: string, data: IGig): Promise<IGig | null>;
     changeGigStatus(id: string): Promise<IGig | null>;
     getGigs(id: string): Promise<IGig[] | null>;
+    getAllGigs(): Promise<IGig[] | null>;
 }

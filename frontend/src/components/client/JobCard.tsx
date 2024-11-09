@@ -3,62 +3,30 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-
-interface JobPosting {
-    id: string;
-    jobTitle: string;
-    category: string;
-    subCategory: string;
-    skillsRequired: string[];
-    description: string;
-    budget: string;
-    searchTags: string[];
-}
+import { IJob } from "@/types/IJob";
 
 interface JobPostingCardProps {
-    job: JobPosting;
-    onDelete: (id: string) => void;
-    onEdit: (id: string) => void;
+    job: IJob;
+    // onDelete: (id: string) => void;
+    // onEdit: (id: string) => void;
 }
 
-const JobCard: React.FC = () => {
+const JobCard: React.FC<JobPostingCardProps> = ({ job }) => {
     return (
-        <Card className="w-full max-w-[300px]">
+        <Card className="w-full max-w-[300px] min-w-[300px] min-h-[250px] flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-2xl font-bold">
-                    title
-                </CardTitle>
-                
+                <CardTitle className="text-2xl font-bold">{job.jobTitle}</CardTitle>
             </CardHeader>
             <CardDescription className="px-6 pb-2">
-                category
+                {job.category} . {job.subCategory}
             </CardDescription>
-            <CardContent>
+            <CardContent className="mt-auto">
                 <div className="space-y-4">
-                    <div>
-                        <h3 className="font-semibold mb-1">Skills Required:</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {/* {job.skillsRequired.map((skill, index) => (
-                                <Badge key={index} variant="secondary">
-                                    {skill}
-                                </Badge>
-                            ))} */}
-                        </div>
-                    </div>
-                    <div>
-                        <h3 className="font-semibold mb-1">Description:</h3>
-                        <p className="text-sm text-gray-600">dfasdfas</p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <h3 className="font-semibold mb-1">Budget:</h3>
-                            <p className="text-lg font-bold text-green-600">asdasd</p>
-                        </div>
-                        
+                    <div className=" ">
+                        <Button className="bg-green-700 hover:bg-green-800">Review details</Button>
                     </div>
                 </div>
             </CardContent>
-            
         </Card>
     );
 };
