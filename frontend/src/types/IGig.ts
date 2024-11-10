@@ -1,4 +1,5 @@
 export interface IGig {
+    _id:string
     freelancerId: string;
     title: string;
     description: string;

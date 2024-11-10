@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { persistor } from "./store/store.ts";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
@@ -15,7 +16,9 @@ createRoot(document.getElementById("root")!).render(
             <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
-                        <App />
+                        <ErrorBoundary>
+                            <App />
+                        </ErrorBoundary>
                     </PersistGate>
                 </Provider>
             </GoogleOAuthProvider>

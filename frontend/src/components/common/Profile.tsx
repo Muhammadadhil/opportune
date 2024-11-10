@@ -13,6 +13,7 @@ import { fetchGigs } from "@/api/userApi";
 import { IGig } from "@/types/IGig";
 import JobCard from "../client/JobCard";
 import { IJob } from "@/types/IJob";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
     const { userInfo, freelancerData, clientData } = useSelector((state: RootState) => state.user);
@@ -20,6 +21,7 @@ export default function Profile() {
     const [profileImage, setProfileImage] = useState("");
     const [gigs, setGigs] = useState<IGig[]>([]);
     const [jobs, setJobs] = useState<IJob[]>();
+    const [isEdited, setIsEdited] = useState(false);
 
     const visibleJobs = jobs?.slice(0, 2);
 
@@ -54,7 +56,7 @@ export default function Profile() {
     }, []);
 
     const fetchProjects = async () => {
-        const response = await fetchGigs(freelancerData.userId);
+        const response = await fetchGigs(userInfo._id);
         console.log("gigs response:", response.data);
         setGigs(response.data);
     };
@@ -74,7 +76,15 @@ export default function Profile() {
         } else if (userInfo?.role == "client") {
             fetchJobs();
         }
-    }, []);
+    }, [isEdited]);
+
+    const updateGig = (updatedGig: IGig) => {
+        console.log("!!!!! updating the edit gig in Profile !!!!!!!11");
+        console.log("gig edited:", updatedGig);
+        console.log("prev gigs:", gigs);
+        // setGigs((prevGigs) => prevGigs?.map((gig) => (gig._id === updatedGig._id ? updatedGig : gig)) ?? []);
+        setIsEdited(true);
+    };
 
     const formatDate = (date: Date) => {
         return date.toLocaleDateString("en-US", {
@@ -187,10 +197,11 @@ export default function Profile() {
                             {gigs.map((item, index) => {
                                 return (
                                     <GigCard
-                                        key={index}
+                                        key={item._id}
+                                        _id={item._id}
                                         title={item.title}
                                         description={item.description}
-                                        deliveryTime={`${item.deliveryTime}days delivery`}
+                                        deliveryTime={`${item.deliveryTime}`}
                                         price={item.price}
                                         category={item.category}
                                         subCategory={item.subCategory}
@@ -200,19 +211,20 @@ export default function Profile() {
                                         isProfile={true}
                                         searchTags={item.searchTags}
                                         requirements={item.requirements}
+                                        onUpdate={updateGig}
                                     />
                                 );
                             })}
                         </CardContent>
                     ) : (
                         <CardContent className="flex gap-2 flex-wrap ">
-                            {visibleJobs?.map((job,index) => {
-                                return <JobCard job={job} key={index}/>;
+                            {visibleJobs?.map((job, index) => {
+                                return <JobCard job={job} key={index} />;
                             })}
                             {jobs?.length > 2 ? (
-                                <button className="text-blue-600 hover:underline mt-2">
-                                    See all
-                                </button>
+                                <Link to="/cl/applicants">
+                                    <button className="text-blue-600 hover:underline mt-2">See all</button>
+                                </Link>
                             ) : (
                                 ""
                             )}

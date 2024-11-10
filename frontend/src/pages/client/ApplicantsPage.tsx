@@ -1,9 +1,9 @@
-import Applicants
+import Applicants from "@/components/client/Applicants";
 
 const ApplicantsPage = () => {
     return (
         <>
-
+            <Applicants />
         </>
     );
 };

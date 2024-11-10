@@ -9,7 +9,6 @@ export class GigRepository extends BaseRepository<IGig> implements IGigRepositoy
     }
 
     async updateGigUsingFreelancerId(id: string, data: Partial<IGig>): Promise<IGig | null> {
-        console.log("updating Gig in database !! :: ", id);
         return await GigModel.findOneAndUpdate({ freelancerId: id }, { $set: data }, { new: true, });
     }
 

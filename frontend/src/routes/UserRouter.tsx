@@ -4,7 +4,6 @@ import LoginPage from "../pages/common/Login";
 import Signup from "../pages/common/Signup";
 import UserTypeSelection from "../pages/common/UserRolePage";
 import VerifyEmail from "../pages/common/VerfiyEmail";
-// import ClientPrivateRoute from "./ClientPrivateRoute";
 import ClientProtected from '@/components/client/ClientProtected';
 import DetailsClient from "../pages/client/ClientDetailsPage";
 import ClientDashboard from "../pages/client/ClientDashboardPage";
@@ -15,6 +14,7 @@ import ProfilePage from "@/pages/freelancer/ProfilePage";
 import CompleteProfile from "@/components/freelancer/CompleteProfile"
 import PostProject from "@/pages/freelancer/PostProjectPage";
 import PostJobPage from "@/pages/client/PostJobPage";
+import ApplicantsPage from '@/pages/client/ApplicantsPage';
 
 function UserRoute() {
     return (
@@ -35,6 +35,7 @@ function UserRoute() {
                         <Route path="cl/dashboard" element={<ClientDashboard />} />
                         <Route path="cl/profile" element={<ProfilePage />} />
                         <Route path="cl/postjob" element={<PostJobPage />} />
+                        <Route path="cl/applicants" element={<ApplicantsPage />} />
                     </Route>
                     <Route path="cl/details" element={<DetailsClient />} />
                 </Route>

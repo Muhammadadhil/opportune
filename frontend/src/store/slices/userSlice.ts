@@ -2,14 +2,22 @@ import { createSlice } from "@reduxjs/toolkit";
 import { userState } from "../../types/Iuser";
 
 const initialState: userState = {
-    userInfo: null,
+    userInfo: {
+        _id: "",
+        firstname:"",
+        lastname:"",
+        country:"",
+        email:"",
+        role:""
+
+    },
     freelancerData: {
         userId: "",
         title: "",
         skills: [],
         accounts: {},
         image: "",
-        imageUrl:""
+        imageUrl: "",
     },
     clientData: {},
     isAdminAuthenticated: false,

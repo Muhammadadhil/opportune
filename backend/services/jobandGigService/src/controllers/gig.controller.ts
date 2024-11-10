@@ -26,6 +26,7 @@ export class GigController {
             const savedGigData = await this.gigService.saveGig(files, req.body);
             res.status(200).json(savedGigData);
         } catch (error) {
+            console.log(error)
             res.status(500).json({ message: "Error saving gig", error });
         }
     };

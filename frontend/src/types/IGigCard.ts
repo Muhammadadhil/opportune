@@ -1,5 +1,10 @@
+import { ReactSetState } from "@/types/ReactSetState";
+import { IGig } from "@/types/IGig";
+
+
 export interface GigCardProps {
-    freelancerId?:string;
+    _id:string
+    freelancerId?: string;
     title: string;
     description: string;
     deliveryTime: string;
@@ -9,9 +14,13 @@ export interface GigCardProps {
     rating?: number;
     reviews?: number;
     theme?: string;
-    images:string[] | File[];
+    images: string[] | File[];
     imageUrls: string[];
     isProfile?: boolean;
     searchTags: string[];
-    requirements:string[];
+    requirements: string[];
+    handleSave: (data: GigCardProps) => Promise<void>;
+    isDialogOpen?: boolean;
+    setIsDialogOpen?: ReactSetState<boolean>;
+    onUpdate: (gigData: IGig) => void;
 }

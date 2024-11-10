@@ -5,8 +5,37 @@ import { ImageCarousal } from "@/components/common/ImageCarousel";
 // import Button from "../ui/Button";
 import EditGig from "./EditGig";
 import { GigCardProps } from "@/types/IGigCard";
+import { editGigPost } from "@/api/userApi";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { IGig } from "@/types/IGig";
 
-const GigCard: React.FC<GigCardProps> = ({ title, description, deliveryTime, price, category, subCategory, rating, reviews, theme, images, imageUrls, isProfile, requirements, searchTags }) => {
+
+
+const GigCard: React.FC<GigCardProps> = ({ _id,title, description, deliveryTime, price, category, subCategory, rating, reviews, theme, images, imageUrls, isProfile, requirements, searchTags,onUpdate }) => {
+
+    const { userInfo } = useSelector((state: RootState) => state.user);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleEditSave = async (data: IGig) => {
+
+        console.log('gig updating data :',data);
+
+        try {
+            data.freelancerId = userInfo._id;
+            await editGigPost(data);
+            setIsDialogOpen(false);
+            const updateData={...data,_id};
+            console.log('udaata:',updateData)
+            onUpdate(updateData);
+        } catch (error) {
+            console.error(error);
+            toast.error("Error In Editing Gig");
+        }
+    };
+
     return (
         <Card className={`max-w-64 overflow-hidden group ${theme == "dark" ? "bg-gray-900 border-gray-800" : "bg-white"}`}>
             <div className="relative aspect-[2/1] overflow-hidden">
@@ -43,7 +72,8 @@ const GigCard: React.FC<GigCardProps> = ({ title, description, deliveryTime, pri
                 {isProfile ? (
                     <div className="flex items-center justify-center pt-2 border-t">
                         <EditGig
-                            images={images}
+                            _id={_id}
+                            images={images} 
                             imageUrls={imageUrls}
                             category={category}
                             subCategory={subCategory}
@@ -53,6 +83,9 @@ const GigCard: React.FC<GigCardProps> = ({ title, description, deliveryTime, pri
                             requirements={requirements}
                             searchTags={searchTags}
                             title={title}
+                            handleSave={handleEditSave}
+                            isDialogOpen={isDialogOpen}
+                            setIsDialogOpen={setIsDialogOpen}
                         />
                     </div>
                 ) : (

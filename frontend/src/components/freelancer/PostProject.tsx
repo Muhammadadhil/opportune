@@ -18,7 +18,7 @@ const steps = ["Title & Category", "Description & Pricing", "Overview"];
 export default function PostProject() {
     const [step, setStep] = useState(0);
     const { formData } = useSelector((state: RootState) => state.post);
-    const { freelancerData } = useSelector((state: RootState) => state.user);
+    const { userInfo,freelancerData } = useSelector((state: RootState) => state.user);
     const { isLoading } = useSelector((state: RootState) => state.app);
 
     const dispatch = useDispatch();
@@ -40,9 +40,10 @@ export default function PostProject() {
         try {
             const data = { ...formData };
             console.log('data in post gig:',data);
+            console.log("freelancerId:", freelancerData.userId);
             setLoading(true);
             const formData1 = await convertToFormData(data);
-            formData1.append("freelancerId", freelancerData?.userId);
+            formData1.append("freelancerId", userInfo?._id);
             const response = await saveProjectPost(formData1);
             console.log("gig Response:", response);
             dispatch(clearPostFormData());

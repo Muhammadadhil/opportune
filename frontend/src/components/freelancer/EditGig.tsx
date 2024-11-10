@@ -12,20 +12,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import DescriptionDataSchema from "@/schemas/postDescriptoinSchema";
 import { overViewSchema } from "@/schemas/postOverviewSchema";
 import KeywordInput from "../common/KeywordInput";
-import { editGigPost } from "@/api/userApi";
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 
-export default function EditGig({ title, description, price, deliveryTime, category, subCategory, searchTags, images, imageUrls, requirements, theme = "light" }: GigCardProps) {
+export default function EditGig({
+    _id,
+    title,
+    description,
+    price,
+    deliveryTime,
+    category,
+    subCategory,
+    searchTags,
+    images,
+    imageUrls,
+    requirements,
+    theme = "light",
+    handleSave,
+    isDialogOpen,
+    setIsDialogOpen,    
+}: GigCardProps) {
     const [newKeyword, setNewKeyword] = useState("");
     const [keywords, setKeywords] = useState<string[]>(searchTags);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const gigSchema = overViewSchema.merge(DescriptionDataSchema);
-    const { freelancerData } = useSelector((state: RootState) => state.user);
-
-    console.log('deliveryTime in edit:',deliveryTime);
 
     const {
         register,
@@ -36,6 +44,7 @@ export default function EditGig({ title, description, price, deliveryTime, categ
     } = useForm<GigCardProps>({
         resolver: zodResolver(gigSchema),
         defaultValues: {
+            _id,
             title,
             description,
             price,
@@ -52,20 +61,6 @@ export default function EditGig({ title, description, price, deliveryTime, categ
         const updatedKeywords = keywords.filter((_, i) => i !== index);
         setKeywords(updatedKeywords);
         setValue("searchTags", updatedKeywords);
-    };
-
-    const handleSave = async (data: GigCardProps) => {
-        try {
-            console.log("!!! Saving changes !!!!");
-            data.freelancerId = freelancerData.userId;
-            console.log("formData data:", data);
-            const response = await editGigPost(data);
-            console.log(response);
-            setIsDialogOpen(false);
-        } catch (error) {
-            console.error(error);
-            toast.error("Error In Editing Gig");
-        }
     };
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -85,7 +80,7 @@ export default function EditGig({ title, description, price, deliveryTime, categ
             </DialogTrigger>
             <DialogContent className={`sm:max-w-[425px] md:max-w-[70rem] ${theme === "dark" ? " text-white" : " text-gray-900"}`}>
                 <DialogHeader>
-                    <DialogTitle onClick={() => setIsDialogOpen(true)}>Edit Gig</DialogTitle>
+                    <DialogTitle onClick={() => setIsDialogOpen?.(true)}>Edit Gig</DialogTitle>
                     <DialogDescription>Make changes to your gig here. Click save when you're done.</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(handleSave)}>
