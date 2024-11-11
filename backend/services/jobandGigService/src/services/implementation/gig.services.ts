@@ -4,6 +4,7 @@ import { IGigRepositoy } from "../../repositories/interfaces/IGigRepository";
 import { IGigService } from "../interfaces/IGigService";
 import { getSignedImageURL, uploadTosS3 } from "../../utils/uploadToS3";
 import IUploadFile from "../../interfaces/IUploadFile";
+import { ObjectId } from "mongoose";
 
 export class GigService implements IGigService {
     private gigRepository: IGigRepositoy;

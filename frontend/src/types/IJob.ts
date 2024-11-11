@@ -1,4 +1,5 @@
 export interface IJob {
+    _id?:string
     clientId: string;
     jobTitle: string;
     description: string;

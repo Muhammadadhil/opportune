@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { JobService } from "../services/implementation/job.services";
 import { IJobService } from "../services/interfaces/IJobService";
+import { HTTPError } from "../utils/HttpError";
 
 export class JobController {
     private jobService: IJobService;
@@ -21,7 +22,7 @@ export class JobController {
         try {
             const id = req.params.id;
             const jobs = await this.jobService.getJobsByClient(id);
-            res.status(200).json(jobs)
+            res.status(200).json(jobs);
         } catch (error) {
             next(error);
         }
@@ -34,6 +35,19 @@ export class JobController {
             const savedData = await this.jobService.saveJob(req.body);
             res.status(200).json(savedData);
         } catch (error) {
+            next(error);
+        }
+    };
+
+    editJob = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const editedJob = await this.jobService.editJob(req.body);
+            if(!editedJob){
+                throw new HTTPError("Error in Updating Job", 400);
+            }
+            res.status(200).json(editedJob);
+        } catch (error) {
+            console.log(error)
             next(error);
         }
     };

@@ -24,5 +24,8 @@ router.get('/jobs',jobController.getJobs);
 router.get("/jobs/:id", jobController.getJobsByClient);
 router.post("/job", jobController.postJob);
 
+router.patch("/job", jobController.editJob);
+
+
 
 export default router;

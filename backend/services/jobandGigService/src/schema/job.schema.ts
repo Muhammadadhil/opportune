@@ -1,10 +1,10 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema,Types } from "mongoose";
 import { IJob } from "../interfaces/IJob";
 
 const jobSchema = new Schema<IJob>(
     {
         clientId: {
-            type: Schema.Types.ObjectId,
+            type: Types.ObjectId,
             required: true,
         },
         jobTitle: {

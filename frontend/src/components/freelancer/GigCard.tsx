@@ -13,7 +13,6 @@ import toast from "react-hot-toast";
 import { IGig } from "@/types/IGig";
 
 
-
 const GigCard: React.FC<GigCardProps> = ({ _id,title, description, deliveryTime, price, category, subCategory, rating, reviews, theme, images, imageUrls, isProfile, requirements, searchTags,onUpdate }) => {
 
     const { userInfo } = useSelector((state: RootState) => state.user);

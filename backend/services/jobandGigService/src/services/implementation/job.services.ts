@@ -1,6 +1,6 @@
 import { IJob } from "../../interfaces/IJob";
 import { JobRepository } from "../../repositories/implementation/job.repositoty";
-
+import { Types } from "mongoose";
 
 export class JobService {
     private jobRepository;
@@ -14,8 +14,8 @@ export class JobService {
         return jobs;
     }
 
-    async getJobsByClient(id:string): Promise<IJob[] | null> {
-        console.log('clientId:',id);
+    async getJobsByClient(id: string): Promise<IJob[] | null> {
+        console.log("clientId:", id);
         const jobs = await this.jobRepository.find({ clientId: id });
         return jobs;
     }
@@ -25,5 +25,12 @@ export class JobService {
         console.log("newGig:", newJob);
 
         return newJob;
+    }
+
+    async editJob(data: Partial<IJob>): Promise<IJob | null> {
+        if (!data._id) {
+            return null;
+        }
+        return await this.jobRepository.update(data._id as string,data)
     }
 }

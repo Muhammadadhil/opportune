@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { GigCardProps } from "@/types/IGigCard";
 import { Textarea } from "../ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import KeywordInput from "../common/KeywordInput";
@@ -15,18 +14,27 @@ import { IJob } from "@/types/IJob";
 import jobPoststepOneSchema from "@/schemas/jobPoststep1Schema";
 import jobPoststepTwoSchema from "@/schemas/jobPoststep2Schema";
 import toast from "react-hot-toast";
+import { ReactSetState } from "@/types/ReactSetState";
+import { Pencil } from "lucide-react";
+import { ICategory, ISubCategory } from "@/types/ICategory";
+import { editJob } from "@/api/jobsApi";
 
 interface EditJobProps {
     job: IJob;
+    isDialogOpen: boolean;
+    setIsDialogOpen: ReactSetState<boolean>;
 }
 
-export default function EditJob({ job }: EditJobProps) {
+export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobProps) {
     const [newKeyword, setNewKeyword] = useState("");
     const [keywords, setKeywords] = useState<string[]>(job.searchTags);
+    const [skillsRequired, setSkillsRequired] = useState<string[]>(job.skillsRequired);
+    const [newskill, setNewSkill] = useState("");
 
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [subCategories, setSubCategories] = useState<ISubCategory[]>(
+        job.subCategory? [{_id: "",name: job.subCategory,},]: []
+    );
 
     const schema = jobPoststepOneSchema.merge(jobPoststepTwoSchema);
 
@@ -39,6 +47,16 @@ export default function EditJob({ job }: EditJobProps) {
         formState: { errors },
     } = useForm<IJob>({
         resolver: zodResolver(schema),
+        defaultValues: {
+            clientId:job.clientId,
+            jobTitle: job.jobTitle,
+            description: job.description,
+            category: job.category,
+            subCategory: job.subCategory,
+            budget: job.budget,
+            skillsRequired: job.skillsRequired,
+            searchTags: job.searchTags,
+        },
     });
 
     const removeKeyword = (index: number) => {
@@ -47,12 +65,23 @@ export default function EditJob({ job }: EditJobProps) {
         setValue("searchTags", updatedKeywords);
     };
 
+    const removeSkills = (index: number) => {
+        console.log("removing skills !!");
+
+        const updatedKeywords = keywords.filter((_, i) => i !== index);
+        console.log("updatekeyworld:", updatedKeywords);
+        setSkillsRequired(updatedKeywords);
+        setValue("skillsRequired", updatedKeywords);
+    };
+
     const selectedCategoryName = watch("category");
 
     useEffect(() => {
         const category = categories.find((cat) => cat.name === selectedCategoryName);
         console.log("category selected", category);
-        setSubCategories(category?.subCategory || []);
+        console.log("category.subCategory:", category?.subCategory);
+        console.log("job.subCategory:", typeof job.subCategory);
+        if (category?.subCategory) setSubCategories(category.subCategory || job.subCategory);
     }, [selectedCategoryName]);
 
     const fetchCategories = async () => {
@@ -65,8 +94,10 @@ export default function EditJob({ job }: EditJobProps) {
     }, []);
 
     const handleSave = async (data: IJob) => {
-        console.log("job update data :", data);
         try {
+            data._id=job._id;
+            console.log("job update data :", data);
+            await editJob(data);
             setIsDialogOpen(false);
         } catch (error) {
             console.error(error);
@@ -77,19 +108,19 @@ export default function EditJob({ job }: EditJobProps) {
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">Edit Job</Button>
+                <Pencil size={16} />
             </DialogTrigger>
             <DialogContent className={`sm:max-w-[425px] md:max-w-[70rem]`}>
                 <DialogHeader>
                     <DialogTitle onClick={() => setIsDialogOpen?.(true)}>Edit Job</DialogTitle>
-                    <DialogDescription>Make changes to your gig here. Click save when you're done.</DialogDescription>
+                    <DialogDescription>Make changes to your job here. Click save when you're done.</DialogDescription>
                 </DialogHeader>
-                <form >
+                <form onSubmit={handleSubmit(handleSave)}>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-2 items-center gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="title">Title</Label>
-                                <Input id="title" {...register("jobTitle")} />
+                                <Label htmlFor="jobTitle">Job Title</Label>
+                                <Input id="jobTitle" {...register("jobTitle")} />
                                 {errors.jobTitle && <p className="text-red-800 text-sm">{errors.jobTitle.message}</p>}
                             </div>
                         </div>
@@ -148,34 +179,37 @@ export default function EditJob({ job }: EditJobProps) {
                                 />
                             </div>
                         </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="description">Budget</Label>
-                            <Textarea {...register("budget")} id="budget" placeholder="Write about your work experience" className="min-h-[75px]" />
-                            {errors.description && <p className="text-red-800 text-sm">{errors.description.message}</p>}
+                        <div className="grid gap-2 max-w-[200px]">
+                            <Label htmlFor="budget">Budget</Label>
+                            <Input type="number" id="budget" {...register("budget")} />
+                            {errors.budget && <p className="text-red-800 text-sm">{errors.budget.message}</p>}
                         </div>
-                        {errors.budget && <p className="text-red-700 text-sm">{errors.budget.message}</p>}
-
                         <div className="grid gap-2">
                             <Label htmlFor="skillsRequired">Skills Required</Label>
 
                             <div className="flex gap-2">
-                                <KeywordInput formFieldName="skillsRequired" keywords={keywords} setKeywords={setKeywords} newKeyword={newKeyword} setNewKeyword={setNewKeyword} setValue={setValue} />
+                                <KeywordInput
+                                    formFieldName="skillsRequired"
+                                    keywords={skillsRequired}
+                                    setKeywords={setSkillsRequired}
+                                    newKeyword={newskill}
+                                    setNewKeyword={setNewSkill}
+                                    setValue={setValue}
+                                />
                             </div>
                             {errors.skillsRequired && <p className="text-red-700 text-sm">{errors.skillsRequired.message}</p>}
 
                             <div className="flex flex-wrap gap-2">
-                                {keywords.map((keyword, index) => (
+                                {skillsRequired.map((keyword, index) => (
                                     <div key={index} className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md">
                                         {keyword}
-                                        <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => removeKeyword(index)}>
+                                        <button type="button" onClick={() => removeSkills(index)}>
                                             <X className="h-3 w-3" />
-                                        </Button>
+                                        </button>
                                     </div>
                                 ))}
                             </div>
                         </div>
-
                         <div className="grid gap-2">
                             <Label htmlFor="searchTags">Search Tags</Label>
 
