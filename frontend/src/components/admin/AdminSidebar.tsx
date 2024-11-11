@@ -2,7 +2,7 @@ import { Briefcase, CreditCard, Settings, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
-import { logoutAdmin } from "@/api/admin";
+import { logoutAdmin } from "@/api/adminApi";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setAdminAuthStatus } from "@/store/slices/userSlice";

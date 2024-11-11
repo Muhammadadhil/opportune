@@ -1,7 +1,8 @@
 import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 import profilePicture from "@/assets/profilePicture.jpg";
-import { getClientProfileData, getJobs, getProfileData } from "@/api/userApi";
+import { getClientProfileData, getProfileData } from "@/api/userApi";
+import { getJobs } from "@/api/jobsApi";
 import { useSelector, useDispatch } from "react-redux";
 import { setClientData } from "@/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";

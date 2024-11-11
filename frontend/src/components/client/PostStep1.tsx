@@ -9,7 +9,7 @@ import { RootState } from "@/store/store";
 import { updateJobData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
 import KeywordInput from "../common/KeywordInput";
-import { getCategories } from "@/api/admin";
+import { getCategories } from "@/api/adminApi";
 
 interface OverviewProps {
     onNext: () => void;

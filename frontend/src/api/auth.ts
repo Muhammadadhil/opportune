@@ -1,5 +1,5 @@
 import axios from "axios";
-import apiClient from "./apiClient/axios";
+import apiClient from "./axiosInstance";
 
 export const refreshToken = async (): Promise<string> => {
     try {

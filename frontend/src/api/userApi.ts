@@ -1,6 +1,5 @@
-import apiClient from "./apiClient/axios";
+import apiClient from "./axiosInstance";
 import IClientData from "../types/IClientData";
-import { JobData } from "@/types/IProjectPost";
 
 interface FormData {
     email: string;
@@ -66,16 +65,3 @@ export const fetchAllGigs = async () => {
     return await apiClient.get(`/post/getAllGigs`);
 };
 
-// jobs
-export const saveJobPost = async (data: JobData) => {
-    return await apiClient.post("/post/job", data);
-};
-
-export const getJobs = async (CId: string) => {
-    console.log('cid:',CId)
-    return await apiClient.get(`/post/jobs/${CId}`);
-};
-
-export const fetchAllJobs = async () => {
-    return await apiClient.get(`/post/jobs`);
-};

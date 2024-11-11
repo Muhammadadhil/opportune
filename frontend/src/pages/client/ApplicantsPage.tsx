@@ -1,4 +1,4 @@
-import Applicants from "@/components/client/Applicants";
+import Applicants from "@/components/client/ClientJobs";
 
 const ApplicantsPage = () => {
     return (

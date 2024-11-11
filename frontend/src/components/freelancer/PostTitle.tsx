@@ -9,7 +9,7 @@ import { RootState } from "@/store/store";
 import { updatePostFormData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
 import KeywordInput from "../common/KeywordInput";
-import { getCategories } from "@/api/admin";
+import { getCategories } from "@/api/adminApi";
 
 interface OverviewProps {
     onNext: () => void;
@@ -41,7 +41,6 @@ export const PostTitle: React.FC<OverviewProps> = React.memo(({ onNext }) => {
 
     useEffect(() => {
         const category = categories.find((cat) => cat.name === selectedCategoryName);
-        console.log("category selected", category);
         setSubCategories(category?.subCategory || []);
     }, [selectedCategoryName]);
 

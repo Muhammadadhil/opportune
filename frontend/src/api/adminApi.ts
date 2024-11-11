@@ -1,4 +1,4 @@
-import apiClient from "./apiClient/axios";
+import apiClient from "./axiosInstance";
 
 type subCategory = {
     category: string;

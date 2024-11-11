@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import formSchema from "@/schemas/jobPoststep2Schema";
+import jobPoststepTwoSchema from "@/schemas/jobPoststep2Schema";
 
 interface OverviewProps {
     handleSubmitForm: () => void;
@@ -32,7 +32,7 @@ export const PostStep2: React.FC<OverviewProps> = React.memo(({ onPrev, handleSu
         setValue,
         formState: { errors },
     } = useForm<BudgetData>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(jobPoststepTwoSchema),
         defaultValues: jobData,
     });
 

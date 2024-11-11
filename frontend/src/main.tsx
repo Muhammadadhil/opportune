@@ -9,6 +9,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { persistor } from "./store/store.ts";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
@@ -17,7 +20,9 @@ createRoot(document.getElementById("root")!).render(
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ErrorBoundary>
-                            <App />
+                            <QueryClientProvider client={queryClient}>
+                                <App />
+                            </QueryClientProvider>
                         </ErrorBoundary>
                     </PersistGate>
                 </Provider>

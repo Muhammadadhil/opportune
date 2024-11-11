@@ -1,3 +1,5 @@
+// slice used when posting gigs and jobs
+
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/types/IProjectPost";
 
