@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { useJobs } from "@/hooks/useJobs";
+import { useJobs } from "@/hooks/jobs/useJobs";
 import { useState } from "react";
 import { IJob } from "@/types/IJob";
 import { Pencil } from "lucide-react";
@@ -10,7 +10,7 @@ import EditJob from "./EditJob";
 
 export default function ClientJobs() {
     const { userInfo } = useSelector((state: RootState) => state.user);
-    const { data: jobs, isLoading } = useJobs(userInfo?._id as string);
+    const { data: jobs, isLoading, refetch } = useJobs(userInfo?._id as string);
     const [editingJob, setEditingJob] = useState<IJob | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
@@ -19,10 +19,13 @@ export default function ClientJobs() {
         setIsDialogOpen(true);
     };
 
-    const handleCloseDialog = () => {
+    const handleCloseDialog = async() => {
         setIsDialogOpen(false);
         setEditingJob(null);
+        await refetch();
     };
+    console.log("updated : ");
+    console.count("clientjobs");
 
     return (
         <div className="container mx-auto py-8 max-w-7xl">

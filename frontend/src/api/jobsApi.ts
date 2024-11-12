@@ -13,7 +13,9 @@ export const getJobs = async (clientId: string) => {
     return await apiClient.get(`/post/jobs`);
 };
 
-export const editJob = async (data: IJob) => {
-    console.log('edittinggggggggggggggggggggggg');
+export const editJob = async (data: IJob): Promise<IJob> => {
+
+    console.log('!!!!!!!!!!!!!!!!! edit job api callll !!!!!!!!!!!!!!!!!!!!!!');
+
     return await apiClient.patch("/post/job", data);
 };

@@ -18,6 +18,7 @@ import { ReactSetState } from "@/types/ReactSetState";
 import { Pencil } from "lucide-react";
 import { ICategory, ISubCategory } from "@/types/ICategory";
 import { editJob } from "@/api/jobsApi";
+import { useEditJob } from "@/hooks/jobs/useEditJob";
 
 interface EditJobProps {
     job: IJob;
@@ -32,9 +33,13 @@ export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobP
     const [newskill, setNewSkill] = useState("");
 
     const [categories, setCategories] = useState<ICategory[]>([]);
-    const [subCategories, setSubCategories] = useState<ISubCategory[]>(
-        job.subCategory? [{_id: "",name: job.subCategory,},]: []
-    );
+    const [subCategories, setSubCategories] = useState<ISubCategory[]>(job.subCategory ? [{ _id: "", name: job.subCategory }] : []);
+
+    const editJobMutation = useEditJob();
+
+    const handleEditJob = async (jobData: IJob) => {
+        await editJobMutation.mutateAsync(jobData);
+    };
 
     const schema = jobPoststepOneSchema.merge(jobPoststepTwoSchema);
 
@@ -48,7 +53,7 @@ export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobP
     } = useForm<IJob>({
         resolver: zodResolver(schema),
         defaultValues: {
-            clientId:job.clientId,
+            clientId: job.clientId,
             jobTitle: job.jobTitle,
             description: job.description,
             category: job.category,
@@ -66,10 +71,7 @@ export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobP
     };
 
     const removeSkills = (index: number) => {
-        console.log("removing skills !!");
-
         const updatedKeywords = keywords.filter((_, i) => i !== index);
-        console.log("updatekeyworld:", updatedKeywords);
         setSkillsRequired(updatedKeywords);
         setValue("skillsRequired", updatedKeywords);
     };
@@ -78,9 +80,6 @@ export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobP
 
     useEffect(() => {
         const category = categories.find((cat) => cat.name === selectedCategoryName);
-        console.log("category selected", category);
-        console.log("category.subCategory:", category?.subCategory);
-        console.log("job.subCategory:", typeof job.subCategory);
         if (category?.subCategory) setSubCategories(category.subCategory || job.subCategory);
     }, [selectedCategoryName]);
 
@@ -95,9 +94,10 @@ export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobP
 
     const handleSave = async (data: IJob) => {
         try {
-            data._id=job._id;
-            console.log("job update data :", data);
-            await editJob(data);
+            data._id = job._id;
+            // console.log("job update data :", data);
+            // await editJob(data);
+            await handleEditJob(data);
             setIsDialogOpen(false);
         } catch (error) {
             console.error(error);
@@ -231,7 +231,9 @@ export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobP
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="submit">Save changes</Button>
+                        <Button  disabled={editJobMutation.isPending}>
+                            {editJobMutation.isPending ? "Updating..." : "Save Changes"}
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
