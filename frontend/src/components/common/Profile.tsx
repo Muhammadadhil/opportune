@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RootState } from "@/store/store";
 import GigCard from "../freelancer/GigCard";
-import { fetchGigs } from "@/api/userApi";
+import { fetchGigs } from "@/api/gigsApi";
 import { IGig } from "@/types/IGig";
 import JobCard from "../client/JobCard";
 import { IJob } from "@/types/IJob";

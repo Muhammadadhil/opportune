@@ -1,7 +1,7 @@
 import { getJobs } from "@/api/jobsApi";
 import { useQuery } from "@tanstack/react-query";
 
-export function useJobs(clientId:string) {
+export function useJobs(clientId?:string) {
     return useQuery({
         queryKey: clientId ? ["job", clientId] : ["jobs"],
         queryFn: () => getJobs(clientId), 

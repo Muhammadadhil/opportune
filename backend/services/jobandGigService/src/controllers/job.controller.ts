@@ -10,9 +10,10 @@ export class JobController {
         this.jobService = new JobService();
     }
 
-    getJobs = async (req: Request, res: Response, next: NextFunction) => {  //not using right now
+    getJobs = async (req: Request, res: Response, next: NextFunction) => { 
         try {
             const jobs = await this.jobService.getJobs();
+            res.status(200).json(jobs);
         } catch (error) {
             next(error);
         }

@@ -3,14 +3,12 @@ import { IJob } from "@/types/IJob";
 import Nojobs from "../ui/NoJob";
 import SkeletonCard from "../common/LoadingSkelton";
 
-
-const JobList = () => {
-
+const GigList = () => {
     const { data: jobs, isLoading } = useJobs();
-    
+
     return (
         <div className="flex-grow p-4 md:p-6">
-            <h2 className="text-xl font-semibold mb-4">Jobs you might like</h2>
+            <h2 className="text-xl font-semibold mb-4">Your Gigs</h2>
             <ul className="space-y-4">
                 {isLoading ? (
                     Array.from({ length: 3 }).map((_, index) => <SkeletonCard key={index} />)
@@ -42,4 +40,4 @@ const JobList = () => {
     );
 };
 
-export default JobList;
+export default GigList;

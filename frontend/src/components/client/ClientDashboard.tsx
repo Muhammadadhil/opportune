@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardTitle } from "../ui/card";
 import { Link } from "react-router-dom";
-import { fetchAllGigs } from "@/api/userApi";
+import { fetchGigs } from "@/api/gigsApi";
 import { IGig } from "@/types/IGig";
 
 
@@ -9,7 +9,7 @@ const ClientDashboard: React.FC = () => {
     const [gigs, setGigs] = useState<IGig[]>([]);
 
     const fetchAllGig = async () => {
-        const resData = await fetchAllGigs();
+        const resData = await fetchGigs();
         console.log(resData);
         setGigs(resData?.data || []);
     };

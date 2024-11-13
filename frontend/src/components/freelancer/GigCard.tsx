@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ImageCarousal } from "@/components/common/ImageCarousel";
 import EditGig from "./EditGig";
 import { GigCardProps } from "@/types/IGigCard";
-import { editGigPost } from "@/api/userApi";
+import { editGigPost } from "@/api/gigsApi";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { IGig } from "@/types/IGig";

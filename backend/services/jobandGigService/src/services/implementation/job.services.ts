@@ -10,8 +10,8 @@ export class JobService {
     }
 
     async getJobs(): Promise<IJob[] | null> {
-        const jobs = await this.jobRepository.find();
-        return jobs;
+        return await this.jobRepository.find({isActive:true});
+
     }
 
     async getJobsByClient(id: string): Promise<IJob[] | null> {
