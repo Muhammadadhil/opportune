@@ -24,8 +24,8 @@ export class GigService implements IGigService {
         return newGig;
     }
 
-    async editGig(userId: string, data: IGig): Promise<IGig | null> {
-        return await this.gigRepository.updateGigUsingFreelancerId(userId, data);
+    async editGig(data: IGig): Promise<IGig | null> {
+        return await this.gigRepository.update(data._id as string,data)
     }
 
     async changeGigStatus(id: string): Promise<IGig | null> {

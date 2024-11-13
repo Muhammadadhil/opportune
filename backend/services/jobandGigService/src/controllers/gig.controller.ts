@@ -33,15 +33,10 @@ export class GigController {
 
     editGig = async (req: Request, res: Response) => {
         try {
-            console.log("req.boby Edit:", req.body);
-
-            const updatedData = await this.gigService.editGig(req.body.freelancerId, req.body);
-            console.log("updateData:", updatedData);
-
+            const updatedData = await this.gigService.editGig( req.body);
             if (!updatedData) {
                 return res.status(404).json({ message: "Error editing gig. no Database response" });
             }
-
             res.status(200).json(updatedData);
         } catch (error) {
             console.log("Error in edit gig:", error);

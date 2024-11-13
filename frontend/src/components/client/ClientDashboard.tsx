@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Card, CardTitle } from "../ui/card";
 import { Link } from "react-router-dom";
 import { fetchAllGigs } from "@/api/userApi";
+import { IGig } from "@/types/IGig";
 
 
 const ClientDashboard: React.FC = () => {
-    const [gigs, setGigs] = useState([]);
+    const [gigs, setGigs] = useState<IGig[]>([]);
 
     const fetchAllGig = async () => {
         const resData = await fetchAllGigs();
@@ -59,7 +60,7 @@ const ClientDashboard: React.FC = () => {
                                     </div>
                                     <div className="text-sm text-gray-500 flex flex-col sm:flex-row sm:justify-between">
                                         <span>Price: ${gig?.price}</span>
-                                        <span>Delivery Time: {gig?.deliveryTime}</span>
+                                        <span>Delivery Time: {gig?.deliveryTime} days</span>
                                     </div>
                                     <div className="text-sm text-gray-500 mt-2">
                                         <span>

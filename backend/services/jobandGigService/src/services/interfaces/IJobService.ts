@@ -5,4 +5,5 @@ export interface IJobService {
     getJobs(): Promise<IJob[] | null>;
     getJobsByClient(id: string): Promise<IJob[] | null>;
     editJob(data: Partial<IJob>): Promise<IJob | null>;
+    removeJob(id: string): Promise<IJob | null>;
 }

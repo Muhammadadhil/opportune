@@ -2,20 +2,15 @@ import { Star, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ImageCarousal } from "@/components/common/ImageCarousel";
-// import Button from "../ui/Button";
 import EditGig from "./EditGig";
 import { GigCardProps } from "@/types/IGigCard";
 import { editGigPost } from "@/api/userApi";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { IGig } from "@/types/IGig";
 
-
 const GigCard: React.FC<GigCardProps> = ({ _id,title, description, deliveryTime, price, category, subCategory, rating, reviews, theme, images, imageUrls, isProfile, requirements, searchTags,onUpdate }) => {
 
-    const { userInfo } = useSelector((state: RootState) => state.user);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleEditSave = async (data: IGig) => {
@@ -23,12 +18,10 @@ const GigCard: React.FC<GigCardProps> = ({ _id,title, description, deliveryTime,
         console.log('gig updating data :',data);
 
         try {
-            data.freelancerId = userInfo._id;
+            data._id =_id;
             await editGigPost(data);
             setIsDialogOpen(false);
-            const updateData={...data,_id};
-            console.log('udaata:',updateData)
-            onUpdate(updateData);
+            onUpdate(data);
         } catch (error) {
             console.error(error);
             toast.error("Error In Editing Gig");

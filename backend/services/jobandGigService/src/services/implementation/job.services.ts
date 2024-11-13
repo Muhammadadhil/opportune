@@ -16,7 +16,7 @@ export class JobService {
 
     async getJobsByClient(id: string): Promise<IJob[] | null> {
         console.log("clientId:", id);
-        const jobs = await this.jobRepository.find({ clientId: id });
+        const jobs = await this.jobRepository.findActiveJobs(id);
         return jobs;
     }
 
@@ -31,6 +31,12 @@ export class JobService {
         if (!data._id) {
             return null;
         }
-        return await this.jobRepository.update(data._id as string,data)
+        return await this.jobRepository.update(data._id as string, data);
+    }
+
+    async removeJob(id: string): Promise<IJob | null> {
+        console.log("jobId to delete:", id);
+        return await this.jobRepository.updateActiveStatus(id);
+
     }
 }

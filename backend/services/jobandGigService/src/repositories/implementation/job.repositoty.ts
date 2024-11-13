@@ -8,4 +8,18 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
     constructor() {
         super(JobModel);
     }
+
+    async findActiveJobs(id: string): Promise<IJob[] | null>{
+        return await JobModel.find({clientId:id,isActive: true});
+    };
+
+    //change active status
+    async updateActiveStatus(id: string): Promise<IJob | null> {
+        const job = await JobModel.findById(id);
+        if (!job) {
+            return null;
+        }
+        job.isActive = false;
+        return await job.save();
+    }
 }

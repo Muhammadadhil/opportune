@@ -25,6 +25,8 @@ router.get("/jobs/:id", jobController.getJobsByClient);
 router.post("/job", jobController.postJob);
 
 router.patch("/job", jobController.editJob);
+router.patch("/job/:id", jobController.removeJob);
+
 
 
 

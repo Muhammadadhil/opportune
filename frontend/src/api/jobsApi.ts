@@ -9,13 +9,13 @@ export const saveJobPost = async (data: JobData) => {
 
 export const getJobs = async (clientId: string) => {
     if (clientId) return await apiClient.get(`/post/jobs/${clientId}`);
-
     return await apiClient.get(`/post/jobs`);
 };
 
 export const editJob = async (data: IJob): Promise<IJob> => {
-
-    console.log('!!!!!!!!!!!!!!!!! edit job api callll !!!!!!!!!!!!!!!!!!!!!!');
-
     return await apiClient.patch("/post/job", data);
+};
+
+export const removeJob = async (jobId: string) => {
+    return await apiClient.patch(`/post/job/${jobId}`);
 };

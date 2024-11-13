@@ -17,7 +17,6 @@ import toast from "react-hot-toast";
 import { ReactSetState } from "@/types/ReactSetState";
 import { Pencil } from "lucide-react";
 import { ICategory, ISubCategory } from "@/types/ICategory";
-import { editJob } from "@/api/jobsApi";
 import { useEditJob } from "@/hooks/jobs/useEditJob";
 
 interface EditJobProps {

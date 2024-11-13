@@ -16,7 +16,6 @@ export const useEditJob = (): UseMutationResult<IJob, unknown, IJob, { previousJ
             if (previousJobs) {
                 queryClient.setQueryData<IJob[]>(["jobs"], (old) => old?.map((job) => (job._id === updatedJob._id ? { ...job, ...updatedJob } : job)));
             }
-
             // Return a context object with the snapshotted value
             return { previousJobs };
         },

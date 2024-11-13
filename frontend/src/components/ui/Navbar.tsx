@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
 
     const menuItems: NavItem[] = [
         { path: "/find-jobs", label: "Find Jobs" },
-        { path: "/hire-talents", label: "Hire Talents" },
+        { path: "/hire-talents", label: "gigs" },
         { path: "/contact", label: "Discover" },
     ];
 
@@ -37,8 +37,8 @@ const Navbar: React.FC = () => {
 
     const clientMenu: NavItem[] = [
         { path: "/cl/dashboard", label: "Dashboard" },
-        { path: "/find-jobs", label: "Post a requirement" },
-        { path: "/hire-talents", label: "find talents" },
+        { path: "/cl/manage-jobs", label: " Jobs" },
+        { path: "/hire-talents", label: "Find talents" },
     ];
     const { userInfo } = useSelector((state: RootState) => state.user);
     const { isLoading, theme } = useSelector((state: RootState) => state.app);

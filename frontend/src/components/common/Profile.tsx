@@ -15,6 +15,7 @@ import { IGig } from "@/types/IGig";
 import JobCard from "../client/JobCard";
 import { IJob } from "@/types/IJob";
 import { Link } from "react-router-dom";
+import NoItems from "../ui/NoJob";
 
 export default function Profile() {
     const { userInfo, freelancerData, clientData } = useSelector((state: RootState) => state.user);
@@ -24,7 +25,7 @@ export default function Profile() {
     const [jobs, setJobs] = useState<IJob[]>();
     const [isEdited, setIsEdited] = useState(false);
 
-    const visibleJobs = jobs?.slice(0, 2);
+    const visibleJobs = jobs?.slice(0, 3);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -80,11 +81,8 @@ export default function Profile() {
     }, [isEdited]);
 
     const updateGig = (updatedGig: IGig) => {
-        console.log("!!!!! updating the edit gig in Profile !!!!!!!11");
-        console.log("gig edited:", updatedGig);
-        console.log("prev gigs:", gigs);
         // setGigs((prevGigs) => prevGigs?.map((gig) => (gig._id === updatedGig._id ? updatedGig : gig)) ?? []);
-        setIsEdited(true);
+        setIsEdited((prev) => !prev);
     };
 
     const formatDate = (date: Date) => {
@@ -94,6 +92,8 @@ export default function Profile() {
             day: "numeric",
         });
     };
+
+    console.count("profile component");
 
     return (
         <div className={`container mx-auto px-4 py-8 ${theme === "dark" ? " text-white" : " text-gray-900"}`}>
@@ -223,12 +223,13 @@ export default function Profile() {
                                 return <JobCard job={job} key={index} />;
                             })}
                             {jobs?.length > 2 ? (
-                                <Link to="/cl/applicants">
-                                    <button className="text-blue-600 hover:underline mt-2">See all</button>
+                                <Link to="/cl/manage-jobs">
+                                    <button className="text-blue-600 hover:text-blue-500 mt-2 ">See all jobs</button>
                                 </Link>
                             ) : (
                                 ""
                             )}
+                            <div className="mx-auto">{visibleJobs?.length == 0 ? <NoItems /> : ""}</div>
                         </CardContent>
                     )}
                 </Card>

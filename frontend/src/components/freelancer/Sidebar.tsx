@@ -6,10 +6,10 @@ import profilePicture from "@/assets/profilePicture.jpg";
 import { getProfileData } from "@/api/userApi";
 import { useSelector, useDispatch } from "react-redux";
 import { setFreelancerData } from "@/store/slices/userSlice";
+import { RootState } from "@/store/store";
 
 const Sidebar = () => {
-    const { userInfo, freelancerData } = useSelector((state: any) => state.user);
-
+    const { userInfo, freelancerData } = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
 
     async function getData() {
@@ -42,7 +42,7 @@ const Sidebar = () => {
                         </div>
                     </div>
                     <div className="mt-4">
-                        {freelancerData?.userId !=="" ? (
+                        
                             <div>
                                 <Button variant="outline" className="w-full" onClick={() => navigate("/fr/complete-profile")}>
                                     Complete your profile
@@ -51,9 +51,7 @@ const Sidebar = () => {
                                     <div className="bg-green-600 h-2.5 rounded-full" style={{ width: "40%" }}></div>
                                 </div>
                             </div>
-                        ) : (
-                            ""
-                        )}
+                        
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@ import ProfilePage from "@/pages/freelancer/ProfilePage";
 import CompleteProfile from "@/components/freelancer/CompleteProfile"
 import PostProject from "@/pages/freelancer/PostProjectPage";
 import PostJobPage from "@/pages/client/PostJobPage";
-import ApplicantsPage from '@/pages/client/ApplicantsPage';
+import ClientJobsPage from "@/pages/client/ClientJobsPage";
 
 function UserRoute() {
     return (
@@ -35,7 +35,7 @@ function UserRoute() {
                         <Route path="cl/dashboard" element={<ClientDashboard />} />
                         <Route path="cl/profile" element={<ProfilePage />} />
                         <Route path="cl/postjob" element={<PostJobPage />} />
-                        <Route path="cl/applicants" element={<ApplicantsPage />} />
+                        <Route path="cl/manage-jobs" element={<ClientJobsPage />} />
                     </Route>
                     <Route path="cl/details" element={<DetailsClient />} />
                 </Route>
