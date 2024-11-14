@@ -15,9 +15,10 @@ const jobController = new JobController();
 router.get("/gigs/:id", gigController.getGigs);
 router.get("/gigs", gigController.getAllGigs);   
 
+router.patch("/gig/:id", deleteGigValidator, gigController.changeStatus);
+
 router.post("/postaGig", upload.array("images", 3), gigController.postAGig);
 router.post("/editGig", upload.array("images", 3),gigController.editGig);
-router.delete("/deleteGig/:id", deleteGigValidator, gigController.changeStatus);
 
 // jobs
 router.get('/jobs',jobController.getJobs);

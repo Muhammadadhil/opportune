@@ -14,6 +14,7 @@ export class GigRepository extends BaseRepository<IGig> implements IGigRepositoy
 
     //change active status
     async updateActiveStatus(id: string): Promise<IGig | null> {
+        console.log('updating acitve status !!!!',id);
         const gig = await GigModel.findById(id);
         if (!gig) {
             return null;

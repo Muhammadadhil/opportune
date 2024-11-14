@@ -15,3 +15,7 @@ export const fetchGigs = async (fId?: string) => {
     return await apiClient.get(`/post/gigs`);
 };
 
+export const removeGig = async (gigId:string) => {
+    return await apiClient.patch(`/post/gig/${gigId}`);
+};
+

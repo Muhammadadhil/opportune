@@ -6,7 +6,7 @@ export function useGigs(fId?: string) {
         queryKey: fId ? ["gig", fId] : ["gigs"],
         queryFn: () => fetchGigs(fId),
         staleTime: 300000, // 5 minutes<<>
-        retry: 1,
+        // retry: 1,
         enabled:true 
     });
 }

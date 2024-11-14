@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import ConfirmDialog from "./ConfirmDialog";
 import { IGig } from "@/types/IGig";
+import { useRemoveGig } from "@/hooks/gigs/useDeleteGig";
 
 interface GigCardProps {
     gig: IGig;
@@ -20,12 +21,15 @@ const GigCard: React.FC<GigCardProps> = ({ gig, onUpdate }) => {
     const [open, setOpen] = useState(false);
 
     const { userInfo } = useSelector((state: RootState) => state.user);
-    const HandleRemove = (gigId: string) => {
+    const removeMutaion = useRemoveGig();
 
+    const HandleRemove = async (gigId: string) => {
+        await removeMutaion.mutateAsync(gigId);
+        toast.success("Gig removed successfully");
+        setOpen(false);
     };
 
     const handleEditSave = async (data: IGig) => {
-        // console.log("gig updating data :", data);
         try {
             data._id = gig._id;
             await editGigPost(data);
@@ -38,11 +42,11 @@ const GigCard: React.FC<GigCardProps> = ({ gig, onUpdate }) => {
     };
 
     const isFreelancer = userInfo?.role === "freelancer";
-    
+
     console.log("gig card data", gig);
 
     return (
-        <Card className={`col-span-12 sm:col-span-6 md:col-span-4 ${isFreelancer ? "md:col-span-4" : "2xl:col-span-3"} overflow-hidden group`}>
+        <Card className={`min-w-[250px] col-span-12 sm:col-span-6  ${isFreelancer ? "md:col-span-6 xl:col-span-4" : "md:col-span-4 2xl:col-span-3"} overflow-hidden group min`}>
             <div className="relative aspect-[2/1] overflow-hidden">
                 <ImageCarousal array={gig.imageUrls} />
                 {!isFreelancer && (
@@ -81,6 +85,7 @@ const GigCard: React.FC<GigCardProps> = ({ gig, onUpdate }) => {
                             open={open}
                             setOpen={setOpen}
                             onConfirm={HandleRemove}
+                            id={gig._id}
                         />
                     </div>
                 ) : (

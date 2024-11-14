@@ -16,13 +16,13 @@ import JobCard from "../client/JobCard";
 import { IJob } from "@/types/IJob";
 import { Link } from "react-router-dom";
 import NoItems from "../ui/NoJob";
-
+import { useGigs } from "@/hooks/gigs/useGigs";
 
 export default function Profile() {
     const { userInfo, freelancerData, clientData } = useSelector((state: RootState) => state.user);
     const { theme } = useSelector((state: RootState) => state.app);
     const [profileImage, setProfileImage] = useState("");
-    const [gigs, setGigs] = useState<IGig[]>([]);
+    // const [gigs, setGigs] = useState<IGig[]>([]);
     const [jobs, setJobs] = useState<IJob[]>();
     const [isEdited, setIsEdited] = useState(false);
 
@@ -30,6 +30,8 @@ export default function Profile() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const { data:gigs, isLoading } = useGigs(userInfo._id);
 
     async function getData() {
         try {
@@ -58,11 +60,11 @@ export default function Profile() {
         }
     }, []);
 
-    const fetchProjects = async () => {
-        const response = await fetchGigs(userInfo._id);
-        console.log("gigs response:", response.data);
-        setGigs(response.data);
-    };
+    // const fetchProjects = async () => {
+    //     const response = await fetchGigs(userInfo._id);
+    //     console.log("gigs response:", response.data);
+    //     setGigs(response.data);
+    // };
 
     const fetchJobs = async () => {
         console.log("fetching jobs !!!");
@@ -75,7 +77,7 @@ export default function Profile() {
     useEffect(() => {
         console.log("calling to  gigs | jobs !");
         if (userInfo?.role == "freelancer") {
-            fetchProjects();
+            // fetchProjects();
         } else if (userInfo?.role == "client") {
             fetchJobs();
         }
@@ -185,10 +187,10 @@ export default function Profile() {
                         <CardTitle className={theme === "dark" ? "text-gray-200" : "text-gray-600"}>Your Posts</CardTitle>
                     </CardHeader>
                     {userInfo.role == "freelancer" ? (
-                        <CardContent className="flex gap-4 grid grid-cols-12 gap-5 justify-center ">
-                            {gigs.length < 1 && <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p>}
+                        <CardContent className="gap-4 grid grid-cols-12 gap-5 justify-center ">
+                            {gigs?.data?.length < 1 && <p>No posts yet.</p>}
 
-                            {gigs.map((gig) => {
+                            {gigs?.data?.map((gig) => {
                                 return <GigCard key={gig._id} gig={gig} onUpdate={updateGig} />;
                             })}
                         </CardContent>

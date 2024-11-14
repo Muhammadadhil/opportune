@@ -3,15 +3,16 @@ import { Button } from "../ui/button";
 import { ReactSetState } from "@/types/ReactSetState";
 
 interface ConfirmDialogProps {
+    id: string;
     title: string;
     description1: string;
     description2: string;
     open: boolean;
     setOpen: ReactSetState<boolean>;
-    onConfirm: (gigId:string) => void;
+    onConfirm: (gigId: string) => void;
 }
 
-const ConfirmDialog = ({ title, description1, description2, open, setOpen, onConfirm }: ConfirmDialogProps) => (
+const ConfirmDialog = ({ title, description1, description2, open, setOpen, onConfirm, id }: ConfirmDialogProps) => (
     <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger className=" rounded-xl transition duration-300 ease-in-out">
             <Button>remove gig</Button>
@@ -28,7 +29,7 @@ const ConfirmDialog = ({ title, description1, description2, open, setOpen, onCon
                 <Button variant="outline" onClick={() => setOpen(false)}>
                     Cancel
                 </Button>
-                <Button variant="default" onClick={()=> onConfirm()}>
+                <Button variant="default" onClick={() => onConfirm(id)}>
                     Remove
                 </Button>
             </DialogFooter>
