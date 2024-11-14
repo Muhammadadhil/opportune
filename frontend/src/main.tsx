@@ -9,7 +9,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { persistor } from "./store/store.ts";
 import ErrorBoundary from "./components/common/ErrorBoundary";
-import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
                     <PersistGate loading={null} persistor={persistor}>
                         <ErrorBoundary>
                             <QueryClientProvider client={queryClient}>
+                                <ReactQueryDevtools initialIsOpen={false} />
                                 <App />
                             </QueryClientProvider>
                         </ErrorBoundary>

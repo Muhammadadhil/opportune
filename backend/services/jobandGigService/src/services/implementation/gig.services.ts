@@ -25,7 +25,7 @@ export class GigService implements IGigService {
     }
 
     async editGig(data: IGig): Promise<IGig | null> {
-        return await this.gigRepository.update(data._id as string,data)
+        return await this.gigRepository.update(data._id as string, data);
     }
 
     async changeGigStatus(id: string): Promise<IGig | null> {
@@ -46,6 +46,15 @@ export class GigService implements IGigService {
     }
 
     async getAllGigs(): Promise<IGig[] | null> {
-        return await this.gigRepository.find();
+        const gigDatas = await this.gigRepository.find();
+        for (const gig of gigDatas) {
+            const imageUrls = await Promise.all(
+                gig.images.map(async (image) => {
+                    return await getSignedImageURL(image);
+                })
+            );
+            gig.imageUrls = imageUrls;
+        }
+        return gigDatas;
     }
 }

@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
 
     const freelancerMenu: NavItem[] = [
         { path: "/fr/dashboard", label: "Dashboard" },
-        { path: "/find-jobs", label: "Post a project" },
+        { path: "/fr/manage-gigs", label: "manage gigs" },
         { path: "/hire-talents", label: "find jobs" },
     ];
 

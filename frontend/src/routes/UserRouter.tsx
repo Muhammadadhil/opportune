@@ -15,6 +15,7 @@ import CompleteProfile from "@/components/freelancer/CompleteProfile"
 import PostProject from "@/pages/freelancer/PostProjectPage";
 import PostJobPage from "@/pages/client/PostJobPage";
 import ClientJobsPage from "@/pages/client/ClientJobsPage";
+import GigsPage from "@/pages/freelancer/GigsPages";
 
 function UserRoute() {
     return (
@@ -46,6 +47,7 @@ function UserRoute() {
                         <Route path="fr/profile" element={<ProfilePage />} />
                         <Route path="fr/complete-profile" element={<CompleteProfile />} />
                         <Route path="/fr/post-project" element={<PostProject />} />
+                        <Route path="/fr/manage-gigs" element={<GigsPage />} />
                     </Route>
                 </Route>
             </Routes>

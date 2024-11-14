@@ -9,6 +9,7 @@ export const editGigPost = async (gigData) => {
 };
 
 export const fetchGigs = async (fId?: string) => {
+    console.log('fetchgigs id:',fId);
     if (fId) return await apiClient.get(`/post/gigs/${fId}`);
 
     return await apiClient.get(`/post/gigs`);

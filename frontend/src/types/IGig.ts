@@ -8,7 +8,7 @@ export interface IGig {
     category: string;
     subCategory: string;
     isActive: boolean;
-    deliveryTime: Date;
+    deliveryTime: string;
     reviewsCount: number;
     averageRating: number;
     searchTags: string[];

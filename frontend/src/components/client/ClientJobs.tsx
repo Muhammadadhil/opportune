@@ -18,7 +18,6 @@ export default function ClientJobs() {
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [open, setOpen] = useState(false);
 
-
     const { userInfo } = useSelector((state: RootState) => state.user);
     const { data: jobs, isLoading, refetch } = useJobs(userInfo?._id as string);
 

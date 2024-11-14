@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -6,37 +6,30 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { GigCardProps } from "@/types/IGigCard";
 import { Textarea } from "../ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DescriptionDataSchema from "@/schemas/postDescriptoinSchema";
 import { overViewSchema } from "@/schemas/postOverviewSchema";
 import KeywordInput from "../common/KeywordInput";
 import { getCategories } from "@/api/adminApi";
+import { ICategory, ISubCategory } from "@/types/ICategory";
+import { IGig } from "@/types/IGig";
 
+interface Props {
+    gig: IGig;
+    handleSave: (data: IGig) => Promise<void>;
+    isDialogOpen: boolean;
+    setIsDialogOpen: (isOpen: boolean) => void;
+}
 
-export default function EditGig({
-    _id,
-    title,
-    description,
-    price,
-    deliveryTime,
-    category,
-    subCategory,
-    searchTags,
-    images,
-    imageUrls,
-    requirements,
-    theme = "light",
-    handleSave,
-    isDialogOpen,
-    setIsDialogOpen,    
-}: GigCardProps) {
+export default function EditGig({ gig, handleSave, isDialogOpen, setIsDialogOpen }: Props) {
+    const { _id, title, description, price, deliveryTime, category, subCategory, searchTags, images, imageUrls, requirements } = gig;
+
     const [newKeyword, setNewKeyword] = useState("");
     const [keywords, setKeywords] = useState<string[]>(searchTags);
 
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [subCategories, setSubCategories] = useState<ISubCategory[]>([]);
 
     const gigSchema = overViewSchema.merge(DescriptionDataSchema);
 
@@ -47,7 +40,7 @@ export default function EditGig({
         setValue,
         watch,
         formState: { errors },
-    } = useForm<GigCardProps>({
+    } = useForm<IGig>({
         resolver: zodResolver(gigSchema),
         defaultValues: {
             _id,
@@ -69,15 +62,15 @@ export default function EditGig({
         setValue("searchTags", updatedKeywords);
     };
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const file = event.target.files?.[0];
+    // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    //     const file = event.target.files?.[0];
 
-        if (file) {
-            images[index] = file;
-            setValue("images", images);
-        }
-        console.log("images Array:", images);
-    };
+    //     if (file) {
+    //         images[index] = file;
+    //         setValue("images", images);
+    //     }
+    //     console.log("images Array:", images);
+    // };
 
     const selectedCategoryName = watch("category");
 
@@ -101,7 +94,7 @@ export default function EditGig({
             <DialogTrigger asChild>
                 <Button variant="outline">Edit Gig</Button>
             </DialogTrigger>
-            <DialogContent className={`sm:max-w-[425px] md:max-w-[70rem] ${theme === "dark" ? " text-white" : " text-gray-900"}`}>
+            <DialogContent className="sm:max-w-[425px] md:max-w-[70rem]">
                 <DialogHeader>
                     <DialogTitle onClick={() => setIsDialogOpen?.(true)}>Edit Gig</DialogTitle>
                     <DialogDescription>Make changes to your gig here. Click save when you're done.</DialogDescription>
@@ -110,7 +103,7 @@ export default function EditGig({
                     <div className="grid grid-cols-3 gap-4">
                         {imageUrls.map((image, index) => (
                             <div key={index} className="h-40 border-2 border-dashed rounded-lg flex items-center justify-center relative bg-gray-50 hover:bg-gray-100 transition-colors group">
-                                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, index)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
+                                {/* <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, index)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" /> */}
 
                                 <div className="relative w-full h-full">
                                     <img src={image} alt={`Upload ${index + 1}`} className="w-full h-full object-cover rounded-lg" />

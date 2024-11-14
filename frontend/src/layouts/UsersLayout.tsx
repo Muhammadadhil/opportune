@@ -5,7 +5,7 @@ import { RootState } from "@/store/store";
 
 
 const UsersLayout = () => {
-    const { theme } = useSelector((state: RootState) => state.app);
+    // const { theme } = useSelector((state: RootState) => state.app);
 
     return (
         <div >

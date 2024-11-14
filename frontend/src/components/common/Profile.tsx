@@ -9,13 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RootState } from "@/store/store";
-import GigCard from "../freelancer/GigCard";
+import GigCard from "./GigCard";
 import { fetchGigs } from "@/api/gigsApi";
 import { IGig } from "@/types/IGig";
 import JobCard from "../client/JobCard";
 import { IJob } from "@/types/IJob";
 import { Link } from "react-router-dom";
 import NoItems from "../ui/NoJob";
+
 
 export default function Profile() {
     const { userInfo, freelancerData, clientData } = useSelector((state: RootState) => state.user);
@@ -83,14 +84,6 @@ export default function Profile() {
     const updateGig = (updatedGig: IGig) => {
         // setGigs((prevGigs) => prevGigs?.map((gig) => (gig._id === updatedGig._id ? updatedGig : gig)) ?? []);
         setIsEdited((prev) => !prev);
-    };
-
-    const formatDate = (date: Date) => {
-        return date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
     };
 
     console.count("profile component");
@@ -192,29 +185,11 @@ export default function Profile() {
                         <CardTitle className={theme === "dark" ? "text-gray-200" : "text-gray-600"}>Your Posts</CardTitle>
                     </CardHeader>
                     {userInfo.role == "freelancer" ? (
-                        <CardContent className="flex gap-4 ">
+                        <CardContent className="flex gap-4 grid grid-cols-12 gap-5 justify-center ">
                             {gigs.length < 1 && <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>No posts yet.</p>}
 
-                            {gigs.map((item, index) => {
-                                return (
-                                    <GigCard
-                                        key={item._id}
-                                        _id={item._id}
-                                        title={item.title}
-                                        description={item.description}
-                                        deliveryTime={`${item.deliveryTime}`}
-                                        price={item.price}
-                                        category={item.category}
-                                        subCategory={item.subCategory}
-                                        theme={theme}
-                                        images={item.images}
-                                        imageUrls={item.imageUrls}
-                                        isProfile={true}
-                                        searchTags={item.searchTags}
-                                        requirements={item.requirements}
-                                        onUpdate={updateGig}
-                                    />
-                                );
+                            {gigs.map((gig) => {
+                                return <GigCard key={gig._id} gig={gig} onUpdate={updateGig} />;
                             })}
                         </CardContent>
                     ) : (
