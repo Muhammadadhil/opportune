@@ -178,9 +178,9 @@ export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobP
                                 />
                             </div>
                         </div>
-                        <div className="grid gap-2 max-w-[200px]">
+                        <div className="grid gap-2 max-w-[350px]">
                             <Label htmlFor="budget">Budget</Label>
-                            <Input type="number" id="budget" {...register("budget")} />
+                            <Input type="number" id="budget" {...register("budget", { valueAsNumber: true })} />
                             {errors.budget && <p className="text-red-800 text-sm">{errors.budget.message}</p>}
                         </div>
                         <div className="grid gap-2">
@@ -230,9 +230,7 @@ export default function EditJob({ job, isDialogOpen, setIsDialogOpen }: EditJobP
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button  disabled={editJobMutation.isPending}>
-                            {editJobMutation.isPending ? "Updating..." : "Save Changes"}
-                        </Button>
+                        <Button disabled={editJobMutation.isPending}>{editJobMutation.isPending ? "Updating..." : "Save Changes"}</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
