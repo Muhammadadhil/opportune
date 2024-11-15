@@ -28,7 +28,7 @@ router.post("/job", jobController.postJob);
 router.patch("/job", jobController.editJob);
 router.patch("/job/:id", jobController.removeJob);
 
-
+router.post('/job-application',jobController.applyForJob);
 
 
 export default router;

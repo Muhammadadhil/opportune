@@ -2,12 +2,11 @@ import { useJobs } from "@/hooks/jobs/useJobs";
 import { IJob } from "@/types/IJob";
 import Nojobs from "../ui/NoJob";
 import SkeletonCard from "../common/LoadingSkelton";
-
+import { Button } from "../ui/button";
 
 const JobList = () => {
-
     const { data: jobs, isLoading } = useJobs();
-    
+
     return (
         <div className="flex-grow p-4 md:p-6">
             <h2 className="text-xl font-semibold mb-4">Jobs you might like</h2>
@@ -32,7 +31,12 @@ const JobList = () => {
                             </div>
                             <div className="text-sm text-gray-500 flex flex-col sm:flex-row sm:justify-between">
                                 <span>Budget: ₹{job.budget}</span>
-                                <span>Proposals: 5 to 10</span>
+                                <span>Proposals: 5 to 10 </span>
+                            </div>
+                            <div className="w-full flex justify-end mt-3">
+                                <Button variant="outline" className="w-28 ">
+                                    apply
+                                </Button>
                             </div>
                         </li>
                     ))

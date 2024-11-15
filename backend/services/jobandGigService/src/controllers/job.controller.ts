@@ -10,7 +10,7 @@ export class JobController {
         this.jobService = new JobService();
     }
 
-    getJobs = async (req: Request, res: Response, next: NextFunction) => { 
+    getJobs = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const jobs = await this.jobService.getJobs();
             res.status(200).json(jobs);
@@ -23,7 +23,7 @@ export class JobController {
         try {
             const id = req.params.id;
             const jobs = await this.jobService.getJobsByClient(id);
-            console.log('jobs Active now:',jobs)
+            console.log("jobs Active now:", jobs);
             res.status(200).json(jobs);
         } catch (error) {
             next(error);
@@ -57,12 +57,25 @@ export class JobController {
     removeJob = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const jobId = req.params.id;
-            console.log('going to remove ',jobId)
+            console.log("going to remove ", jobId);
             const removedJob = await this.jobService.removeJob(jobId);
             if (!removedJob) {
                 throw new HTTPError("Error in removing Job", 400);
             }
             res.status(200).json(removedJob);
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+    };
+
+    applyForJob = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { jobId, clientId, freelancerId } = req.body;
+            const removedJob = await this.jobService.applyJob(jobId);
+            
+
+
         } catch (error) {
             console.log(error);
             next(error);

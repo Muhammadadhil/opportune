@@ -5,7 +5,7 @@ export default async () => {
     try {
         if (process.env.MONGODB_URL) {
             dbInstance = await mongoose.connect(process.env.MONGODB_URL);
-            console.log("jobAndGig DB connected!");
+            console.log("Contracts DB connected!");
         } else {
             throw new Error("MONGODB_URL not defined");
         }

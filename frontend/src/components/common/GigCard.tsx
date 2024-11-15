@@ -50,7 +50,7 @@ const GigCard: React.FC<GigCardProps> = ({ gig, onUpdate }) => {
             <div className="relative aspect-[2/1] overflow-hidden">
                 <ImageCarousal array={gig.imageUrls} />
                 {!isFreelancer && (
-                    <button className="absolute top-3 right-3 p-1.5 bg-white rounded-full hover:bg-gray-100">
+                    <button aria-label='Add to favourites' className="absolute top-3 right-3 p-1.5 bg-white rounded-full hover:bg-gray-100">
                         <Heart className="w-4 h-4" />
                     </button>
                 )}
