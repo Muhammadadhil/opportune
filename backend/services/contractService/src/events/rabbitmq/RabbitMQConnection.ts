@@ -12,7 +12,7 @@ class RabbitMQConnection {
 
     async createChannel(): Promise<amqplib.Channel> {
         const connection = await this.getConnection();
-        console.log("Created connection and Channel : Job&GigService");
+        console.log("Created connection and Channel : ContractService");
         return await connection.createChannel();
     }
 }

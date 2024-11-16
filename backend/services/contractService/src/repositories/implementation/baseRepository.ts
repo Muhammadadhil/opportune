@@ -1,5 +1,4 @@
 import { Model, Document } from "mongoose";
-
 import { IBaseRepository } from "../interfaces/IBaseRepository";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {

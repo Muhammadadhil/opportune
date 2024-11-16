@@ -4,5 +4,5 @@ export interface IApplication extends Document {
     freelancerId: ObjectId;
     clientId:Object;
     jobId:ObjectId;
-    status:String;
+    status?:String;
 }

@@ -72,10 +72,8 @@ export class JobController {
     applyForJob = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { jobId, clientId, freelancerId } = req.body;
-            const removedJob = await this.jobService.applyJob(jobId);
+            const removedJob = await this.jobService.applyJob(req.body);
             
-
-
         } catch (error) {
             console.log(error);
             next(error);

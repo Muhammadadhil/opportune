@@ -1,20 +1,15 @@
-import { GigService } from "../services/implementation/gig.services";
+import { ApplicationSerivce } from "../services/implementation/Application.services";
 import { Request, Response } from "express";
-import { IGigService } from "../services/interfaces/IGigService";
+import { IApplicationService } from "../services/interfaces/IApplicationService";
 
 export class GigController {
-    private gigService: IGigService;
+    private applicationService: IApplicationService;
 
     constructor() {
-        this.gigService = new GigService();
+        this.applicationService = new ApplicationSerivce();
     }
 
     getAllGigs = async (req: Request, res: Response) => {
-        try {
-            const gigs = await this.gigService.getAllGigs();
-            res.status(200).json(gigs);
-        } catch (error) {
-            res.status(500).json(error);
-        }
+        
     };
 }

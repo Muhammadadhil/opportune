@@ -1,6 +1,4 @@
-import { IGig } from "../../interfaces/IGig";
+import { IApplication } from "../../interfaces/IApplication";
 import { IBaseRepository } from "./IBaseRepository";
 
-export interface IGigRepositoy extends IBaseRepository<IGig>{
-   
-}
+export interface IGigRepositoy extends IBaseRepository<IApplication> {}

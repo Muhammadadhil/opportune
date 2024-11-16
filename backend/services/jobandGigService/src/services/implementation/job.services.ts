@@ -5,25 +5,18 @@ import { IApplyJob,IJobService } from "../interfaces/IJobService";
 import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
 
 
-
-
 export class JobService implements IJobService {
     private jobRepository;
     private producer = new RabbitMQProducer();
 
     constructor() {
         this.jobRepository = new JobRepository();
+        this.intialize();
+        
     }
-
+    
     async intialize() {
         await this.producer.connect();
-
-        // await this.consumer.connect();
-
-        // // Start consuming
-        // this.consumer.consume("job.application.created", (message) => {
-        //     console.log("Processing job application:", message);
-        // });
     }
 
     async getJobs(): Promise<IJob[] | null> {
@@ -56,9 +49,8 @@ export class JobService implements IJobService {
     }
 
     async applyJob(data: IApplyJob) {
-        // return await this.jobRepository.updateActiveStatus(id);
         // sent to queue and save it in contract service : application model
-
+        console.log("In service : going to publish the message with data:", data);
         await this.producer.publish("job.application.created", data);
     }
 }
