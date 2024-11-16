@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { GigController } from "../controllers/gig.controller";
-import { gigValidationSchema } from "../validators/gigValidator";
+import { applicatinSchema } from "../validators/applicationValidator";
 import validateEntry from "../middleware/validateEntry";
-import { checkSchema } from "express-validator";
-import editGigValidator from "../validators/editGigValidator";
+// import { checkSchema } from "express-validator";
+// import editGigValidator from "../validators/editGigValidator";
 import { deleteGigValidator } from "../validators/deleteGigvalidator";
 import upload from "../utils/multerConfig";
 import { JobController } from "../controllers/job.controller";
@@ -28,7 +28,7 @@ router.post("/job", jobController.postJob);
 router.patch("/job", jobController.editJob);
 router.patch("/job/:id", jobController.removeJob);
 
-router.post('/job-application',jobController.applyForJob);
+router.post("/job-application", applicatinSchema, validateEntry,jobController.applyForJob);
 
 
 export default router;

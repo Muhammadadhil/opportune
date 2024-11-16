@@ -1,6 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 import { IApplication } from "../interfaces/IApplication";
 
+export enum ApplicationStutus {
+    PENDING = "pending",
+    ACCEPTED = "accepted",
+    REJECTED = "rejected",
+}
+
 const applicationSchema = new Schema<IApplication>(
     {
         jobId: {
@@ -17,7 +23,9 @@ const applicationSchema = new Schema<IApplication>(
         },
         status: {
             type: String,
+            enum: Object.values(ApplicationStutus),
             required: true,
+            default: ApplicationStutus.PENDING,
         },
     },
     { timestamps: true }

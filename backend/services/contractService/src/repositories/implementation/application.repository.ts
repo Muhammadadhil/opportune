@@ -1,10 +1,23 @@
 import { IApplication } from "../../interfaces/IApplication";
 import GigModel from "../../schema/applications.schema";
-import { IGigRepositoy } from "../interfaces/IGigRepository";
+import { IApplicationRepository } from "../interfaces/IApplicationRepository";
 import { BaseRepository } from "./baseRepository";
 
-export class GigRepository extends BaseRepository<IApplication> implements IGigRepositoy {
+export class ApplicationRepository extends BaseRepository<IApplication> implements IApplicationRepository {
+
     constructor() {
         super(GigModel);
     }
+    
+
+
+
+
+
+
+
+
+
+
+
 }

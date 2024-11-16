@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { JobService } from "../services/implementation/job.services";
-import { IJobService } from "../services/interfaces/IJobService";
+import { IApplyJob, IJobService } from "../services/interfaces/IJobService";
 import { HTTPError } from "../utils/HttpError";
 
 export class JobController {
@@ -71,11 +71,16 @@ export class JobController {
 
     applyForJob = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { jobId, clientId, freelancerId } = req.body;
-            const removedJob = await this.jobService.applyJob(req.body);
-            
+            const applicationData: IApplyJob = req.body;
+            const result = await this.jobService.applyJob(applicationData);
+
+            return res.status(201).json({
+                success: true,
+                message: "Job application submitted successfully",
+                data: result,
+            });
         } catch (error) {
-            console.log(error);
+            console.error("Error in job application:", error);
             next(error);
         }
     };

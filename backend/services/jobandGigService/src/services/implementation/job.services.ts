@@ -1,9 +1,8 @@
 import { IJob } from "../../interfaces/IJob";
 import { JobRepository } from "../../repositories/implementation/job.repositoty";
-import { Types } from "mongoose";
-import { IApplyJob,IJobService } from "../interfaces/IJobService";
+import mongoose, { Types } from "mongoose";
+import { IApplyJob, IJobService } from "../interfaces/IJobService";
 import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
-
 
 export class JobService implements IJobService {
     private jobRepository;
@@ -12,9 +11,8 @@ export class JobService implements IJobService {
     constructor() {
         this.jobRepository = new JobRepository();
         this.intialize();
-        
     }
-    
+
     async intialize() {
         await this.producer.connect();
     }
@@ -51,6 +49,18 @@ export class JobService implements IJobService {
     async applyJob(data: IApplyJob) {
         // sent to queue and save it in contract service : application model
         console.log("In service : going to publish the message with data:", data);
-        await this.producer.publish("job.application.created", data);
+
+        const trackingId = new mongoose.Types.ObjectId().toString();
+
+        const messagePayload = {
+            ...data,
+            trackingId
+        };
+        await this.producer.publish("job.application.created", messagePayload);
+
+        return {
+            trackingId,
+            data: messagePayload,
+        };
     }
 }

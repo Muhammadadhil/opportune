@@ -9,7 +9,7 @@ export class RabbitMQConsumer {
             this.channel = await rabbitMQConnection.createChannel();
         }
     }
-
+    
     async consume(queue: string, callback: (message: any) => void) {
         if (!this.channel) {
             throw new Error("RabbitMQ consumer channel is not initialized");
