@@ -57,8 +57,6 @@ export class UserController {
 
     public login = async (req: Request, res: Response): Promise<Response> => {
         try {
-            console.log("!!!!!!!!!!! in login !!!!!!!!!!!!!!!11");
-
             const { email, password } = req.body;
             const { user, accessToken, refreshToken } = await this.userService.login(email, password);
 
@@ -68,7 +66,7 @@ export class UserController {
                 httpOnly: true,
                 secure: false, // true in production
                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
                 path: "/", // Ensure cookie is available on all paths
             });
 
@@ -95,8 +93,6 @@ export class UserController {
     };
 
     async logout(req: Request, res: Response) {
-
-        console.log('Going to logout the user !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1');
 
         res.cookie("jwt-refresh", {
             httpOnly: true,

@@ -48,7 +48,7 @@ export class JobService implements IJobService {
 
     async applyJob(data: IApplyJob) {
         // sent to queue and save it in contract service : application model
-        console.log("In service : going to publish the message with data:", data);
+        console.log("In service layer: going to publish the message with data:", data);
 
         const trackingId = new mongoose.Types.ObjectId().toString();
 

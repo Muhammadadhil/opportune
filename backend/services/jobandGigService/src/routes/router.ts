@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { GigController } from "../controllers/gig.controller";
-import { applicatinSchema } from "../validators/applicationValidator";
+import { applicationSchema } from "../validators/applicationValidator";
 import validateEntry from "../middleware/validateEntry";
 // import { checkSchema } from "express-validator";
 // import editGigValidator from "../validators/editGigValidator";
@@ -28,7 +28,7 @@ router.post("/job", jobController.postJob);
 router.patch("/job", jobController.editJob);
 router.patch("/job/:id", jobController.removeJob);
 
-router.post("/job-application", applicatinSchema, validateEntry,jobController.applyForJob);
-
+router.post("/job-application", applicationSchema, validateEntry, jobController.applyForJob);
+router.post("/approve-job", jobController.applyForJob);
 
 export default router;

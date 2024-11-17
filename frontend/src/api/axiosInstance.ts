@@ -1,6 +1,9 @@
 import axios from "axios";
-import { getAccessToken, setAccessToken } from "../services/authService";
+import { setAccessToken } from "../services/authService";
 import { refreshToken } from "./auth";
+import requestInterceptor from "./interceptors/requestInterceptor";
+import { logout } from "./userApi";
+import { logoutThUeser } from "../utils/logout";
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_SERVER_API,
@@ -10,19 +13,7 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
-apiClient.interceptors.request.use(
-    (config) => {
-        
-        const token = getAccessToken();
-        if (token) {
-            config.headers["authorization"] = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+apiClient.interceptors.request.use(requestInterceptor);
 
 apiClient.interceptors.response.use(
     (response) => response,
@@ -33,13 +24,15 @@ apiClient.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!Going to get the new access token with refresh token !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 const newAccessToken = await refreshToken();
                 setAccessToken(newAccessToken);
                 originalRequest.headers["Authorisation"] = `Bearer ${newAccessToken}`;
                 return apiClient(originalRequest);
             } catch (error) {
                 console.error("Refresh token failed", error);
+                logoutThUeser();
+                await logout();
+                return Promise.reject(error);
             }
         }
         return Promise.reject(error);

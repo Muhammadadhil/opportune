@@ -2,15 +2,17 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request,Response,NextFunction } from 'express';
 
 export default async (req: Request & Partial<{ user: jwt.JwtPayload }>, res: Response, next: NextFunction) => {
+
     const header = req.headers['authorization'] as string; 
-    console.log('header:',header);
+    console.log('Auth header:',header);
 
     if (!header || !header.startsWith("Bearer ")) {
         return res.status(401).json({ message: "Authorization header is missing or malformed" });
     }
+
     const token = header.split(" ")[1];
 
-    console.log('token:',token);
+    console.log('accces token:',token);
 
     const secret = process.env.JWT_ACCESSTOKEN_SECRET;
 

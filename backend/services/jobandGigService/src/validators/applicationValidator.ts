@@ -1,6 +1,6 @@
 import { checkSchema } from "express-validator";
 
-export const applicatinSchema = checkSchema({
+export const applicationSchema = checkSchema({
     jobId: {
         in: ["body"],
         isMongoId: {

@@ -23,9 +23,6 @@ router.post("/google-login", getGoogleUserInfo);
 router.post("/otp-verify", otpController.verifyOtp);
 router.post("/otp-resend", otpController.resendOtp);
 
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage: storage });
-
 //details
 router.post("/save-client-details", userController.saveClientDetails);
 router.post("/client-profile", protect, userController.getClientData);

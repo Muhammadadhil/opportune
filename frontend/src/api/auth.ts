@@ -6,7 +6,7 @@ export const refreshToken = async (): Promise<string> => {
         const response = await apiClient.get(import.meta.env.VITE_SERVER_API + "user/refreshToken");
         return response.data.accessToken;
     } catch (error) {
-        console.error("Failed to refresh token", error);
+        console.error("Failed to get refresh token", error);
         throw error;
     }
 };

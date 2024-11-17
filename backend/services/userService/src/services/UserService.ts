@@ -53,15 +53,12 @@ export class UserService {
         if (!user) {
             throw new Error("Invalid email or password");
         }
-
         console.log("user w/o password:", user);
 
-        console.log("checking password!!");
         const isPasswordValid = bcrypt.compareSync(password, user.password ?? "");
         if (!isPasswordValid) {
             throw new Error("Invalid email or password");
         }
-        console.log(" password  checked !!");
 
         const userId: string = user._id.toString();
         const role: string = user.role;
