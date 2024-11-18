@@ -19,25 +19,20 @@ export class UserController {
     }
 
     public registerUser = async (req: Request, res: Response) => {
-        //The return type of an async function or method must be the global Promise<T> type.
-        console.log("sign up body:", req.body);
 
         try {
             const userExists = await this.userService.userExist(req.body.formData.email);
-            console.log("userExists:", userExists);
             if (userExists) {
                 return res.status(400).json({ message: "user already exists" });
             }
-            console.log("sending body!");
             const { user, accessToken, refreshToken } = await this.userService.registerUser(req.body.formData);
 
-            console.log("user in controller:", user);
             res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // true in production
                 sameSite: "strict", // Use 'none' in production with secure: true
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-                path: "/", // Ensure cookie is available on all paths
+                path: "/", 
             });
 
             this.otpService.sendMail(user.email);

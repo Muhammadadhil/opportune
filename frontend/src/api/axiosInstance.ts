@@ -3,7 +3,7 @@ import { setAccessToken } from "../services/authService";
 import { refreshToken } from "./auth";
 import requestInterceptor from "./interceptors/requestInterceptor";
 import { logout } from "./userApi";
-import { logoutThUeser } from "../utils/logout";
+import { logoutTheUser } from "../utils/logout";
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_SERVER_API,
@@ -30,7 +30,7 @@ apiClient.interceptors.response.use(
                 return apiClient(originalRequest);
             } catch (error) {
                 console.error("Refresh token failed", error);
-                logoutThUeser();
+                logoutTheUser();
                 await logout();
                 return Promise.reject(error);
             }

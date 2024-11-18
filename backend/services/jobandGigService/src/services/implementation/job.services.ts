@@ -3,6 +3,7 @@ import { JobRepository } from "../../repositories/implementation/job.repositoty"
 import mongoose, { Types } from "mongoose";
 import { IApplyJob, IJobService } from "../interfaces/IJobService";
 import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
+import { IApproval } from "../../interfaces/IApproval";
 
 export class JobService implements IJobService {
     private jobRepository;
@@ -51,16 +52,25 @@ export class JobService implements IJobService {
         console.log("In service layer: going to publish the message with data:", data);
 
         const trackingId = new mongoose.Types.ObjectId().toString();
-
         const messagePayload = {
             ...data,
-            trackingId
+            trackingId,
         };
-        await this.producer.publish("job.application.created", messagePayload);
 
+        await this.producer.publish("job.application.created", messagePayload);
+        
         return {
             trackingId,
             data: messagePayload,
         };
+    }
+
+    async approveApplication(data: IApproval){
+        console.log('going to publish message with data:',data);
+
+        const exchangeName = "job_approval_exchange";
+        await this.producer.publishToMultiple(exchangeName,data);
+
+
     }
 }

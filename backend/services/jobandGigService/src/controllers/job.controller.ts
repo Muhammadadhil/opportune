@@ -2,17 +2,18 @@ import { NextFunction, Request, Response } from "express";
 import { JobService } from "../services/implementation/job.services";
 import { IApplyJob, IJobService } from "../services/interfaces/IJobService";
 import { HTTPError } from "../utils/HttpError";
+import { IApproval } from "../interfaces/IApproval";
 
 export class JobController {
-    private jobService: IJobService;
+    private _jobService: IJobService;
 
     constructor() {
-        this.jobService = new JobService();
+        this._jobService = new JobService();
     }
 
     getJobs = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const jobs = await this.jobService.getJobs();
+            const jobs = await this._jobService.getJobs();
             res.status(200).json(jobs);
         } catch (error) {
             next(error);
@@ -22,7 +23,7 @@ export class JobController {
     getJobsByClient = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = req.params.id;
-            const jobs = await this.jobService.getJobsByClient(id);
+            const jobs = await this._jobService.getJobsByClient(id);
             console.log("jobs Active now:", jobs);
             res.status(200).json(jobs);
         } catch (error) {
@@ -32,9 +33,7 @@ export class JobController {
 
     postJob = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log("in post job!!!!!!!!11111");
-
-            const savedData = await this.jobService.saveJob(req.body);
+            const savedData = await this._jobService.saveJob(req.body);
             res.status(200).json(savedData);
         } catch (error) {
             next(error);
@@ -43,7 +42,7 @@ export class JobController {
 
     editJob = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const editedJob = await this.jobService.editJob(req.body);
+            const editedJob = await this._jobService.editJob(req.body);
             if (!editedJob) {
                 throw new HTTPError("Error in Updating Job", 400);
             }
@@ -58,7 +57,7 @@ export class JobController {
         try {
             const jobId = req.params.id;
             console.log("going to remove ", jobId);
-            const removedJob = await this.jobService.removeJob(jobId);
+            const removedJob = await this._jobService.removeJob(jobId);
             if (!removedJob) {
                 throw new HTTPError("Error in removing Job", 400);
             }
@@ -72,7 +71,7 @@ export class JobController {
     applyForJob = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const applicationData: IApplyJob = req.body;
-            const result = await this.jobService.applyJob(applicationData);
+            const result = await this._jobService.applyJob(applicationData);
 
             return res.status(201).json({
                 success: true,
@@ -81,6 +80,18 @@ export class JobController {
             });
         } catch (error) {
             console.error("Error in job application:", error);
+            next(error);
+        }
+    };
+
+    approveApplication = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const approvalData: IApproval = req.body;
+            await this._jobService.approveApplication(approvalData);
+            res.status(201).json({ message: "Job application submitted successfully" });
+            
+        } catch (error) {
+            console.error("Error in approve application :", error);
             next(error);
         }
     };

@@ -1,6 +1,5 @@
 import express from "express";
 import userRouter from "./routes/userRouter";
-
 import connectDB from "./config/connectDB";
 import dotenv from "dotenv";
 import cors from "cors";

@@ -24,6 +24,35 @@ export class RabbitMQConsumer {
                 callback(content);
                 this.channel?.ack(data);
             }
+        },{
+            noAck:false   // manual ack
         });
+    }
+
+    async consumeFromFanoutExchange(exchange:string, callback:(message:any) => void){
+        if (!this.channel) {
+            throw new Error("RabbitMQ consumer channel is not initialized");
+        }
+
+        // Declare the exchange (fanout type)
+        await this.channel.assertExchange(exchange, "fanout", { durable: true });
+
+        // Create an anonymous queue (RabbitMQ will generate a unique name)
+        const q = await this.channel.assertQueue("", { exclusive: true });
+
+        await this.channel.bindQueue(q.queue,exchange,"");
+
+        console.log(`Waiting for messages in queue ${q.queue} from exchange ${exchange}`);
+
+        this.channel.consume(q.queue,(msg)=> {
+            if(msg){
+                const messageContent = JSON.parse(msg.content.toString());
+                callback(messageContent);
+                this.channel?.ack(msg);
+
+            }
+        },{
+            noAck:false
+        })
     }
 }

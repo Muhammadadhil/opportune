@@ -31,8 +31,20 @@ export class ApplicationSerivce implements IApplicationService {
                 }
             });
 
+            const exchangeName = "job_approval_exchange"; 
+            await this.consumer.consumeFromFanoutExchange(exchangeName,(message)=> {
+                console.log("Processing job approval message:", message);
+
+                //logic for job approval
+
+            });
+
+            
+
         } catch (error) {
+
             console.error("Failed to initialize ApplicationService:", error);
+
             await this.producer.publish("job.application.failed", {
                 success: false,
                 // error: error?.message || "Application process failed",

@@ -1,3 +1,4 @@
+import { IApproval } from "../../interfaces/IApproval";
 import { IJob } from "../../interfaces/IJob";
  
 export interface IApplyJob {
@@ -13,4 +14,5 @@ export interface IJobService {
     editJob(data: Partial<IJob>): Promise<IJob | null>;
     removeJob(id: string): Promise<IJob | null>;
     applyJob(data: IApplyJob): void;
+    approveApplication(data:IApproval):void;
 }
