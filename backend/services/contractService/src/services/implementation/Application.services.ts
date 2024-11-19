@@ -5,6 +5,7 @@ import { IApplication } from "../../interfaces/IApplication";
 import { RabbitMQConsumer } from "../../events/rabbitmq/Consumer";
 import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
 import { IContract } from "../../interfaces/IContract";
+import { ObjectId } from "mongoose";
 
 export class ApplicationSerivce implements IApplicationService {
     private applicationRepository: IApplicationRepository;
@@ -31,7 +32,6 @@ export class ApplicationSerivce implements IApplicationService {
                     throw new Error("failed to create application");
                 }
             });
-            
         } catch (error) {
             console.error("Failed to initialize ApplicationService:", error);
 
@@ -54,13 +54,8 @@ export class ApplicationSerivce implements IApplicationService {
         }
     }
 
-    // async createContract(data: IContract): Promise<IContract | null> {
-    //     try {
-    //         console.log("data in createApplication:", data);
-    //         return this.applicationRepository.create(data);
-    //     } catch (error) {
-    //         console.log("Error in saving application:", error);
-    //         return null;
-    //     }
-    // }
+    async checkApplicationExists(jobId: string, freelancerId: string): Promise<IApplication | null> {
+        return this.applicationRepository.findOne({ jobId, freelancerId });
+    }
+
 }

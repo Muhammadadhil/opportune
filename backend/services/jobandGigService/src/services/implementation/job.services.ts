@@ -4,6 +4,8 @@ import mongoose, { Types } from "mongoose";
 import { IApplyJob, IJobService } from "../interfaces/IJobService";
 import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
 import { IApproval } from "../../interfaces/IApproval";
+import axios from 'axios';
+import { HTTPError } from "../../utils/HttpError";
 
 export class JobService implements IJobService {
     private jobRepository;
@@ -48,10 +50,22 @@ export class JobService implements IJobService {
     }
 
     async applyJob(data: IApplyJob) {
+
+        const response = await axios.get(`http://localhost:4002/contract/application`, {
+            params: { jobId:data.jobId, freelancerId: data.freelancerId },
+        });
+        if (response.data.exists) {
+            // Handle duplicate application
+            // throw new Error("You have already applied for this job.");
+            throw new HTTPError('You have already applied for this job',401);
+        }
+
+
         // sent to queue and save it in contract service : application model
         console.log("In service layer: going to publish the message with data:", data);
 
         const trackingId = new mongoose.Types.ObjectId().toString();
+
         const messagePayload = {
             ...data,
             trackingId,

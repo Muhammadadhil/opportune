@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import toast from 'react-hot-toast'
 import {IApplication} from '@/types/IApplication';
+import { AxiosError } from "axios";
 
 interface JobSideBarProps {
     job: IJob;
@@ -24,9 +25,15 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
     };
 
     const handleJobApply= async()=>{
-        const result= await applyJob(applicationData);
-        console.log('result:',result);
-        toast.success('Your application has sent successfully');
+        try{
+            await applyJob(applicationData);
+            toast.success("Your application has sent successfully");
+        }catch(error){
+            console.log('Error in apply job:',error);
+            const axiosError = error as AxiosError;
+             const data = axiosError.response?.data as { message: string };
+            toast.error(data?.message || 'An error occurred');
+        }
     }
 
     return (

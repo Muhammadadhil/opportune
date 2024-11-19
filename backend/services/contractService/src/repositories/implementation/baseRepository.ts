@@ -12,21 +12,25 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         const newItem = new this.model(data);
         return await newItem.save();
     }
-    
-    async find(query: object = {}): Promise<T[]>{
+
+    async find(query: object = {}): Promise<T[]> {
         return await this.model.find(query).exec();
-    }   
+    }
 
     async findById(id: string): Promise<T | null> {
         return await this.model.findById(id).exec();
     }
 
     async update(id: string, data: Partial<T>): Promise<T | null> {
-        return await this.model.findByIdAndUpdate(id,data,{new:true}).exec();
+        return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
     }
 
     async delete(id: string): Promise<T | null> {
         return await this.model.findByIdAndDelete(id).exec();
+    }
+    
+    async findOne(query: object = {}): Promise<T | null> {
+        return await this.model.findOne(query).exec();
     }
 }
 
