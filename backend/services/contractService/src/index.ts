@@ -6,11 +6,14 @@ import cors from "cors";
 import morgan from "morgan";
 import { errorHandler } from "./middleware/errorHandler";
 import { ApplicationSerivce } from "./services/implementation/Application.services";
+import { ContractService } from "./services/implementation/contract.services";
+
 
 const app = express();
 dotenv.config();
 
 const applicationSerivce = new ApplicationSerivce();
+const contractService = new ContractService();
 
 app.use(
     cors({
@@ -36,6 +39,7 @@ const startServer = () => {
             console.log(`contract-server is running on the port ${PORT}`);
         });
         applicationSerivce.initialize();
+        contractService.initialize();
     } catch (error) {
         console.log('Error in starting Server',error);
         process.exit(1);

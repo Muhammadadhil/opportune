@@ -4,6 +4,7 @@ import { IApplicationService } from "../interfaces/IApplicationService";
 import { IApplication } from "../../interfaces/IApplication";
 import { RabbitMQConsumer } from "../../events/rabbitmq/Consumer";
 import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
+import { IContract } from "../../interfaces/IContract";
 
 export class ApplicationSerivce implements IApplicationService {
     private applicationRepository: IApplicationRepository;
@@ -30,19 +31,8 @@ export class ApplicationSerivce implements IApplicationService {
                     throw new Error("failed to create application");
                 }
             });
-
-            const exchangeName = "job_approval_exchange"; 
-            await this.consumer.consumeFromFanoutExchange(exchangeName,(message)=> {
-                console.log("Processing job approval message:", message);
-
-                //logic for job approval
-
-            });
-
             
-
         } catch (error) {
-
             console.error("Failed to initialize ApplicationService:", error);
 
             await this.producer.publish("job.application.failed", {
@@ -56,11 +46,21 @@ export class ApplicationSerivce implements IApplicationService {
 
     async createApplication(data: IApplication): Promise<IApplication | null> {
         try {
-            console.log('data in createApplication:',data);
+            console.log("data in createApplication:", data);
             return this.applicationRepository.create(data);
         } catch (error) {
             console.log("Error in saving application:", error);
             return null;
         }
     }
+
+    // async createContract(data: IContract): Promise<IContract | null> {
+    //     try {
+    //         console.log("data in createApplication:", data);
+    //         return this.applicationRepository.create(data);
+    //     } catch (error) {
+    //         console.log("Error in saving application:", error);
+    //         return null;
+    //     }
+    // }
 }

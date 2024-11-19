@@ -88,7 +88,7 @@ export class JobController {
         try {
             const approvalData: IApproval = req.body;
             await this._jobService.approveApplication(approvalData);
-            res.status(201).json({ message: "Job application submitted successfully" });
+            res.status(201).json({ message: "Application approved successfully" });
             
         } catch (error) {
             console.error("Error in approve application :", error);

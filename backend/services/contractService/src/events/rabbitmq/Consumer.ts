@@ -38,9 +38,9 @@ export class RabbitMQConsumer {
         await this.channel.assertExchange(exchange, "fanout", { durable: true });
 
         // Create an anonymous queue (RabbitMQ will generate a unique name)
-        const q = await this.channel.assertQueue("", { exclusive: true });
+        const q = await this.channel.assertQueue("");
 
-        await this.channel.bindQueue(q.queue,exchange,"");
+        await this.channel.bindQueue(q.queue,exchange,""); // "" - binding key
 
         console.log(`Waiting for messages in queue ${q.queue} from exchange ${exchange}`);
 

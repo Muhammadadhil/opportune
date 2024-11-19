@@ -1,11 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IApplication } from "../interfaces/IApplication";
-
-export enum ApplicationStutus {
-    PENDING = "pending",
-    ACCEPTED = "accepted",
-    REJECTED = "rejected",
-}
+import { ApplicationStutus } from "../enums/ApplicationStatus";
 
 const applicationSchema = new Schema<IApplication>(
     {
