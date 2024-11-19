@@ -11,6 +11,7 @@ import { useRemoveJob } from "@/hooks/jobs/useDeleteJob";
 import toast from "react-hot-toast";
 import Nojobs from "../ui/NoJob";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import JobCard from "../common/JobCard";
 
 
 export default function ClientJobs() {
@@ -108,6 +109,7 @@ export default function ClientJobs() {
                                     </span>
                                 </div>
                             </li>
+                            // <JobCard job={job} key={job._id} />
                         ))
                     )}
                 </ul>

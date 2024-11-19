@@ -6,20 +6,31 @@ export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 
     theme: {
-        extend: {
-            borderRadius: {
-                lg: "var(--radius)",
-                md: "calc(var(--radius) - 2px)",
-                sm: "calc(var(--radius) - 4px)",
-            },
-            colors: {},
-        },
-        fontFamily: {
-            Poppins: ["Poppins", "sans-serif"],
-            Inter: ["Inter", "sans-serif"],
-            Nunito: ["Nunito", "sans-serif"],
-            Montserrat: ["Montserrat", "sans-serif"],
-        },
+    	extend: {
+    		borderRadius: {
+    			lg: 'var(--radius)',
+    			md: 'calc(var(--radius) - 2px)',
+    			sm: 'calc(var(--radius) - 4px)'
+    		},
+    		colors: {
+    			sidebar: {
+    				DEFAULT: 'hsl(var(--sidebar-background))',
+    				foreground: 'hsl(var(--sidebar-foreground))',
+    				primary: 'hsl(var(--sidebar-primary))',
+    				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+    				accent: 'hsl(var(--sidebar-accent))',
+    				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+    				border: 'hsl(var(--sidebar-border))',
+    				ring: 'hsl(var(--sidebar-ring))'
+    			}
+    		}
+    	},
+    	fontFamily: {
+    		Poppins: ["Poppins", "sans-serif"],
+    		Inter: ["Inter", "sans-serif"],
+    		Nunito: ["Nunito", "sans-serif"],
+    		Montserrat: ["Montserrat", "sans-serif"]
+    	}
     },
     plugins: [require("tailwindcss-animate")],
 };

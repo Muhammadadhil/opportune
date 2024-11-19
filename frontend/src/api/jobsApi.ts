@@ -1,6 +1,8 @@
 import apiClient from "./axiosInstance";
 import { JobData } from "@/types/IProjectPost";
 import { IJob } from "@/types/IJob";
+import { IApplication } from "@/types/IApplication";
+
 
 // jobs
 export const saveJobPost = async (data: JobData) => {
@@ -19,3 +21,8 @@ export const editJob = async (data: IJob): Promise<IJob> => {
 export const removeJob = async (jobId: string) => {
     return await apiClient.patch(`/post/job/${jobId}`);
 };
+
+export const applyJob = async (data:IApplication) => {
+    return await apiClient.post(`/post/job/application`, data);
+};
+

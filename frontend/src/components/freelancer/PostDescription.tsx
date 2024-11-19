@@ -137,6 +137,7 @@ export const PostDescription: React.FC<IDescriptionProps> = React.memo(({ onNext
                                             <SelectItem value="3">3 days</SelectItem>
                                             <SelectItem value="7">1 week</SelectItem>
                                             <SelectItem value="14">2 weeks</SelectItem>
+                                            <SelectItem value="30">1 month</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 )}

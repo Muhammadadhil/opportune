@@ -5,10 +5,14 @@ import Nojobs from "../ui/NoJob";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const GigList = () => {
     const { data: gigs, isLoading } = useGigs();
     const [open, setOpen] = useState(false);
+    const { userInfo } = useSelector((state: RootState) => state.user);
+
 
     return (
         <div className="flex-grow p-4 md:p-6">
@@ -39,7 +43,7 @@ const GigList = () => {
                                 <span>
                                     Category: {gig?.category} &gt; {gig?.subCategory}
                                 </span>
-                                {userInfo.role == "freelancer" && (
+                                {userInfo?.role == "freelancer" && (
                                     <Dialog open={open} onOpenChange={setOpen}>
                                         <DialogTrigger className=" rounded-xl transition duration-300 ease-in-out">
                                             <Button>remove gig</Button>
