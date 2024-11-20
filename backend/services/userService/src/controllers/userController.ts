@@ -16,10 +16,10 @@ export class UserController {
         this.saveFreelancerDetails = this.saveFreelancerDetails.bind(this);
         this.getFreelancerData = this.getFreelancerData.bind(this);
         this.getClientData = this.getClientData.bind(this);
+        this.getFreelancers= this.getFreelancers.bind(this);
     }
 
     public registerUser = async (req: Request, res: Response) => {
-
         try {
             const userExists = await this.userService.userExist(req.body.formData.email);
             if (userExists) {
@@ -32,7 +32,7 @@ export class UserController {
                 secure: process.env.NODE_ENV === "production", // true in production
                 sameSite: "strict", // Use 'none' in production with secure: true
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-                path: "/", 
+                path: "/",
             });
 
             this.otpService.sendMail(user.email);
@@ -88,7 +88,6 @@ export class UserController {
     };
 
     async logout(req: Request, res: Response) {
-
         res.cookie("jwt-refresh", {
             httpOnly: true,
             expires: new Date(0),
@@ -142,6 +141,20 @@ export class UserController {
             res.status(200).json(profile);
         } catch (error) {
             console.log("Error in fetching profile :", error);
+            return res.status(500).json({ message: "Server error", error });
+        }
+    }
+
+    async getFreelancers(req: Request, res: Response) {
+        try {
+            const { freelancerIds } = req.body;
+            console.log("freelancerids:", freelancerIds);
+            const freelancers = await this.userService.getFreelancers(freelancerIds);
+            console.log('freeelnacer and user details:',freelancers);
+            res.status(200).json(freelancers);
+
+        } catch (error) {
+            console.log("Error in fetching freelancers :", error);
             return res.status(500).json({ message: "Server error", error });
         }
     }

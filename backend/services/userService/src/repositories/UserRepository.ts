@@ -5,6 +5,7 @@ import IUser from "../interfaces/IUser";
 import IClientDetail from "../interfaces/IClientDetail";
 import IFreelancer from "../interfaces/IFreelancer";
 import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 
 export class UserRepository {
@@ -66,5 +67,26 @@ export class UserRepository {
             website:data.website
         };
         return client;
+    }
+
+    async getFreelancersDatas(ids:ObjectId[]){
+        // return await User.aggregate([
+        //     {
+        //         $match: { _id: { $in: ids } },
+        //     },
+        //     {
+        //         $lookup: {
+        //             from: "FreelancerDetails",
+        //             localField: "_id",
+        //             foreignField: "userId",
+        //             as: "freelancerDetails",
+        //         },
+        //     },
+        //     {
+        //         $unwind: "$freelancerDetails",
+        //     },
+        // ]);
+        return await User.find({ _id: { $in: ids } },{_id:1,firstname:1,lastname:1,email:1,country:1});
+        
     }
 }

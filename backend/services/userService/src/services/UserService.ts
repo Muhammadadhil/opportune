@@ -10,6 +10,7 @@ import IFreelancer from "../interfaces/IFreelancer";
 import IAccounts from "../interfaces/IAccounts";
 import { uploadTosS3,getSignedImageURL } from "../utils/Uploads3";
 import sharp from "sharp";
+import { ObjectId } from "mongoose";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -109,6 +110,10 @@ export class UserService {
         }
 
         return clientDetails;
+    }
+
+    async getFreelancers(ids:ObjectId[]) {
+        return await this.userRepository.getFreelancersDatas(ids);
         
     }
 }

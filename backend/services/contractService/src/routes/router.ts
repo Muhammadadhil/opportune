@@ -8,5 +8,4 @@ router.get("/application", applicationController.checkApplication);
 router.get("/client/job/applications", applicationController.getApplications);
 
 
-
 export default router;

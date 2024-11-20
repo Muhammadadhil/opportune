@@ -30,4 +30,6 @@ router.post("/client-profile", protect, userController.getClientData);
 router.post("/complete-profile",protect,upload.single('image'),userController.saveFreelancerDetails);
 router.post("/freelancer-profile",protect,userController.getFreelancerData);
 
+router.post('/batch/freelancer',userController.getFreelancers)
+
 export default router;

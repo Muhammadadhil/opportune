@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux'
 import {RootState} from '@/store/store';
 import {IApplication} from '@/types/IApplication';
 import {useParams} from 'react-router-dom';
+// import TableRowSkelton from '@/components/common/TableRowSkelton';
 
 export const JobApplications: React.FC = () => {
 
@@ -15,8 +16,6 @@ export const JobApplications: React.FC = () => {
     const {id} = useParams();
 
     const {data:applications} = useApplications(clientId,id!);
-    console.log('applcations:',applications);
-
 
     return (
         <div className="mx-auto px-4 py-8">
@@ -31,12 +30,13 @@ export const JobApplications: React.FC = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
+                    {/* {isLoading && applications?.data?.applications.map(() => <TableRowSkelton />)} */}
                     {applications?.data?.applications.map((app: IApplication) => {
                         return (
                             <TableRow className="h-20" key={app._id}>
                                 <TableCell className="font-medium">APP{app._id}</TableCell>
                                 <TableCell>{app.status}</TableCell>
-                                <TableCell>Muhammd adhil</TableCell>
+                                <TableCell>{app?.freelancerDetails?.firstname + " " + app?.freelancerDetails?.lastname}</TableCell>
                                 <TableCell className="text-right ">
                                     <div className="">
                                         <Button variant="default" className="">
@@ -53,34 +53,3 @@ export const JobApplications: React.FC = () => {
         </div>
     );
 };
-
-
- {
-     /* <Card className="w-full w-max-4xl mx-auto">
-                <CardHeader>
-                    <CardTitle>
-                        <div className="flex justify-stretch">
-                            <h2>muhammad adhil</h2>
-                            <h2 className="text-gray-400 mx-32">application id: 8943759782934890</h2>
-                        </div>
-                    </CardTitle>
-                    <CardDescription>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been</CardDescription>
-                    <CardContent></CardContent>
-                </CardHeader>
-            </Card> */
- }
-
- // In Contract Service
-// const applications = await ApplicationModel.find({ clientId: someClientId });
-
-// // Batch API call to Freelancer Service
-// const freelancerIds = applications.map(app => app.freelancerId);
-// const freelancers = await axios.post('http://freelancer-service/api/freelancers/batch', { ids: freelancerIds });
-
-// // Combine data
-// const enrichedApplications = applications.map(app => ({
-//     ...app,
-//     freelancerDetails: freelancers.find(f => f.id === app.freelancerId),
-// }));
-
-// return enrichedApplications;

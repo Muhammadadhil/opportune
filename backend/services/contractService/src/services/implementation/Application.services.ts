@@ -6,6 +6,15 @@ import { RabbitMQConsumer } from "../../events/rabbitmq/Consumer";
 import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
 import { IContract } from "../../interfaces/IContract";
 import { ObjectId } from "mongoose";
+import axios from 'axios';
+
+interface IFreelancerData {
+    _id:string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    country: string;
+}
 
 export class ApplicationSerivce implements IApplicationService {
     private applicationRepository: IApplicationRepository;
@@ -58,7 +67,18 @@ export class ApplicationSerivce implements IApplicationService {
         return this.applicationRepository.findOne({ jobId, freelancerId });
     }
 
-    getApplicationOfClient(clientId: string, jobId:string): Promise<IApplication[] | null> {
-        return this.applicationRepository.find({ clientId, jobId });
+    async getApplicationOfClient(clientId: string, jobId:string) {
+
+        const applications=await this.applicationRepository.find({ clientId, jobId });
+        const freelancerIds = applications.map((app) => app.freelancerId);
+
+        const response = await axios.post("http://localhost:4002/user/batch/freelancer", { freelancerIds });
+
+        const enrichedApplications = applications.map((app) => ({
+            ...app.toObject(),
+            freelancerDetails: response.data.find((f: IFreelancerData) => f._id === app.freelancerId.toString()),
+        }));
+        
+        return enrichedApplications;
     }
 }
