@@ -26,3 +26,6 @@ export const applyJob = async (data:IApplication) => {
     return await apiClient.post(`/post/job/application`, data);
 };
 
+export const getApplications = async (clientId:string,jobId:string) => {
+    return await apiClient.get(`/contract/client/job/applications`, { params: { clientId, jobId } });
+};

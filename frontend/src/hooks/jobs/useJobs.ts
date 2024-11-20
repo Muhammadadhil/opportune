@@ -7,6 +7,6 @@ export function useJobs(clientId?:string) {
         queryFn: () => getJobs(clientId), 
         staleTime: 300000, // 5 minutes
         refetchOnWindowFocus: true,
-        retry: 1, // Retry once on failure
+        retry: 1, 
     });
 }

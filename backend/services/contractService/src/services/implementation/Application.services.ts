@@ -58,4 +58,7 @@ export class ApplicationSerivce implements IApplicationService {
         return this.applicationRepository.findOne({ jobId, freelancerId });
     }
 
+    getApplicationOfClient(clientId: string, jobId:string): Promise<IApplication[] | null> {
+        return this.applicationRepository.find({ clientId, jobId });
+    }
 }

@@ -16,7 +16,10 @@ const applicationSerivce = new ApplicationSerivce();
 const contractService = new ContractService();
 
 app.use(
-    cors()
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    })
 );
 
 app.use(express.json());

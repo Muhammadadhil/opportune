@@ -16,6 +16,7 @@ import PostProject from "@/pages/freelancer/PostProjectPage";
 import PostJobPage from "@/pages/client/PostJobPage";
 import ClientJobsPage from "@/pages/client/ClientJobsPage";
 import GigsPage from "@/pages/freelancer/GigsPages";
+import JobDetailsPage from '@/pages/client/JobDetailsPage';
 
 function UserRoute() {
     return (
@@ -27,16 +28,13 @@ function UserRoute() {
                 <Route path="/type" element={<UserTypeSelection />} />
                 <Route path="/verify-email" element={<VerifyEmail />} />
 
-                {/* <Route path="" element={<PrivateRoute />}>
-                    <Route path="/profile" element={<Profile />} />
-                </Route> */}
-
                 <Route path="" element={<ClientProtected />}>
                     <Route element={<UsersLayout />}>
                         <Route path="cl/dashboard" element={<ClientDashboard />} />
                         <Route path="cl/profile" element={<ProfilePage />} />
                         <Route path="cl/postjob" element={<PostJobPage />} />
                         <Route path="cl/manage-jobs" element={<ClientJobsPage />} />
+                        <Route path="cl/jobdetail/:id" element={<JobDetailsPage />} />
                     </Route>
                     <Route path="cl/details" element={<DetailsClient />} />
                 </Route>

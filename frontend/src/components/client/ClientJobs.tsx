@@ -11,13 +11,16 @@ import { useRemoveJob } from "@/hooks/jobs/useDeleteJob";
 import toast from "react-hot-toast";
 import Nojobs from "../ui/NoJob";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import JobCard from "../common/JobCard";
+// import JobCard from "../common/JobCard";
+import {useNavigate} from 'react-router-dom';
 
 
 export default function ClientJobs() {
     const [editingJob, setEditingJob] = useState<IJob | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [open, setOpen] = useState(false);
+
+    const navigate=useNavigate();
 
     const { userInfo } = useSelector((state: RootState) => state.user);
     const { data: jobs, isLoading, refetch } = useJobs(userInfo?._id as string);
@@ -41,9 +44,10 @@ export default function ClientJobs() {
         await refetch();
     };
 
-    console.log("updated : ",jobs);
-    console.count("clientjobs");
-
+    const handleJobClick=(job:IJob)=>{
+        navigate(`/cl/jobdetail/${job._id}`,{state:{job}});
+    }
+    
     return (
         <div className="container mx-auto py-8 max-w-7xl">
             <div className="p-4 md:p-6 max-w-5xl">
@@ -55,7 +59,11 @@ export default function ClientJobs() {
                         <Nojobs />
                     ) : (
                         jobs?.data?.map((job: IJob) => (
-                            <li key={job._id} className="bg-white p-4 rounded-lg border shadow-sm">
+                            <li
+                                key={job._id}
+                                className="bg-white p-4 rounded-lg border shadow-sm hover:bg-gray-100 transition-all duration-300 ease-in-out cursor-pointer"
+                                onClick={() => handleJobClick(job)}
+                            >
                                 <div className="flex justify-between">
                                     <h3 className="font-bold text-lg mb-2">{job.jobTitle}</h3>
                                     <div>
@@ -74,7 +82,7 @@ export default function ClientJobs() {
                                                     <DialogTitle>Remove the job ?</DialogTitle>
                                                     <DialogDescription>
                                                         Are you sure you want to remove this job?
-                                                        <span className="block">  You can access the removed jobs in manage jobs</span>
+                                                        <span className="block"> You can access the removed jobs in manage jobs</span>
                                                     </DialogDescription>
                                                 </DialogHeader>
                                                 <DialogFooter>
@@ -90,7 +98,7 @@ export default function ClientJobs() {
                                     </div>
                                 </div>
 
-                                <p className="text-gray-600 mb-2">{job.description}</p>
+                                <p className="text-gray-600 mb-2 mt-3">{job.description}</p>
                                 <div className="flex flex-wrap gap-2 mb-2">
                                     {job.searchTags?.map((tag, idx) => (
                                         <span key={idx} className="bg-zinc-100 text-gray-700 rounded-full px-3 py-1 text-sm">
@@ -98,18 +106,11 @@ export default function ClientJobs() {
                                         </span>
                                     ))}
                                 </div>
-
-                                <div className="text-sm text-gray-500 flex flex-col sm:flex-row sm:justify-between">
-                                    <span>Budget: ${job.budget}</span>
-                                    <span>Skills: {job.skillsRequired.join(" • ")}</span>
-                                </div>
-                                <div className="text-sm text-gray-500 mt-2">
-                                    <span>
-                                        Category: {job.category} &gt; {job.subCategory}
-                                    </span>
+                                <div className="text-sm text-gray-800 mt-2 text-end">
+                                    <span>posted on : 14/11/2024 Wednesday</span>
                                 </div>
                             </li>
-                            // <JobCard job={job} key={job._id} />
+
                         ))
                     )}
                 </ul>

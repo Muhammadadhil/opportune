@@ -55,15 +55,10 @@ export class JobService implements IJobService {
             params: { jobId:data.jobId, freelancerId: data.freelancerId },
         });
         if (response.data.exists) {
-            // Handle duplicate application
-            // throw new Error("You have already applied for this job.");
             throw new HTTPError('You have already applied for this job',401);
         }
 
-
-        // sent to queue and save it in contract service : application model
         console.log("In service layer: going to publish the message with data:", data);
-
         const trackingId = new mongoose.Types.ObjectId().toString();
 
         const messagePayload = {

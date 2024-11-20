@@ -8,18 +8,17 @@ import { useRemoveJob } from "@/hooks/jobs/useDeleteJob";
 import EditJob from "../client/EditJob";
 import toast from "react-hot-toast";
 import { IJob } from "@/types/IJob";
-import JobSideBar from './JobSideBar';
+import JobSideBar from "./JobSideBar";
 
-
-interface JobCardProps{
-    job:IJob
+interface JobCardProps {
+    job: IJob;
 }
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
     const [editingJob, setEditingJob] = useState<IJob | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [open, setOpen] = useState(false);
     const [sheetOpen, setSheetOpen] = useState(false);
-    
+
     const { userInfo } = useSelector((state: RootState) => state.user);
 
     const handleEditClick = (job: IJob) => {
