@@ -5,14 +5,14 @@ import { ObjectId } from "mongoose";
 //     endDate:string;
 // }
 
-
 export interface IApproval {
     applicationId: ObjectId;
     jobId: ObjectId;
     clientId: ObjectId;
     freelancerId: ObjectId;
-    status: string;
+    status?: string;
     startDate: Date;
     endDate: Date;
     clientNotes?: string;
 }
+

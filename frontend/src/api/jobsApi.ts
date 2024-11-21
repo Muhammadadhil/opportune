@@ -2,7 +2,7 @@ import apiClient from "./axiosInstance";
 import { JobData } from "@/types/IProjectPost";
 import { IJob } from "@/types/IJob";
 import { IApplication } from "@/types/IApplication";
-
+import {IApproval} from '@/types/IApproval';
 
 // jobs
 export const saveJobPost = async (data: JobData) => {
@@ -28,4 +28,8 @@ export const applyJob = async (data:IApplication) => {
 
 export const getApplications = async (clientId:string,jobId:string) => {
     return await apiClient.get(`/contract/client/job/applications`, { params: { clientId, jobId } });
+};
+
+export const approveApplication = async (data: IApproval) => {
+    return await apiClient.post(`/post/job/approve`, data);
 };

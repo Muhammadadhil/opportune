@@ -4,6 +4,10 @@ import { ApprovalStatus } from "../enums/ApprovalStatus";
 
 const contractSchema = new mongoose.Schema<IContract>(
     {
+        applicationId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+        },
         jobId: {
             type: Schema.Types.ObjectId,
             required: true,
@@ -18,11 +22,11 @@ const contractSchema = new mongoose.Schema<IContract>(
         },
         startDate: {
             type: Date,
-            required: true,
+            // required: true,
         },
         endDate: {
             type: Date,
-            required: true,
+            // required: true,
         },
         status: {
             type: String,

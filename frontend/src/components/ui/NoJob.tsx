@@ -1,18 +1,33 @@
-import { FolderSearch2 } from "lucide-react";
+import { type LucideIcon, FolderSearch2 } from "lucide-react";
 import { Button } from "./button";
 import { Link } from "react-router-dom";
 
+interface NoItemsProps {
+    title?: string;
+    description?: string;
+    buttonText?: string;
+    buttonLink?: string;
+    Icon?: LucideIcon;
+}
 
-
-export default function NoItems() {
+export default function NoItems({
+    title = "No items to list right now",
+    description = "Check back later for new items or try adjusting your search criteria.",
+    buttonText = "Add New Item",
+    buttonLink,
+    Icon = FolderSearch2,
+}: NoItemsProps) {
     return (
         <div className="flex flex-col items-center justify-center min-h-[400px] p-4 bg-muted/40 rounded-lg">
-            <FolderSearch2 className="w-20 h-20 text-muted-foreground mb-4 text-gray-600" aria-hidden="true" />
-            <h2 className="text-xl font-semibold text-center mb-2">No jobs to list right now</h2>
-            <p className="text-muted-foreground text-center max-w-sm mb-10">Check back later for new job listings or try adjusting your search criteria.</p>
-            <Link to="/cl/postjob">
-                <Button>{"Post new Job"}</Button>
-            </Link>
+            <Icon className="w-20 h-20 text-muted-foreground mb-4 text-gray-600" aria-hidden="true" />
+            <h2 className="text-xl font-semibold text-center mb-2">{title}</h2>
+            <p className="text-muted-foreground text-center max-w-sm mb-10">{description}</p>
+            {buttonLink && (
+                <Link to={buttonLink}>
+                    <Button>{buttonText}</Button>
+                </Link>
+            )}
         </div>
     );
 }
+
