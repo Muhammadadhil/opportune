@@ -3,8 +3,6 @@ import Maxwidth from '@/layouts/MaxWidth'
 import {JobDetail} from '@/components/client/JobDetail';
 import {JobApplications} from '@/components/client/JobApplications';
 
-
-
 const JobDetailPage: React.FC = () => {
 
     return (
@@ -22,7 +20,7 @@ const JobDetailPage: React.FC = () => {
                             <JobDetail />
                         </TabsContent>
                         <TabsContent value="applications">
-                            <JobApplications />
+                            <JobApplications userType="client"/>
                         </TabsContent>
                         <TabsContent value="hires">{/* <GigList /> */}</TabsContent>
                     </Tabs>

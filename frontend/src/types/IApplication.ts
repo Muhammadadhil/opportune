@@ -1,4 +1,4 @@
-
+import {IJob} from './IJob';
 
 interface IFreelancerData {
     _id:string;
@@ -14,5 +14,6 @@ export interface IApplication {
     clientId: string;
     freelancerId: string;
     status?: string;
-    freelancerDetails: IFreelancerData;
+    freelancerDetails?: IFreelancerData;
+    jobDetails?: IJob;
 }

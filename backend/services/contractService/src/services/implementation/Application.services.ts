@@ -67,9 +67,8 @@ export class ApplicationSerivce implements IApplicationService {
         return this.applicationRepository.findOne({ jobId, freelancerId });
     }
 
-    async getApplicationOfClient(clientId: string, jobId:string) {
-
-        const applications=await this.applicationRepository.find({ clientId, jobId });
+    async getApplicationOfClient(clientId: string, jobId: string) {
+        const applications = await this.applicationRepository.find({ clientId, jobId });
         const freelancerIds = applications.map((app) => app.freelancerId);
 
         const response = await axios.post("http://localhost:4002/user/batch/freelancer", { freelancerIds });
@@ -78,7 +77,23 @@ export class ApplicationSerivce implements IApplicationService {
             ...app.toObject(),
             freelancerDetails: response.data.find((f: IFreelancerData) => f._id === app.freelancerId.toString()),
         }));
-        
+
         return enrichedApplications;
     }
+
+    async getApplicationsOfFreelancer(freelancerId: string): Promise<any | null> {
+        const applications = await this.applicationRepository.find({ freelancerId });
+        const jobIds= applications.map((app) => app.jobId);
+
+        const response = await axios.get("http://localhost:4002/post/batch/jobs", { params: { jobIds } });
+        console.log('jobs details:',response.data);
+        const enrichedApplications = applications.map((application) => ({
+            ...application.toObject(),
+            jobDetails: response.data.find((j: any) => j._id === application.jobId.toString()),
+        }));
+        console.log("enrichedApplications:", enrichedApplications);
+        return enrichedApplications;
+        
+
+    };
 }

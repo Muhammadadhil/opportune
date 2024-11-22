@@ -33,3 +33,9 @@ export const getApplications = async (clientId:string,jobId:string) => {
 export const approveApplication = async (data: IApproval) => {
     return await apiClient.post(`/post/job/approve`, data);
 };
+
+export const getFApplications = async (fId:string) => {
+    return await apiClient.get(`/contract/freelancer/job/applications`, { params: { fId } });
+};
+
+

@@ -89,9 +89,19 @@ export class JobController {
             const approvalData: IApproval = req.body;
             await this._jobService.approveApplication(approvalData);
             res.status(201).json({ message: "Application approved successfully" });
-            
         } catch (error) {
             console.error("Error in approve application :", error);
+            next(error);
+        }
+    };
+
+    getJobDetails = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const {jobIds}=req.query;
+            const jobs = await this._jobService.getJobDetails(jobIds as string[]);
+            console.log('feched jobs:',jobs)
+            res.status(200).json(jobs);
+        } catch (error) {
             next(error);
         }
     };

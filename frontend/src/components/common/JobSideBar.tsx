@@ -19,7 +19,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
     const { userInfo } = useSelector((state: RootState) => state.user);
 
     const applicationData: IApplication = {
-        jobId: job._id! ,
+        jobId: job._id!,
         clientId: job.clientId,
         freelancerId: userInfo._id,
     };

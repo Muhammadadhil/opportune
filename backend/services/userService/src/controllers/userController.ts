@@ -148,7 +148,6 @@ export class UserController {
     async getFreelancers(req: Request, res: Response) {
         try {
             const { freelancerIds } = req.body;
-            console.log("freelancerids:", freelancerIds);
             const freelancers = await this.userService.getFreelancers(freelancerIds);
             console.log('freeelnacer and user details:',freelancers);
             res.status(200).json(freelancers);

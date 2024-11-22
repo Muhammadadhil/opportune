@@ -31,4 +31,6 @@ router.patch("/job/:id", jobController.removeJob);
 router.post("/job/application", applicationSchema, validateEntry, jobController.applyForJob);
 router.post("/job/approve",jobController.approveApplication);
 
+router.get("/batch/jobs", jobController.getJobDetails);
+
 export default router;

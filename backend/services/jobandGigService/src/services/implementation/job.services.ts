@@ -82,4 +82,9 @@ export class JobService implements IJobService {
 
 
     }
+
+    async getJobDetails(jobIds: string[]): Promise<IJob[] | null> {
+        console.log("jobIds to fetch jobs details:", jobIds);
+        return await this.jobRepository.find({ _id: { $in: jobIds } });
+    }
 }

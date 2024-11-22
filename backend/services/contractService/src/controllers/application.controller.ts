@@ -24,17 +24,30 @@ export class ApplicationController {
         }
     };
 
-    getApplications = async (req: Request, res: Response,next:NextFunction) => {
+    getApplications = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { clientId,jobId } = req.query;
+            const { clientId, jobId } = req.query;
             console.log("checking existing application:", req.query);
 
             const applications = await this.applicationService.getApplicationOfClient(clientId as string, jobId as string);
-            console.log('appplcations from db:',applications);
-            return res.status(200).json({applications});
-            
+            console.log("appplcations from db:", applications);
+            return res.status(200).json({ applications });
         } catch (error) {
-            console.log('Error in geting applications:',error);
+            console.log("Error in geting applications:", error);
+            next(error);
+        }
+    };
+
+    getFreelancerApplications = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { fId } = req.query;
+            console.log("checking freelancers application:", req.query);
+
+            const applications = await this.applicationService.getApplicationsOfFreelancer(fId as string);
+            console.log("appplcations of freelancer:", applications);
+            return res.status(200).json({ applications });
+        } catch (error) {
+            console.log("Error in geting applications:", error);
             next(error);
         }
     };

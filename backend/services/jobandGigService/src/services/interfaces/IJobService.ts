@@ -15,4 +15,5 @@ export interface IJobService {
     removeJob(id: string): Promise<IJob | null>;
     applyJob(data: IApplyJob): void;
     approveApplication(data:IApproval):void;
+    getJobDetails(jobIds: string[]): Promise<IJob[] | null>;
 }
