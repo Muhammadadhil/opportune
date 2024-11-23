@@ -68,10 +68,16 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                                     </DialogDescription>
                                 </DialogHeader>
                                 <DialogFooter>
-                                    <Button variant="outline" onClick={() => setOpen(false)}>
+                                    <Button variant="outline" onClick={(e) => {
+                                            e.stopPropagation();
+                                            setOpen(false)
+                                        }}>
                                         Cancel
                                     </Button>
-                                    <Button variant="default" onClick={() => job?._id && HandleRemove(job?._id)}>
+                                    <Button variant="default" onClick={(e) => {
+                                        e.stopPropagation();
+                                        if(job?._id) HandleRemove(job?._id);
+                                    }}>
                                         Remove
                                     </Button>
                                 </DialogFooter>
@@ -91,7 +97,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                 </div>
                 <div className="text-sm text-gray-500 flex flex-col sm:flex-row sm:justify-between">
                     <span>Budget: ₹{job.budget}</span>
-                    <span>Proposals: 5 to 10 </span>
+                    <span>applicants: 5 to 10 </span>
                 </div>
 
                 {sheetOpen && <JobSideBar job={job} sheetOpen={sheetOpen} setSheetOpen={setSheetOpen} />}

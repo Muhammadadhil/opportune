@@ -5,6 +5,8 @@ export interface IApplyJob {
     jobId: string;
     clientId: string;
     freelancerId: string;
+    freelancerNotes?: string;
+    freelancerPrice?:number;
 }   
 
 export interface IJobService {

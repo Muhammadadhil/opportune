@@ -73,7 +73,7 @@ export default function ClientJobs() {
 
                                         <Dialog open={open} onOpenChange={setOpen}>
                                             <DialogTrigger className=" rounded-xl transition duration-300 ease-in-out">
-                                                <Button variant="secondary" className="">
+                                                <Button variant="secondary" className="" onClick={(e)=> e.stopPropagation()}>
                                                     remove job
                                                 </Button>
                                             </DialogTrigger>

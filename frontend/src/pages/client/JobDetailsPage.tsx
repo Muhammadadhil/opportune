@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Maxwidth from '@/layouts/MaxWidth'
 import {JobDetail} from '@/components/client/JobDetail';
-import {JobApplications} from '@/components/client/JobApplications';
+import {JobApplications} from '@/components/common/JobApplications';
 
 const JobDetailPage: React.FC = () => {
 

@@ -22,6 +22,12 @@ const applicationSchema = new Schema<IApplication>(
             required: true,
             default: ApplicationStutus.PENDING,
         },
+        freelancerNotes: {
+            type: String,
+        },
+        freelancerPrice: {
+            type: Number,
+        }
     },
     { timestamps: true }
 );
