@@ -1,5 +1,6 @@
 import { IApproval } from "../../interfaces/IApproval";
 import { IJob } from "../../interfaces/IJob";
+import { IOffer } from "../../interfaces/IOffer";
  
 export interface IApplyJob {
     jobId: string;
@@ -19,4 +20,5 @@ export interface IJobService {
     approveApplication(data: IApproval): void;
     getJobDetails(jobIds: string[]): Promise<IJob[] | null>;
     getJobDetail(jobId: string): Promise<IJob | null>;
+    sendOfferToFreelancer(data: IOffer): void;
 }

@@ -3,7 +3,6 @@ import { IOffer,IMilestone } from '../interfaces/IOffer';
 import { OfferStatus } from '../enums/OfferStatus';
 
 const MilestoneSchema = new Schema<IMilestone>({
-    milestoneId: { type: String, required: true },
     description: { type: String, required: true },
     amount: { type: Number, required: true },
     deadline: { type: Date, required: true },

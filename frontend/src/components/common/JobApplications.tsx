@@ -81,7 +81,11 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                         {applications?.map((app: IApplication) => (
                             <TableRow className="h-20" key={app._id}>
                                 <TableCell className="font-medium">APP{app._id}</TableCell>
-                                <TableCell>{app.status}</TableCell>
+                                <TableCell>
+                                    <div className={`w-24 h-8 rounded-xl text-center flex items-center justify-center ${app.status === "offerSent" ? "bg-green-500" : "bg-red-500"}`}>
+                                        <p className="text-white font-semibold">{app.status}</p>
+                                    </div>
+                                </TableCell>
                                 {userType === "client" ? (
                                     <TableCell>{app?.freelancerDetails?.firstname + " " + app?.freelancerDetails?.lastname}</TableCell>
                                 ) : (
@@ -99,7 +103,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                                 Send Offer
                                             </Button> */}
 
-                                            <Button className="bg-green-800 hover:bg-green-700" onClick={() => navigate(`/cl/send-offer/${app.jobId}`,{state:{application:app}})}>
+                                            <Button className="bg-green-800 hover:bg-green-700" onClick={() => navigate(`/cl/send-offer/${app.jobId}`, { state: { application: app } })}>
                                                 Send Offer
                                             </Button>
                                         </div>

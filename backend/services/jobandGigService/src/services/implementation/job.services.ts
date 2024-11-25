@@ -7,6 +7,7 @@ import { IApproval } from "../../interfaces/IApproval";
 import axios from 'axios';
 import { HTTPError } from "../../utils/HttpError";
 import { IJobRepository } from "../../repositories/interfaces/IJobRepository";
+import { IOffer } from "../../interfaces/IOffer";
 
 export class JobService implements IJobService {
     private jobRepository: IJobRepository;
@@ -97,5 +98,18 @@ export class JobService implements IJobService {
      */
     async getJobDetail(jobId: string): Promise<IJob | null> {
         return await this.jobRepository.findById(jobId);
+    }
+
+    /**
+     * @description Publishes an offer to the given freelancer.
+     * @param data The data of the offer to be published.
+     * @returns A promise that resolves when the message has been published.
+     */
+    async sendOfferToFreelancer(data: IOffer) {
+
+        console.log("going to publish message with data:", data);
+
+        const exchangeName = "offer_created_exchange";
+        await this.producer.publishToMultiple(exchangeName, data);
     }
 }

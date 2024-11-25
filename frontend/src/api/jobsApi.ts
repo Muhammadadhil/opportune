@@ -3,6 +3,7 @@ import { JobData } from "@/types/IProjectPost";
 import { IJob } from "@/types/IJob";
 import { IApplication } from "@/types/IApplication";
 import {IApproval} from '@/types/IApproval';
+import {IOffer} from '@/types/IOffer';
 
 // jobs
 export const saveJobPost = async (data: JobData) => {
@@ -46,3 +47,6 @@ export const getJobDetails = async (jobId:string) => {
     return await apiClient.get(`/post/job/${jobId}`);
 };
 
+export const sendOffer = async (data: IOffer) => {
+    return await apiClient.post(`/post/job/offer`, data);
+};

@@ -34,4 +34,7 @@ router.post("/job/approve", authenticate(['client']),jobController.approveApplic
 router.get("/batch/jobs", jobController.getJobDetails);
 router.get('/job/:id', jobController.getJobDetail);
 
+//offer 
+router.post("/job/offer", jobController.sendOffer);
+
 export default router;

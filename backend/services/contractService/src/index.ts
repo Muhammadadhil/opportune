@@ -7,6 +7,7 @@ import morgan from "morgan";
 import { errorHandler } from "./middleware/errorHandler";
 import { ApplicationSerivce } from "./services/implementation/Application.services";
 import { ContractService } from "./services/implementation/contract.services";
+import { OfferService } from "./services/implementation/offer.services";
 
 
 const app = express();
@@ -14,6 +15,7 @@ dotenv.config();
 
 const applicationSerivce = new ApplicationSerivce();
 const contractService = new ContractService();
+const offerService = new OfferService();
 
 app.use(
     cors({
@@ -39,6 +41,7 @@ const startServer = () => {
         });
         applicationSerivce.initialize();
         contractService.initialize();
+        offerService.initialize();
     } catch (error) {
         console.log('Error in starting Server',error);
         process.exit(1);

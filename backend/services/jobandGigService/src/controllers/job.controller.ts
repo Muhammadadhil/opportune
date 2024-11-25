@@ -84,10 +84,9 @@ export class JobController {
         }
     };
 
-
     /**
      * Approves an application by the client.
-     * 
+     *
      * @route POST /job/approve
      * @param {Request} req - The request object, containing the application approval data in the body.
      * @param {Response} res - The response object, used to send back the HTTP response.
@@ -95,7 +94,7 @@ export class JobController {
      * @returns {Promise<void>} 201 - Returns a success message if the application is approved.
      * @throws {Error} 500 - Internal server error if approval fails.
      */
-    
+
     approveApplication = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const approvalData: IApproval = req.body;
@@ -106,7 +105,6 @@ export class JobController {
             next(error);
         }
     };
-
 
     /**
      * Get the details of multiple jobs by their IDs.
@@ -143,10 +141,19 @@ export class JobController {
     getJobDetail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { id } = req.params;
-            console.log('id:',id);
+            console.log("id:", id);
             const job = await this._jobService.getJobDetail(id as string);
-            console.log('job:',job);
+            console.log("job:", job);
             res.status(200).json(job);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    sendOffer = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            await this._jobService.sendOfferToFreelancer(req.body);
+            res.status(200).json({ message: "Offer sent successfully" });
         } catch (error) {
             next(error);
         }

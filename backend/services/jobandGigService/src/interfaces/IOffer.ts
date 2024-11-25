@@ -9,7 +9,6 @@ export interface IMilestone {
 }
 
 export interface IOffer extends Document {
-    offerId: string;
     applicationId: ObjectId;
     jobId: ObjectId;
     freelancerId: ObjectId;

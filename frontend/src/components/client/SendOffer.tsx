@@ -3,24 +3,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "lucide-react";
+// import { Calendar } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import {useJobDetails} from "@/hooks/jobs/useJobDetails";
 import {useParams,useLocation} from 'react-router-dom'
+import { IOffer, IMilestone } from "@/types/IOffer";
+import {sendOffer} from "@/api/jobsApi";
+import toast from "react-hot-toast";
 
-
-interface Milestone {
-    description: string;
-    dueDate: string;
-    amount: string;
-}
 
 export default function SendOffer() {
 
     const {jobId}=useParams();
     const { data: job } = useJobDetails(jobId!);
 
-    const [milestones, setMilestones] = useState<Milestone[]>([{ description: "", dueDate: "", amount: "" }]);
+    const [milestones, setMilestones] = useState<IMilestone[]>([{ description: "", deadline: "", amount: "" }]);
     const [budget,setBudget]=useState(job?.data.budget);
     const [title,setTitle]=useState(job?.data.jobTitle);
     const [description,setDescription]=useState(job?.data.description);
@@ -28,17 +25,15 @@ export default function SendOffer() {
     const location = useLocation();
     const { application } = location.state;
 
-    console.log('job:',job);
-
     const addMilestone = () => {
-        setMilestones([...milestones, { description: "", dueDate: "", amount: "" }]);
+        setMilestones([...milestones, { description: "", deadline: "", amount: "" }]);
     };
 
     const removeMilestone = (index: number) => {
         setMilestones(milestones.filter((_, i) => i !== index));
     };
 
-    const updateMilestone = (index: number, field: keyof Milestone, value: string) => {
+    const updateMilestone = (index: number, field: keyof IMilestone, value: string) => {
 
         console.log("Index:", index);
         console.log("Field:", field);
@@ -53,14 +48,25 @@ export default function SendOffer() {
         setMilestones(updatedMilestones);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const data: IOffer = {
+        applicationId: application._id,
+        jobId: jobId!,
+        freelancerId: application.freelancerId,
+        clientId: application.clientId,
+        milestones,
+        totalAmount: budget,
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Offer Data:", {
-            milestones,
-            budget,
-            title,
-            description
-        });
+        try {
+            const response = await sendOffer(data);
+            console.log('response in sending offer:',response);
+            toast.success('Offer sent successfully');
+        } catch (error) {
+            console.log("Error in sending offer:", error);
+            toast.error('Error in sending offer');
+        }
     };
 
     return (
@@ -100,8 +106,8 @@ export default function SendOffer() {
                                 <div className="space-y-2 md:col-span-3">
                                     <label className="text-sm font-medium">Due date (optional)</label>
                                     <div className="relative">
-                                        <Input type="date" value={milestone.dueDate} onChange={(e) => updateMilestone(index, "dueDate", e.target.value)} />
-                                        <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                        <Input type="date" value={milestone.deadline} onChange={(e) => updateMilestone(index, "deadline", e.target.value)} />
+                                        {/* <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" /> */}
                                     </div>
                                 </div>
 
