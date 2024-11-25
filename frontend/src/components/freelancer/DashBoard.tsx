@@ -2,8 +2,7 @@
 import Sidebar from "./Sidebar";
 import JobList from './Joblist'
 import { Input } from "@/components/ui/input";
-import ExploreLayout from "@/layouts/ExploreLayout"; // sidebar layout component
-
+// import ExploreLayout from "@/layouts/ExploreLayout"; // sidebar layout component
 
 const Dashboard = () => {
 

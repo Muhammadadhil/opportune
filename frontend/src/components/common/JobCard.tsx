@@ -9,6 +9,7 @@ import EditJob from "../client/EditJob";
 import toast from "react-hot-toast";
 import { IJob } from "@/types/IJob";
 import JobSideBar from "./JobSideBar";
+import {getRelativeTime} from "@/utils/relativeDateFormatter";
 
 interface JobCardProps {
     job: IJob;
@@ -68,16 +69,22 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                                     </DialogDescription>
                                 </DialogHeader>
                                 <DialogFooter>
-                                    <Button variant="outline" onClick={(e) => {
+                                    <Button
+                                        variant="outline"
+                                        onClick={(e) => {
                                             e.stopPropagation();
-                                            setOpen(false)
-                                        }}>
+                                            setOpen(false);
+                                        }}
+                                    >
                                         Cancel
                                     </Button>
-                                    <Button variant="default" onClick={(e) => {
-                                        e.stopPropagation();
-                                        if(job?._id) HandleRemove(job?._id);
-                                    }}>
+                                    <Button
+                                        variant="default"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (job?._id) HandleRemove(job?._id);
+                                        }}
+                                    >
                                         Remove
                                     </Button>
                                 </DialogFooter>
@@ -97,7 +104,10 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                 </div>
                 <div className="text-sm text-gray-500 flex flex-col sm:flex-row sm:justify-between">
                     <span>Budget: ₹{job.budget}</span>
-                    <span>applicants: 5 to 10 </span>
+                    <span>applicants: {job.applicantsCount}</span>
+                </div>
+                <div className="text-sm text-gray-800 mt-2 text-end">
+                    <span className="text-gray-500">posted {getRelativeTime(job.createdAt!)}</span>
                 </div>
 
                 {sheetOpen && <JobSideBar job={job} sheetOpen={sheetOpen} setSheetOpen={setSheetOpen} />}

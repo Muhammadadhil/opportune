@@ -6,9 +6,10 @@ import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
 import { IApproval } from "../../interfaces/IApproval";
 import axios from 'axios';
 import { HTTPError } from "../../utils/HttpError";
+import { IJobRepository } from "../../repositories/interfaces/IJobRepository";
 
 export class JobService implements IJobService {
-    private jobRepository;
+    private jobRepository:IJobRepository
     private producer = new RabbitMQProducer();
 
     constructor() {
@@ -54,6 +55,7 @@ export class JobService implements IJobService {
         const response = await axios.get(`http://localhost:4002/contract/application`, {
             params: { jobId:data.jobId, freelancerId: data.freelancerId },
         });
+
         if (response.data.exists) {
             throw new HTTPError('You have already applied for this job',401);
         }
@@ -67,6 +69,9 @@ export class JobService implements IJobService {
         };
 
         await this.producer.publish("job.application.created", messagePayload);
+        
+        // update applicants count
+        await this.jobRepository.updateApplicantsCount(data.jobId);
         
         return {
             trackingId,

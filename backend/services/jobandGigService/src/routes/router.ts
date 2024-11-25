@@ -29,7 +29,7 @@ router.patch("/job", jobController.editJob);
 router.patch("/job/:id", jobController.removeJob);
 
 router.post("/job/application", applicationSchema, validateEntry, jobController.applyForJob);
-router.post("/job/approve",jobController.approveApplication);
+router.post("/job/approve", authenticate(['client']),jobController.approveApplication);
 
 router.get("/batch/jobs", jobController.getJobDetails);
 

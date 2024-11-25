@@ -22,7 +22,8 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
         req.user = user;
 
         if (!allowedRoles.includes(user.role)) {
-            return new HTTPError("Access denied: insufficient permissions", 403);
+            const error = new HTTPError("Access denied: insufficient permissions", 403);
+            next(error);
         }
 
         next();

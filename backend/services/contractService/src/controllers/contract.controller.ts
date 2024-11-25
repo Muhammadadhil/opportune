@@ -9,15 +9,27 @@ export class ContractController {
         this.contractService = new ContractService();
     }
 
-    getFreelancerContracts = async (req: Request, res: Response) => {
+    getFreelancerContracts = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { fId }=req.query;
-            console.log('checking existing contracts of freelacner::', req.query);
+            const { fId } = req.query;
+            console.log("checking existing contracts of freelacner::", req.query);
             const contracts = await this.contractService.getFreelancerContracts(fId as string);
             return res.status(200).json(contracts);
         } catch (error) {
             console.log("Error in geting applications:", error);
-            return res.status(500).json({ message: "Something went wrong, please try again later." });
+            next(error);
+        }
+    };
+
+    getJobContracts = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { jobId } = req.query;
+            console.log("checking contracts for job clinet:", req.query);
+            const contracts = await this.contractService.getJobContracts(jobId as string);
+            return res.status(200).json(contracts);
+        } catch (error) {
+            console.error("Error in getting contract:", error);
+            next(error);
         }
     };
 }

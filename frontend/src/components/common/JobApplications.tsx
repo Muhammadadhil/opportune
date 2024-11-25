@@ -57,11 +57,13 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
 
     return (
         <div className="mx-auto px-4 py-8">
-            {clientLoading || freelancerLoading ? Array.from({ length: 5 }).map(() => <TableRowSkelton />) : ""}
-            {applications?.length < 1 ? (
+            {applications?.length < 1 && (
                 <div className="text-center">
                     <h2>No applications found</h2>
                 </div>
+            )}
+            {clientLoading || freelancerLoading ? (
+                Array.from({ length: 5 }).map(() => <TableRowSkelton userType={userType} />)
             ) : (
                 <Table className="border">
                     <TableCaption>A list of your recent applications.</TableCaption>
@@ -86,7 +88,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                 <TableCell className="text-right">
                                     {userType === "client" && app.status === "pending" ? (
                                         <div>
-                                            <Button variant="default" className="mr-2" >
+                                            <Button variant="default" className="mr-2">
                                                 Decline
                                             </Button>
                                             <Button
@@ -100,7 +102,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                     ) : userType === "client" ? (
                                         <Button>Contact freelancer</Button>
                                     ) : (
-                                        <Button >View Details</Button>
+                                        <Button>View Details</Button>
                                     )}
                                 </TableCell>
                             </TableRow>

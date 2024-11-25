@@ -35,9 +35,7 @@ export class ContractService implements IContractService {
 
     async createContract(data: IContract): Promise<IContract | null> {
         try {
-            console.log("application data to save:", data);
             const contract = await this.contractRepository.create(data);
-            console.log("contract saved:", contract);
             await this.applicationRepository.updateStatus(contract.applicationId, "accepted");
             return contract;
         } catch (error) {
@@ -53,5 +51,10 @@ export class ContractService implements IContractService {
             console.log("Error in getting freelancer contracts:", error);
             return null;
         }
+    }
+
+    async getJobContracts(jobId: string): Promise<IContract[] | null> {
+        return this.contractRepository.find({ jobId });
+        
     }
 }

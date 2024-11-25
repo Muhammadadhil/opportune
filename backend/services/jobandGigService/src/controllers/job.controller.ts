@@ -78,6 +78,7 @@ export class JobController {
                 message: "Job application submitted successfully",
                 data: result,
             });
+            
         } catch (error) {
             console.error("Error in job application:", error);
             next(error);

@@ -22,4 +22,8 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
         job.isActive = false;
         return await job.save();
     }
+
+    async updateApplicantsCount(jobId:string) {
+        return await JobModel.findByIdAndUpdate({_id:jobId},{$inc:{applicantsCount:1}},{new:true}).exec();
+    }
 }

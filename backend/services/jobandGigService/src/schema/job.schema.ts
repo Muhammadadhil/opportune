@@ -39,6 +39,10 @@ const jobSchema = new Schema<IJob>(
             type: [String],
             required: true,
         },
+        applicantsCount: {
+            type: Number,
+            default: 0,
+        }
     },
     { timestamps: true }
 );

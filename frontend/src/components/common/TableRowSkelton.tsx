@@ -1,37 +1,43 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const TableRowSkelton = () => {
-  return (
-    <div>
-      <TableRow className="h-20">
-    {/* Skeleton for Application ID */}
-    <TableCell className="font-medium">
-        <Skeleton className="h-6 w-24 rounded" /> {/* Simulates APP{app._id} */}
-    </TableCell>
-
-    {/* Skeleton for Status */}
-    <TableCell>
-        <Skeleton className="h-6 w-16 rounded" /> {/* Simulates app.status */}
-    </TableCell>
-
-    {/* Skeleton for Freelancer Name */}
-    <TableCell>
-        <Skeleton className="h-6 w-32 rounded" /> {/* Simulates freelancerDetails name */}
-    </TableCell>
-
-    {/* Skeleton for Buttons */}
-    <TableCell className="text-right">
-        <div className="flex justify-end space-x-4">
-            <Skeleton className="h-10 w-24 rounded" /> {/* Simulates Decline button */}
-            <Skeleton className="h-10 w-24 rounded" /> {/* Simulates Approve button */}
-        </div>
-    </TableCell>
-</TableRow>
-
-    </div>
-  )
+interface TableRowSkeletonProps {
+    userType: "client" | "freelancer";
 }
 
-export default TableRowSkelton
+const TableRowSkeleton: React.FC<TableRowSkeletonProps> = ({ userType }) => {
+    return (
+        <TableRow className="h-20">
+            {/* Skeleton for Application ID */}
+            <TableCell className="font-medium">
+                <Skeleton className="h-6 w-24 rounded" />
+            </TableCell>
 
+            {/* Skeleton for Status */}
+            <TableCell>
+                <Skeleton className="h-6 w-16 rounded" />
+            </TableCell>
+
+            {/* Skeleton for Freelancer Name or Job Title */}
+            <TableCell>
+                <Skeleton className="h-6 w-32 rounded" />
+            </TableCell>
+
+            {/* Skeleton for Action Buttons */}
+            <TableCell className="text-right">
+                {userType === "client" ? (
+                    <div className="flex justify-end space-x-2">
+                        <Skeleton className="h-9 w-20 rounded" /> {/* Simulates Decline button */}
+                        <Skeleton className="h-9 w-20 rounded" /> {/* Simulates Accept button */}
+                    </div>
+                ) : (
+                    <div className="flex justify-end">
+                        <Skeleton className="h-9 w-28 rounded" /> {/* Simulates View Details button */}
+                    </div>
+                )}
+            </TableCell>
+        </TableRow>
+    );
+};
+
+export default TableRowSkeleton;
