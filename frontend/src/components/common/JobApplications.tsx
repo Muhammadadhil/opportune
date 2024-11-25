@@ -11,7 +11,8 @@ import { IApproval } from "@/types/IApproval";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import TableRowSkelton from '@/components/common/TableRowSkelton';
-
+// import {Link} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 interface JobApplicationsProps {
     userType: "client" | "freelancer";
@@ -20,6 +21,8 @@ interface JobApplicationsProps {
 export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const userId = userInfo?._id;
     const { id: jobId } = useParams();
@@ -88,15 +91,16 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                 <TableCell className="text-right">
                                     {userType === "client" && app.status === "pending" ? (
                                         <div>
-                                            <Button variant="default" className="mr-2">
-                                                Decline
-                                            </Button>
-                                            <Button
+                                            {/* <Button
                                                 className="bg-green-800 hover:bg-green-700"
                                                 onClick={() => acceptApplication(app._id ?? "", app.jobId, app?.freelancerDetails?._id ?? "")}
                                                 disabled={loading}
                                             >
-                                                {loading ? "Accepting..." : "Accept"}
+                                                Send Offer
+                                            </Button> */}
+
+                                            <Button className="bg-green-800 hover:bg-green-700" onClick={() => navigate(`/cl/send-offer/${app.jobId}`,{state:{application:app}})}>
+                                                Send Offer
                                             </Button>
                                         </div>
                                     ) : userType === "client" ? (

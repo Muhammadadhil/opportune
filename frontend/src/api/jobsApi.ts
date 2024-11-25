@@ -41,3 +41,8 @@ export const getFApplications = async (fId:string) => {
 export const getHires = async (jobId:string) => {
     return await apiClient.get(`/contract/client/hires`, { params: { jobId } });
 };
+
+export const getJobDetails = async (jobId:string) => {
+    return await apiClient.get(`/post/job/${jobId}`);
+};
+

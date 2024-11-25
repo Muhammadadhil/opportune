@@ -16,6 +16,7 @@ export interface IJobService {
     editJob(data: Partial<IJob>): Promise<IJob | null>;
     removeJob(id: string): Promise<IJob | null>;
     applyJob(data: IApplyJob): void;
-    approveApplication(data:IApproval):void;
+    approveApplication(data: IApproval): void;
     getJobDetails(jobIds: string[]): Promise<IJob[] | null>;
+    getJobDetail(jobId: string): Promise<IJob | null>;
 }

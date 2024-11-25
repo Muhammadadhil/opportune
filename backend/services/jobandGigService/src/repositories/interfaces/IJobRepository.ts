@@ -5,5 +5,5 @@ import { IBaseRepository } from "./IBaseRepository";
 export interface IJobRepository extends IBaseRepository<IJob> {
     updateActiveStatus(id: string): Promise<IJob | null>;
     findActiveJobs(id: string): Promise<IJob[] | null>;
-    updateApplicantsCount(jobId:string):void;
+    updateApplicantsCount(jobId: string): void;
 }

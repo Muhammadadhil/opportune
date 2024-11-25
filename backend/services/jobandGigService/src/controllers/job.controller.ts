@@ -78,14 +78,25 @@ export class JobController {
                 message: "Job application submitted successfully",
                 data: result,
             });
-            
         } catch (error) {
             console.error("Error in job application:", error);
             next(error);
         }
     };
 
-    approveApplication = async (req: Request, res: Response, next: NextFunction) => {
+
+    /**
+     * Approves an application by the client.
+     * 
+     * @route POST /job/approve
+     * @param {Request} req - The request object, containing the application approval data in the body.
+     * @param {Response} res - The response object, used to send back the HTTP response.
+     * @param {NextFunction} next - The next middleware function in the Express stack.
+     * @returns {Promise<void>} 201 - Returns a success message if the application is approved.
+     * @throws {Error} 500 - Internal server error if approval fails.
+     */
+    
+    approveApplication = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const approvalData: IApproval = req.body;
             await this._jobService.approveApplication(approvalData);
@@ -96,12 +107,46 @@ export class JobController {
         }
     };
 
+
+    /**
+     * Get the details of multiple jobs by their IDs.
+     *
+     * @route GET /batch/jobs
+     * @queryParam {string[]} jobIds - Array of job IDs to fetch details for.
+     * @returns {Promise<Response>} 200 - Returns the job details.
+     * @throws {Error} 500 - Internal server error.
+     */
+
     getJobDetails = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {jobIds}=req.query;
+            const { jobIds } = req.query;
             const jobs = await this._jobService.getJobDetails(jobIds as string[]);
-            console.log('feched jobs:',jobs)
+            console.log("fetched jobs:", jobs);
             res.status(200).json(jobs);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    /**
+     * Retrieves the details of a specific job by its ID.
+     *
+     * @route GET /job
+     * @queryParam {string} jobId - The ID of the job to retrieve details for.
+     * @param {Request} req - The request object, containing the job ID in the query parameters.
+     * @param {Response} res - The response object, used to send back the HTTP response.
+     * @param {NextFunction} next - The next middleware function in the Express stack.
+     * @returns {Promise<void>} 200 - Returns the job details.
+     * @throws {Error} 500 - Internal server error if retrieval fails.
+     */
+
+    getJobDetail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const { id } = req.params;
+            console.log('id:',id);
+            const job = await this._jobService.getJobDetail(id as string);
+            console.log('job:',job);
+            res.status(200).json(job);
         } catch (error) {
             next(error);
         }

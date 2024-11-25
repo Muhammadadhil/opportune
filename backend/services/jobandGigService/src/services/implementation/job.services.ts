@@ -9,7 +9,7 @@ import { HTTPError } from "../../utils/HttpError";
 import { IJobRepository } from "../../repositories/interfaces/IJobRepository";
 
 export class JobService implements IJobService {
-    private jobRepository:IJobRepository
+    private jobRepository: IJobRepository;
     private producer = new RabbitMQProducer();
 
     constructor() {
@@ -51,13 +51,12 @@ export class JobService implements IJobService {
     }
 
     async applyJob(data: IApplyJob) {
-
         const response = await axios.get(`http://localhost:4002/contract/application`, {
-            params: { jobId:data.jobId, freelancerId: data.freelancerId },
+            params: { jobId: data.jobId, freelancerId: data.freelancerId },
         });
 
         if (response.data.exists) {
-            throw new HTTPError('You have already applied for this job',401);
+            throw new HTTPError("You have already applied for this job", 401);
         }
 
         console.log("In service layer: going to publish the message with data:", data);
@@ -69,27 +68,34 @@ export class JobService implements IJobService {
         };
 
         await this.producer.publish("job.application.created", messagePayload);
-        
+
         // update applicants count
         await this.jobRepository.updateApplicantsCount(data.jobId);
-        
+
         return {
             trackingId,
             data: messagePayload,
         };
     }
 
-    async approveApplication(data: IApproval){
-        console.log('going to publish message with data:',data);
+    async approveApplication(data: IApproval) {
+        console.log("going to publish message with data:", data);
 
         const exchangeName = "job_approval_exchange";
-        await this.producer.publishToMultiple(exchangeName,data);
-
-
+        await this.producer.publishToMultiple(exchangeName, data);
     }
 
     async getJobDetails(jobIds: string[]): Promise<IJob[] | null> {
         console.log("jobIds to fetch jobs details:", jobIds);
         return await this.jobRepository.find({ _id: { $in: jobIds } });
+    }
+
+    /**
+     * @description Fetches the job with the given jobId.
+     * @param jobId The id of the job to be fetched.
+     * @returns The job with the given jobId if exists, else null.
+     */
+    async getJobDetail(jobId: string): Promise<IJob | null> {
+        return await this.jobRepository.findById(jobId);
     }
 }

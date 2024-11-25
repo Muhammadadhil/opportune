@@ -32,5 +32,6 @@ router.post("/job/application", applicationSchema, validateEntry, jobController.
 router.post("/job/approve", authenticate(['client']),jobController.approveApplication);
 
 router.get("/batch/jobs", jobController.getJobDetails);
+router.get('/job/:id', jobController.getJobDetail);
 
 export default router;

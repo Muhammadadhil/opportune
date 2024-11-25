@@ -12,8 +12,8 @@ router.get("/freelancer/job/applications", applicationController.getFreelancerAp
 
 //contracts
 router.get("/freelancer/contracts", contractController.getFreelancerContracts);
-
 router.get("/client/hires", contractController.getJobContracts);  //want to change this;
+
 
 
 export default router;
