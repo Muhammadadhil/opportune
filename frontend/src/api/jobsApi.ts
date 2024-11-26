@@ -50,3 +50,7 @@ export const getJobDetails = async (jobId:string) => {
 export const sendOffer = async (data: IOffer) => {
     return await apiClient.post(`/post/job/offer`, data);
 };
+
+export const getOffers = async (id:string,userType:string) => {
+    return await apiClient.get(`/contract/${userType}/offers`, { params: { id } });
+}

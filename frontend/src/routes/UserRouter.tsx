@@ -18,6 +18,7 @@ import ClientJobsPage from "@/pages/client/ClientJobsPage";
 import GigsPage from "@/pages/freelancer/GigsPages";
 import JobDetailsPage from '@/pages/client/JobDetailsPage';
 import SendOfferPage from '@/pages/client/ClientSendOfferPage';
+import SuccessPage from '@/components/common/SuccessPage';
 
 function UserRoute() {
     return (
@@ -28,6 +29,7 @@ function UserRoute() {
                 <Route path="/join" element={<Signup />} />
                 <Route path="/type" element={<UserTypeSelection />} />
                 <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/offer-success" element={<SuccessPage />} />
 
                 <Route path="" element={<ClientProtected />}>
                     <Route element={<UsersLayout />}>
@@ -40,7 +42,6 @@ function UserRoute() {
                     </Route>
                     <Route path="cl/details" element={<DetailsClient />} />
                 </Route>
-
                 <Route element={<FreelancerProtected />}>
                     <Route element={<UsersLayout />}>
                         <Route path="fr/dashboard" element={<FreelancerDashboard />} />

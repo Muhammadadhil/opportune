@@ -11,7 +11,7 @@ const GigList = () => {
         <div className="grid grid-cols-12 gap-5 justify-center mt-16">
             {isLoading && Array.from({ length: 5 }).map(() => <GigCardSkeleton />)}
             {gigs?.data?.map((gig: IGig) => {
-                return <GigCard gig={gig} />;
+                return <GigCard gig={gig} key={gig._id}/>;
             })}
         </div>
 

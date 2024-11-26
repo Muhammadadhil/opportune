@@ -3,6 +3,7 @@ import GigList from "@/components/common/GigList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {JobApplications} from "@/components/common/JobApplications";
 import {Contracts} from "@/components/common/Contracts";
+import {OffersList} from '@/components/common/Offer';
 
 const GigsPage = () => {
     return (
@@ -12,18 +13,18 @@ const GigsPage = () => {
                 <Tabs defaultValue="gigs" className="w-max-[800px] mt-8">
                     <TabsList className="w-full justify-start border-b rounded-none h-auto pt-2 bg-transparent">
                         <TabsTrigger value="gigs">Your Gigs</TabsTrigger>
-                        <TabsTrigger value="gigsInterests">Gig Interests</TabsTrigger>
                         <TabsTrigger value="applications">Your Applications</TabsTrigger>
+                        <TabsTrigger value="offers">Offers</TabsTrigger>
                         <TabsTrigger value="contracts">Contracts</TabsTrigger>
                     </TabsList>
                     <TabsContent value="gigs">
                         <GigList />
                     </TabsContent>
-                    <TabsContent value="gigsInterests">
-                        
-                    </TabsContent>
                     <TabsContent value="applications">
                         <JobApplications userType="freelancer" />
+                    </TabsContent>
+                    <TabsContent value="offers">
+                        <OffersList userType="freelancer"/>
                     </TabsContent>
                     <TabsContent value="contracts">
                         <Contracts userType="freelancer" />

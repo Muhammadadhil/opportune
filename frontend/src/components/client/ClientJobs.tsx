@@ -61,11 +61,11 @@ export default function ClientJobs() {
                     ) : jobs?.data?.length === 0 ? (
                         <Nojobs />
                     ) : (
-                        jobs?.data?.map((job: IJob,index) => (
+                        jobs?.data?.map((job: IJob) => (
                             <li key={job._id} className="bg-white p-4 rounded-lg border shadow-sm hover:bg-gray-100 transition-all duration-300 ease-in-out cursor-pointer">
                                 <div className="flex justify-between">
                                     <h3 className="font-bold text-lg mb-2 hover:underline" onClick={() => handleJobClick(job)}>
-                                        {job.jobTitle},{index}
+                                        {job.jobTitle}
                                     </h3>
                                     <div>
                                         <button
@@ -107,7 +107,6 @@ export default function ClientJobs() {
                                                         className="bg-red-700 hover:bg-red-800"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            console.log(index+'jobId forrr remove:',job._id,)
                                                             if (job?._id) HandleRemove(job._id);
                                                         }}
                                                     >

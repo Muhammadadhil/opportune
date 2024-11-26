@@ -37,12 +37,20 @@ export class OfferService implements IOfferService {
     async createOffer(data: IOffer): Promise<IOffer | null> {
         try {
             const offer = await this.offerRepository.create(data);
-            console.log('created offer:',offer);
+            console.log("created offer:", offer);
             await this.applicationRepository.updateStatus(offer.applicationId, "offerSent");
             return offer;
         } catch (error) {
             console.log("Error in creating Contract:", error);
             return null;
         }
+    }
+
+    getFreelancerOffers(freelancerId: string): Promise<IOffer[] | null> {
+        return this.offerRepository.find({ freelancerId });
+    }
+
+    getClientOffers(clientId: string): Promise<IOffer[] | null> {
+        return this.offerRepository.find({ clientId });
     }
 }

@@ -82,7 +82,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                             <TableRow className="h-20" key={app._id}>
                                 <TableCell className="font-medium">APP{app._id}</TableCell>
                                 <TableCell>
-                                    <div className={`w-24 h-8 rounded-xl text-center flex items-center justify-center ${app.status === "offerSent" ? "bg-green-500" : "bg-red-500"}`}>
+                                    <div className={`w-24 h-8 rounded-xl text-center flex items-center justify-center ${app.status === "offerSent" ? "bg-green-500" : "bg-gray-400"}`}>
                                         <p className="text-white font-semibold">{app.status}</p>
                                     </div>
                                 </TableCell>
@@ -90,7 +90,6 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                     <TableCell>{app?.freelancerDetails?.firstname + " " + app?.freelancerDetails?.lastname}</TableCell>
                                 ) : (
                                     <TableCell>{truncateString(app?.jobDetails?.jobTitle ?? "")}</TableCell>
-                                    // <TableCell>job title</TableCell>
                                 )}
                                 <TableCell className="text-right">
                                     {userType === "client" && app.status === "pending" ? (

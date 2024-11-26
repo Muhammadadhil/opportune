@@ -2,6 +2,7 @@ import amqplib from "amqplib";
 import { rabbitMQConnection } from "./RabbitMQConnection";
 
 export class RabbitMQConsumer {
+    
     private channel: amqplib.Channel | null = null;
 
     async connect() {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,6 +10,7 @@ import {useParams,useLocation} from 'react-router-dom'
 import { IOffer, IMilestone } from "@/types/IOffer";
 import {sendOffer} from "@/api/jobsApi";
 import toast from "react-hot-toast";
+import {useNavigate} from 'react-router-dom';
 
 
 export default function SendOffer() {
@@ -17,28 +18,54 @@ export default function SendOffer() {
     const {jobId}=useParams();
     const { data: job } = useJobDetails(jobId!);
 
-    const [milestones, setMilestones] = useState<IMilestone[]>([{ description: "", deadline: "", amount: "" }]);
+    console.log('job:',job?.data);
+
     const [budget,setBudget]=useState(job?.data.budget);
     const [title,setTitle]=useState(job?.data.jobTitle);
     const [description,setDescription]=useState(job?.data.description);
+    const [milestones, setMilestones] = useState<IMilestone[]>([{ description: "", deadline: "", amount: budget }]);
+
+    useEffect(() => {
+        setTitle(job?.data.jobTitle);
+        setDescription(job?.data.description);
+        setBudget(job?.data.budget);
+    }, [job]);
 
     const location = useLocation();
     const { application } = location.state;
+    const navigate=useNavigate();
 
     const addMilestone = () => {
-        setMilestones([...milestones, { description: "", deadline: "", amount: "" }]);
+        const isValid = milestones.every((milestone) => milestone.description.trim() !== "" && milestone.deadline.trim() !== "");
+        if (!isValid) {
+            toast.error("Please fill all previous milestones");
+            return;
+        }
+
+        const newMilestones = [...milestones, { description: "", deadline: "", amount: "" }];
+        setMilestones(splitBudget(newMilestones));
     };
 
     const removeMilestone = (index: number) => {
-        setMilestones(milestones.filter((_, i) => i !== index));
+        const updatedMilestones = milestones.filter((_, i) => i !== index);
+        setMilestones(splitBudget(updatedMilestones));
     };
 
+    const splitBudget = (milestones: IMilestone[]): IMilestone[] => {
+        const amountPerMilestone = budget && milestones.length > 0 ? (parseFloat(budget) / milestones.length) : "0.00";
+        return milestones.map((milestone) => ({
+            ...milestone,
+            amount: amountPerMilestone,
+        }));
+    };
+
+    useEffect(() => {
+        if (milestones.length > 0) {
+            setMilestones(splitBudget(milestones));
+        }
+    }, [budget, milestones.length]);
+
     const updateMilestone = (index: number, field: keyof IMilestone, value: string) => {
-
-        console.log("Index:", index);
-        console.log("Field:", field);
-        console.log("Value:", value);   
-
         const updatedMilestones = milestones.map((milestone, i) => {
             if (i === index) {
                 return { ...milestone, [field]: value };
@@ -48,21 +75,28 @@ export default function SendOffer() {
         setMilestones(updatedMilestones);
     };
 
-    const data: IOffer = {
-        applicationId: application._id,
-        jobId: jobId!,
-        freelancerId: application.freelancerId,
-        clientId: application.clientId,
-        milestones,
-        totalAmount: budget,
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const isValidMilestones = milestones.every(milestone => milestone.description.trim() !== "" && milestone.deadline.trim() !== "" );
+        const isValid = title.trim() !== "" && description.trim() !== "" && budget !== ""  && isValidMilestones;
+        if (!isValid) {
+            toast.error("Please fill all fields");
+            return;
+        }
+
         try {
+            const data: IOffer = {
+                applicationId: application._id,
+                jobId: jobId!,
+                freelancerId: application.freelancerId,
+                clientId: application.clientId,
+                milestones,
+                totalAmount: budget,
+            };
+
             const response = await sendOffer(data);
             console.log('response in sending offer:',response);
-            toast.success('Offer sent successfully');
+            navigate('/offer-success',{state:{message:"Offer Sent Successfully!",redirectPath:"/cl/dashboard",redirectTime:3000}})
         } catch (error) {
             console.log("Error in sending offer:", error);
             toast.error('Error in sending offer');
@@ -80,12 +114,12 @@ export default function SendOffer() {
                     </CardHeader>
                     <CardContent>
                         <label>Title</label>
-                        <Input placeholder="Enter job description" className="mb-4 mt-1" value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <Input placeholder="Title" className="mb-4 mt-1" value={title} onChange={(e) => setTitle(e.target.value)} />
                         <label>Description</label>
-                        <Textarea placeholder="Enter job description" className="mb-4 mt-1 min-h-[150px]" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                        <Textarea placeholder="Job description" className="mb-4 mt-1 min-h-[150px]" value={description} onChange={(e) => setDescription(e.target.value)}/>
 
                         <label>budget $</label>
-                        <Input placeholder="Enter job description" className=" mt-1 max-w-40" value={budget} onChange={(e) => setBudget(e.target.value)} />
+                        <Input placeholder="budget" className=" mt-1 max-w-40" value={budget} onChange={(e) => setBudget(e.target.value)} />
                     </CardContent>
                 </Card>
 
@@ -151,3 +185,5 @@ export default function SendOffer() {
         </div>
     );
 }
+
+
