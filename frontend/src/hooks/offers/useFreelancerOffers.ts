@@ -1,9 +1,9 @@
-import { getOffers } from "@/api/jobsApi";
+import { getOffers } from "@/api/offersApi";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useFreelancerOffers(freelancerId: string | null) {
     return useQuery({
-        queryKey: ["FreelancerOffers"],
+        queryKey: ["offers"],
         queryFn: () => getOffers(freelancerId!,'freelancer'),
         enabled: !!freelancerId
     });

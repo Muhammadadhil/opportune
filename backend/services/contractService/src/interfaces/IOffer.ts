@@ -9,12 +9,13 @@ export interface IMilestone {
 }
 
 export interface IOffer extends Document {
-    offerId: string;
     applicationId: ObjectId;
     jobId: ObjectId;
     freelancerId: ObjectId;
     clientId: ObjectId;
-    milestones: IMilestone[];
+    workTitle: string;
+    workDescription:string;
     totalAmount: number;
+    milestones: IMilestone[];
     status: string;
 }

@@ -53,4 +53,17 @@ export class OfferService implements IOfferService {
     getClientOffers(clientId: string): Promise<IOffer[] | null> {
         return this.offerRepository.find({ clientId });
     }
+
+    acceptOffer(offerId: string,status:string): Promise<IOffer | null> {
+
+        const updatedOffer = this.offerRepository.update(offerId, { status });
+        // publish a message : " offer accepted " for notification service , 
+        // call createContract function : pass the offerId, 
+            // get the offer datails from there
+            // save contract there
+
+            
+        return updatedOffer;
+
+    }
 }

@@ -1,8 +1,7 @@
 
 export interface IMilestone {
-    // milestoneId: string;
     description: string;
-    amount: string;
+    amount: string | number;
     deadline: string | number;
     // status?: string;
 }
@@ -13,7 +12,9 @@ export interface IOffer{
     jobId: string;
     freelancerId: string;
     clientId: string;
-    milestones: IMilestone[];
+    workTitle: string;
+    workDescription:string;
     totalAmount: number;
+    milestones: IMilestone[];
     status?: string;
 }

@@ -8,7 +8,7 @@ import { Trash2 } from "lucide-react";
 import {useJobDetails} from "@/hooks/jobs/useJobDetails";
 import {useParams,useLocation} from 'react-router-dom'
 import { IOffer, IMilestone } from "@/types/IOffer";
-import {sendOffer} from "@/api/jobsApi";
+import {sendOffer} from "@/api/offersApi";
 import toast from "react-hot-toast";
 import {useNavigate} from 'react-router-dom';
 
@@ -36,7 +36,7 @@ export default function SendOffer() {
     const navigate=useNavigate();
 
     const addMilestone = () => {
-        const isValid = milestones.every((milestone) => milestone.description.trim() !== "" && milestone.deadline.trim() !== "");
+        const isValid = milestones.every((milestone) => milestone.description.trim() !== "" && milestone.deadline!== "");
         if (!isValid) {
             toast.error("Please fill all previous milestones");
             return;
@@ -77,7 +77,7 @@ export default function SendOffer() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const isValidMilestones = milestones.every(milestone => milestone.description.trim() !== "" && milestone.deadline.trim() !== "" );
+        const isValidMilestones = milestones.every(milestone => milestone.description.trim() !== "" && milestone.deadline !== "" );
         const isValid = title.trim() !== "" && description.trim() !== "" && budget !== ""  && isValidMilestones;
         if (!isValid) {
             toast.error("Please fill all fields");
@@ -90,6 +90,8 @@ export default function SendOffer() {
                 jobId: jobId!,
                 freelancerId: application.freelancerId,
                 clientId: application.clientId,
+                workTitle:title,
+                workDescription:description,
                 milestones,
                 totalAmount: budget,
             };

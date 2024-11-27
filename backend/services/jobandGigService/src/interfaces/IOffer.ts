@@ -8,12 +8,16 @@ export interface IMilestone {
     status: string;
 }
 
+
 export interface IOffer extends Document {
     applicationId: ObjectId;
     jobId: ObjectId;
     freelancerId: ObjectId;
     clientId: ObjectId;
-    milestones: IMilestone[];
+    workTitle?: string;
+    workDescription?: string;
     totalAmount: number;
+    milestones: IMilestone[];
     status: string;
 }
+

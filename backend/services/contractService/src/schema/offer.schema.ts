@@ -16,6 +16,8 @@ const OfferSchema = new Schema<IOffer>(
         freelancerId: { type: mongoose.Types.ObjectId, required: true },
         clientId: { type: mongoose.Types.ObjectId, required: true },
         milestones: { type: [MilestoneSchema], required: true },
+        workTitle: { type: String, required: true },
+        workDescription: { type: String, required: true },
         totalAmount: { type: Number, required: true },
         status: { type: String, OfferStatus, default: OfferStatus.PENDING },
     },

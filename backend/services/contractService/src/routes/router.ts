@@ -20,6 +20,9 @@ router.get("/client/hires", contractController.getJobContracts);  //want to chan
 router.get("/client/offers", offerController.clietOffers);  
 router.get("/freelancer/offers", offerController.freelancerOffers); 
 
+router.patch("/job/offer", offerController.updateOffer);
+
+
 
 
 

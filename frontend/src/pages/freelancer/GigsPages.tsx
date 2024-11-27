@@ -3,7 +3,7 @@ import GigList from "@/components/common/GigList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {JobApplications} from "@/components/common/JobApplications";
 import {Contracts} from "@/components/common/Contracts";
-import {OffersList} from '@/components/common/Offer';
+import {OffersList} from '@/components/common/OfferList';
 
 const GigsPage = () => {
     return (
