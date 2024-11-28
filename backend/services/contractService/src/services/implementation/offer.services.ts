@@ -5,19 +5,25 @@ import { ApplicationRepository } from "../../repositories/implementation/applica
 import { OfferRepository } from "../../repositories/implementation/offer.repository";
 import { IApplicationRepository } from "../../repositories/interfaces/IApplicationRepository";
 import { IOfferRepository } from "../../repositories/interfaces/IOfferRepository";
+import { IContractService } from "../interfaces/IContractService";
 import { IOfferService } from "../interfaces/IOfferService";
 
 
 export class OfferService implements IOfferService {
-    private offerRepository: IOfferRepository;
-    private applicationRepository: IApplicationRepository;
 
+    private _offerRepository: IOfferRepository;
+    private _applicationRepository: IApplicationRepository;
+    private _contractService: IContractService;
     private consumer;
 
-    constructor() {
-        this.offerRepository = new OfferRepository();
-        this.applicationRepository = new ApplicationRepository();
-
+    constructor(
+        offerRepository:IOfferRepository,
+        applicationRepository:IApplicationRepository,
+        contractService:IContractService)
+    {
+        this._offerRepository = offerRepository;
+        this._applicationRepository = applicationRepository;
+        this._contractService = contractService;
         this.consumer = new RabbitMQConsumer();
     }
 
@@ -36,9 +42,9 @@ export class OfferService implements IOfferService {
 
     async createOffer(data: IOffer): Promise<IOffer | null> {
         try {
-            const offer = await this.offerRepository.create(data);
+            const offer = await this._offerRepository.create(data);
             console.log("created offer:", offer);
-            await this.applicationRepository.updateStatus(offer.applicationId, "offerSent");
+            await this._applicationRepository.updateStatus(offer.applicationId, "offerSent");
             return offer;
         } catch (error) {
             console.log("Error in creating Contract:", error);
@@ -46,23 +52,28 @@ export class OfferService implements IOfferService {
         }
     }
 
-    getFreelancerOffers(freelancerId: string): Promise<IOffer[] | null> {
-        return this.offerRepository.find({ freelancerId });
+    async getFreelancerOffers(freelancerId: string): Promise<IOffer[] | null> {
+        return this._offerRepository.find({ freelancerId });
     }
 
-    getClientOffers(clientId: string): Promise<IOffer[] | null> {
-        return this.offerRepository.find({ clientId });
+    async getClientOffers(clientId: string): Promise<IOffer[] | null> {
+        return this._offerRepository.find({ clientId });
     }
 
-    acceptOffer(offerId: string,status:string): Promise<IOffer | null> {
+    async acceptOffer(offerId: string,status:string): Promise<IOffer | null> {
 
-        const updatedOffer = this.offerRepository.update(offerId, { status });
+        const updatedOffer =await this._offerRepository.update(offerId, { status });
+
+        if (updatedOffer && updatedOffer.status == "accepted") {
+            
+        } 
+
         // publish a message : " offer accepted " for notification service , 
         // call createContract function : pass the offerId, 
             // get the offer datails from there
             // save contract there
 
-            
+
         return updatedOffer;
 
     }

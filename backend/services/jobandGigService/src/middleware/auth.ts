@@ -27,6 +27,7 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
         }
 
         next();
+
     } catch (err) {
         new HTTPError("Invalid or expired token", 401);
     }

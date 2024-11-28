@@ -8,29 +8,13 @@ import { IApplicationRepository } from "../../repositories/interfaces/IApplicati
 import { ApplicationRepository } from "../../repositories/implementation/application.repository";
 
 export class ContractService implements IContractService {
+    
     private contractRepository: IContractRepository;
     private applicationRepository: IApplicationRepository;
 
-    private consumer;
-
-    constructor() {
-        this.contractRepository = new ContractRepository();
-        this.applicationRepository = new ApplicationRepository();
-        this.consumer = new RabbitMQConsumer();
-    }
-
-    async initialize() {
-        try {
-            await this.consumer.connect();
-            const exchangeName = "job_approval_exchange";
-            await this.consumer.consumeFromFanoutExchange(exchangeName, (message) => {
-                console.log("Processing job approval message:", message);
-
-                this.createContract(message);
-            });
-        } catch (error) {
-            console.error("Failed to initialize Contract Service:", error);
-        }
+    constructor(contractRepository: IContractRepository,applicationRepository:IApplicationRepository) {
+        this.contractRepository = contractRepository;
+        this.applicationRepository = applicationRepository;
     }
 
     async createContract(data: IContract): Promise<IContract | null> {
@@ -55,6 +39,5 @@ export class ContractService implements IContractService {
 
     async getJobContracts(jobId: string): Promise<IContract[] | null> {
         return this.contractRepository.find({ jobId });
-        
     }
 }

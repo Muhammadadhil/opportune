@@ -2,7 +2,7 @@ import apiClient from "./axiosInstance";
 import { JobData } from "@/types/IProjectPost";
 import { IJob } from "@/types/IJob";
 import { IApplication } from "@/types/IApplication";
-import {IApproval} from '@/types/IApproval';
+import {IApproval} from '@/types/IApproval';                                             
 
 // jobs
 export const saveJobPost = async (data: JobData) => {

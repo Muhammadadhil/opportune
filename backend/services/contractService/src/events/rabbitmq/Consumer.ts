@@ -1,10 +1,9 @@
 import amqplib from "amqplib";
-import { rabbitMQConnection } from "./RabbitMQConnection";
+import { rabbitMQConnection } from "./RabbitMQConnection";   
 
 export class RabbitMQConsumer {
     
-    private channel: amqplib.Channel | null = null;
-
+    private channel: amqplib.Channel | null = null;            
     async connect() {
         if (!this.channel) {
             this.channel = await rabbitMQConnection.createChannel();
@@ -31,6 +30,7 @@ export class RabbitMQConsumer {
     }
 
     async consumeFromFanoutExchange(exchange:string, callback:(message:any) => void){
+        
         if (!this.channel) {
             throw new Error("RabbitMQ consumer channel is not initialized");
         }
@@ -50,7 +50,6 @@ export class RabbitMQConsumer {
                 const messageContent = JSON.parse(msg.content.toString());
                 callback(messageContent);
                 this.channel?.ack(msg);
-
             }
         },{
             noAck:false

@@ -1,6 +1,7 @@
 import amqplib from "amqplib";
 
 class RabbitMQConnection {
+    
     private connection: amqplib.Connection | null = null;
 
     async getConnection(): Promise<amqplib.Connection> {

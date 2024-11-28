@@ -23,7 +23,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     
     // const navigate = useNavigate();
-    const userId = userInfo?._id;
+    const userId = userInfo?._id;       
 
     const { data: freelancerOffers, isLoading: freelancerLoading } = useFreelancerOffers(userInfo.role === "freelancer" ? userId : null);
     const { data: clientOffers, isLoading: clientLoading} = useClientOffers(userInfo.role === "client" ? userId : null);
