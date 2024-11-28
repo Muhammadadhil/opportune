@@ -1,7 +1,7 @@
 import { Card, CardContent,CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useClientOffers from "@/hooks/offers/useClientOffers";
 import useFreelancerOffers from "@/hooks/offers/useFreelancerOffers";
@@ -42,7 +42,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
         }
     };
 
-    const truncateString = (str: string, limit: number = 80) => {
+    const truncateString = (str: string, limit: number = 120) => {
         if (str.length <= limit) return str;
         return str.slice(0, limit) + " ...";
     };
@@ -75,7 +75,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                 </div>
                             </div>
                             <Button variant="ghost" size="icon" className="rounded-full">
-                                <Heart className="h-4 w-4" />
+                                
                             </Button>
                         </div>
 
@@ -86,7 +86,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                         <div className="mt-4 flex justify-between items-center">
                             <div>
                                 <p className="text-sm font-medium">Total Amount</p>
-                                <p className="text-xl font-bold text-green-500">${offer.totalAmount.toFixed(2)}</p>
+                                <p className="text-xl font-bold text-green-500">${offer.totalAmount.toFixed()}</p>
                             </div>
                             <div className="text-right">
                                 <p className="text-sm font-medium">Milestones</p>
@@ -103,13 +103,13 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                     </Button>
                                 </div>
                                 <div className="space-y-1">
-                                    {offer.milestones.slice(0, 2).map((milestone: IMilestone, index: number) => (
+                                    {offer.milestones.map((milestone: IMilestone, index: number) => (
                                         <div key={index} className="flex justify-between text-sm">
                                             <span className="truncate flex-1 mr-2">{milestone.description}</span>
-                                            <span className="font-medium">${milestone.amount}</span>
+                                            <span className="font-medium">${milestone.amount.toFixed(2)}</span>
                                         </div>
                                     ))}
-                                    {offer.milestones.length > 2 && <p className="text-xs text-muted-foreground italic">+ {offer.milestones.length - 2} more</p>}
+                                    {/* {offer.milestones.length > 2 && <p className="text-xs text-muted-foreground italic">+ {offer.milestones.length - 2} more</p>} */}
                                 </div>
                             </div>
                         )}

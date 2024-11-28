@@ -1,17 +1,10 @@
 import { Router } from "express";
-import { ApplicationController } from "../controllers/application.controller";
-import { ContractController } from "../controllers/contract.controller";
-// import { OfferController } from "../controllers/offer.controller";
 
 import { offerController } from "../config/container";
 import { contractController } from "../config/container";
-
+import { applicationController } from "../config/container";
 
 const router = Router();
-const applicationController = new ApplicationController();
-// const contractController = new ContractController();
-// const offerController = new OfferController();
-
 
 router.get("/application", applicationController.checkApplication);
 router.get("/client/job/applications", applicationController.getApplications);
@@ -26,8 +19,6 @@ router.get("/client/offers", offerController.clietOffers);
 router.get("/freelancer/offers", offerController.freelancerOffers); 
 
 router.patch("/job/offer", offerController.updateOffer);
-
-
 
 
 

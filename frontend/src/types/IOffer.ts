@@ -1,7 +1,7 @@
 
 export interface IMilestone {
     description: string;
-    amount: string | number;
+    amount:  number;
     deadline: string | number;
     // status?: string;
 }

@@ -10,28 +10,38 @@ import { OfferService } from "../services/implementation/offer.services";
 
 import Offer from "../schema/offer.schema";
 import Contract from "../schema/contract.schema";
+import Application from "../schema/applications.schema";
+
 import { JobApprovalConsumer } from "../events/rabbitmq/consumers/jobApproveConsumer";
+import { CreateOfferConsumer } from "../events/rabbitmq/consumers/createOfferConsumer";
+import { CreateApplicationConsumer } from "../events/rabbitmq/consumers/applicationConsumer";
 
 //repositories
-const applicationRepository = new ApplicationRepository();
+const applicationRepository = new ApplicationRepository(Application);
 const contractRepository = new ContractRepository(Contract);
 const offerRepository = new OfferRepository(Offer);
 
 //services
-const applicationService = new ApplicationSerivce();
+const applicationService = new ApplicationSerivce(applicationRepository);
 const contractService = new ContractService(contractRepository,applicationRepository);
 const offerService = new OfferService(offerRepository,applicationRepository,contractService);
 
 //controllers
-const applicationController = new ApplicationController();
+const applicationController = new ApplicationController(applicationService);
 const contractController = new ContractController(contractService);
 const offerController = new OfferController(offerService);
 
+
 // consumers
 const jobApproveConsumer = new JobApprovalConsumer(contractService, "job_approval_exchange");
+const offerConsumer = new CreateOfferConsumer(offerService, "offer_created_exchange");
+const applicationConsumer = new CreateApplicationConsumer(applicationService,"job.application.created")
+
 
 export async function intialiseConsumers() {
     jobApproveConsumer.initialise();
+    offerConsumer.initialise();
+    applicationConsumer.initialise();
 }
 
-export { offerController, contractController };
+export { offerController, contractController, applicationController };
