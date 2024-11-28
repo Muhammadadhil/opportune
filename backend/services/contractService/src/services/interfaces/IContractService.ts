@@ -3,7 +3,7 @@ import { IOffer } from "../../interfaces/IOffer";
 
 export interface IContractService {
     // initialize(): void;
-    createContract(data: IContract): Promise<IContract | null>;
+    createContract(data: IOffer): void;
     getFreelancerContracts(freelancerId: string): Promise<IContract[] | null>;
     getJobContracts(jobId: string): Promise<IContract[] | null>; 
 }

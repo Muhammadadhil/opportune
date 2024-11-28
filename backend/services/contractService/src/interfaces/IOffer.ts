@@ -1,7 +1,7 @@
 import {Document ,ObjectId} from 'mongoose';
 
 export interface IMilestone {
-    milestoneId: string;
+    _id: string;
     description: string;
     amount: number;
     deadline: Date;
@@ -9,6 +9,7 @@ export interface IMilestone {
 }
 
 export interface IOffer extends Document {
+    _id:ObjectId;
     applicationId: ObjectId;
     jobId: ObjectId;
     freelancerId: ObjectId;

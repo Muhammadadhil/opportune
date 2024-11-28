@@ -18,6 +18,7 @@ router.get("/client/hires", contractController.getJobContracts);  //want to chan
 router.get("/client/offers", offerController.clietOffers);  
 router.get("/freelancer/offers", offerController.freelancerOffers); 
 
+// accept or reject offer
 router.patch("/job/offer", offerController.updateOffer);
 
 

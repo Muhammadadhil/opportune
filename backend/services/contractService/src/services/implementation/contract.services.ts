@@ -6,26 +6,46 @@ import { ContractRepository } from "../../repositories/implementation/contract.r
 import { IContractRepository } from "../../repositories/interfaces/IContractRepository";
 import { IApplicationRepository } from "../../repositories/interfaces/IApplicationRepository";
 import { ApplicationRepository } from "../../repositories/implementation/application.repository";
+import { IMilestone, IOffer } from "../../interfaces/IOffer";
 
 export class ContractService implements IContractService {
-    
     private contractRepository: IContractRepository;
     private applicationRepository: IApplicationRepository;
 
-    constructor(contractRepository: IContractRepository,applicationRepository:IApplicationRepository) {
+    constructor(contractRepository: IContractRepository, applicationRepository: IApplicationRepository) {
         this.contractRepository = contractRepository;
         this.applicationRepository = applicationRepository;
     }
 
-    async createContract(data: IContract): Promise<IContract | null> {
+    async createContract(data: IOffer) {
         try {
-            const contract = await this.contractRepository.create(data);
-            await this.applicationRepository.updateStatus(contract.applicationId, "accepted");
+            console.log("data in createContract from offerService:", data);
+            const contractData = {
+                offerId: data._id,
+                freelancerId: data.freelancerId,
+                clientId: data.clientId,
+                jobId: data.jobId,
+                workTitle: data.workTitle,
+                workDescription: data.workDescription,
+                totalAmount: data.totalAmount,
+                milestones: data.milestones,
+                status: "active",
+                startDate: new Date(),
+                endDate: this.calculateEndDate(data.milestones), // Calculate end date based on milestone deadlines
+                clientNotes: "",
+            };
+
+            const contract = await this.contractRepository.create(contractData as IContract);
+            await this.applicationRepository.updateStatus(data.applicationId, "accepted");
             return contract;
         } catch (error) {
             console.log("Error in creating Contract:", error);
             return null;
         }
+    }
+
+    private calculateEndDate(milestones: IMilestone[]): Date {
+        return new Date(Math.max(...milestones.map((milestone) => new Date(milestone.deadline).getTime())));
     }
 
     async getFreelancerContracts(freelancerId: string): Promise<IContract[] | null> {

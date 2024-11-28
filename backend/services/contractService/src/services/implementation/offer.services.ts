@@ -46,8 +46,12 @@ export class OfferService implements IOfferService {
     async acceptOffer(offerId: string, status: string): Promise<IOffer | null> {
         const updatedOffer = await this._offerRepository.update(offerId, { status });
 
+        console.log('updateOffer:',updatedOffer);
+
         if (updatedOffer && updatedOffer.status == "accepted") {
-            // this._contractService.createContract(offerId);
+            this._contractService.createContract(updatedOffer);
+        console.log("updateOffer accepted" );
+
         }   
 
         // publish a message : " offer accepted " for notification service ,
