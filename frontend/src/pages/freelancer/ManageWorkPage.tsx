@@ -5,7 +5,7 @@ import {JobApplications} from "@/components/common/JobApplications";
 import {Contracts} from "@/components/common/Contracts";
 import {OffersList} from '@/components/common/OfferList';
 
-const GigsPage = () => {
+const ManageWorkPage = () => {
     return (
         <div className="mx-auto py-8 max-w-7xl">
             <div className="p-4 md:p-6 max-w-7xl">
@@ -36,4 +36,4 @@ const GigsPage = () => {
     );
 };
 
-export default GigsPage;
+export default ManageWorkPage;

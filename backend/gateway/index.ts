@@ -27,6 +27,7 @@ const targets = {
     manage: process.env.MANAGE_API_BASE_URL,
     jobandGig: process.env.JOBANDGIG_BASE_URL,
     contract: process.env.CONTRACT_BASE_URL,
+    payment: process.env.PAYMENT_BASE_URL
 };
 
 app.use(
@@ -56,6 +57,14 @@ app.use(
     "/contract",
     createProxyMiddleware({
         target: targets.contract,
+        changeOrigin: true,
+    })
+);
+
+app.use(
+    "/payment",
+    createProxyMiddleware({
+        target: targets.payment,
         changeOrigin: true,
     })
 );

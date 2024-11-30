@@ -50,7 +50,7 @@ export class OfferService implements IOfferService {
 
         if (updatedOffer && updatedOffer.status == "accepted") {
             this._contractService.createContract(updatedOffer);
-        console.log("updateOffer accepted" );
+            console.log("updateOffer accepted" );
 
         }   
 

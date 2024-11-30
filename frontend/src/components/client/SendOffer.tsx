@@ -52,7 +52,7 @@ export default function SendOffer() {
     };
 
     const splitBudget = (milestones: IMilestone[]): IMilestone[] => {
-        const amountPerMilestone = budget && milestones.length > 0 ? (parseFloat(budget) / milestones.length) : "0.00";
+        const amountPerMilestone = budget && milestones.length > 0 ? (parseFloat(budget.toFixed(2)) / milestones.length) : "0.00";
         return milestones.map((milestone) => ({
             ...milestone,
             amount: amountPerMilestone,

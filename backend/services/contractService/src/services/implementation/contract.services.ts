@@ -7,6 +7,9 @@ import { IContractRepository } from "../../repositories/interfaces/IContractRepo
 import { IApplicationRepository } from "../../repositories/interfaces/IApplicationRepository";
 import { ApplicationRepository } from "../../repositories/implementation/application.repository";
 import { IMilestone, IOffer } from "../../interfaces/IOffer";
+import { ContractStatus } from "../../enums/ContractStatus";
+import { ApplicationStutus } from "../../enums/ApplicationStatus";
+
 
 export class ContractService implements IContractService {
     private contractRepository: IContractRepository;
@@ -29,14 +32,14 @@ export class ContractService implements IContractService {
                 workDescription: data.workDescription,
                 totalAmount: data.totalAmount,
                 milestones: data.milestones,
-                status: "active",
+                status: ContractStatus.PENDING,
                 startDate: new Date(),
-                endDate: this.calculateEndDate(data.milestones), // Calculate end date based on milestone deadlines
+                endDate: this.calculateEndDate(data.milestones), 
                 clientNotes: "",
             };
 
             const contract = await this.contractRepository.create(contractData as IContract);
-            await this.applicationRepository.updateStatus(data.applicationId, "accepted");
+            await this.applicationRepository.updateStatus(data.applicationId, ApplicationStutus.ACCEPTED);
             return contract;
         } catch (error) {
             console.log("Error in creating Contract:", error);

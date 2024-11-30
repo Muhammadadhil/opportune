@@ -15,10 +15,11 @@ import CompleteProfile from "@/components/freelancer/CompleteProfile"
 import PostProject from "@/pages/freelancer/PostProjectPage";
 import PostJobPage from "@/pages/client/PostJobPage";
 import ClientJobsPage from "@/pages/client/ClientJobsPage";
-import GigsPage from "@/pages/freelancer/GigsPages";
+import MangeWorkPage from "@/pages/freelancer/ManageWorkPage";
 import JobDetailsPage from '@/pages/client/JobDetailsPage';
 import SendOfferPage from '@/pages/client/ClientSendOfferPage';
 import SuccessPage from '@/components/common/SuccessPage';
+import PaymentSuccess from "../components/common/PaymentSuccess";
 
 function UserRoute() {
     return (
@@ -30,6 +31,7 @@ function UserRoute() {
                 <Route path="/type" element={<UserTypeSelection />} />
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/offer-success" element={<SuccessPage />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
 
                 <Route path="" element={<ClientProtected />}>
                     <Route element={<UsersLayout />}>
@@ -48,7 +50,7 @@ function UserRoute() {
                         <Route path="fr/profile" element={<ProfilePage />} />
                         <Route path="fr/complete-profile" element={<CompleteProfile />} />
                         <Route path="/fr/post-project" element={<PostProject />} />
-                        <Route path="/fr/manage-gigs" element={<GigsPage />} />
+                        <Route path="/fr/manage-gigs" element={<MangeWorkPage />} />
                     </Route>
                 </Route>
             </Routes>

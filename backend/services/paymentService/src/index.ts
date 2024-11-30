@@ -1,21 +1,24 @@
 import express from "express";
-import router from "./routes/router";
+import router from "./routes/route";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import { errorHandler } from "./middleware/errorHandler";
 import { intialiseConsumers } from "./config/container";
 import { connectMongoDB } from "@_opportune/common"
+import webhookRouter from "./routes/webhook.route";
 
 const app = express();
 dotenv.config();
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: process.env.FRONTEND_URL,
         credentials: true,
     })
 );
+
+app.use("/webhook",express.raw({ type: 'application/json' }), webhookRouter);
 
 app.use(express.json());
 app.use(morgan("dev"));

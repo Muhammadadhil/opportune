@@ -10,6 +10,7 @@ interface SuccessPageProps {
 }
 
 const SuccessPage: React.FC<SuccessPageProps> = ({ defaultMessage = "Operation Successful!", defaultRedirectPath = "/dashboard", defaultRedirectTime = 3000 }) => {
+    
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state as {

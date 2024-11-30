@@ -1,19 +1,19 @@
-import { OfferController } from "../controllers/payment.controller";
-import { OfferRepository } from "../repositories/implementation/offer.repository";
-import { OfferService } from "../services/implementation/payment.services";
+import { PaymentController } from "../controllers/payment.controller";
+import { PaymentRepository } from "../repositories/implementation/payment.repository";
+import { PaymentService } from "../services/implementation/payment.services";
 
-import Offer from "../schema/offer.schema";
+import PaymentModel from "../schema/payment.schema";
 
-import { CreateOfferConsumer } from "../events/rabbitmq/consumers/createOfferConsumer";
+// import { CreateOfferConsumer } from "../events/rabbitmq/consumers/createOfferConsumer";
 
 //repositories
-const offerRepository = new OfferRepository(Offer);
+const paymentRepository = new PaymentRepository(PaymentModel);
 
 //services
-const offerService = new OfferService(offerRepository);
+const paymentService = new PaymentService(paymentRepository);
 
 //controllers
-const offerController = new OfferController(offerService);
+const paymentController = new PaymentController(paymentService);
 
 
 // consumers
@@ -24,4 +24,4 @@ export async function intialiseConsumers() {
     // offerConsumer.initialise();
 }
 
-export { offerController };
+export { paymentController };

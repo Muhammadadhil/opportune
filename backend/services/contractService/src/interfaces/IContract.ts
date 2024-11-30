@@ -1,7 +1,7 @@
 import { Document, ObjectId } from "mongoose";
 import { IMilestone } from "./IOffer";
 
-export interface IContract extends Document{
+export interface IContract extends Document {
     offerId: ObjectId;
     freelancerId: ObjectId;
     clientId: ObjectId;
@@ -12,6 +12,7 @@ export interface IContract extends Document{
     milestones: IMilestone[];
     status: string;
     startDate: Date;
-    endDate:Date;
+    endDate: Date;
+    currentMilestoneIndex: number;
     clientNotes?: string;
 }

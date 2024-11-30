@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
 
+
 function App() {
 
     const { theme } = useSelector((state: RootState) => state.app);
@@ -19,10 +20,12 @@ function App() {
         <>
             <ToastContainer />
             <Toaster />
-            <Routes>
-                <Route path="/*" element={<UserRoute />} />
-                <Route path="/admin/*" element={<AdminRoute />} />
-            </Routes>
+            
+                <Routes>
+                    <Route path="/*" element={<UserRoute />} />
+                    <Route path="/admin/*" element={<AdminRoute />} />
+                </Routes>
+            
         </>
     );
 }

@@ -1,12 +1,16 @@
-
+import {IMilestone} from "@/types/IMilestone";
 export interface IContract {
-    _id:string
-    applicationId: string;
-    jobId: string;
-    clientId: string;
+    _id: string;
+    offerId: string;
     freelancerId: string;
-    status?: string;
-    startDate?: Date;
-    endDate?: Date;
+    clientId: string;
+    jobId: string;
+    workTitle: string;
+    workDescription: string;
+    totalAmount: number;
+    milestones: IMilestone[];
+    status: string;
+    startDate: Date;
+    endDate: Date;
     clientNotes?: string;
 }

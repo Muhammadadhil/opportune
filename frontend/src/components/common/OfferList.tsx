@@ -14,6 +14,9 @@ import toast from "react-hot-toast";
 import { IMilestone } from "@/types/IOffer";
 import SkeletonCard from '../common/LoadingSkelton';
 import { useAcceptOffer } from '@/hooks/offers/useAcceptOffer';
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { truncateString } from '@/utils/truncateString';
+
 
 interface OffersListProps {
     userType: "client" | "freelancer";
@@ -21,8 +24,8 @@ interface OffersListProps {
 
 export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
-    
-    // const navigate = useNavigate();
+
+    const [isExpanded,setIsExpanded]=useState<boolean>(false);    
     const userId = userInfo?._id;       
 
     const { data: freelancerOffers, isLoading: freelancerLoading } = useFreelancerOffers(userInfo.role === "freelancer" ? userId : null);
@@ -42,19 +45,18 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
         }
     };
 
-    const truncateString = (str: string, limit: number = 120) => {
-        if (str.length <= limit) return str;
-        return str.slice(0, limit) + " ...";
+    const toggleExpand = (offerId:string) => {
+        setIsExpanded(!isExpanded);
     };
 
     return (
         <div className="space-y-6">
-            {(clientLoading || freelancerLoading) && <SkeletonCard />}
             {!offers?.length && (
                 <div className="text-center py-10">
-                    <h2 className="text-xl font-semibold">No offers found</h2>
+                    <h2 className="text-xl font-semibold text-gray-700">No offers found</h2>
                 </div>
             )}
+            {(clientLoading || freelancerLoading) && <SkeletonCard />}
             {offers?.map((offer: IOffer) => (
                 <Card key={offer._id} className="overflow-hidden">
                     <CardContent className="p-6">
@@ -74,9 +76,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                     <p className="text-sm text-muted-foreground mt-1">{userType === "client" ? `Freelancer: ${offer.freelancerId}` : `Client: ${offer.clientId}`}</p>
                                 </div>
                             </div>
-                            <Button variant="ghost" size="icon" className="rounded-full">
-                                
-                            </Button>
+                            <Button variant="ghost" size="icon" className="rounded-full"></Button>
                         </div>
 
                         <div className="mt-4">
@@ -93,8 +93,20 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                 <p className="text-lg font-semibold">{offer.milestones.length}</p>
                             </div>
                         </div>
-
-                        {offer.milestones.length > 0 && (
+                        <Button variant="outline" size="sm" className="mt-4 w-full" onClick={() => toggleExpand(offer._id)}>
+                            {isExpanded ? (
+                                <>
+                                    Hide Milestone Details
+                                    <ChevronUp className="ml-2 h-4 w-4" />
+                                </>
+                            ) : (
+                                <>
+                                    Show Milestone Details
+                                    <ChevronDown className="ml-2 h-4 w-4" />
+                                </>
+                            )}
+                        </Button>
+                        {offer.milestones.length > 0 && isExpanded && (
                             <div className="mt-4 border-t pt-4">
                                 <div className="flex justify-between items-center mb-2">
                                     <p className="text-sm font-medium">Milestone Preview</p>
@@ -118,18 +130,24 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                     <CardFooter className="bg-muted/50 p-6">
                         <div className="w-full flex justify-end">
                             {userType === "freelancer" && offer.status === "pending" ? (
-                                <div className="space-x-2">
-                                    <Button className="bg-blue-800 hover:bg-blue-700" onClick={() => acceptOrReject(offer._id!, "rejected")} >
-                                        Reject Offer
-                                    </Button>
-                                    <Button className="bg-green-800 hover:bg-green-700" onClick={() => acceptOrReject(offer._id!, "accepted")} >
-                                        Accept Offer
-                                    </Button>
+                                <div className="flex justify-between w-full">
+                                    <div>
+                                        <Button className="">
+                                            Chat with Client
+                                        </Button>
+                                    </div>
+                                    <div className="space-x-2">
+                                        <Button className="bg-blue-800 hover:bg-blue-700" onClick={() => acceptOrReject(offer._id!, "rejected")}>
+                                            Reject Offer
+                                        </Button>
+                                        <Button className="bg-green-800 hover:bg-green-700" onClick={() => acceptOrReject(offer._id!, "accepted")}>
+                                            Accept Offer
+                                        </Button>
+                                    </div>
                                 </div>
                             ) : userType === "client" ? (
                                 <Button>View Details</Button>
-                            ) : null
-                            }
+                            ) : null}
                         </div>
                     </CardFooter>
                 </Card>
