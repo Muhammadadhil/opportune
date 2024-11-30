@@ -12,8 +12,8 @@ echo "Starting apiGateway..."
 echo "Starting userService..."
 (cd "$USER_SERVICE_PATH" && npm run dev) &
 
-echo "Starting manageService..."
-(cd "$MANAGE_SERVICE_PATH" && npm run dev) &
+# echo "Starting manageService..."
+# (cd "$MANAGE_SERVICE_PATH" && npm run dev) &
 
 echo "Starting jobAndGigService..."
 (cd "$JOBANGGIG_SERIVE_PATH" && npm run dev) &

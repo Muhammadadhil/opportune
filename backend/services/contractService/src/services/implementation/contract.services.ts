@@ -60,4 +60,13 @@ export class ContractService implements IContractService {
     async getJobContracts(jobId: string): Promise<IContract[] | null> {
         return this.contractRepository.find({ jobId });
     }
+
+    async getClientContracts(clientId: string): Promise<IContract[] | null> {
+        try {
+            return this.contractRepository.find({ clientId });
+        } catch (error) {
+            console.log("Error in getting client contracts:", error);
+            return null;
+        }
+    }
 }

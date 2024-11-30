@@ -14,5 +14,4 @@ export interface IContract extends Document{
     startDate: Date;
     endDate:Date;
     clientNotes?: string;
-
 }

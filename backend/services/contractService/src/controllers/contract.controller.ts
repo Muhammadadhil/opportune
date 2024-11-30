@@ -20,16 +20,15 @@ export class ContractController {
         }
     };
 
-    getJobContracts = async (req: Request, res: Response, next: NextFunction) => {
+    getClientContracts = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { jobId } = req.query;
-            console.log("checking contracts for job clinet:", req.query);
-            const contracts = await this._contractService.getJobContracts(jobId as string);
+            const { cId } = req.query;
+            console.log("checking existing contracts of client::", req.query);
+            const contracts = await this._contractService.getClientContracts(cId as string);
             return res.status(200).json(contracts);
         } catch (error) {
-            console.error("Error in getting contract:", error);
+            console.log("Error in geting applications:", error);
             next(error);
         }
     };
-
 }

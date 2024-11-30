@@ -10,7 +10,7 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
     }
 
     async findActiveJobs(id: string): Promise<IJob[] | null> {
-        return await JobModel.find({ clientId: id, isActive: true });
+        return await JobModel.find({ clientId: id, isActive: true }).sort({createdAt:-1}).exec();
     }
 
     //change active status
