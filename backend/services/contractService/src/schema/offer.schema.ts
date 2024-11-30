@@ -1,13 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { IOffer,IMilestone } from '../interfaces/IOffer';
+import { IOffer } from '../interfaces/IOffer';
 import { OfferStatus } from '../enums/OfferStatus';
-
-const MilestoneSchema = new Schema<IMilestone>({
-    description: { type: String, required: true },
-    amount: { type: Number, required: true },
-    deadline: { type: Date, required: true },
-    status: { type: String, enum: ["Pending", "Completed", "Approved"], default: "Pending" },
-});
+import MilestoneSchema from "./milestone.schema";
 
 const OfferSchema = new Schema<IOffer>(
     {

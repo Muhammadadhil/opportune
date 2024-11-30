@@ -13,4 +13,5 @@ export interface IContract {
     startDate: Date;
     endDate: Date;
     clientNotes?: string;
+    currentMilestoneIndex?:number;
 }

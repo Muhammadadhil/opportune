@@ -1,15 +1,7 @@
 import mongoose,{Schema} from "mongoose";
 import { IContract } from "../interfaces/IContract";
 import { ContractStatus } from '../enums/ContractStatus';
-import { MilestoneStatus } from '../enums/MIlestoneStatus';
-import { IMilestone } from "../interfaces/IOffer";
-
-const MilestoneSchema = new Schema<IMilestone>({
-    description: { type: String, required: true },
-    amount: { type: Number, required: true },
-    deadline: { type: Date, required: true },
-    status: { type: String, MilestoneStatus, default: MilestoneStatus.UNPAID },
-});
+import MilestoneSchema from "./milestone.schema";
 
 const contractSchema = new mongoose.Schema<IContract>(
     {
@@ -50,6 +42,10 @@ const contractSchema = new mongoose.Schema<IContract>(
             required: true,
             enum: Object.values(ContractStatus),
             default: ContractStatus.PENDING,
+        },
+        currentMilestoneIndex: {
+            type: Number,
+            default: 0,
         },
         startDate: {
             type: Date,
