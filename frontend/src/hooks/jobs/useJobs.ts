@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useJobs(clientId?:string) {
     return useQuery({
-        queryKey: clientId ? ["job", clientId] : ["jobs"],
+        queryKey:  clientId ? ["job", clientId] : ["jobs"],
         queryFn: () => getJobs(clientId), 
         staleTime: 300000, // 5 minutes
         refetchOnWindowFocus: true,

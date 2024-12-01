@@ -20,6 +20,7 @@ import JobDetailsPage from '@/pages/client/JobDetailsPage';
 import SendOfferPage from '@/pages/client/ClientSendOfferPage';
 import SuccessPage from '@/components/common/SuccessPage';
 import PaymentSuccess from "../components/common/PaymentSuccess";
+import ExplorePage from "../pages/freelancer/ExplorePage";
 
 function UserRoute() {
     return (
@@ -32,6 +33,9 @@ function UserRoute() {
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/offer-success" element={<SuccessPage />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route element={<UsersLayout />}>
+                    <Route path="/explore" element={<ExplorePage />} />
+                </Route>
 
                 <Route path="" element={<ClientProtected />}>
                     <Route element={<UsersLayout />}>

@@ -7,6 +7,6 @@ export function useGigs(fId?: string) {
         queryFn: () => fetchGigs(fId),
         staleTime: 300000, // 5 minutes
         // retry: 1,
-        enabled:true 
+        enabled: true,
     });
 }

@@ -9,8 +9,9 @@ export const saveJobPost = async (data: JobData) => {
     return await apiClient.post("/post/job", data);
 };
 
-export const getJobs = async (clientId?: string) => {
+export const getJobs = async (clientId?: string,filters?:any) => {
     if (clientId) return await apiClient.get(`/post/jobs/${clientId}`);
+    if(filters) return await apiClient.get(`/post/jobs`, { params: { filters } });
     return await apiClient.get(`/post/jobs`);
 };
 
