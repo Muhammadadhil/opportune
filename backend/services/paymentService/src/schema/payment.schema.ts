@@ -1,57 +1,45 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IPayment } from "../interfaces/IPayment";
+import { PaymentStatus } from "../enums/PaymentStatus";
 
-const paymentSchema = new mongoose.Schema<IPayment>(
+
+const PaymentSchema = new mongoose.Schema<IPayment>(
     {
         contractId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Contract",
+            type: Schema.Types.ObjectId,
             required: true,
+            index: true,
         },
         milestoneId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Milestone",
+            type: Schema.Types.ObjectId,
             required: true,
+            index: true,
         },
         clientId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            type: Schema.Types.ObjectId,
             required: true,
         },
         freelancerId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            type: Schema.Types.ObjectId,
             required: true,
         },
         amount: {
             type: Number,
             required: true,
-            min: 0,
         },
-        currency: {
-            type: String,
-            required: true,
-            default: "USD",
-        },
+        stripeSessionId: String,
+        stripePaymentIntentId: String,
+        stripeChargeId: String,
         status: {
             type: String,
-            enum: ["pending", "succeeded", "failed", "refunded"],
-            default: "pending",
-        },
-        stripeSessionId: {
-            type: String,
-            required: true,
-        },
-        paymentIntentId: {
-            type: String,
-        },
-        metadata: {
-            type: Object,
+            enum: Object.values(PaymentStatus),
+            default: PaymentStatus.PENDING,
         },
     },
-    { timestamps: true }
+    {
+        timestamps: true,
+    }
 );
-
-const Payment = mongoose.model<IPayment>("Payment", paymentSchema);
+const Payment = mongoose.model<IPayment>("Payment", PaymentSchema);
 
 export default Payment;

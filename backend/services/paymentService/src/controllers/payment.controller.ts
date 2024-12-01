@@ -16,6 +16,7 @@ export class PaymentController {
     async createCheckoutSession(req: Request, res: Response, next: NextFunction) {
         try {
             const { milestoneAmount, contractId, freelancerId, clientId, milestoneId } = req.body;
+            console.log('creating checkout session:',milestoneAmount, contractId, freelancerId, clientId, milestoneId);
             const sessionId = await this._paymentService.createSession(milestoneId,milestoneAmount, contractId, freelancerId, clientId);
             res.status(201).json(sessionId);
         } catch (error) {
@@ -26,18 +27,13 @@ export class PaymentController {
     async handleWebhook(req: Request, res: Response, next: NextFunction) {
         try {
             const signature = req.headers["stripe-signature"];
-            // console.log('signature:',signature);
-            const event = Stripe.webhooks.constructEvent(req.body, signature!, process.env.STRIPE_WEBHOOK_SECRET!);
+            console.log('signature handle webhook contrller:',signature);
 
-            if (event.type === "checkout.session.completed") {
-                const session = event.data.object;
-                // const {} = session.metadata;
-                console.log("session.metadata:", session.metadata);
-
-            }else if(event.type === "checkout.session.async_payment_failed") {
-                
+            if(!signature){
+                throw new Error('No Stripe Signature found');
             }
-
+            const event = Stripe.webhooks.constructEvent(req.body, signature!, process.env.STRIPE_WEBHOOK_SECRET!);
+            this._paymentService.handleStripeWebhook(event);
             res.status(200).end();
 
         } catch (error) {

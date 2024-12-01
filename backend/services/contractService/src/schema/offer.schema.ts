@@ -23,3 +23,6 @@ const OfferSchema = new Schema<IOffer>(
 const Offer = mongoose.model<IOffer>("Offer", OfferSchema);
 
 export default Offer;
+
+
+

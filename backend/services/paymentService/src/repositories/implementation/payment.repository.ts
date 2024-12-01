@@ -8,4 +8,7 @@ export class PaymentRepository extends BaseRepository<IPayment> implements IPaym
     constructor(offerModel: Model<IPayment>) {
         super(offerModel);
     }
+
+    
+
 }

@@ -1,16 +1,16 @@
-import { Document, ObjectId } from "mongoose";
-
+import mongoose, { Document, ObjectId } from "mongoose";
+import { PaymentStatus } from "../enums/PaymentStatus";
 export interface IPayment extends Document {
-    contractId: ObjectId;
-    milestoneId: ObjectId;
-    clientId: ObjectId;
-    freelancerId: ObjectId;
+    _id: mongoose.Types.ObjectId;
+    contractId: mongoose.Types.ObjectId;
+    milestoneId: mongoose.Types.ObjectId;
+    clientId: mongoose.Types.ObjectId;
+    freelancerId: mongoose.Types.ObjectId;
     amount: number;
-    currency: string;
-    status: "pending" | "succeeded" | "failed" | "refunded";
-    stripeSessionId: string;
-    paymentIntentId?: string;
-    metadata?: Record<string, any>;
-    createdAt?: Date;
-    updatedAt?: Date;
+    // Stripe-specific Details
+    stripeSessionId?: string;
+    stripePaymentIntentId?: string;
+    stripeChargeId?: string;
+
+    status: PaymentStatus;
 }
