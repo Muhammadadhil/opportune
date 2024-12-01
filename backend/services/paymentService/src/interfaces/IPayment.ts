@@ -7,10 +7,8 @@ export interface IPayment extends Document {
     clientId: mongoose.Types.ObjectId;
     freelancerId: mongoose.Types.ObjectId;
     amount: number;
-    // Stripe-specific Details
     stripeSessionId?: string;
     stripePaymentIntentId?: string;
     stripeChargeId?: string;
-
     status: PaymentStatus;
 }

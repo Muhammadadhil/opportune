@@ -12,7 +12,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@_opportune/common": "^1.0.3",
+        "@_opportune/common": "^1.0.7",
         "amqplib": "^0.10.4",
         "axios": "^1.7.7",
         "cors": "^2.8.5",

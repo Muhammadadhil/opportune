@@ -19,7 +19,7 @@ export const createPaymentIntent = async (amount:number) => {
 };
 
 export const createChekcoutSession = async (data:IPaymentData) => {
-    return await apiClient.post(`/payment/create/checkout-session`, { milestoneAmount:data.milestoneAmount,contractId:data.contractId,freelancerId:data.freelancerId, clientId:data.clientId });
+    return await apiClient.post(`/payment/create/checkout-session`, { milestoneAmount:data.milestoneAmount,contractId:data.contractId,freelancerId:data.freelancerId, clientId:data.clientId,milestoneId:data.milestoneId });
 };
 
 ;

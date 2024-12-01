@@ -37,7 +37,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     };
 
     const handlePayMilestone = async (data: IPaymentData) => {
-        // console.log(`Processing payment for milestone ${data.milestoneAmount} in contract ${data.contractId} for freelancer ${data.freelancerId} and client ${data.clientId}`);
+        console.log(`Processing payment for milestone ${data.milestoneAmount} in contract ${data.contractId} for freelancer ${data.freelancerId} and client ${data.clientId} milestoneId: ${data.milestoneId}`);
 
         const stripe = await stripePromise;
         const response = await createChekcoutSession(data);
@@ -124,7 +124,6 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                         <p className="text-sm font-medium">{truncateString(milestone.description, 30)}</p>
                                                         <p className="text-sm text-muted-foreground">${milestone.amount.toFixed(2)}</p>
                                                     </div>
-
                                                     
                                                     {userType === "client" &&
                                                         milestone.status === "unpaid" && contract.currentMilestoneIndex==index &&(
@@ -132,6 +131,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                                 size="sm"
                                                                 onClick={() =>
                                                                     handlePayMilestone({
+                                                                        milestoneId: milestone._id, 
                                                                         contractId: contract._id,
                                                                         milestoneAmount: milestone.amount.toString(), // Ensure amount is passed as a string
                                                                         clientId: contract.clientId,

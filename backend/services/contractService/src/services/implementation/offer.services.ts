@@ -22,9 +22,6 @@ export class OfferService implements IOfferService {
 
     async createOffer(data: IOffer): Promise<IOffer | null> {
         try {
-            // if(!data.clientId || !data.freelancerId || !data.applicationId){
-            //     return null;
-            // }
             const offer = await this._offerRepository.create(data);
             console.log("created offer:", offer);
             await this._applicationRepository.updateStatus(offer.applicationId, "offerSent");

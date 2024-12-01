@@ -9,6 +9,9 @@ import { ApplicationRepository } from "../../repositories/implementation/applica
 import { IMilestone, IOffer } from "../../interfaces/IOffer";
 import { ContractStatus } from "../../enums/ContractStatus";
 import { ApplicationStutus } from "../../enums/ApplicationStatus";
+import { IPayment } from "@_opportune/common";
+import { MilestoneStatus } from "../../enums/MIlestoneStatus";
+import mongoose from "mongoose";
 
 
 export class ContractService implements IContractService {
@@ -34,7 +37,7 @@ export class ContractService implements IContractService {
                 milestones: data.milestones,
                 status: ContractStatus.PENDING,
                 startDate: new Date(),
-                endDate: this.calculateEndDate(data.milestones), 
+                endDate: this.calculateEndDate(data.milestones),
                 clientNotes: "",
             };
 
@@ -69,6 +72,36 @@ export class ContractService implements IContractService {
             return this.contractRepository.find({ clientId });
         } catch (error) {
             console.log("Error in getting client contracts:", error);
+            return null;
+        }
+    }
+
+    async postPaymentSuccess(data: IPayment): Promise<void> {
+        console.log("payment success:", data);
+        this.updateMilestoneStatus(data.contractId, data.milestoneId, MilestoneStatus.ACTIVE);
+        const contract = await this.contractRepository.findById(data.contractId as string);
+        if (contract && contract.status == ContractStatus.PENDING) {
+            await this.contractRepository.update(contract._id as string,{status:ContractStatus.IN_PROGRESS});
+        }
+    }
+
+    async updateMilestoneStatus(contractId: string | mongoose.Types.ObjectId, milestoneId: string | mongoose.Types.ObjectId, newStatus: string): Promise<IContract | null> {
+        const contract = await this.contractRepository.findById(contractId as string);
+        console.log('contract to update milestone dtila:',contract)
+        console.log("milestoneId:", milestoneId);
+
+        if (contract) {
+            const milestone = contract.milestones.find((m) => m._id == milestoneId);
+            console.log('milestone to update:',milestone);
+            if (milestone) milestone.status = newStatus;
+
+            // Auto-complete contract if all milestones are completed
+            if (contract.milestones.every((m) => m.status === MilestoneStatus.COMPLETED)) {
+                contract.status = ContractStatus.COMPLETED;
+            }
+            return this.contractRepository.update(contractId as string, contract);
+        } else {
+            throw new Error("Contract not found");
             return null;
         }
     }

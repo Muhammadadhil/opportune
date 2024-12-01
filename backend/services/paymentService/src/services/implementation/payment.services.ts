@@ -11,14 +11,21 @@ dotenv.config();
 
 export class PaymentService implements IPaymentService {
     private _paymentRepository: IPaymentRepository;
+    private _publisher: any
     private stripe: Stripe;
 
-    constructor(private readonly paymentRepository: IPaymentRepository) {
+    constructor(
+        private readonly paymentRepository: IPaymentRepository,
+        private readonly publisher: any
+    ){
         this._paymentRepository = paymentRepository;
+        this._publisher = publisher;
         this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     }
 
     async createSession(milestoneId: string, milestoneAmount: number, contractId: string, freelancerId: string, clientId: string): Promise<string | null> {
+        console.log("milestoneId:", milestoneId);
+        
         const session = await this.stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: [
@@ -49,7 +56,6 @@ export class PaymentService implements IPaymentService {
     }
 
     async handleStripeWebhook(event: Stripe.Event) {
-        console.log("stripe handle webhook service");
 
         switch (event.type) {
             case "checkout.session.completed":
@@ -72,6 +78,7 @@ export class PaymentService implements IPaymentService {
             freelancerId: string;
             clientId: string;
         };
+        
         const paymentData: Partial<IPayment> = {
             contractId: this.toObjectId(contractId),
             milestoneId: this.toObjectId(milestoneId),
@@ -83,11 +90,14 @@ export class PaymentService implements IPaymentService {
         };
 
         const data = { ...paymentData, status: PaymentStatus.SUCCEEDED } as IPayment;
-        return await this._paymentRepository.create(data);
+        const payment = await this._paymentRepository.create(data);
+
+        this._publisher.publish("payment_success_exchange", payment);
 
         // // Trigger events or notifications
         // this.notifyContractService(payment);
         // this.notifyUserService(payment);
+        return payment
     }
 
     private toObjectId(id: string): mongoose.Types.ObjectId {
