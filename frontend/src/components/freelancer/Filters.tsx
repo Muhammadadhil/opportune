@@ -14,8 +14,6 @@ export const Filters:React.FC<FiltersProps> = ({onChange}) => {
 
     const {data: categories} = useCategories();
 
-    console.log("categories:", categories);
-
     return (
         <div className="w-64 space-y-6 mt-16">
             <Accordion type="single" collapsible className="w-full" defaultValue="category">
@@ -29,7 +27,7 @@ export const Filters:React.FC<FiltersProps> = ({onChange}) => {
                                         id={category._id}
                                         onClick={(e) => {
                                             console.log("checkbox clicked", e.target);
-                                            onChange("category", (e.target as HTMLInputElement).checked ? category.name : null);
+                                            onChange("category", category.name );
                                         }}
                                     />
                                     <Label htmlFor={category._id}>{category.name}</Label>
@@ -40,10 +38,10 @@ export const Filters:React.FC<FiltersProps> = ({onChange}) => {
                 </AccordionItem>
 
                 <AccordionItem value="proposals">
-                    <AccordionTrigger>Number of Proposals</AccordionTrigger>
+                    <AccordionTrigger>Number of Applicants</AccordionTrigger>
                     <AccordionContent>
                         <div className="space-y-4 px-2">
-                            <Slider defaultValue={[0, 50]} max={50} step={5} className="w-full" onValueChange={(value) => onChange("proposals", value[1])} />
+                            <Slider defaultValue={[0, 50]} max={50} step={5} className="w-full" onValueChange={(value) => onChange("applications", value[1])} />
                             <div className="flex justify-between text-xs text-muted-foreground">
                                 <span>0</span>
                                 <span>50+</span>

@@ -13,7 +13,8 @@ export class JobController {
 
     getJobs = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const jobs = await this._jobService.getJobs();
+            const { category, applications, budgetRange, search, sort } = req.query;            
+            const jobs = await this._jobService.getJobs( category as string, applications as string, budgetRange as string, search as string,sort as string );
             res.status(200).json(jobs);
         } catch (error) {
             next(error);

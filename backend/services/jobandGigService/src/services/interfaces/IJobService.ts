@@ -1,4 +1,5 @@
 import { IApproval } from "../../interfaces/IApproval";
+import { IFilters } from "../../interfaces/IFilters";
 import { IJob } from "../../interfaces/IJob";
 import { IOffer } from "../../interfaces/IOffer";
  
@@ -12,7 +13,7 @@ export interface IApplyJob {
 
 export interface IJobService {
     saveJob(data: IJob): Promise<IJob | null>;
-    getJobs(): Promise<IJob[] | null>;
+    getJobs(category:string, applications:string, budgetRange:string, search:string, sort:string): Promise<IJob[] | null>;
     getJobsByClient(id: string): Promise<IJob[] | null>;
     editJob(data: Partial<IJob>): Promise<IJob | null>;
     removeJob(id: string): Promise<IJob | null>;

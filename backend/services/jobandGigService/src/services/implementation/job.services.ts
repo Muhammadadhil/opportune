@@ -8,6 +8,7 @@ import axios from 'axios';
 import { HTTPError } from "../../utils/HttpError";
 import { IJobRepository } from "../../repositories/interfaces/IJobRepository";
 import { IOffer } from "../../interfaces/IOffer";
+import { IFilters } from "../../interfaces/IFilters";
 
 export class JobService implements IJobService {
     private jobRepository: IJobRepository;
@@ -22,8 +23,25 @@ export class JobService implements IJobService {
         await this.producer.connect();
     }
 
-    async getJobs(): Promise<IJob[] | null> {
-        return await this.jobRepository.find({ isActive: true });
+    async getJobs(category: string, applications: string, budgetRange: string, search: string, sort: string): Promise<IJob[] | null> {
+        
+
+        const filters = {} as any;
+
+        if (category) filters.category = category;
+        if (applications) filters.applications = { $lte: Number(applications) };
+        if (budgetRange) {
+            const [min, max] = budgetRange.split("-").map(Number);
+            filters.budget = max ? { $gte: min, $lte: max } : { $gte: min };
+        }
+        if (search) filters.jobTitle = new RegExp(search, "i");
+
+        const sortOption = sort === "latest" ? { createdAt: -1 } : { createdAt: 1 };
+
+        console.log("filters in service layer:", filters);
+
+        // return await this.jobRepository.find({ isActive: true });
+        return await this.jobRepository.getFilteredJobs(filters, sortOption);
     }
 
     async getJobsByClient(id: string): Promise<IJob[] | null> {
@@ -106,7 +124,6 @@ export class JobService implements IJobService {
      * @returns A promise that resolves when the message has been published.
      */
     async sendOfferToFreelancer(data: IOffer) {
-
         console.log("going to publish message with data:", data);
 
         const exchangeName = "offer_created_exchange";

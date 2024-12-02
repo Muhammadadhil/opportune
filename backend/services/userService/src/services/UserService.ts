@@ -92,11 +92,13 @@ export class UserService {
 
     async getFreelancerProfile(userId: string) {
         const freelancerDetails = await this.userRepository.getFreelancerDetails(userId);
+        console.log('freelancerDetails:',freelancerDetails);
         const imageName = freelancerDetails?.image;
 
         if (!imageName) {
             throw new Error("No image in database!");
         }
+        
         const imageUrl = await getSignedImageURL(imageName);
 
         freelancerDetails.imageUrl = imageUrl;

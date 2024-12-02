@@ -8,7 +8,7 @@ export default function ExplorePage() {
 
     const [filterState, setFilterState] = useState({
         category: "",
-        proposals: "",
+        applications: "",
         budgetRange: "",
         search: "",
         sort: "latest",

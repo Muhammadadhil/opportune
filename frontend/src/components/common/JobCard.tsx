@@ -103,7 +103,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                     ))}
                 </div>
                 <div className="text-sm text-gray-500 flex flex-col sm:flex-row sm:justify-between">
-                    <span>Budget: ₹{job.budget}</span>
+                    <span>Budget: ${job.budget}</span>
                     <span>applicants: {job.applicantsCount}</span>
                 </div>
                 <div className="text-sm text-gray-800 mt-2 text-end">
