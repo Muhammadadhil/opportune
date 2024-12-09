@@ -1,7 +1,7 @@
 //service layer contains the business logic ,
 //  we can include password hasing,validation etc..
 
-import { UserRepository } from "../repositories/UserRepository";
+import { UserRepository } from "../repositories/implementation/UserRepository";
 import bcrypt from "bcrypt";
 import IUser from "../interfaces/IUser";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt/generateToken";
@@ -114,8 +114,7 @@ export class UserService {
         return clientDetails;
     }
 
-    async getFreelancers(ids:ObjectId[]) {
+    async getFreelancers(ids:string[]) {
         return await this.userRepository.getFreelancersDatas(ids);
-        
     }
 }

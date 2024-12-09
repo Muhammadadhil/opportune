@@ -23,7 +23,6 @@ export class OfferController {
 
     freelancerOffers = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('jaslkdfjalkdfjalksdfj;lkj');
             const { id } = req.query;
             const offers = await this._offerService.getFreelancerOffers(id as string);
             return res.status(200).json(offers);

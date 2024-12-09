@@ -1,6 +1,6 @@
 
 
-import { getJobDetails } from "@/api/jobsApi";
+import { getJobDetails } from "@/api/job";
 import { useQuery } from "@tanstack/react-query";
 
 export function useJobDetails(jobId: string) {

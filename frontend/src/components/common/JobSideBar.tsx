@@ -2,7 +2,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/com
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import {IJob} from '@/types/IJob';
-import {applyJob} from '@/api/jobsApi'; 
+import {applyJob} from '@/api/job'; 
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import toast from 'react-hot-toast'

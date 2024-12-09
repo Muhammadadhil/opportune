@@ -9,6 +9,4 @@ export class ContractRepository extends BaseRepository<IContract> implements ICo
     constructor(contractModel:Model<IContract>) {
         super(contractModel);
     }
-
-    
 }

@@ -12,7 +12,7 @@ router.get("/freelancer/job/applications", applicationController.getFreelancerAp
 
 //contracts
 router.get("/freelancer/contracts", contractController.getFreelancerContracts);
-router.get("/client/contracts", contractController.getClientContracts);  //want to change this;
+router.get("/client/contracts", contractController.getClientContracts); 
 
 //offers
 router.get("/client/offers", offerController.clietOffers);  

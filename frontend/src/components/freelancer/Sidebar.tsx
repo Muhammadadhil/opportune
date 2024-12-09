@@ -3,17 +3,19 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import profilePicture from "@/assets/profilePicture.jpg";
-import { getProfileData } from "@/api/userApi";
+import { getProfileData } from "@/api/user";
 import { useSelector, useDispatch } from "react-redux";
 import { setFreelancerData } from "@/store/slices/userSlice";
 import { RootState } from "@/store/store";
 
 const Sidebar = () => {
+
     const { userInfo, freelancerData } = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
 
     async function getData() {
         const response = await getProfileData(userInfo._id);
+        console.log('response profile:', response);
         dispatch(setFreelancerData(response.data));
     }
 
@@ -42,7 +44,9 @@ const Sidebar = () => {
                         </div>
                     </div>
                     <div className="mt-4">
-                        
+                        {Object.keys(freelancerData).length != 0 ? (
+                            <p className="text-sm text-gray-600">{freelancerData.userId}</p>
+                        ) : (
                             <div>
                                 <Button variant="outline" className="w-full" onClick={() => navigate("/fr/complete-profile")}>
                                     Complete your profile
@@ -51,7 +55,7 @@ const Sidebar = () => {
                                     <div className="bg-green-600 h-2.5 rounded-full" style={{ width: "40%" }}></div>
                                 </div>
                             </div>
-                        
+                        )}
                     </div>
                 </div>
             </div>

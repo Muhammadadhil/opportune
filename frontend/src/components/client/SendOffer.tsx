@@ -8,7 +8,7 @@ import { Trash2 } from "lucide-react";
 import {useJobDetails} from "@/hooks/jobs/useJobDetails";
 import {useParams,useLocation} from 'react-router-dom'
 import { IOffer, IMilestone } from "@/types/IOffer";
-import {sendOffer} from "@/api/offersApi";
+import {sendOffer} from "@/api/offers";
 import toast from "react-hot-toast";
 import {useNavigate} from 'react-router-dom';
 

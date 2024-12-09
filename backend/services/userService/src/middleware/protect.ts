@@ -4,7 +4,7 @@ import { Request,Response,NextFunction } from 'express';
 export default async (req: Request & Partial<{ user: jwt.JwtPayload }>, res: Response, next: NextFunction) => {
 
     const header = req.headers['authorization'] as string; 
-    console.log('Auth header:',header);
+    // console.log('Auth header:',header);
 
     if (!header || !header.startsWith("Bearer ")) {
         return res.status(401).json({ message: "Authorization header is missing or malformed" });
@@ -12,7 +12,7 @@ export default async (req: Request & Partial<{ user: jwt.JwtPayload }>, res: Res
 
     const token = header.split(" ")[1];
 
-    console.log('accces token:',token);
+    // console.log('accces token:',token);
 
     const secret = process.env.JWT_ACCESSTOKEN_SECRET;
 
@@ -23,7 +23,7 @@ export default async (req: Request & Partial<{ user: jwt.JwtPayload }>, res: Res
     if (token) {
         try {
             const decoded = jwt.verify(token, secret) as JwtPayload;
-            console.log("decoded:", decoded);
+            // console.log("decoded:", decoded);
             req.user = decoded;
             next();
         } catch (error) {

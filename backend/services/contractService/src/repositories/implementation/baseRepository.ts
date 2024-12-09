@@ -9,28 +9,59 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     }
 
     async create(data: T): Promise<T> {
-        const newItem = new this.model(data);
-        return await newItem.save();
+        try {
+            const newItem = new this.model(data);
+            return await newItem.save();
+        } catch (error) {
+            console.log("Error in creating:", error);
+            throw error
+        }
     }
 
     async find(query: object = {}): Promise<T[]> {
-        return await this.model.find(query).sort({ createdAt: -1 }).exec();
+        try {
+            console.log("query:", query);
+            return await this.model.find(query).sort({ createdAt: -1 }).exec();
+        } catch (error) {
+            console.log("Error :", error);
+            throw error
+        }
     }
 
     async findById(id: string): Promise<T | null> {
-        return await this.model.findById(id).exec();
+        try {
+            return await this.model.findById(id).exec();
+        } catch (error) {
+            console.log("Error in finding by id:", error);
+            throw error;
+        }
     }
 
     async update(id: string, data: Partial<T>): Promise<T | null> {
-        return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
+        try {
+            return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
+        } catch (error) {
+            console.log("Error in updating:", error);
+            throw error;
+        }
     }
 
     async delete(id: string): Promise<T | null> {
-        return await this.model.findByIdAndDelete(id).exec();
+        try {
+            return await this.model.findByIdAndDelete(id).exec();
+        } catch (error) {
+            console.log("Error in deleting:", error);
+            throw error;
+        }
     }
     
     async findOne(query: object = {}): Promise<T | null> {
-        return await this.model.findOne(query).exec();
+        try {
+            return await this.model.findOne(query).exec();
+        } catch (error) {
+            console.log("Error in finding one:", error);
+            throw error;
+        }
     }
 }
 

@@ -12,6 +12,7 @@ export class AdminController {
     }
     async login(req: Request, res: Response) {
         try {
+            
             const { email, password } = req.body;
             const { admin, accessToken, refreshToken } = await this.adminService.login(email, password);
 

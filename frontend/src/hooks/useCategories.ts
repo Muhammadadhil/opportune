@@ -1,4 +1,4 @@
-import { getCategories } from "@/api/adminApi";
+import { getCategories } from "@/api/admin";
 import { useQuery } from "@tanstack/react-query";
 
 export function useCategories() {

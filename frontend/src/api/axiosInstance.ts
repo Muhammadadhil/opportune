@@ -2,7 +2,7 @@ import axios from "axios";
 import { setAccessToken } from "../services/authService";
 import { refreshToken } from "./auth";
 import requestInterceptor from "./interceptors/requestInterceptor";
-import { logout } from "./userApi";
+import { logout } from "./auth";
 import { logoutTheUser } from "../utils/logout";
 
 const apiClient = axios.create({
@@ -19,11 +19,14 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+        console.log('axios instance error:',error.response);
 
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
             try {
+                console.log("requesting for refresh token !!!!");
+
                 const newAccessToken = await refreshToken();
                 setAccessToken(newAccessToken);
                 originalRequest.headers["Authorisation"] = `Bearer ${newAccessToken}`;

@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { OtpService } from "../services/OtpService";
 import IClientDetail from "../interfaces/IClientDetail";
+import { ObjectId } from "mongoose";
 
 export class UserController {
     private userService: UserService;
@@ -126,6 +127,7 @@ export class UserController {
     async getFreelancerData(req: Request, res: Response) {
         try {
             const { userId } = req.body;
+            console.log("userId:", userId);
             const profile = await this.userService.getFreelancerProfile(userId);
             res.status(200).json(profile);
         } catch (error) {
@@ -147,8 +149,14 @@ export class UserController {
 
     async getFreelancers(req: Request, res: Response) {
         try {
-            const { freelancerIds } = req.body;
-            const freelancers = await this.userService.getFreelancers(freelancerIds);
+            // const { freelancerIds } = req.body;
+            const ids = req.query.ids;
+            console.log("ids:", ids);
+            if (!ids || !Array.isArray(ids)) {
+                throw new Error("Invalid or missing 'ids' query parameter");
+            }
+
+            const freelancers = await this.userService.getFreelancers(ids as string[]);
             console.log('freeelnacer and user details:',freelancers);
             res.status(200).json(freelancers);
 

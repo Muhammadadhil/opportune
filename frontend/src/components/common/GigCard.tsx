@@ -2,7 +2,7 @@ import { Star, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ImageCarousal } from "@/components/common/ImageCarousel";
 import EditGig from "../freelancer/EditGig";
-import { editGigPost } from "@/api/gigsApi";
+import { editGigPost } from "@/api/gigs";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";

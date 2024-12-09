@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableCaption, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import useApplications from "@/hooks/jobs/useApplications";
-import useFreelancerApplications from "@/hooks/jobs/useFreelancerApplications";
+// import useFreelancerApplications from "@/hooks/jobs/useFreelancerApplications";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { IApplication } from "@/types/IApplication";
@@ -21,13 +21,17 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
     const userId = userInfo?._id;
     const { id: jobId } = useParams();
 
-    const { data: clientApplications,isLoading:clientLoading } = useApplications(userId, jobId!);
-    console.log("clientApplications:", clientApplications);
+    const { data: Allapplications, isLoading } = useApplications(userId, jobId!, userType);
+    const applications = Allapplications?.data.applications;
 
-    const { data: freelancerApplications, isLoading: freelancerLoading } = useFreelancerApplications(userId);
-    console.log("freelancerApplications:", freelancerApplications);
+    console.log('applications:',applications);
 
-    const applications = userType === "client" ? clientApplications?.data?.applications : freelancerApplications?.data?.applications;
+    // console.log("clientApplications:", clientApplications);
+
+    // const { data: freelancerApplications, isLoading: freelancerLoading } = useFreelancerApplications(userId);
+    // console.log("freelancerApplications:", freelancerApplications);
+
+    // const applications = userType === "client" ? clientApplications?.data?.applications : freelancerApplications?.data?.applications;
 
     return (
         <div className="mx-auto px-4 py-8">
@@ -36,7 +40,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                     <h2 className="text-xl font-semibold text-gray-700">No applications found</h2>
                 </div>
             )}
-            {clientLoading || freelancerLoading ? (
+            {isLoading ? (
                 Array.from({ length: 5 }).map(() => <TableRowSkelton userType={userType} />)
             ) : (
                 <>

@@ -12,7 +12,6 @@ export class OtpController {
 
     async verifyOtp(req: Request, res: Response) {
         const { otp, email } = req.body;
-        console.log("req.body:verifyOtp:", otp, email);
         const { status, message, success } = await this.otpService.verifyOtp(otp, email);
         res.status(status).json({ success, message });
     }

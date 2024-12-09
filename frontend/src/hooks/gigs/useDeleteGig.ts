@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { removeGig } from "@/api/gigsApi";
+import { removeGig } from "@/api/gigs";
 
 export const useRemoveGig = () => {
     const queryClient = useQueryClient();

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PostStep1 } from "./PostStep1";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { saveJobPost } from "@/api/jobsApi";
+import { saveJobPost } from "@/api/job";
 import Loading from "@/components/loading/Loading";
 import { setIsLoading } from "@/store/slices/appSlice";
 import { toast } from "react-hot-toast";

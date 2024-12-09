@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { removeJob } from "@/api/jobsApi";
+import { removeJob } from "@/api/job";
 import { IJob } from "@/types/IJob";
 
 export const useRemoveJob = () => {

@@ -15,7 +15,7 @@ export class categoryRepository {
     }
     
     async findCategory(name: string): Promise<ICategory | null> {
-        return await Category.findOne({ name });
+        return await Category.findOne({ name: { $regex: `^${name}$`, $options: "i" } });
     }
 
     async createCategory(category: ICategoryData): Promise<ICategory> {

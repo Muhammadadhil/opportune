@@ -1,14 +1,13 @@
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
-import { OtpRepository } from "../repositories/OtpRepository";
-import { UserRepository } from "../repositories/UserRepository";
+import { OtpRepository } from "../repositories/implementation/OtpRepository";
+import { UserRepository } from "../repositories/implementation/UserRepository";
 import { IOtp } from "../interfaces/IOtp";
-import { ObjectId } from "mongoose";
 
 export class OtpService {
     private otpRepository: OtpRepository;
     private userRepository: UserRepository;
-
+    
     constructor() {
         this.otpRepository = new OtpRepository();
         this.userRepository = new UserRepository();
@@ -56,12 +55,12 @@ export class OtpService {
             const saltRounds = 10;
             const hashedOtp = await bcrypt.hash(otp, saltRounds);
 
-            const otpData: IOtp = {
+            const otpData = {
                 email,
                 otp: hashedOtp,
-            };
+            } as IOtp;
 
-            await this.otpRepository.storeOtp(otpData);
+            await this.otpRepository.create(otpData);
 
             //send the mail
             await transpoter.sendMail(mailOptions);
@@ -79,22 +78,23 @@ export class OtpService {
                 return { success: false, message: "Error occurred. User email not found", status: 404 };
             }
 
-            const otpDetails = await this.otpRepository.findOtp(email);
+            const otpDetails = await this.otpRepository.findOne({email});
             if (!otpDetails) {
                 return { success: false, message: "Invalid OTP", status: 400 };
             }
 
             const matchedOtp = await bcrypt.compare(otp, otpDetails.otp);
             if (matchedOtp) {
-                await this.otpRepository.removeOtp(email);
-                console.log("going to change status!!");
+
+                await this.otpRepository.delete(otpDetails._id as string);
                 await this.userRepository.changeVerifiedStatus(email, true);
+                
                 return { success: true, message: "OTP verified!", status: 200 };
             } else {
                 return { success: false, message: "Invalid OTP .", status: 400 };
             }
         } catch (error) {
-            console.log('Otp verify error:',error)
+            console.log('Otp verify error:',error);
             return { success: false, message: "Error verifying otp", status: 400 };
         }
     }

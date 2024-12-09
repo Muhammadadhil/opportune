@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { generateAccessToken } from "../utils/jwt/generateToken";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt/generateToken";
 import axios from "axios";
-import { UserRepository } from "../repositories/UserRepository";
+import { UserRepository } from "../repositories/implementation/UserRepository";
 import IUser from "../interfaces/IUser";
 import { auth } from "google-auth-library";
 
@@ -29,9 +29,7 @@ export class AuthService {
         }
     }
 
-    async getUserInfo(token: string, authType: string, role?: string) {
-        console.log("google get userInfo service!!");
-
+    async getUserInfo(token: string, role?: string) {
         const response = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -40,36 +38,34 @@ export class AuthService {
         });
         const data = response.data;
         data.role = role;
-        console.log("googleapi response data:", data);
 
+        console.log("googleapi response data:", data);
         let user = await this.userRepository.findUserByEmail(data.email);
 
-        console.log("authType in userService:", authType);
-
+        let authType;
         if (user) {
-            return user;
+            const accessToken = generateAccessToken(user._id.toString(), user.role);
+            const refreshToken = generateRefreshToken(user._id.toString(), user.role);
+            authType = 'login'
+            return { user, accessToken, refreshToken };
         }
-        
-        //for signup:user shouldnot exist
-        // if (user && authType!="login") {
-        //     return 'user already exists'
-        // }
 
         const googleUser: Partial<IUser> = {
             firstname: data.given_name,
             lastname: data.family_name,
             email: data.email,
-            role: data.role,
+            role: data.role || "client",
             isOAuthUser: true,
         };
 
-        if (!user) {
-            user = await this.userRepository.createUser(googleUser as IUser);
-        }
+        const gUser = await this.userRepository.createUser(googleUser as IUser);
+        user = gUser.toObject();
 
-        console.log("typeof userobj:", typeof user);
-        const { password, ...userWithoutPassword } = user;
-
-        return userWithoutPassword;
+        const accessToken = generateAccessToken(user!._id.toString(), user!.role);
+        const refreshToken = generateRefreshToken(user!._id.toString(), user!.role);
+        authType = "signup";
+        return { user, accessToken, refreshToken, authType };
+        
+    
     }
 }

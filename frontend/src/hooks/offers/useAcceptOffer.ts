@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient, UseMutationResult } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import { acceptOffer } from "@/api/offersApi";
+import { acceptOffer } from "@/api/offers";
 import { IOffer } from "@/types/IOffer";
 
 

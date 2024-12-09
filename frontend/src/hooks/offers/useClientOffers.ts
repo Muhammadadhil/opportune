@@ -1,4 +1,4 @@
-import { getOffers } from "@/api/offersApi";
+import { getOffers } from "@/api/offers";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useClientOffers(userId: string | null) {

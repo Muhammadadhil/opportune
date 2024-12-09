@@ -1,7 +1,6 @@
 import apiClient from "./axiosInstance";
 import { IPaymentData } from "@/types/IPaymentData";
 
-
 export const getFContracts = async (fId: string) => {
     console.log("sedning request:/contract/freelancer/contracts");
     return await apiClient.get(`/contract/freelancer/contracts`, { params: { fId } });

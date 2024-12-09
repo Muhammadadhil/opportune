@@ -10,7 +10,7 @@ import { logoutUser } from "@/store/slices/userSlice";
 import { clearPostFormData } from "@/store/slices/postSlice";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { RootState } from "@/store/store";
-import { logout } from "@/api/userApi";
+import { logout } from "@/api/auth";
 import { toggleTheme } from "@/store/slices/appSlice";
 
 interface NavItem {

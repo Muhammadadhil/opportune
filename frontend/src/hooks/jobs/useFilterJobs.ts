@@ -1,4 +1,4 @@
-import { getFilteredJobs } from "@/api/jobsApi";
+import { getFilteredJobs } from "@/api/job";
 import { useQuery } from "@tanstack/react-query";
 
 export function useFilterJobs(filters: any) {

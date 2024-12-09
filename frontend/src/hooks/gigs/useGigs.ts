@@ -1,4 +1,4 @@
-import { fetchGigs } from "@/api/gigsApi";
+import { fetchGigs } from "@/api/gigs";
 import { useQuery } from "@tanstack/react-query";
 
 export function useGigs(fId?: string) {

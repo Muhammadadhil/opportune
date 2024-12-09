@@ -1,12 +1,10 @@
-import { User } from "../schema/User";
-import { ClientDetail } from "../schema/ ClientDetails";
-import { FreelancerDetails } from "../schema/FreelancerDetails";
-import IUser from "../interfaces/IUser";
-import IClientDetail from "../interfaces/IClientDetail";
-import IFreelancer from "../interfaces/IFreelancer";
+import { User } from "../../schema/User";
+import { ClientDetail } from "../../schema/ ClientDetails";
+import { FreelancerDetails } from "../../schema/FreelancerDetails";
+import IUser from "../../interfaces/IUser";
+import IClientDetail from "../../interfaces/IClientDetail";
+import IFreelancer from "../../interfaces/IFreelancer";
 import { ObjectId } from "mongoose";
-import mongoose from "mongoose";
-
 
 export class UserRepository {
 
@@ -16,7 +14,7 @@ export class UserRepository {
     }
 
     async findUserByEmail(email: string): Promise<IUser | null> {
-        return await User.findOne({ email }).lean(); // lean() will avoid the unwanted fields in mongoose doc
+        return await User.findOne({ email }).lean();       // lean() will avoid the unwanted fields in mongoose doc
     }
 
     async changeVerifiedStatus(email: string, status: boolean) {
@@ -36,6 +34,8 @@ export class UserRepository {
 
     async getFreelancerDetails(userId: string): Promise<IFreelancer | null> {
         const freelancerData = await FreelancerDetails.findOne({ userId }).lean();
+
+        console.log("freelancerData in db:", freelancerData);
 
         if (!freelancerData) {
             return null;
@@ -69,7 +69,7 @@ export class UserRepository {
         return client;
     }
 
-    async getFreelancersDatas(ids:ObjectId[]){
+    async getFreelancersDatas(ids:string[]){
         // return await User.aggregate([
         //     {
         //         $match: { _id: { $in: ids } },
