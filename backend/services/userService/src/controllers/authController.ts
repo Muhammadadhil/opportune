@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AuthService } from "../services/authService";
+import { AuthService } from "../services/implementation/authService";
 import { OAuth2Client } from "google-auth-library";
 
 // const authService = new AuthService();
@@ -55,7 +55,6 @@ export class AuthController {
 
     async loginGoogleUser(req: Request, res: Response): Promise<Response> {
         try {
-            console.log('req.body:', req.body);
             const { token, role } = req.body;
             const { user, accessToken, refreshToken, authType } = await this.authService.getUserInfo(token, role);
 
@@ -66,8 +65,6 @@ export class AuthController {
                 maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
                 path: "/", 
             });
-
-            console.log("new/existing User:", user);
 
             return res.status(201).json({
                 success: true,

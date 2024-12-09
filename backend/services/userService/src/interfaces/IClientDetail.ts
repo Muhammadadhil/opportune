@@ -7,3 +7,4 @@ export default interface IClientDetail extends Document {
     projectNeeds: [string];
     website?: string;
 }
+

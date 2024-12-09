@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
+import IFreelancer from "../interfaces/IFreelancer";
 
-const freelancerDetails: Schema = new Schema(
+const freelancerDetails: Schema = new Schema<IFreelancer>(
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -26,4 +27,4 @@ const freelancerDetails: Schema = new Schema(
     { timestamps: true }
 );
 
-export const FreelancerDetails = mongoose.model("FreelancerDetail", freelancerDetails);
+export const FreelancerDetails = mongoose.model<IFreelancer>("FreelancerDetail", freelancerDetails);

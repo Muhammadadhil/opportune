@@ -80,7 +80,7 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
             console.log('fetching countries !!');
             const response = await getCountries();
             const data = response.data;
-            console.log("response countries: ", response.data);
+            // console.log("response countries: ", response.data);
             const countryNames = data.map((country: any) => country.name.common);
             setCountries(countryNames);
         } catch (error) {

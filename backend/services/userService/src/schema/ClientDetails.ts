@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
+import IClientDetail from "../interfaces/IClientDetail";
 
-const ClientDetails: Schema = new Schema(
+const ClientDetails = new Schema<IClientDetail>(
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -23,4 +24,4 @@ const ClientDetails: Schema = new Schema(
     { timestamps: true }
 );
 
-export const ClientDetail = mongoose.model("ClientDetail", ClientDetails);
+export const ClientDetail = mongoose.model<IClientDetail>("ClientDetail", ClientDetails);

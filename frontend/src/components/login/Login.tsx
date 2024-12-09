@@ -80,7 +80,7 @@ const Login: React.FC = () => {
             dispatch(setCredentials(response.data.data));
             setAccessToken(response.data.accessToken);
             if (response.data.authType === "signup" && response.data.data.role === "client") {
-                navigate("/");
+                navigate("/cl/details");
             }else{
                 navigate("/");
             }

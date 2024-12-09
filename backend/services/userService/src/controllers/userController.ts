@@ -1,8 +1,8 @@
 //The controller handles the HTTP request and interacts with the service layer.
 
 import { Request, Response } from "express";
-import { UserService } from "../services/UserService";
-import { OtpService } from "../services/OtpService";
+import { UserService } from "../services/implementation/UserService";
+import { OtpService } from "../services/implementation/OtpService";
 import IClientDetail from "../interfaces/IClientDetail";
 import { ObjectId } from "mongoose";
 
@@ -100,7 +100,7 @@ export class UserController {
     async saveClientDetails(req: Request, res: Response) {
         try {
             const { userId, companyName, companyDescription, projectNeeds, website } = req.body.clientData;
-            const savedClientData = await this.userService.clientDetail({ userId, companyName, companyDescription, projectNeeds, website } as IClientDetail);
+            const savedClientData = await this.userService.saveClientDetail({ userId, companyName, companyDescription, projectNeeds, website } as IClientDetail);
             res.status(201).json(savedClientData);
         } catch (error) {
             console.log("Error in saving Client data:", error);

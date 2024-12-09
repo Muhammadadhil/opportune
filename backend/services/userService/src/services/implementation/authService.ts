@@ -1,8 +1,8 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt/generateToken";
+import { generateAccessToken, generateRefreshToken } from "../../utils/jwt/generateToken";
 import axios from "axios";
-import { UserRepository } from "../repositories/implementation/UserRepository";
-import IUser from "../interfaces/IUser";
+import { UserRepository } from "../../repositories/implementation/UserRepository";
+import IUser from "../../interfaces/IUser";
 import { auth } from "google-auth-library";
 
 export class AuthService {
@@ -40,7 +40,7 @@ export class AuthService {
         data.role = role;
 
         console.log("googleapi response data:", data);
-        let user = await this.userRepository.findUserByEmail(data.email);
+        let user = await this.userRepository.findOne({email:data.email});
 
         let authType;
         if (user) {
@@ -58,7 +58,7 @@ export class AuthService {
             isOAuthUser: true,
         };
 
-        const gUser = await this.userRepository.createUser(googleUser as IUser);
+        const gUser = await this.userRepository.create(googleUser as IUser);
         user = gUser.toObject();
 
         const accessToken = generateAccessToken(user!._id.toString(), user!.role);

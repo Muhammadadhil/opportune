@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { OtpService } from "../services/OtpService";
+import { OtpService } from "../services/implementation/OtpService";
 
 export class OtpController {
     private otpService: OtpService;

@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
-import { OtpRepository } from "../repositories/implementation/OtpRepository";
-import { UserRepository } from "../repositories/implementation/UserRepository";
-import { IOtp } from "../interfaces/IOtp";
+import { OtpRepository } from "../../repositories/implementation/OtpRepository";
+import { UserRepository } from "../../repositories/implementation/UserRepository";
+import { IOtp } from "../../interfaces/IOtp";
 
 export class OtpService {
     private otpRepository: OtpRepository;
@@ -73,7 +73,7 @@ export class OtpService {
         console.log("verifyOtp service:", otp, email);
 
         try {
-            const userDetails = await this.userRepository.findUserByEmail(email);
+            const userDetails = await this.userRepository.findOne({email});
             if (!userDetails) {
                 return { success: false, message: "Error occurred. User email not found", status: 404 };
             }
