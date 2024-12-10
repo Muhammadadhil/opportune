@@ -83,7 +83,7 @@ export default function SendOffer() {
             toast.error("Please fill all fields");
             return;
         }
-
+        
         try {
             const data: IOffer = {
                 applicationId: application._id,

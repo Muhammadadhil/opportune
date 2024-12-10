@@ -28,15 +28,18 @@ export class ApplicationSerivce implements IApplicationService {
 
         const applications = await this._applicationRepository.find({ clientId, jobId });
         const freelancerIds = applications.map((app) => app.freelancerId);
+        console.log('freelancerIds to fetch:',freelancerIds);
+        if(freelancerIds.length > 0){
+            const response = await axios.get(`http://localhost:4002/user/freelancers`, { params: { ids: freelancerIds } });
 
-        const response = await axios.get(`http://localhost:4002/user/freelancers`,{params:{ids:freelancerIds}});
+            const enrichedApplications = applications.map((app) => ({
+                ...app.toObject(),
+                freelancerDetails: response.data.find((f: IFreelancerData) => f._id === app.freelancerId.toString()),
+            }));
 
-        const enrichedApplications = applications.map((app) => ({
-            ...app.toObject(),
-            freelancerDetails: response.data.find((f: IFreelancerData) => f._id === app.freelancerId.toString()),
-        }));
-
-        return enrichedApplications;
+            return enrichedApplications;
+        }
+        
     }
 
     async getApplicationsOfFreelancer(freelancerId: string): Promise<any | null> {

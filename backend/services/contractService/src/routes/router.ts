@@ -6,6 +6,7 @@ import { applicationController } from "../config/container";
 
 const router = Router();
 
+//applications
 router.get("/application", applicationController.checkApplication);
 router.get("/client/job/applications", applicationController.getApplications);
 router.get("/freelancer/job/applications", applicationController.getFreelancerApplications);

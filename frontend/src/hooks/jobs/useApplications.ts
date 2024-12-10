@@ -8,5 +8,6 @@ export default function useApplications(userId: string,jobId:string,userType:str
     return useQuery({
         queryKey: userType === "client" ? ["clientApplications"] : ["freelancerApplications"],
         queryFn: () => (userType === "client" ? getApplications(userId, jobId) : getFApplications(userId)),
+        retry: 1
     });
 }

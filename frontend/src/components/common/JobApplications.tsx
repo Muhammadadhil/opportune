@@ -25,37 +25,26 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
     const applications = Allapplications?.data.applications;
 
     console.log('applications:',applications);
-
-    // console.log("clientApplications:", clientApplications);
-
-    // const { data: freelancerApplications, isLoading: freelancerLoading } = useFreelancerApplications(userId);
-    // console.log("freelancerApplications:", freelancerApplications);
-
-    // const applications = userType === "client" ? clientApplications?.data?.applications : freelancerApplications?.data?.applications;
-
     return (
         <div className="mx-auto px-4 py-8">
-            {!applications?.length && (
-                <div className="text-center">
-                    <h2 className="text-xl font-semibold text-gray-700">No applications found</h2>
-                </div>
-            )}
-            {isLoading ? (
-                Array.from({ length: 5 }).map(() => <TableRowSkelton userType={userType} />)
-            ) : (
-                <>
-                    <Table className="border">
-                        <TableCaption>A list of your recent applications.</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[300px]">Id</TableHead>
-                                <TableHead>Status</TableHead>
-                                {userType === "client" ? <TableHead>Freelancer Name</TableHead> : <TableHead>Job Title</TableHead>}
-                            </TableRow>
-                        </TableHeader>
-                        {applications?.map((app: IApplication) => (
-                            <TableBody>
-                                <TableRow className="h-20" key={app._id}>
+            {applications?.length > 0 ? (
+                <Table className="border">
+                    {isLoading && (Array.from({ length: 5 }).map(() => (
+                        <TableRowSkelton userType={userType} />
+                    )))}
+                    {applications?.map((app: IApplication) => (
+                        <>
+                            <TableCaption>A list of your recent applications.</TableCaption>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[300px]">Id</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    {userType === "client" ? <TableHead>Freelancer Name</TableHead> : <TableHead>Job Title</TableHead>}
+                                </TableRow>
+                            </TableHeader>
+
+                            <TableBody key={app._id}>
+                                <TableRow className="h-20">
                                     <TableCell className="font-medium">APP{app._id}</TableCell>
                                     <TableCell>
                                         <div className={`w-24 h-8 rounded-xl text-center flex items-center justify-center ${app.status === "offerSent" ? "bg-green-500" : "bg-gray-400"}`}>
@@ -72,7 +61,14 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                     <TableCell className="text-right">
                                         {userType === "client" && app.status === "pending" ? (
                                             <div>
-                                                <Button className="bg-green-800 hover:bg-green-700" onClick={() => navigate(`/cl/send-offer/${app.jobId}`, { state: { application: app } })}>
+                                                <Button
+                                                    className="bg-green-800 hover:bg-green-700"
+                                                    onClick={() =>
+                                                        navigate(`/cl/send-offer/${app.jobId}`, {
+                                                            state: { application: app },
+                                                        })
+                                                    }
+                                                >
                                                     Send Offer
                                                 </Button>
                                             </div>
@@ -84,9 +80,13 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                     </TableCell>
                                 </TableRow>
                             </TableBody>
-                        ))}
-                    </Table>
-                </>
+                        </>
+                    ))}
+                </Table>
+            ) : (
+                <div className="flex flex-col items-center justify-center h-[200px]">
+                    <h2 className="text-xl font-semibold text-gray-700">No applications found</h2>
+                </div>
             )}
         </div>
     );
