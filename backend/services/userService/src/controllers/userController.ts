@@ -13,6 +13,8 @@ export class UserController {
     constructor() {
         this.userService = new UserService();
         this.otpService = new OtpService();
+        this.registerUser = this.registerUser.bind(this);
+        this.login = this.login.bind(this);
         this.saveClientDetails = this.saveClientDetails.bind(this);
         this.saveFreelancerDetails = this.saveFreelancerDetails.bind(this);
         this.getFreelancerData = this.getFreelancerData.bind(this);
@@ -20,13 +22,15 @@ export class UserController {
         this.getFreelancers= this.getFreelancers.bind(this);
     }
 
-    public registerUser = async (req: Request, res: Response) => {
+    async registerUser(req: Request, res: Response){
         try {
-            const userExists = await this.userService.userExist(req.body.formData.email);
-            if (userExists) {
-                return res.status(400).json({ message: "user already exists" });
+            console.log('resginsglakdfjasl;dfjkasl;dfja;slfdj;aslfdkj;alskjflkasjdkf;kasdf');
+            const response = await this.userService.registerUser(req.body.formData);
+            if(!response.success){
+                return res.status(400).json({ message: response.message });
             }
-            const { user, accessToken, refreshToken } = await this.userService.registerUser(req.body.formData);
+
+            const { user, accessToken, refreshToken } = response;
 
             res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
@@ -47,11 +51,12 @@ export class UserController {
                 message: "User Registered in successfully",
             });
         } catch (error) {
+            console.log('Error in registering user:', error);
             return res.status(500).json({ message: "Server error", error });
         }
     };
 
-    public login = async (req: Request, res: Response): Promise<Response> => {
+     async login(req: Request, res: Response): Promise<Response> {
         try {
             const { email, password } = req.body;
             const { user, accessToken, refreshToken } = await this.userService.login(email, password);

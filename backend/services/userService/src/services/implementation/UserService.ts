@@ -14,8 +14,10 @@ import { ObjectId } from "mongoose";
 import { ClientRepository } from "../../repositories/implementation/ClientRepository";
 import { IFreelancerRepository } from "../../repositories/interfaces/IFreelancerRepository";
 import { FreelancerRepository } from "../../repositories/implementation/FreelancerRepository";
+import { LoginUserResponse, RegisterUserResponse } from '../../interfaces/IAuthResponse';
+import IUserService from "../interfaces/IUserService";
 
-export class UserService {
+export class UserService implements IUserService {
     private userRepository: UserRepository;
     private clientRepository: ClientRepository;
     private freelancerRepository: IFreelancerRepository;
@@ -23,26 +25,19 @@ export class UserService {
     constructor() {
         this.userRepository = new UserRepository();
         this.clientRepository = new ClientRepository();
-        this.freelancerRepository= new FreelancerRepository();
+        this.freelancerRepository = new FreelancerRepository();
     }
 
-    async userExist(email: string): Promise<IUser | null> {
-        const user = await this.userRepository.findOne({ email });
+    async registerUser(userData: IUser): RegisterUserResponse {
+        const user = await this.userRepository.findOne({ email: userData.email });
         if (user) {
-            return user;
+            return { success: false, message: "User already exists" };
         }
-        return null;
-    }
-
-    async registerUser(userData: IUser): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
-        console.log("Register user service");
-        console.log("register user Serive: userData:", userData);
 
         const hashedPassword = await bcrypt.hash(userData.password ?? "", 10);
         const userToCreate = { ...userData, password: hashedPassword };
 
         const newUser = await this.userRepository.create(userToCreate as IUser);
-        console.log("newUser:", newUser);
 
         const userId: string = newUser._id.toString();
         const role: string = newUser.role;
@@ -51,10 +46,10 @@ export class UserService {
 
         const { password, ...userWithoutPassword } = newUser.toObject();
 
-        return { user: userWithoutPassword, accessToken, refreshToken };
+        return { success: true, user: userWithoutPassword, accessToken, refreshToken };
     }
 
-    async login(email: string, password: string): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
+    async login(email: string, password: string): LoginUserResponse {
         const user = await this.userRepository.findOne({ email });
         if (!user) {
             throw new Error("Invalid email or password");
@@ -74,7 +69,7 @@ export class UserService {
         return { user, accessToken, refreshToken };
     }
 
-    async saveClientDetail(details: IClientDetail) {
+    async saveClientDetail(details: IClientDetail): Promise<IClientDetail> {
         const existClientDetail = await this.clientRepository.findOne({ _id: details.userId });
         if (existClientDetail) {
             throw new Error("Detail already exists");
@@ -121,7 +116,7 @@ export class UserService {
         return freelancerDetails;
     }
 
-    async getFreelancers(ids: string[]) {
+    async getFreelancers(ids: string[]): Promise<IFreelancer[] | IUser[]> {
         return await this.freelancerRepository.getFreelancersDatas(ids);
     }
 }

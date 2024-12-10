@@ -2,9 +2,6 @@ import { Request, Response } from "express";
 import { AuthService } from "../services/implementation/authService";
 import { OAuth2Client } from "google-auth-library";
 
-// const authService = new AuthService();
-// const oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.GOOGLE_REDIRECT_URI);
-
 export class AuthController {
     private authService: AuthService;
     private oAuth2Client;
@@ -19,7 +16,6 @@ export class AuthController {
     async refreshAccessToken(req: Request, res: Response): Promise<Response> {
         try {
             const refreshToken = req.cookies.jwtRefresh;
-            // console.log("refresh token from cookies:", refreshToken);           
 
             if (!refreshToken) {
                 return res.status(400).json({ message: "No Refresh token found" });
@@ -35,7 +31,6 @@ export class AuthController {
             console.error("Error refreshing access token:", error);
             return res.status(500).json({ error: "Failed to refresh access token" });
         }
-        
     }
 
     async getGoogleAuthToken(req: Request, res: Response): Promise<void> {

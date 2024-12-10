@@ -3,9 +3,9 @@ import { generateAccessToken, generateRefreshToken } from "../../utils/jwt/gener
 import axios from "axios";
 import { UserRepository } from "../../repositories/implementation/UserRepository";
 import IUser from "../../interfaces/IUser";
-import { auth } from "google-auth-library";
+import IAuthService from "../interfaces/IAuthService";
 
-export class AuthService {
+export class AuthService implements IAuthService {
     private userRepository: UserRepository;
 
     constructor() {
@@ -29,7 +29,7 @@ export class AuthService {
         }
     }
 
-    async getUserInfo(token: string, role?: string) {
+    async getUserInfo(token: string, role?: string): Promise<any> {
         const response = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -40,13 +40,13 @@ export class AuthService {
         data.role = role;
 
         console.log("googleapi response data:", data);
-        let user = await this.userRepository.findOne({email:data.email});
+        let user = await this.userRepository.findOne({ email: data.email });
 
         let authType;
         if (user) {
             const accessToken = generateAccessToken(user._id.toString(), user.role);
             const refreshToken = generateRefreshToken(user._id.toString(), user.role);
-            authType = 'login'
+            authType = "login";
             return { user, accessToken, refreshToken };
         }
 
@@ -65,7 +65,5 @@ export class AuthService {
         const refreshToken = generateRefreshToken(user!._id.toString(), user!.role);
         authType = "signup";
         return { user, accessToken, refreshToken, authType };
-        
-    
     }
 }

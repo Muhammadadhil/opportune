@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import toast from "react-hot-toast";
 import { setAccessToken } from "@/services/authService";
 import { signUpvalidationSchema } from '@/schemas/SignUpSchema'
-
+import { useQuery } from "@tanstack/react-query";
 
 type ValidationSchema = z.infer<typeof signUpvalidationSchema>;
 
@@ -36,7 +36,6 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
         resolver: zodResolver(signUpvalidationSchema),
     });
 
-    const [countries, setCountries] = useState<string[]>([]);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -69,28 +68,18 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
             navigate("/verify-email", { state: { newUserInfo: response.data } });
         } catch (error) {
             console.log("error:", error);
-            toast.error('Error while signup');
+            toast.error(error?.response?.data?.message);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const fetchCountries = async () => {
-        try {
-            console.log('fetching countries !!');
-            const response = await getCountries();
-            const data = response.data;
-            // console.log("response countries: ", response.data);
-            const countryNames = data.map((country: any) => country.name.common);
-            setCountries(countryNames);
-        } catch (error) {
-            console.error("Error fetching countries:", error);
-        }
-    };
+    const { data: countries } = useQuery({
+        queryKey: ["countries"],
+        queryFn: getCountries,
+    });
 
-    useEffect(() => {
-        fetchCountries();
-    }, []);
+    console.log('countries:',countries)
 
     const handleGoogleSignup = useGoogleLogin({
         onSuccess: async (codeResponse) => {
@@ -190,7 +179,7 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Countries</SelectLabel>
-                                                {countries.map((country) => (
+                                                {countries?.map((country:string) => (
                                                     <SelectItem key={country} value={country}>
                                                         {country}
                                                     </SelectItem>

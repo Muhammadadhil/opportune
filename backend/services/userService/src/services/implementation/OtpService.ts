@@ -3,11 +3,12 @@ import bcrypt from "bcrypt";
 import { OtpRepository } from "../../repositories/implementation/OtpRepository";
 import { UserRepository } from "../../repositories/implementation/UserRepository";
 import { IOtp } from "../../interfaces/IOtp";
+import IOtpService from "../interfaces/IOtpService";
 
-export class OtpService {
+export class OtpService implements IOtpService {
     private otpRepository: OtpRepository;
     private userRepository: UserRepository;
-    
+
     constructor() {
         this.otpRepository = new OtpRepository();
         this.userRepository = new UserRepository();
@@ -69,32 +70,29 @@ export class OtpService {
         }
     }
 
-    async verifyOtp(otp: string, email: string) {
-        console.log("verifyOtp service:", otp, email);
-
+    async verifyOtp(otp: string, email: string): Promise<{ success: boolean; message: string; status: number }> {
         try {
-            const userDetails = await this.userRepository.findOne({email});
+            const userDetails = await this.userRepository.findOne({ email });
             if (!userDetails) {
                 return { success: false, message: "Error occurred. User email not found", status: 404 };
             }
 
-            const otpDetails = await this.otpRepository.findOne({email});
+            const otpDetails = await this.otpRepository.findOne({ email });
             if (!otpDetails) {
                 return { success: false, message: "Invalid OTP", status: 400 };
             }
 
             const matchedOtp = await bcrypt.compare(otp, otpDetails.otp);
             if (matchedOtp) {
-
                 await this.otpRepository.delete(otpDetails._id as string);
                 await this.userRepository.changeVerifiedStatus(email, true);
-                
+
                 return { success: true, message: "OTP verified!", status: 200 };
             } else {
                 return { success: false, message: "Invalid OTP .", status: 400 };
             }
         } catch (error) {
-            console.log('Otp verify error:',error);
+            console.log("Otp verify error:", error);
             return { success: false, message: "Error verifying otp", status: 400 };
         }
     }
