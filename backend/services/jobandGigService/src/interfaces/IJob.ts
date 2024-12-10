@@ -10,4 +10,5 @@ export interface IJob extends Document {
     skillsRequired: string[];
     isActive: boolean;
     searchTags: string[];
+    applicantsCount?: number;
 }

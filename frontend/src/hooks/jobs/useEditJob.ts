@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation, UseMutationResult } from "@tanstack/react-query";
-import { editJob } from "@/api/jobsApi";
+import { editJob } from "@/api/job";
 import { IJob } from "@/types/IJob";
 
 export const useEditJob = (): UseMutationResult<IJob, unknown, IJob, { previousJobs: IJob[] | undefined }> => {

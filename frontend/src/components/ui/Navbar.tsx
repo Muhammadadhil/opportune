@@ -10,7 +10,7 @@ import { logoutUser } from "@/store/slices/userSlice";
 import { clearPostFormData } from "@/store/slices/postSlice";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { RootState } from "@/store/store";
-import { logout } from "@/api/userApi";
+import { logout } from "@/api/auth";
 import { toggleTheme } from "@/store/slices/appSlice";
 
 interface NavItem {
@@ -31,14 +31,14 @@ const Navbar: React.FC = () => {
 
     const freelancerMenu: NavItem[] = [
         { path: "/fr/dashboard", label: "Dashboard" },
-        { path: "/fr/manage-gigs", label: "manage gigs" },
-        { path: "/hire-talents", label: "find jobs" },
+        { path: "/fr/manage-gigs", label: "manage work" },
+        { path: "/explore", label: "find jobs" },
     ];
 
     const clientMenu: NavItem[] = [
         { path: "/cl/dashboard", label: "Dashboard" },
-        { path: "/cl/manage-jobs", label: " Jobs" },
-        { path: "/hire-talents", label: "Find talents" },
+        { path: "/cl/manage-jobs", label: "Your Jobs" },
+        { path: "/explore", label: "Find talents" },
     ];
     const { userInfo } = useSelector((state: RootState) => state.user);
     const { isLoading, theme } = useSelector((state: RootState) => state.app);

@@ -69,13 +69,12 @@ export const PostStep2: React.FC<OverviewProps> = React.memo(({ onPrev, handleSu
                         <Label htmlFor="price">Budget</Label>
                         <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
-                            {/* <Input {...register("budget")} id="price" type="number" min="0" step="0.01" className="pl-8" placeholder="0.00" /> */}
-                            <Input type="number" id="budget" {...register("budget", { valueAsNumber: true })} />
+                            <Input {...register("budget", { valueAsNumber: true })} id="price" type="number" min="0" step="0.01" className="pl-8" placeholder="0.00" />
                         </div>
                         {errors.budget && <p className="text-red-700 text-sm">{errors.budget.message}</p>}
                     </div>
 
-                    <div className="">
+                    <div className="">1
                         <label htmlFor="searchTags" className="block text-sm font-medium text-gray-700">
                             Search Tags
                         </label>

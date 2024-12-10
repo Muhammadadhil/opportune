@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "@/store/slices/userSlice";
-import { signUp } from "@/api/userApi";
+import { signUp } from "@/api/auth";
 import { getCountries } from "@/api/auth";
 import { useGoogleLogin } from "@react-oauth/google";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -13,32 +13,19 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getUserDetails } from "@/api/auth";
+import { loginGoogleUser } from "@/api/auth";
 import LoadingSpinner from "../loading/Loading";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import toast from "react-hot-toast";
+import { setAccessToken } from "@/services/authService";
+import { signUpvalidationSchema } from '@/schemas/SignUpSchema'
+import { useQuery } from "@tanstack/react-query";
 
-const validationSchema = z
-    .object({
-        firstname: z.string().min(1, { message: "Firstname is required" }),
-        lastname: z.string().min(1, { message: "Lastname is required" }),
-        email: z.string().min(1, { message: "Email is required" }).email({
-            message: "Must be a valid email",
-        }),
-        password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-        confirmPassword: z.string().min(1, { message: "Confirm Password is required" }),
-        country: z.string().min(1, { message: "Country is required" }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        path: ["confirmPassword"],
-        message: "Passwords don't match",
-    });
+type ValidationSchema = z.infer<typeof signUpvalidationSchema>;
 
-type ValidationSchema = z.infer<typeof validationSchema>;
 interface SignUpProps {
     role: string;
 }
-
 const SignUp: React.FC<SignUpProps> = ({ role }) => {
     const {
         register,
@@ -46,10 +33,9 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
         formState: { errors },
         setValue,
     } = useForm<ValidationSchema>({
-        resolver: zodResolver(validationSchema),
+        resolver: zodResolver(signUpvalidationSchema),
     });
 
-    const [countries, setCountries] = useState<string[]>([]);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -82,35 +68,27 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
             navigate("/verify-email", { state: { newUserInfo: response.data } });
         } catch (error) {
             console.log("error:", error);
-            toast.error('Error while signup');
+            toast.error(error?.response?.data?.message);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const fetchCountries = async () => {
-        try {
-            const response = await getCountries();
-            const data = response.data;
-            const countryNames = data.map((country: any) => country.name.common);
-            setCountries(countryNames);
-        } catch (error) {
-            console.error("Error fetching countries:", error);
-        }
-    };
+    const { data: countries } = useQuery({
+        queryKey: ["countries"],
+        queryFn: getCountries,
+    });
 
-    useEffect(() => {
-        fetchCountries();
-    }, []);
+    console.log('countries:',countries)
 
     const handleGoogleSignup = useGoogleLogin({
         onSuccess: async (codeResponse) => {
             console.log(codeResponse);
             try {
-                const authType = "signup";
-                const response = await getUserDetails(codeResponse.access_token, role ?? "", authType);
+                const response = await loginGoogleUser(codeResponse.access_token, role ?? "");
                 console.log("response:", response);
-                dispatch(setCredentials(response.data.userInfo));
+                dispatch(setCredentials(response.data.data));
+                setAccessToken(response.data.accessToken);
                 navigate("/");
             } catch (error) {
                 console.log("error in creating new user:", error);
@@ -201,7 +179,7 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Countries</SelectLabel>
-                                                {countries.map((country) => (
+                                                {countries?.map((country:string) => (
                                                     <SelectItem key={country} value={country}>
                                                         {country}
                                                     </SelectItem>

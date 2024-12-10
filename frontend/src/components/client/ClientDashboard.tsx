@@ -1,6 +1,6 @@
 import { Card, CardTitle } from "../ui/card";
 import { Link } from "react-router-dom";
-import GigList from "./GigList";
+import GigList from "../common/GigList";
 import MaxWidth from "@/layouts/MaxWidth";
 
 const ClientDashboard: React.FC = () => {

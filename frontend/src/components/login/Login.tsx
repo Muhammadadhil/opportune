@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
-import { signIn } from "@/api/userApi";
+import { signIn } from "@/api/auth";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "@/store/slices/userSlice";
@@ -14,7 +14,7 @@ import PasswordField from "@/components/ui/passwordField";
 import Loading from "../loading/Loading";
 import { setAccessToken } from "@/services/authService";
 import { RootState } from "@/store/store";
-import { getUserDetails } from "@/api/auth";
+import { loginGoogleUser } from "@/api/auth";
 
 
 const Login: React.FC = () => {
@@ -75,9 +75,15 @@ const Login: React.FC = () => {
 
     const handleGoogleSignIn = useGoogleLogin({
         onSuccess: async (codeResponse) => {
-            const response = await getUserDetails(codeResponse.access_token);
-            dispatch(setCredentials(response.data.userInfo));
-            navigate("/");
+            const response = await loginGoogleUser(codeResponse.access_token);
+            console.log("google signin esponse:", response);
+            dispatch(setCredentials(response.data.data));
+            setAccessToken(response.data.accessToken);
+            if (response.data.authType === "signup" && response.data.data.role === "client") {
+                navigate("/cl/details");
+            }else{
+                navigate("/");
+            }
         },
         onError: (errorResponse) => {
             toast.error("Error signing in with Google");

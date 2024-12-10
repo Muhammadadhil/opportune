@@ -1,5 +1,5 @@
 export interface userState {
-    userInfo: userInfo | null;
+    userInfo: userInfo ;
     freelancerData: IFreelancer;
     clientData: object;
     isAdminAuthenticated: boolean;

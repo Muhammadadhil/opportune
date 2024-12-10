@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { OtpService } from "../services/OtpService";
+import { OtpService } from "../services/implementation/OtpService";
 
 export class OtpController {
     private otpService: OtpService;
@@ -12,7 +12,6 @@ export class OtpController {
 
     async verifyOtp(req: Request, res: Response) {
         const { otp, email } = req.body;
-        console.log("req.body:verifyOtp:", otp, email);
         const { status, message, success } = await this.otpService.verifyOtp(otp, email);
         res.status(status).json({ success, message });
     }

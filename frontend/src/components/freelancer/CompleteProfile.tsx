@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import profilePicture from "@/assets/profilePicture.jpg";
 import { IoIosClose } from "react-icons/io";
 // import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { completeProfle } from "@/api/userApi";
+import { completeProfle } from "@/api/user";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LoadingSpinner from "../loading/Loading";

@@ -25,7 +25,7 @@ export interface TitleData {
 
 export interface BudgetData {
     description: string;
-    budget: string;
+    budget: number;
     searchTags: string[];
 }
 

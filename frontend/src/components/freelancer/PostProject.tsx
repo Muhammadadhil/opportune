@@ -5,7 +5,7 @@ import Publish from "./PostPublish";
 // import Button from "../ui/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { saveProjectPost } from "@/api/gigsApi";
+import { saveProjectPost } from "@/api/gigs";
 import convertToFormData from "@/helpers/convertToFormData";
 import Loading from "@/components/loading/Loading";
 import { setIsLoading } from "@/store/slices/appSlice";

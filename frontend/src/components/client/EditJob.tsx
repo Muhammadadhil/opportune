@@ -9,7 +9,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Textarea } from "../ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import KeywordInput from "../common/KeywordInput";
-import { getCategories } from "@/api/adminApi";
+import { getCategories } from "@/api/admin";
 import { IJob } from "@/types/IJob";
 import jobPoststepOneSchema from "@/schemas/jobPoststep1Schema";
 import jobPoststepTwoSchema from "@/schemas/jobPoststep2Schema";

@@ -12,6 +12,7 @@ export class AdminController {
     }
     async login(req: Request, res: Response) {
         try {
+            
             const { email, password } = req.body;
             const { admin, accessToken, refreshToken } = await this.adminService.login(email, password);
 
@@ -23,7 +24,7 @@ export class AdminController {
                 path: "/", 
             });
 
-            console.log("user login Successfully");
+            console.log("admin login Successfully");
 
             return res.status(201).json({
                 success: true,
@@ -32,7 +33,7 @@ export class AdminController {
                 message: "admin logged in successfully",
             });
         } catch (error: any) {
-            console.log("login error:", error);
+            console.error("login error:", error);
 
             if (error.message === "User already exists") {
                 return res.status(400).json({ message: error });

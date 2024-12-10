@@ -1,8 +1,8 @@
 import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 import profilePicture from "@/assets/profilePicture.jpg";
-import { getClientProfileData, getProfileData } from "@/api/userApi";
-import { getJobs } from "@/api/jobsApi";
+import { getClientProfileData } from "@/api/user";
+import { getJobs } from "@/api/job";
 import { useSelector, useDispatch } from "react-redux";
 import { setClientData } from "@/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -10,18 +10,23 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RootState } from "@/store/store";
 import GigCard from "./GigCard";
-import { fetchGigs } from "@/api/gigsApi";
+import { fetchGigs } from "@/api/gigs";
 import { IGig } from "@/types/IGig";
 import JobCard from "../client/JobCard";
 import { IJob } from "@/types/IJob";
 import { Link } from "react-router-dom";
 import NoItems from "../ui/NoJob";
 import { useGigs } from "@/hooks/gigs/useGigs";
+import {useFreelancerProfile} from '@/hooks/user/useFreelancerProfile';
+import { useClientProfile } from "@/hooks/user/useClientProfile";
+
 
 export default function Profile() {
-    const { userInfo, freelancerData, clientData } = useSelector((state: RootState) => state.user);
+
+    const { userInfo, clientData } = useSelector((state: RootState) => state.user);
     const { theme } = useSelector((state: RootState) => state.app);
-    const [profileImage, setProfileImage] = useState("");
+    
+    const [profileImage, setProfileImage] = useState("");     
     // const [gigs, setGigs] = useState<IGig[]>([]);
     const [jobs, setJobs] = useState<IJob[]>();
     const [isEdited, setIsEdited] = useState(false);
@@ -32,16 +37,20 @@ export default function Profile() {
     const navigate = useNavigate();
 
     const { data:gigs, isLoading } = useGigs(userInfo._id);
+    const {data:freelancer} = useFreelancerProfile(userInfo._id);
+    console.log("freelancer details :", freelancer);
+    // const { data: client } = useClientProfile(userInfo._id);
 
-    async function getData() {
-        try {
-            const response = await getProfileData(userInfo._id);
-            const imgUrl = response.data.imageUrl;
-            setProfileImage(imgUrl);
-        } catch (error) {
-            console.log("error fetching profile data:", error);
-        }
-    }
+
+    // async function getData() {
+    //     try {
+    //         const response = await getProfileData(userInfo._id);
+    //         const imgUrl = response.data.imageUrl;
+    //         setProfileImage(imgUrl);
+    //     } catch (error) {
+    //         console.log("error fetching profile data:", error);
+    //     }
+    // }
 
     const getClientData = async () => {
         try {
@@ -53,11 +62,9 @@ export default function Profile() {
     };
 
     useEffect(() => {
-        if (userInfo.role == "freelancer") {
-            getData();
-        } else {
+        if (userInfo.role == "client") {
             getClientData();
-        }
+        } 
     }, []);
 
     // const fetchProjects = async () => {
@@ -88,8 +95,6 @@ export default function Profile() {
         setIsEdited((prev) => !prev);
     };
 
-    console.count("profile component");
-
     return (
         <div className={`container mx-auto px-4 py-8 ${theme === "dark" ? " text-white" : " text-gray-900"}`}>
             <div className="flex flex-col lg:flex-row gap-8">
@@ -98,7 +103,7 @@ export default function Profile() {
                         <div className="flex flex-col items-center">
                             <div className="relative mb-4">
                                 <img
-                                    src={freelancerData.imageUrl ? freelancerData.imageUrl : profilePicture}
+                                    src={freelancer?.data?.imageUrl ? freelancer?.data?.imageUrl : profilePicture}
                                     alt="Profile"
                                     className={`w-32 h-32 rounded-full object-cover border-4 ${theme === "dark" ? "border-gray-700" : "border-white"}`}
                                 />
@@ -107,36 +112,40 @@ export default function Profile() {
                                 {userInfo.firstname} {userInfo.lastname}
                             </h2>
                             <p className={`text-sm mb-2 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{userInfo.role}</p>
-                            <p className={`text-sm text-center ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>{freelancerData?.title}</p>
+                            <p className={`text-sm text-center ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>{freelancer?.data?.title}</p>
                         </div>
 
                         <div className="mt-6 flex justify-center">
-                            {!freelancerData ? (
-                                <Button className="w-full" onClick={() => navigate("/fr/complete-profile")} variant={theme === "dark" ? "secondary" : "default"}>
+                            {userInfo.role=='freelancer' && !freelancer?.data ? (
+                                <Button className="w-full" onClick={() => navigate("/fr/complete-profile")} variant="outline">
                                     Complete your profile
                                 </Button>
                             ) : (
-                                <Button className="w-44" variant={theme === "dark" ? "secondary" : "outline"}>
-                                    <Edit className="mr-2 h-4 w-4" /> Edit profile
-                                </Button>
+                                // <Button className="w-44" variant={theme === "dark" ? "secondary" : "outline"}>
+                                //     {/* <Edit className="mr-2 h-4 w-4" /> Edit profile */}
+                                // </Button>
+                                <></>
                             )}
                         </div>
 
                         <div className="mt-6 space-y-3 text-sm">
-                            <div className="flex items-center">
-                                <MapPin className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
-                                <span>{userInfo.country}</span>
-                            </div>
+                            {userInfo.country && (
+                                <div className="flex items-center">
+                                    <MapPin className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                    <span>{userInfo.country}</span>
+                                </div>
+                            )}
+
                             <div className="flex items-center">
                                 <Mail className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
                                 <span className={theme === "dark" ? "text-gray-300" : "text-gray-600"}>{userInfo.email}</span>
                             </div>
 
-                            {userInfo.role == "freelancer" && freelancerData?.skills && (
+                            {userInfo.role == "freelancer" && freelancer?.data.skills && (
                                 <div className="flex items-start">
                                     <Lightbulb className={`w-4 h-4 mr-2 mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
                                     <div className="flex flex-wrap">
-                                        {freelancerData.skills.map((skill, index) => (
+                                        {freelancer.data.skills.map((skill, index) => (
                                             <span key={index} className={`rounded-full px-2 py-1 text-sm mr-2 mb-2 ${theme === "dark" ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-700"}`}>
                                                 {skill}
                                             </span>
@@ -147,13 +156,16 @@ export default function Profile() {
 
                             {userInfo.role == "client" && (
                                 <>
-                                    <div className="flex items-start">
-                                        <Building2 className={`w-4 h-4 mr-2 mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
-                                        <div>
-                                            <h3 className="font-medium">{clientData.companyName}</h3>
-                                            <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{clientData.companyDescription}</p>
+                                    {clientData.companyName && (
+                                        <div className="flex items-start">
+                                            <Building2 className={`w-4 h-4 mr-2 mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                            <div>
+                                                <h3 className="font-medium">{clientData.companyName}</h3>
+                                                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{clientData.companyDescription}</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
+
                                     <div className="flex items-start">
                                         <Briefcase className={`w-4 h-4 mr-2 mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
                                         <div>
@@ -170,12 +182,20 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center">
-                                        <Globe className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
-                                        <a href={clientData.website} target="_blank" rel="noopener noreferrer" className={`hover:underline ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`}>
-                                            {clientData.website}
-                                        </a>
-                                    </div>
+
+                                    {clientData.website && (
+                                        <div className="flex items-center">
+                                            <Globe className={`w-4 h-4 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                            <a
+                                                href={clientData.website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`hover:underline ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`}
+                                            >
+                                                {clientData.website}
+                                            </a>
+                                        </div>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -187,7 +207,7 @@ export default function Profile() {
                         <CardTitle className={theme === "dark" ? "text-gray-200" : "text-gray-600"}>Your Posts</CardTitle>
                     </CardHeader>
                     {userInfo.role == "freelancer" ? (
-                        <CardContent className="gap-4 grid grid-cols-12 gap-5 justify-center ">
+                        <CardContent className="grid grid-cols-12 justify-center ">
                             {gigs?.data?.length < 1 && <p>No posts yet.</p>}
 
                             {gigs?.data?.map((gig) => {

@@ -9,7 +9,7 @@ import {useNavigate} from 'react-router-dom';
 import { setAdminAuthStatus } from "@/store/slices/userSlice"; 
 
 // Assume this function is imported from your API utilities
-import { loginAdmin } from "@/api/adminApi";
+import { loginAdmin } from "@/api/admin";
 
 export default function AdminLogin() {
     const [email, setEmail] = useState("");

@@ -15,7 +15,12 @@ import CompleteProfile from "@/components/freelancer/CompleteProfile"
 import PostProject from "@/pages/freelancer/PostProjectPage";
 import PostJobPage from "@/pages/client/PostJobPage";
 import ClientJobsPage from "@/pages/client/ClientJobsPage";
-import GigsPage from "@/pages/freelancer/GigsPages";
+import MangeWorkPage from "@/pages/freelancer/ManageWorkPage";
+import JobDetailsPage from '@/pages/client/JobDetailsPage';
+import SendOfferPage from '@/pages/client/ClientSendOfferPage';
+import SuccessPage from '@/components/common/SuccessPage';
+import PaymentSuccess from "../components/common/PaymentSuccess";
+import ExplorePage from "../pages/freelancer/ExplorePage";
 
 function UserRoute() {
     return (
@@ -26,10 +31,11 @@ function UserRoute() {
                 <Route path="/join" element={<Signup />} />
                 <Route path="/type" element={<UserTypeSelection />} />
                 <Route path="/verify-email" element={<VerifyEmail />} />
-
-                {/* <Route path="" element={<PrivateRoute />}>
-                    <Route path="/profile" element={<Profile />} />
-                </Route> */}
+                <Route path="/offer-success" element={<SuccessPage />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route element={<UsersLayout />}>
+                    <Route path="/explore" element={<ExplorePage />} />
+                </Route>
 
                 <Route path="" element={<ClientProtected />}>
                     <Route element={<UsersLayout />}>
@@ -37,17 +43,18 @@ function UserRoute() {
                         <Route path="cl/profile" element={<ProfilePage />} />
                         <Route path="cl/postjob" element={<PostJobPage />} />
                         <Route path="cl/manage-jobs" element={<ClientJobsPage />} />
+                        <Route path="cl/jobdetail/:id" element={<JobDetailsPage />} />
+                        <Route path="cl/send-offer/:jobId" element={<SendOfferPage />} />
                     </Route>
                     <Route path="cl/details" element={<DetailsClient />} />
                 </Route>
-
                 <Route element={<FreelancerProtected />}>
                     <Route element={<UsersLayout />}>
                         <Route path="fr/dashboard" element={<FreelancerDashboard />} />
                         <Route path="fr/profile" element={<ProfilePage />} />
                         <Route path="fr/complete-profile" element={<CompleteProfile />} />
                         <Route path="/fr/post-project" element={<PostProject />} />
-                        <Route path="/fr/manage-gigs" element={<GigsPage />} />
+                        <Route path="/fr/manage-gigs" element={<MangeWorkPage />} />
                     </Route>
                 </Route>
             </Routes>

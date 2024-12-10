@@ -10,7 +10,7 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
     }
 
     async findActiveJobs(id: string): Promise<IJob[] | null> {
-        return await JobModel.find({ clientId: id, isActive: true });
+        return await JobModel.find({ clientId: id, isActive: true }).sort({ createdAt: -1 }).exec();
     }
 
     //change active status
@@ -21,5 +21,16 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
         }
         job.isActive = false;
         return await job.save();
+    }
+
+    async updateApplicantsCount(jobId: string) {
+        return await JobModel.findByIdAndUpdate({ _id: jobId }, { $inc: { applicantsCount: 1 } }, { new: true }).exec();
+    }
+
+    async getFilteredJobs(filters: any, sortOption: any): Promise<IJob[] | null>{
+
+        console.log("filters in repo:", filters);
+
+        return await JobModel.find(filters).sort(sortOption).exec();
     }
 }

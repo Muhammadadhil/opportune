@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import DescriptionDataSchema from "@/schemas/postDescriptoinSchema";
 import { overViewSchema } from "@/schemas/postOverviewSchema";
 import KeywordInput from "../common/KeywordInput";
-import { getCategories } from "@/api/adminApi";
+import { getCategories } from "@/api/admin";
 import { ICategory, ISubCategory } from "@/types/ICategory";
 import { IGig } from "@/types/IGig";
 

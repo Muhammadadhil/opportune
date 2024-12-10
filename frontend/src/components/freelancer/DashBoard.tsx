@@ -2,7 +2,7 @@
 import Sidebar from "./Sidebar";
 import JobList from './Joblist'
 import { Input } from "@/components/ui/input";
-
+// import ExploreLayout from "@/layouts/ExploreLayout"; // sidebar layout component
 
 const Dashboard = () => {
 
@@ -13,7 +13,10 @@ const Dashboard = () => {
             </div>
             <div className="flex flex-col lg:flex-row gap-8">
                 <div className="w-full lg:w-3/4 order-2 lg:order-1">
-                    <JobList />
+                    <div className="flex-grow p-4 md:p-6">
+                        <h2 className="text-xl font-semibold mb-4">Jobs you might like</h2>
+                        <JobList />
+                    </div>
                 </div>
                 <div className="w-full lg:w-1/4 order-1 lg:order-2">
                     <Sidebar />

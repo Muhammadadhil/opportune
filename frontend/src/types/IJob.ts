@@ -9,4 +9,6 @@ export interface IJob {
     skillsRequired: string[];
     isActive: boolean;
     searchTags: string[];
+    applicantsCount?:number;
+    createdAt?:string;
 }
