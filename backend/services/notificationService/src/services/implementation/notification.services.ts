@@ -17,25 +17,23 @@ export class NotificationService implements INotificatoinService {
         this._notificationRepository = notificationRepository;
     }
 
-    async createNotification(userId:ObjectId,message:string,type:NotificationType):Promise<INotification> {
+    async createNotification(userId: ObjectId, message: string, type: NotificationType): Promise<INotification> {
+        const notification = await this._notificationRepository.create({ userId, message, type } as INotification);
+        const io = getIo();
+        io.to(userId.toString()).emit("newNotification", notification);
 
-        const notification = await this._notificationRepository.create({userId, message, type} as INotification);
-        const io= getIo();
-        // io.to(userId.toString()).emit("newNotification","you have successfully created a new notification");
-        io.emit("newNotification", notification);
-
-        
         return notification;
     }
 
-    async getUserNotifications(userId:ObjectId|string):Promise<INotification[]> {
-        return await this._notificationRepository.find({userId})
-    }   
-
-    async markAsRead(notificationId:ObjectId):Promise<INotification | null> {
-        return await this._notificationRepository.update(notificationId,{isRead:true})
+    async getUserNotifications(userId: ObjectId | string): Promise<INotification[]> {
+        return await this._notificationRepository.getUnReadNotifications(userId as string);
     }
 
+    async markAsRead(notificationId: ObjectId): Promise<INotification | null> {
+        return await this._notificationRepository.update(notificationId, { isRead: true });
+    }
 
-
+    // async markAllAsRead(notificationId: ObjectId): Promise<INotification | null> {
+    //     return await this._notificationRepository.update(notificationId, { isRead: true });
+    // }
 }

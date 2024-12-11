@@ -11,6 +11,7 @@ import { IOffer, IMilestone } from "@/types/IOffer";
 import {sendOffer} from "@/api/offers";
 import toast from "react-hot-toast";
 import {useNavigate} from 'react-router-dom';
+import {createNotification} from '@/api/notification';
 
 
 export default function SendOffer() {
@@ -97,6 +98,14 @@ export default function SendOffer() {
             };
 
             const response = await sendOffer(data);
+            // notify freelancer
+            await createNotification(
+                application.freelancerId,
+                `You have a new offer from the client ${application.clientId}
+                check your offers page`,
+                "info"
+            );
+
             console.log('response in sending offer:',response);
             navigate('/offer-success',{state:{message:"Offer Sent Successfully!",redirectPath:"/cl/dashboard",redirectTime:3000}})
         } catch (error) {

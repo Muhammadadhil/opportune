@@ -13,7 +13,6 @@ import { RootState } from "@/store/store";
 import { logout } from "@/api/auth";
 import { toggleTheme } from "@/store/slices/appSlice";
 import Notification from "@/components/common/Notification";
-import {Bell} from 'lucide-react'
 
 interface NavItem {
     path: string;
@@ -126,7 +125,6 @@ const Navbar: React.FC = () => {
                                 </div>
                             )}
 
-                            {/* Theme toggle */}
                             <button
                                 onClick={handleToggleTheme}
                                 className={`p-2 rounded-full mr-5 hidden md:block ${
@@ -136,7 +134,7 @@ const Navbar: React.FC = () => {
                                 {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
                             </button>
 
-                            <div className="mr-5">
+                            <div className="mr-5  hidden md:block ">
                                 <Notification />
                             </div>
 

@@ -1,23 +1,33 @@
 import { useState } from "react";
-import { Bell, Download } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {INotification} from '@/types/INotification';
+// import {markNotificationAsRead} from '@/api/notification';
+import {useMarkNotificationAsRead} from "@/hooks/notification/useMarkAsRead";
 
 interface NotificationProps {
-    notifications: any[];
+    notifications: INotification[];
     clearNotifications: () => void;
 }
 
 export const NotificationModal: React.FC<NotificationProps> = ({ notifications, clearNotifications }) => {
     const [open, setOpen] = useState(false);
 
+    const mutation=useMarkNotificationAsRead();
+
+    const handleRead=(id:string)=>{
+        // markNotificationAsRead(id);
+        mutation.mutate(id)
+
+    }
+
     return (
         <div className="relative">
             <button onClick={() => setOpen(true)} className="flex items-center focus:outline-none" aria-label="Notifications">
                 <Bell className="h-6 w-6" />
-                {notifications.length > 0 && (
+                {notifications?.length > 0 && (
                     <span className="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{notifications.length}</span>
                 )}
             </button>
@@ -31,32 +41,24 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications, 
                     </DialogHeader>
 
                     <ScrollArea className="h-[400px] pr-4">
-                        {notifications.length > 0 ? (
+                        {notifications?.length > 0 ? (
                             <div className="space-y-4">
-                                {notifications.map((notification, index) => (
-                                    <div key={index} className="flex items-start gap-4 py-2">
-                                        <Avatar className="h-10 w-10">
-                                            <img src={notification.avatar || "/placeholder.svg?height=40&width=40"} alt={notification.username || "User avatar"} />
-                                        </Avatar>
-                                        <div className="flex-1 space-y-1">
-                                            <p className="text-sm text-gray-800 dark:text-gray-200">
-                                                <span className="font-medium">{notification.username || "User"}</span> {notification.action || notification.message}
-                                            </p>
-                                            {notification.files &&
-                                                notification.files.map((file: any, fileIndex: number) => (
-                                                    <div key={fileIndex} className="flex items-center gap-2 rounded-md border border-gray-200 dark:border-gray-700 p-2 text-sm">
-                                                        <div className="flex-1">
-                                                            <p className="font-medium text-gray-800 dark:text-gray-200">{file.name}</p>
-                                                            <p className="text-gray-600 dark:text-gray-400">{file.size}</p>
-                                                        </div>
-                                                        <Button variant="ghost" size="icon">
-                                                            <Download className="h-4 w-4" />
-                                                        </Button>
-                                                    </div>
-                                                ))}
-                                            <p className="text-xs text-gray-600 dark:text-gray-400">{notification.timestamp || "Just now"}</p>
+                                {notifications.map((notification) => (
+                                    <div key={notification._id} className="flex flex-col gap-2 py-2 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg px-4">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="flex-1 space-y-1">
+                                                <p className="text-sm text-gray-800 dark:text-gray-200">
+                                                    <span className="font-medium">{notification.username || "User"}</span> {notification.message}
+                                                </p>
+                                                <p className="text-xs text-gray-600 dark:text-gray-400">{notification.timestamp || "Just now"}</p>
+                                            </div>
+                                            {!notification.isRead && <div className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0 mt-1" />}
                                         </div>
-                                        {notification.unread && <div className="h-2 w-2 rounded-full bg-blue-500" />}
+                                        <div className="flex justify-start">
+                                            <Button onClick={() => handleRead(notification._id)} variant="outline" size="sm" className="text-xs">
+                                                Mark as read
+                                            </Button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

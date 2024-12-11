@@ -21,9 +21,19 @@ export class NotificationController {
 
     async getUserNotifications(req: Request, res: Response, next: NextFunction) {
         try {
-            const { userId } = req.params;
-            const notifications = await this._notificationService.getUserNotifications(userId);
+            const { id } = req.params;
+            const notifications = await this._notificationService.getUserNotifications(id);
             res.json(notifications);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async markAsRead(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;
+            const notification = await this._notificationService.markAsRead(id);
+            res.json(notification);
         } catch (error) {
             next(error);
         }

@@ -4,7 +4,7 @@ import {IOffer} from "../types/IOffer";
 
 
 export const sendOffer = async (data: IOffer) => {
-    return await apiClient.post(`/post/job/offer`, data);
+    return await apiClient.post("/post/job/offer", data);
 };
 
 export const getOffers = async (id: string, userType: string) => {

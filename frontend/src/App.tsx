@@ -19,7 +19,6 @@ function App() {
         <>
             <ToastContainer />
             <Toaster />
-            
                 <Routes>
                     <Route path="/*" element={<UserRoute />} />
                     <Route path="/admin/*" element={<AdminRoute />} />

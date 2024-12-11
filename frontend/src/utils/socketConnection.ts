@@ -10,13 +10,14 @@ const createSocketConnection = (userId?: string) => {
         reconnectionDelay: 1000,
     });
     
+    if (userId) {
+        socket.emit("register", userId);
+    }
+    
     socket.on("connect_error", (error) => {
         console.error("Connection Error:", error);
     });
 
-    if (userId) {
-        socket.emit("register", userId);
-    }
 
 
     return socket;

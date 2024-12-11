@@ -11,12 +11,12 @@ export const createNotification = async (userId: string, message: string, type: 
 };
 
 
-//  async getUserNotifications(userId: string): Promise<Notification[]> {
-//     const response = await axios.get(`${API_URL}/${userId}`);
-//     return response.data;
-//   },
+export const getUserNotifications = async (userId: string): Promise<INotification[]> => {
+    const response = await apiClient.get(`/notification/notifications/${userId}`);
+    return response.data;
+};
 
-//   async markNotificationAsRead(notificationId: string): Promise<Notification> {
-//     const response = await axios.patch(`${API_URL}/${notificationId}/read`);
-//     return response.data;
-//   },
+export const markNotificationAsRead = async (userId: string): Promise<INotification[]> =>{
+    const response = await apiClient.patch(`/notification/notification/read/${userId}`);
+    return response.data;
+}
