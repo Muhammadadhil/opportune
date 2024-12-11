@@ -12,6 +12,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { RootState } from "@/store/store";
 import { logout } from "@/api/auth";
 import { toggleTheme } from "@/store/slices/appSlice";
+import Notification from "@/components/common/Notification";
+import {Bell} from 'lucide-react'
 
 interface NavItem {
     path: string;
@@ -60,6 +62,8 @@ const Navbar: React.FC = () => {
         dispatch(toggleTheme());
     };
 
+
+
     return (
         <>
             {!isLoading && (
@@ -69,7 +73,7 @@ const Navbar: React.FC = () => {
                             {/* Logo on the left */}
                             <div className="flex-shrink-0">
                                 <a className="flex items-center">
-                                    <Link to={'/'}>
+                                    <Link to={"/"}>
                                         <h2 className={`font-Poppins text-2xl font-extrabold ${theme === "dark" ? "text-white" : "text-slate-800"}`}>
                                             Opportune <span className="text-amber-500">.</span>
                                         </h2>
@@ -131,6 +135,10 @@ const Navbar: React.FC = () => {
                             >
                                 {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
                             </button>
+
+                            <div className="mr-5">
+                                <Notification />
+                            </div>
 
                             {!userInfo ? (
                                 <div className="hidden md:block">

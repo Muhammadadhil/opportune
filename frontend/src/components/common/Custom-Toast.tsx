@@ -18,7 +18,7 @@ export const CustomToast: React.FC<CustomToastProps> = ({ t, message }) => {
                         </div>
                     </div>
                     <div className="ml-3 flex-1">
-                        <p className="text-sm font-medium text-gray-900">Important Notification</p>
+                        <p className="text-sm font-medium text-gray-900">Notification</p>
                         <p className="mt-1 text-sm text-gray-500">{message}</p>
                     </div>
                 </div>
