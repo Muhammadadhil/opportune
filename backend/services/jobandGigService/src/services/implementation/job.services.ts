@@ -23,10 +23,10 @@ export class JobService implements IJobService {
         await this.producer.connect();
     }
 
-    async getJobs(category: string, applications: string, budgetRange: string, search: string, sort: string): Promise<IJob[] | null> {
-        
-
+    async getJobs(page:number,limit:number,category: string, applications: string, budgetRange: string, search: string, sort: string):Promise<{ jobs: IJob[] | null; totalPages: number }> {
+    
         const filters = {} as any;
+        // console.log('sort:',sort);
 
         if (category) filters.category = category;
         if (applications) filters.applications = { $lte: Number(applications) };
@@ -36,12 +36,22 @@ export class JobService implements IJobService {
         }
         if (search) filters.jobTitle = new RegExp(search, "i");
 
-        const sortOption = sort === "latest" ? { createdAt: -1 } : { createdAt: 1 };
+        const sortOption = sort === "newest" ? { createdAt: -1 } : { createdAt: 1 };
 
-        console.log("filters in service layer:", filters);
+        // console.log("filters in service layer:", filters);
+        // console.log('sortoption:',sortOption)
 
         // return await this.jobRepository.find({ isActive: true });
-        return await this.jobRepository.getFilteredJobs(filters, sortOption);
+        const totalJobs = await this.jobRepository.getJobsCount(filters);
+        const jobs = await this.jobRepository.getFilteredJobs(page,limit,filters, sortOption);
+
+        const totalPages = Math.ceil(totalJobs / limit);
+
+
+        return {
+            jobs,
+            totalPages,
+        };
     }
 
     async getJobsByClient(id: string): Promise<IJob[] | null> {

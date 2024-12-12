@@ -6,13 +6,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {INotification} from '@/types/INotification';
 // import {markNotificationAsRead} from '@/api/notification';
 import {useMarkNotificationAsRead} from "@/hooks/notification/useMarkAsRead";
+import {getRelativeTime} from '@/utils/relativeDateFormatter';
 
 interface NotificationProps {
     notifications: INotification[];
-    clearNotifications: () => void;
 }
 
-export const NotificationModal: React.FC<NotificationProps> = ({ notifications, clearNotifications }) => {
+export const NotificationModal: React.FC<NotificationProps> = ({ notifications }) => {
     const [open, setOpen] = useState(false);
 
     const mutation=useMarkNotificationAsRead();
@@ -50,7 +50,7 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications, 
                                                 <p className="text-sm text-gray-800 dark:text-gray-200">
                                                     <span className="font-medium">{notification.username || "User"}</span> {notification.message}
                                                 </p>
-                                                <p className="text-xs text-gray-600 dark:text-gray-400">{notification.timestamp || "Just now"}</p>
+                                                <p className="text-xs text-gray-600 dark:text-gray-400">{getRelativeTime(notification.createdAt) || "Just now"}</p>
                                             </div>
                                             {!notification.isRead && <div className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0 mt-1" />}
                                         </div>
@@ -71,7 +71,7 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications, 
 
                     <div className="flex items-center justify-end border-t border-gray-200 dark:border-gray-700 pt-4">
                         <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm" onClick={clearNotifications}>
+                            <Button variant="ghost" size="sm" >
                                 Mark all as read
                             </Button>
                         </div>

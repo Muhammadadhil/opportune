@@ -3,7 +3,7 @@ import {getUserNotifications} from '@/api/notification';
 
 const useNotification = (userId:string) => {
     return useQuery({
-        queryKey: ["notifications"],
+        queryKey: ["notifications",userId],
         queryFn: () => getUserNotifications(userId),
         staleTime: 300000,     
         refetchOnWindowFocus: true,

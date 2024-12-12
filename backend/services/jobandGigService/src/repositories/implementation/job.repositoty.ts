@@ -27,10 +27,13 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
         return await JobModel.findByIdAndUpdate({ _id: jobId }, { $inc: { applicantsCount: 1 } }, { new: true }).exec();
     }
 
-    async getFilteredJobs(filters: any, sortOption: any): Promise<IJob[] | null>{
-
-        console.log("filters in repo:", filters);
-
-        return await JobModel.find(filters).sort(sortOption).exec();
+    async getFilteredJobs(page: number, limit: number, filters: any, sortOption: any): Promise<IJob[] | null> {
+        const skip = (page - 1) * limit;
+        return await JobModel.find(filters).sort(sortOption).skip(skip).limit(limit).exec();
     }
+
+    async getJobsCount(filters: any): Promise<number>{
+        return await JobModel.countDocuments(filters).exec();
+    }
+    
 }

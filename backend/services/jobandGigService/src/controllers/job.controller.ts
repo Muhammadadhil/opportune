@@ -3,6 +3,7 @@ import { JobService } from "../services/implementation/job.services";
 import { IApplyJob, IJobService } from "../services/interfaces/IJobService";
 import { HTTPError } from "../utils/HttpError";
 import { IApproval } from "../interfaces/IApproval";
+import { IFilters } from "../interfaces/IFilters";
 
 export class JobController {
     private _jobService: IJobService;
@@ -12,10 +13,21 @@ export class JobController {
     }
 
     getJobs = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const { category, applications, budgetRange, search, sort } = req.query;            
-            const jobs = await this._jobService.getJobs( category as string, applications as string, budgetRange as string, search as string,sort as string );
-            res.status(200).json(jobs);
+        try { 
+            console.log('req.query:',req.query);
+            const { page = 1, limit = 10 } = req.query;
+            const { category, applications, budgetRange, search, sort } = req.query.filters as IFilters;
+            const { jobs, totalPages } = await this._jobService.getJobs(
+                page as number,
+                limit as number,
+                category as string,
+                applications as string,
+                budgetRange as string,
+                search as string,
+                sort as string
+            );
+
+            res.status(200).json({ jobs, totalPages });
         } catch (error) {
             next(error);
         }

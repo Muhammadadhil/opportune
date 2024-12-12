@@ -1,12 +1,14 @@
 import { getFilteredJobs } from "@/api/job";
 import { useQuery } from "@tanstack/react-query";
 
-export function useFilterJobs(filters: any) {
+export function useFilterJobs(filters: any,page:number,limit:number) {
 
-    console.log('filters in useFilterJobs:',filters);
+    console.log("pagination & filters in useFilterJobs:", { filters, page , limit});
 
     return useQuery({
-        queryKey: ["jobs", filters],
-        queryFn: () => getFilteredJobs(filters),
+        queryKey: ["jobs", { filters, page, limit }],
+        queryFn: () => getFilteredJobs(filters, page, limit),
+        // staleTime: 600000, //10 minutes
+        keepPreviousData: true,
     });
 }
