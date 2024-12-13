@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import morgan from "morgan";
+import { createStream } from "rotating-file-stream";
+import path from "path";
+// import fs from 'fs'
 
 dotenv.config();
 
@@ -19,8 +22,17 @@ app.use(
   })
 );
 
-app.use(helmet()); 
-app.use(morgan("dev"));
+
+// const logStream = fs.createWriteStream(path.join(__dirname, "access.log"), { flags: "a" });
+
+const logStream= createStream("access.log", {
+    interval: "10d",
+    path: path.join(process.cwd(),"logs"),
+    maxSize: "10M"
+});
+
+
+app.use(morgan("combined",{stream:logStream}));
 
 const targets = {
     user: process.env.USER_API_BASE_URL,

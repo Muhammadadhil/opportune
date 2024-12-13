@@ -47,12 +47,12 @@ export default {
     			'accordion-up': 'accordion-up 0.2s ease-out'
     		}
     	},
-    	fontFamily: {
-    		Poppins: ["Poppins", "sans-serif"],
-    		Inter: ["Inter", "sans-serif"],
-    		Nunito: ["Nunito", "sans-serif"],
-    		Montserrat: ["Montserrat", "sans-serif"]
-    	}
+    	// fontFamily: {
+    	// 	Poppins: ["Poppins", "sans-serif"],
+    	// 	Inter: ["Inter", "sans-serif"],
+    	// 	Nunito: ["Nunito", "sans-serif"],
+    	// 	Montserrat: ["Montserrat", "sans-serif"]
+    	// }
     },
     plugins: [require("tailwindcss-animate")],
 };
