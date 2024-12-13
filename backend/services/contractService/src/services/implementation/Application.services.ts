@@ -43,14 +43,20 @@ export class ApplicationSerivce implements IApplicationService {
     }
 
     async getApplicationsOfFreelancer(freelancerId: string): Promise<any | null> {
+
+        console.log("In Service layer : )!!!!! getApplicationsOfFreelancer ");
+
         const applications = await this._applicationRepository.find({ freelancerId });
         const jobIds= applications.map((app) => app.jobId);
 
-        const response = await axios.get("http://localhost:4002/post/batch/jobs", { params: { jobIds } });
+        const response = await axios.get("http://localhost:3020/batch/jobs", { params: { jobIds } });
         const enrichedApplications = applications.map((application) => ({
             ...application.toObject(),
             jobDetails: response.data.find((j: any) => j._id === application.jobId.toString()),
         }));
+
+        console.log("In Service layer : )!!!!! getApplicationsOfFreelancer ");
+
         return enrichedApplications;
         
 

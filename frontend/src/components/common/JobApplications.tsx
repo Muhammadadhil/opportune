@@ -29,20 +29,17 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
         <div className="mx-auto px-4 py-8">
             {applications?.length > 0 ? (
                 <Table className="border">
-                    {isLoading && (Array.from({ length: 5 }).map(() => (
-                        <TableRowSkelton userType={userType} />
-                    )))}
+                    {isLoading && Array.from({ length: 5 }).map(() => <TableRowSkelton userType={userType} />)}
+                    <TableCaption>A list of your recent applications.</TableCaption>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-[300px]">Id</TableHead>
+                            <TableHead>Status</TableHead>
+                            {userType === "client" ? <TableHead>Freelancer Name</TableHead> : <TableHead>Job Title</TableHead>}
+                        </TableRow>
+                    </TableHeader>
                     {applications?.map((app: IApplication) => (
                         <>
-                            <TableCaption>A list of your recent applications.</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[300px]">Id</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    {userType === "client" ? <TableHead>Freelancer Name</TableHead> : <TableHead>Job Title</TableHead>}
-                                </TableRow>
-                            </TableHeader>
-
                             <TableBody key={app._id}>
                                 <TableRow className="h-20">
                                     <TableCell className="font-medium">APP{app._id}</TableCell>

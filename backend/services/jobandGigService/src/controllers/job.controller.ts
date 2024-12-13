@@ -143,6 +143,7 @@ export class JobController {
 
     getJobDetails = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            console.log('controller: getting job details');
             const { jobIds } = req.query;
             const jobs = await this._jobService.getJobDetails(jobIds as string[]);
             console.log("fetched jobs:", jobs);
