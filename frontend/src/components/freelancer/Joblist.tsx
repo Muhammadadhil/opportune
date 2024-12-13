@@ -10,14 +10,15 @@ import { Button } from "@/components/ui/button";
 const JobList = ({ filters }: { filters?: any }) => {
     const [page, setPage] = useState(1);
     const [totalPages,setTotalPages]=useState(1);
-    const limit = 5;
+    const limit = 3;
 
-    const { data: jobs, isLoading ,isPreviousData } = useFilterJobs(filters, page, limit);
+    const { data: jobs, isLoading } = useFilterJobs(filters, page, limit);
 
-    console.log('jobs:',jobs);
+    // console.log('jobs:', jobs);
+
 
     useEffect(() => {
-        setTotalPages(jobs?.data.totalPages);
+        setTotalPages(jobs?.data?.totalPages);
     }, [jobs]);
     
     
@@ -77,30 +78,36 @@ const JobList = ({ filters }: { filters?: any }) => {
                 )}
             </ul>
 
-            <div className="flex items-center justify-center mt-8">
-                <nav className="flex items-center space-x-2" aria-label="Pagination">
-                    <Button onClick={() => handlePageChange(page - 1)} disabled={page === 1} className="px-2 py-1 rounded-md bg-white text-gray-500 border border-gray-300 hover:bg-gray-50">
-                        Previous
-                    </Button>
-
-                    {getPageNumbers().map((pageNumber, index) => (
-                        <Button
-                            key={index}
-                            onClick={() => typeof pageNumber === "number" && handlePageChange(pageNumber)}
-                            className={`px-3 py-1 rounded-md ${pageNumber === page ? "bg-black text-white" : "bg-white text-gray-500 border border-gray-300 hover:bg-gray-50"} ${
-                                pageNumber === "..." ? "cursor-default" : ""
-                            }`}
-                            disabled={pageNumber === "..."}
-                        >
-                            {pageNumber}
+            {!isLoading && (
+                <div className="flex items-center justify-center mt-8">
+                    <nav className="flex items-center space-x-2" aria-label="Pagination">
+                        <Button onClick={() => handlePageChange(page - 1)} disabled={page === 1} className="px-2 py-1 rounded-md bg-white text-gray-500 border border-gray-300 hover:bg-gray-50">
+                            Previous
                         </Button>
-                    ))}
 
-                    <Button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages} className="px-2 py-1 rounded-md bg-white text-gray-500 border border-gray-300 hover:bg-gray-50">
-                        Next
-                    </Button>
-                </nav>
-            </div>
+                        {getPageNumbers().map((pageNumber, index) => (
+                            <Button
+                                key={index}
+                                onClick={() => typeof pageNumber === "number" && handlePageChange(pageNumber)}
+                                className={`px-3 py-1 rounded-md ${pageNumber === page ? "bg-black text-white" : "bg-white text-gray-500 border border-gray-300 hover:bg-gray-50"} ${
+                                    pageNumber === "..." ? "cursor-default" : ""
+                                }`}
+                                disabled={pageNumber === "..."}
+                            >
+                                {pageNumber}
+                            </Button>
+                        ))}
+
+                        <Button
+                            onClick={() => handlePageChange(page + 1)}
+                            disabled={page === totalPages}
+                            className="px-2 py-1 rounded-md bg-white text-gray-500 border border-gray-300 hover:bg-gray-50"
+                        >
+                            Next
+                        </Button>
+                    </nav>
+                </div>
+            )}
         </>
     );
 };

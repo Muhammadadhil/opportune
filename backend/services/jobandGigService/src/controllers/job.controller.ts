@@ -16,17 +16,30 @@ export class JobController {
         try { 
             console.log('req.query:',req.query);
             const { page = 1, limit = 10 } = req.query;
-            const { category, applications, budgetRange, search, sort } = req.query.filters as IFilters;
-            const { jobs, totalPages } = await this._jobService.getJobs(
-                page as number,
-                limit as number,
-                category as string,
-                applications as string,
-                budgetRange as string,
-                search as string,
-                sort as string
-            );
+            let jobs;
+            let totalPages;
 
+            if(req.query.filters){
+                console.log('req.query.filters:',req.query.filters);
+                const { category, applications, budgetRange, search, sort } = req.query.filters as IFilters;
+                const { Alljobs, totalPagesCount } = await this._jobService.getJobs(
+                    page as number,
+                    limit as number,
+                    category as string,
+                    applications as string,
+                    budgetRange as string,
+                    search as string,
+                    sort as string
+                );
+
+                jobs = Alljobs;
+                totalPages = totalPagesCount;
+            }else{
+                const { Alljobs, totalPagesCount } = await this._jobService.getJobs(page as number, limit as number);
+                jobs = Alljobs;
+                totalPages = totalPagesCount;
+            }
+            
             res.status(200).json({ jobs, totalPages });
         } catch (error) {
             next(error);
