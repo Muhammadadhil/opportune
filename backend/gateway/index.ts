@@ -7,6 +7,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { createStream } from "rotating-file-stream";
 import path from "path";
+import { verifyToken } from "./verifyToken";
+import { errorHandler } from '@_opportune/common'
 // import fs from 'fs'
 
 dotenv.config();
@@ -21,7 +23,6 @@ app.use(
     credentials: true, 
   })
 );
-
 
 // const logStream = fs.createWriteStream(path.join(__dirname, "access.log"), { flags: "a" });
 
@@ -54,6 +55,7 @@ app.use(
 
 app.use(
     "/manage",
+    verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.manage,
         changeOrigin: true,
@@ -62,6 +64,7 @@ app.use(
 
 app.use(
     "/post",
+    verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.jobandGig,
         changeOrigin: true,
@@ -70,6 +73,7 @@ app.use(
 
 app.use(
     "/contract",
+    verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.contract,
         changeOrigin: true,
@@ -78,6 +82,7 @@ app.use(
 
 app.use(
     "/payment",
+    verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.payment,
         changeOrigin: true,
@@ -86,11 +91,14 @@ app.use(
 
 app.use(
     "/notification",
+    verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.notification,
         changeOrigin: true,
     })
 );
+
+app.use(errorHandler);
 
 const port = process.env.APIGATEWAY_PORT;
 

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { HTTPError } from "../utils/HttpError";
 
-export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction):void => {
     console.log("Error handler in Action !!");
 
     if (err instanceof HTTPError) {
