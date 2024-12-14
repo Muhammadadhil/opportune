@@ -5,14 +5,15 @@ import { IApplyJob, IJobService } from "../interfaces/IJobService";
 import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
 import { IApproval } from "../../interfaces/IApproval";
 import axios from 'axios';
-import { HTTPError } from "../../utils/HttpError";
 import { IJobRepository } from "../../repositories/interfaces/IJobRepository";
 import { IOffer } from "../../interfaces/IOffer";
 import { IFilters } from "../../interfaces/IFilters";
+import { CustomError } from '@_opportune/common'
 
 export class JobService implements IJobService {
     private jobRepository: IJobRepository;
     private producer = new RabbitMQProducer();
+    private contractServiceUrl = process.env.CONTRACT_SERVICE_URL;
 
     constructor() {
         this.jobRepository = new JobRepository();
@@ -67,6 +68,7 @@ export class JobService implements IJobService {
         return newJob;
     }
 
+
     async editJob(data: Partial<IJob>): Promise<IJob | null> {
         if (!data._id) {
             return null;
@@ -80,12 +82,12 @@ export class JobService implements IJobService {
     }
 
     async applyJob(data: IApplyJob) {
-        const response = await axios.get(`http://localhost:4002/contract/application`, {
+        const response = await axios.get(`${this.contractServiceUrl}/application`, {
             params: { jobId: data.jobId, freelancerId: data.freelancerId },
         });
 
         if (response.data.exists) {
-            throw new HTTPError("You have already applied for this job", 401);
+            throw new CustomError("You have already applied for this job", 400);
         }
 
         console.log("In service layer: going to publish the message with data:", data);

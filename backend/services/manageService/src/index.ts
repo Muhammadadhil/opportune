@@ -1,11 +1,12 @@
 import express from "express";
-import connectDB from "./config/db/connect";
 import router from './routes/adminRoutes';
 import categoryRouter from './routes/categoryRoutes';
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-import { errorHandler } from "./middleware/errorHandler";
+import { errorHandler } from '@_opportune/common'
+import { connectMongoDB } from '@_opportune/common'
+
 
 const app = express();
 dotenv.config();
@@ -25,8 +26,7 @@ app.use("/category", categoryRouter);
 
 app.use(errorHandler);
 
-
-connectDB();    
+connectMongoDB(process.env.MONGODB_URL!, "manage");    
 
 const PORT = process.env.PORT || 3010;
 

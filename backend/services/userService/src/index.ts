@@ -1,10 +1,10 @@
 import express from "express";
 import userRouter from "./routes/userRouter";
-import connectDB from "./config/connectDB";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import { connectMongoDB } from "@_opportune/common";
 
 const app = express();
 dotenv.config();
@@ -23,7 +23,7 @@ app.use(morgan("dev"));
 
 app.use("/", userRouter);
 
-connectDB();
+connectMongoDB(process.env.MONGODB_URL!, "user");
 
 const PORT = process.env.PORT || 3015;
 

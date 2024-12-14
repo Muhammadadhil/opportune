@@ -12,7 +12,6 @@ export class AdminController {
     }
     async login(req: Request, res: Response) {
         try {
-            
             const { email, password } = req.body;
             const { admin, accessToken, refreshToken } = await this.adminService.login(email, password);
 
@@ -33,8 +32,6 @@ export class AdminController {
                 message: "admin logged in successfully",
             });
         } catch (error: any) {
-            console.error("login error:", error);
-
             if (error.message === "User already exists") {
                 return res.status(400).json({ message: error });
             } else if (error.message.includes("Invalid email or password")) {
@@ -46,8 +43,6 @@ export class AdminController {
     }
 
     async logout(req: Request, res: Response) {
-
-        console.log('admin logout!!!!')
 
         res.cookie("jwt-refresh", {
             httpOnly: true,

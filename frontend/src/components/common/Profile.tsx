@@ -209,10 +209,10 @@ export default function Profile() {
                     {userInfo.role == "freelancer" ? (
                         <CardContent className="grid grid-cols-12 justify-center ">
                             {gigs?.data?.length < 1 && <p>No posts yet.</p>}
-
+{/* 
                             {gigs?.data?.map((gig) => {
                                 return <GigCard key={gig._id} gig={gig} onUpdate={updateGig} />;
-                            })}
+                            })} */}
                         </CardContent>
                     ) : (
                         <CardContent className="flex gap-2 flex-wrap ">

@@ -19,7 +19,7 @@ const ClientDashboard: React.FC = () => {
                     <p className="text-xs md:text-sm mt-1 text-center">Connect with talents and collaborate</p>
                 </Card>
             </div>
-            <GigList />
+            {/* <GigList /> */}
         </MaxWidth>
     );
 };

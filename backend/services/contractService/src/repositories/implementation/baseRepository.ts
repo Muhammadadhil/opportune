@@ -1,4 +1,4 @@
-import { Model, Document } from "mongoose";
+import { Model, Document, ObjectId } from "mongoose";
 import { IBaseRepository } from "../interfaces/IBaseRepository";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
@@ -28,7 +28,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         }
     }
 
-    async findById(id: string): Promise<T | null> {
+    async findById(id: ObjectId): Promise<T | null> {
         try {
             return await this.model.findById(id).exec();
         } catch (error) {

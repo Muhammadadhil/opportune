@@ -11,7 +11,7 @@ import { ContractStatus } from "../../enums/ContractStatus";
 import { ApplicationStutus } from "../../enums/ApplicationStatus";
 import { IPayment } from "@_opportune/common";
 import { MilestoneStatus } from "../../enums/MIlestoneStatus";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 
 export class ContractService implements IContractService {
@@ -79,14 +79,14 @@ export class ContractService implements IContractService {
     async postPaymentSuccess(data: IPayment): Promise<void> {
         console.log("payment success:", data);
         this.updateMilestoneStatus(data.contractId, data.milestoneId, MilestoneStatus.ACTIVE);
-        const contract = await this.contractRepository.findById(data.contractId as string);
+        const contract = await this.contractRepository.findById(data.contractId);
         if (contract && contract.status == ContractStatus.PENDING) {
             await this.contractRepository.update(contract._id as string,{status:ContractStatus.IN_PROGRESS});
         }
     }
 
-    async updateMilestoneStatus(contractId: string | mongoose.Types.ObjectId, milestoneId: string | mongoose.Types.ObjectId, newStatus: string): Promise<IContract | null> {
-        const contract = await this.contractRepository.findById(contractId as string);
+    async updateMilestoneStatus(contractId: string | ObjectId, milestoneId: string | ObjectId, newStatus: string): Promise<IContract | null> {
+        const contract = await this.contractRepository.findById(contractId as ObjectId);
         console.log('contract to update milestone dtila:',contract)
         console.log("milestoneId:", milestoneId);
 

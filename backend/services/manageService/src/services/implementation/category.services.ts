@@ -1,6 +1,6 @@
 import { ISubCategory, ICategoryData } from "../../interfaces/ICategory";
 import { categoryRepository } from "../../repositories/implementation/category.repository";
-import { HTTPError } from "../../utils/HTTPError";
+import { CustomError } from "@_opportune/common";
 
 export class categoryService {
     private categoryRepository;
@@ -16,7 +16,7 @@ export class categoryService {
             const categoryExist = await this.categoryRepository.findCategory(category);
 
             if (categoryExist) {
-                throw new HTTPError("category already exists", 400);
+                throw new CustomError("category already exists", 400); 
             }
             const item: ICategoryData = {
                 name: category,

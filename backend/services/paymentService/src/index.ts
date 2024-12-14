@@ -3,10 +3,10 @@ import router from "./routes/route";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-import { errorHandler } from "./middleware/errorHandler";
 import { intialiseConsumers } from "./config/container";
-import { connectMongoDB } from "@_opportune/common"
 import webhookRouter from "./routes/webhook.route";
+import { connectMongoDB } from "@_opportune/common"
+import { errorHandler } from '@_opportune/common'
 
 const app = express();
 dotenv.config();

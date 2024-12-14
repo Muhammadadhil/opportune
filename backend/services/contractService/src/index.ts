@@ -1,11 +1,11 @@
 import express from "express";
-import connectDB from "./config/db/connect";
 import router from "./routes/router";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-import { errorHandler } from "./middleware/errorHandler";
 import { intialiseConsumers } from "./config/container";
+import { connectMongoDB } from "@_opportune/common"
+import { errorHandler } from '@_opportune/common'
 
 const app = express();
 dotenv.config();
@@ -23,7 +23,7 @@ app.use(morgan("dev"));
 app.use("/", router);
 app.use(errorHandler);
 
-connectDB();
+connectMongoDB(process.env.MONGODB_URL!,'contract');
 
 const PORT = process.env.PORT || 3030;
 
