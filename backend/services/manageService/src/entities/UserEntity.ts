@@ -1,6 +1,6 @@
 import { Document, ObjectId } from "mongoose";
 
-export default interface IUser extends Document {
+export interface IUser extends Document {
     _id: ObjectId;
     firstname: string;
     lastname: string;
@@ -8,6 +8,6 @@ export default interface IUser extends Document {
     country?: string;
     password?: string;
     role: string;
-    isOAuthUser?:boolean;
+    isOAuthUser?: boolean;
     isBlocked?: boolean;
 }

@@ -10,7 +10,8 @@ export class AdminService {
     }
 
     async login(email: string, password: string) {
-
+        
+        // gmail
         // const password1 = "aadhi1234";
         // const hash = bcrypt.hashSync(password1, 10);
         // console.log("Use this hash in MongoDB:", hash);

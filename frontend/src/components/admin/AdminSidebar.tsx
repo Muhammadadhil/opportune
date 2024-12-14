@@ -18,7 +18,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange }) => {
 
     const handleLogout = async () => {
         try {
-            await logoutAdmin();
+            const response = await logoutAdmin();
+            console.log('response:',response);
             dispatch(setAdminAuthStatus());
         } catch (error) {
             console.error("Logout error:", error);

@@ -33,7 +33,7 @@ const Categories: React.FC = () => {
 
     const getAllCategories = async () => {
         const response = await getCategories();
-        // console.log("response.data.data", response);
+        console.log("response.data.data", response);
         setCategories(response.data); 
     };
 

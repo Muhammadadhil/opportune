@@ -1,4 +1,4 @@
-import { Model, Document } from "mongoose";
+import { Model, Document, ObjectId } from "mongoose";
 import { IBaseRepository } from "../interface/IBaseRepository";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
@@ -27,7 +27,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         }
     }
 
-    async findById(id: string): Promise<T | null> {
+    async findById(id: ObjectId): Promise<T | null> {
         try {
             return await this.model.findById(id).exec();
         } catch (error) {
@@ -36,7 +36,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         }
     }
 
-    async update(id: string, data: Partial<T>): Promise<T | null> {
+    async update(id: ObjectId, data: Partial<T>): Promise<T | null> {
         try {
             return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
         } catch (error) {
@@ -45,7 +45,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         }
     }
 
-    async delete(id: string): Promise<T | null> {
+    async delete(id: ObjectId): Promise<T | null> {
         try {
             return await this.model.findByIdAndDelete(id).exec();
         } catch (error) {

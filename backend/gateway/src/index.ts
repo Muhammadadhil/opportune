@@ -10,11 +10,9 @@ import path from "path";
 import { verifyToken } from "./verifyToken";
 import { errorHandler } from '@_opportune/common'
 
-
 dotenv.config();
 
 const app = express();
-
 app.use(cookieParser());
 
 app.use(
@@ -42,7 +40,6 @@ const targets = {
     contract: process.env.CONTRACT_BASE_URL,
     payment: process.env.PAYMENT_BASE_URL,
     notification: process.env.NOTIFICATION_BASE_URL
-
 };
 
 app.use(
@@ -55,7 +52,7 @@ app.use(
 
 app.use(
     "/manage",
-    verifyToken(process.env.JWT_SECRET!),
+    // verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.manage,
         changeOrigin: true,

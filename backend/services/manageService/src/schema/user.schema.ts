@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import IUser from "../interfaces/IUser";
-import { userRoles } from "../enums/userRoles";
+import { IUser } from '../entities/UserEntity'
+import { userRoles } from "@_opportune/common";
 
 const UserSchema: Schema = new Schema({
     firstname: {
@@ -42,8 +42,8 @@ const UserSchema: Schema = new Schema({
     },
     isBlocked: {
         type: Boolean,
-        default: false  
-    }
+        default: false,
+    },
 });
 
 export const User = mongoose.model<IUser>("User", UserSchema);

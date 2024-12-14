@@ -1,7 +1,7 @@
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import Dashboard from "@/components/admin/Dashboard";
 import Categories from "@/components/admin/Categories"; 
-import TopBar from "@/components/admin/AdminDashboardTopBar";
+import TopBar from "@/components/admin/AdminNavbar";
 import { useState } from "react";
 
 export default function AdminDashboardPage() {
