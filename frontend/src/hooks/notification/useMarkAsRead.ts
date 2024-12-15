@@ -8,17 +8,6 @@ export const useMarkNotificationAsRead = () => {
     return useMutation<INotification[], Error, string>({
         mutationFn: (id:string)=> markNotificationAsRead(id),
 
-        onMutate: async () => {
-            await queryClient.cancelQueries({ queryKey: ["notifications"] });
-            const previousNotifications = queryClient.getQueryData<INotification[]>(["notifications"]);
-            queryClient.setQueryData(["notifications"], []);
-            return { previousNotifications };
-        },
-
-        onError: (err, userId, context) => {
-            queryClient.setQueryData(["notifications", userId], context?.previousNotifications);
-        },
-
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["notifications"] });
         },

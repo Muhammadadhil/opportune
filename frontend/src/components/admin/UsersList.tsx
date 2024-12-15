@@ -4,15 +4,7 @@ import { useGetUsers } from '@/hooks/user/useGetUsers'
 import { IUser } from '@/types/IUser'
 import {Button} from '@/components/ui/button'
 import { getPaginationNumbers } from "@/utils/getPageNumbers";
-
-// Sample user data
-// const initialUsers = [
-//     { id: 1, firstName: "John", lastName: "Doe", role: "Developer", email: "john.doe@example.com", country: "USA", blocked: false },
-//     { id: 2, firstName: "Jane", lastName: "Smith", role: "Designer", email: "jane.smith@example.com", country: "Canada", blocked: true },
-//     { id: 3, firstName: "Alice", lastName: "Johnson", role: "Manager", email: "alice.johnson@example.com", country: "UK", blocked: false },
-//     { id: 4, firstName: "Bob", lastName: "Williams", role: "Developer", email: "bob.williams@example.com", country: "Australia", blocked: false },
-//     { id: 5, firstName: "Emma", lastName: "Brown", role: "Marketing", email: "emma.brown@example.com", country: "Germany", blocked: false },
-// ];
+import {useToggleBlockStatus} from '@/hooks/user/useBlock'
 
 const UserList: React.FC = () => {
     // const [users, setUsers] = useState(initialUsers);
@@ -25,10 +17,12 @@ const UserList: React.FC = () => {
     const { data:users,isLoading } = useGetUsers(searchKey, page, limit);
     console.log('users:',users);
 
+    const { mutate: toggleBlockStatus, isPending: isBlocking } = useToggleBlockStatus();
+
     const handleBlockToggle = (userId: string) => {
-        console.log("Toggle blocked for user with ID:", userId);
-        
+        toggleBlockStatus(userId);
     };
+
 
     useEffect(() => {
         setTotalPages(users?.data?.totalPages);
@@ -101,7 +95,7 @@ const UserList: React.FC = () => {
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 text-sm">
                                             <div className="flex items-center">
-                                                <Switch checked={!user.isBlocked} onCheckedChange={() => handleBlockToggle(user._id)} className="mr-2" />
+                                                <Switch checked={!user.isBlocked} onCheckedChange={() => handleBlockToggle(user._id)} className="mr-2" disabled={isBlocking} />
                                                 <span className={user.isBlocked ? "text-red-600" : "text-green-600"}>{user.isBlocked ? "Blocked" : "Active"}</span>
                                             </div>
                                         </td>

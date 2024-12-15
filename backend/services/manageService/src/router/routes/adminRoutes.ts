@@ -13,6 +13,7 @@ router.post("/login",adminController.login);
 router.patch("/logout",adminController.logout);
 
 router.get('/users',userController.getUsers);
+router.patch(`/users/:userId/block-toggle`, userController.toggleBlockStatus);
 
 
 

@@ -4,6 +4,7 @@ import {IUserController} from '../interface/IUserController';
 import { TYPES } from "../../interfaces/types";
 import { IUserService } from "../../services/interfaces/IUserService";
 import { Request, Response, NextFunction } from "express";
+import { ObjectId, Types } from "mongoose";
 
 @injectable()
 export class UserController implements IUserController {
@@ -11,9 +12,8 @@ export class UserController implements IUserController {
 
     constructor(@inject(TYPES.IUserService) userService: IUserService) {
         this.userService = userService;
-        console.log("UserController initialized with userService:", this.userService);
         this.getUsers = this.getUsers.bind(this);
-
+        this.toggleBlockStatus = this.toggleBlockStatus.bind(this);
     }
 
     async getUsers(req: Request, res: Response, next: NextFunction) {
@@ -38,6 +38,22 @@ export class UserController implements IUserController {
                 totalPages = totalPagesCount;
             }
             res.status(200).json({ users, totalPages });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async toggleBlockStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const id=req.params.userId;
+            const userId = new Types.ObjectId(id);
+            
+            if (!userId ) {
+                res.status(400).json({ message: "Invalid input" });
+                return;
+            }
+            const message = await this.userService.toggleBlockStatus(userId as unknown as ObjectId);
+            res.status(200).json({ message });
         } catch (error) {
             next(error);
         }

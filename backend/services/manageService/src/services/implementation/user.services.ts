@@ -1,7 +1,7 @@
 import { IUserService } from "../interfaces/IUserService";
 import { IUserRepository } from "../../repositories/interface/IUserRepository";
 import { IUser } from "../../entities/UserEntity";
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../interfaces/types";
 
@@ -13,8 +13,7 @@ export class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
-    async getUsers(page: number, limit: number, searchkey: string): Promise<{ AllUsers: IUser[] | null; totalPagesCount: number }>{
-    
+    async getUsers(page: number, limit: number, searchkey: string): Promise<{ AllUsers: IUser[] | null; totalPagesCount: number }> {
         const totalJobs = await this.userRepository.getUsersCount();
         const AllUsers = await this.userRepository.getUsers(page, limit, searchkey);
 
@@ -24,6 +23,15 @@ export class UserService implements IUserService {
             AllUsers,
             totalPagesCount,
         };
+    }
+
+    async toggleBlockStatus(userId: ObjectId): Promise<string> {
+        const user = await this.userRepository.toggleBlockStatus(userId);
+        if (!user) throw new Error("User not found");
+
+        return user.isBlocked ? "Blocked" : "Unblocked";
+
+        // publish a message with the event type and the user data;
     }
 
     async createUser(data: IUser): Promise<void> {

@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 import { IUserRepository } from "../interface/IUserRepository";
 import { BaseRepository } from "./base.repository";
 import { IUser } from '../../entities/UserEntity';
@@ -29,5 +29,21 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
         } else {
             return await this.userModel.find().skip(skip).limit(limit).exec();
         }
+    }
+
+    async toggleBlockStatus(userId: ObjectId): Promise<IUser | null> {
+
+        const user = await this.userModel.findOne({ _id: userId });
+        const updatedUser = await this.userModel.findOneAndUpdate(
+            { _id: userId },
+            { $set: { isBlocked: !user?.isBlocked } },
+            { new: true } 
+        );
+
+        if (!updatedUser) {
+            throw new Error("User not found");
+        }
+
+        return updatedUser;
     }
 }
