@@ -1,6 +1,5 @@
 
 import { Channel } from "amqplib";
-import { RabbitMQConsumer } from "../Consumer";
 import { IContractService } from "../../../services/interfaces/IContractService";
 import { rabbitMQConnection } from "../RabbitMQConnection";
 

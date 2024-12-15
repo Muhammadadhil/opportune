@@ -16,16 +16,22 @@ import { JobApprovalConsumer } from "../events/rabbitmq/consumers/jobApproveCons
 import { CreateOfferConsumer } from "../events/rabbitmq/consumers/createOfferConsumer";
 import { CreateApplicationConsumer } from "../events/rabbitmq/consumers/applicationConsumer";
 import { PaymentSuccessConsumer } from '../events/rabbitmq/consumers/paymentConsumer'
+import { UserConsumer } from "../events/rabbitmq/consumers/UserConsumer";
+import { UserService } from "../services/implementation/user.services";
+import { UserRepository } from "../repositories/implementation/user.repository";
+import { User } from "../schema/user.schema";
 
 //repositories
 const applicationRepository = new ApplicationRepository(Application);
 const contractRepository = new ContractRepository(Contract);
 const offerRepository = new OfferRepository(Offer);
+const userRepository = new UserRepository(User);
 
 //services
 const applicationService = new ApplicationSerivce(applicationRepository);
 const contractService = new ContractService(contractRepository,applicationRepository);
 const offerService = new OfferService(offerRepository,applicationRepository,contractService);
+const userService = new UserService(userRepository);
 
 //controllers
 const applicationController = new ApplicationController(applicationService);
@@ -37,6 +43,7 @@ const jobApproveConsumer = new JobApprovalConsumer(contractService, "job_approva
 const offerConsumer = new CreateOfferConsumer(offerService, "offer_created_exchange");
 const applicationConsumer = new CreateApplicationConsumer(applicationService,"job.application.created");
 const paymentSuccessConsumer = new PaymentSuccessConsumer(contractService, "payment_success_exchange");
+const userConsumer = new UserConsumer(userService);
 
 
 export async function intialiseConsumers() {
@@ -44,6 +51,7 @@ export async function intialiseConsumers() {
     offerConsumer.initialise();
     applicationConsumer.initialise();
     paymentSuccessConsumer.initialise();
+    userConsumer.initialise();
 }
 
 export { offerController, contractController, applicationController };

@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { IOffer } from "../../interfaces/IOffer";
 import { IApplicationRepository } from "../../repositories/interfaces/IApplicationRepository";
 import { IOfferRepository } from "../../repositories/interfaces/IOfferRepository";
@@ -40,7 +41,7 @@ export class OfferService implements IOfferService {
         return this._offerRepository.find({ clientId });
     }
 
-    async acceptOffer(offerId: string, status: string): Promise<IOffer | null> {
+    async acceptOffer(offerId: ObjectId, status: string): Promise<IOffer | null> {
         const updatedOffer = await this._offerRepository.update(offerId, { status });
 
         console.log('updateOffer:',updatedOffer);

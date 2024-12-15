@@ -1,14 +1,16 @@
 import { Channel } from "amqplib";
-import { rabbitMQConnection } from "../RabbitMQConnection";
-import { IContractService } from "../../../services/interfaces/IContractService";
+import { rabbitMQConnection } from "@_opportune/common";
+import { IUserService } from "../../../services/interfaces/IUserService";
+import IConsumer from "../../../interfaces/IConsumer";
 
-export class PaymentSuccessConsumer {
-
+export class UserConsumer implements IConsumer{
     private channel: Channel | null = null;
-    constructor(
-        private readonly contractService: IContractService,
-        private readonly exchangeName: string
-    ){}
+    private exchangeName = "user_exchange";
+    private userService:IUserService;
+
+    constructor( userService: IUserService) {
+        this.userService = userService
+    }
 
     async initialise() {
         try {
@@ -21,12 +23,12 @@ export class PaymentSuccessConsumer {
             console.log(`Waiting for messages in queue ${q.queue} from exchange : ${this.exchangeName}`);
 
             this.channel.consume(
-                q.queue, 
+                q.queue,
                 async (msg) => {
                     if (msg) {
                         try {
                             const messageContent = JSON.parse(msg.content.toString());
-                            await this.contractService.postPaymentSuccess(messageContent);
+                            this.userService.handleEvent(messageContent.eventType, messageContent);
                             this.channel?.ack(msg);
                         } catch (error) {
                             console.error(`Error processing message from exchange ${this.exchangeName}:`, error);

@@ -1,5 +1,4 @@
 
-import { RabbitMQConsumer } from "../../events/rabbitmq/Consumer";
 import { IContract } from "../../interfaces/IContract";
 import { IContractService } from "../interfaces/IContractService";
 import { ContractRepository } from "../../repositories/implementation/contract.repository";
@@ -78,10 +77,10 @@ export class ContractService implements IContractService {
 
     async postPaymentSuccess(data: IPayment): Promise<void> {
         console.log("payment success:", data);
-        this.updateMilestoneStatus(data.contractId, data.milestoneId, MilestoneStatus.ACTIVE);
+        this.updateMilestoneStatus(data.contractId as ObjectId, data.milestoneId, MilestoneStatus.ACTIVE);
         const contract = await this.contractRepository.findById(data.contractId);
         if (contract && contract.status == ContractStatus.PENDING) {
-            await this.contractRepository.update(contract._id as string,{status:ContractStatus.IN_PROGRESS});
+            await this.contractRepository.update(contract._id as ObjectId,{status:ContractStatus.IN_PROGRESS});
         }
     }
 
@@ -99,7 +98,7 @@ export class ContractService implements IContractService {
             if (contract.milestones.every((m) => m.status === MilestoneStatus.COMPLETED)) {
                 contract.status = ContractStatus.COMPLETED;
             }
-            return this.contractRepository.update(contractId as string, contract);
+            return this.contractRepository.update(contractId as ObjectId, contract);
         } else {
             throw new Error("Contract not found");
             return null;

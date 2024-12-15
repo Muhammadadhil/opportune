@@ -14,7 +14,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
             return await newItem.save();
         } catch (error) {
             console.log("Error in creating:", error);
-            throw error
+            throw error;
         }
     }
 
@@ -24,7 +24,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
             return await this.model.find(query).sort({ createdAt: -1 }).exec();
         } catch (error) {
             console.log("Error :", error);
-            throw error
+            throw error;
         }
     }
 
@@ -37,7 +37,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         }
     }
 
-    async update(id: string, data: Partial<T>): Promise<T | null> {
+    async update(id: ObjectId, data: Partial<T>): Promise<T | null> {
         try {
             return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
         } catch (error) {
@@ -46,7 +46,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         }
     }
 
-    async delete(id: string): Promise<T | null> {
+    async delete(id: ObjectId): Promise<T | null> {
         try {
             return await this.model.findByIdAndDelete(id).exec();
         } catch (error) {
@@ -54,7 +54,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
             throw error;
         }
     }
-    
+
     async findOne(query: object = {}): Promise<T | null> {
         try {
             return await this.model.findOne(query).exec();
