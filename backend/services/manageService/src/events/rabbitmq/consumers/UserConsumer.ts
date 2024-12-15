@@ -29,7 +29,7 @@ export class UserConsumer implements IConsumer{
                     if (msg) {
                         try {
                             const messageContent = JSON.parse(msg.content.toString());
-                            this.userService.handleEvent(messageContent.eventType, messageContent.data);
+                            this.userService.handleEvent(messageContent.eventType, messageContent);
                             this.channel?.ack(msg);
                         } catch (error) {
                             console.error(`Error processing message from exchange ${this.exchangeName}:`, error);

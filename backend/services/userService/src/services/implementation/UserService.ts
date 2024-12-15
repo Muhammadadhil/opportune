@@ -16,16 +16,24 @@ import { IFreelancerRepository } from "../../repositories/interfaces/IFreelancer
 import { FreelancerRepository } from "../../repositories/implementation/FreelancerRepository";
 import { LoginUserResponse, RegisterUserResponse } from '../../interfaces/IAuthResponse';
 import IUserService from "../interfaces/IUserService";
+import { RabbitMQProducer } from "../../events/rabbitmq/producer";
 
 export class UserService implements IUserService {
     private userRepository: UserRepository;
     private clientRepository: ClientRepository;
     private freelancerRepository: IFreelancerRepository;
+    private producer;
 
     constructor() {
         this.userRepository = new UserRepository();
         this.clientRepository = new ClientRepository();
         this.freelancerRepository = new FreelancerRepository();
+        this.producer = new RabbitMQProducer();
+        this.intialize();
+    }
+
+    async intialize() {
+        await this.producer.connect();
     }
 
     async registerUser(userData: IUser): RegisterUserResponse {
@@ -38,6 +46,8 @@ export class UserService implements IUserService {
         const userToCreate = { ...userData, password: hashedPassword };
 
         const newUser = await this.userRepository.create(userToCreate as IUser);
+
+        this.producer.publishToMultiple("user_exchange", newUser, "create");
 
         const userId: string = newUser._id.toString();
         const role: string = newUser.role;

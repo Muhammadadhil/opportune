@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IUser } from '../entities/UserEntity'
+import { IUser } from "../entities/UserEntity";
 import { userRoles } from "@_opportune/common";
 
 const UserSchema: Schema = new Schema({

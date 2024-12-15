@@ -10,6 +10,8 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
 
     async create(data: T): Promise<T> {
         try {
+            console.log("this.model:", this.model);
+
             const newItem = new this.model(data);
             return await newItem.save();
         } catch (error) {

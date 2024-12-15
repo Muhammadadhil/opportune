@@ -24,7 +24,6 @@ export class UserController {
 
     async registerUser(req: Request, res: Response){
         try {
-            console.log('resginsglakdfjasl;dfjkasl;dfja;slfdj;aslfdkj;alskjflkasjdkf;kasdf');
             const response = await this.userService.registerUser(req.body.formData);
             if(!response.success){
                 return res.status(400).json({ message: response.message });
