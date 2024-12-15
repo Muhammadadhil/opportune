@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { categoryService } from "../services/implementation/category.services";
+import { categoryService } from "../../services/implementation/category.services";
 
 class CategoryController {
 

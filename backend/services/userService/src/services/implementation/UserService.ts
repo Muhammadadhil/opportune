@@ -1,6 +1,3 @@
-//service layer contains the business logic ,
-//  we can include password hasing,validation etc..
-
 import { UserRepository } from "../../repositories/implementation/UserRepository";
 import bcrypt from "bcrypt";
 import IUser from "../../interfaces/IUser";

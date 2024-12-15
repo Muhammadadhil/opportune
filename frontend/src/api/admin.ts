@@ -1,4 +1,5 @@
 import apiClient from "./axiosInstance";
+import { IUser } from "../types/IUser";
 
 type subCategory = {
     category: string;
@@ -26,4 +27,8 @@ export const addSubCategory = async (subCategory: subCategory) => {
 
 export const getCategories = async () => {
     return await apiClient.get("manage/category/getCategories");
+};
+
+export const getUsers = async (searchKey: string, page: number, limit: number): Promise<{ users: IUser[] | null; totalPages: number }> => {
+    return await apiClient.get("manage/users", { params: { searchKey, page, limit } });
 };

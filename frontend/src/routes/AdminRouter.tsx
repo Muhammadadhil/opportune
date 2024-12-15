@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import AdminLogin from "../pages/admin/AdminLogin";
 import AdminDashboardPage from "@/pages/admin/Dashboard";
 import AdminProtected from "@/components/admin/AdminProtected";
+import Categories from "@/components/admin/Categories";
 
 function AdminRoute() {
     return (
@@ -10,6 +11,7 @@ function AdminRoute() {
                 <Route path="/" element={<AdminLogin />} />
                 <Route element={<AdminProtected />}>
                     <Route path="/dashboard" element={<AdminDashboardPage />} />
+                    <Route path="/categories" element={<Categories />} />
                 </Route>
             </Routes>
         </>
@@ -17,3 +19,4 @@ function AdminRoute() {
 }
 
 export default AdminRoute;
+

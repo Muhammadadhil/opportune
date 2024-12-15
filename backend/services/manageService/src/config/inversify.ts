@@ -8,12 +8,15 @@ import { UserConsumer } from "../events/rabbitmq/consumers/UserConsumer";
 import IConsumer from "../interfaces/IConsumer";
 import { Model } from "mongoose";
 import { IUser } from "../entities/UserEntity";
+import { TYPES } from "../interfaces/types";
+import { UserController } from "../controllers/implementation/user.controller";
+import { IUserController } from "../controllers/interface/IUserController";
 
 const container = new Container();
 
-// Bind UserService to IUserService
-container.bind<IUserService>("IUserService").to(UserService);
-container.bind<IUserRepository>("IUserRepository").to(UserRepository);
+container.bind<IUserService>(TYPES.IUserService).to(UserService);
+container.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
+container.bind<IUserController>(TYPES.IUserController).to(UserController);
 
 container.bind<IConsumer>("IUserConsumer").to(UserConsumer);
 

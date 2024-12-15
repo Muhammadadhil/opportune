@@ -1,5 +1,5 @@
 import { Request, Response,NextFunction } from "express";
-import { AdminService } from "../services/implementation/admin.services";
+import { AdminService } from "../../services/implementation/admin.services";
 
 export class AdminController {
     private adminService: AdminService;

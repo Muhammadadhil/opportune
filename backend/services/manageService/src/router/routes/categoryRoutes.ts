@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { categoryController } from "../../controllers/category.controller";
+import { categoryController } from "../../controllers/implementation/category.controller";
 import { adminAuth } from "../../middleware/authenticate";
 
 const router = Router();

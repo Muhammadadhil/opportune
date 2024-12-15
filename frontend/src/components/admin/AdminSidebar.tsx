@@ -1,4 +1,5 @@
-import { Briefcase, CreditCard, Settings, Users } from "lucide-react";
+import React from "react";
+import { Briefcase, CreditCard, Settings, Users, LogOut, ChevronRight, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
@@ -6,20 +7,21 @@ import { logoutAdmin } from "@/api/admin";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setAdminAuthStatus } from "@/store/slices/userSlice";
-import { ReactSetState } from "@/types/ReactSetState";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from "@/components/ui/sidebar";
 
 interface AdminSidebarProps {
-    onPageChange: ReactSetState<string>;
+    onPageChange: (page: string) => void;
+    activePage: string;
 }
 
-const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange }) => {
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange, activePage }) => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
     const handleLogout = async () => {
         try {
             const response = await logoutAdmin();
-            console.log('response:',response);
+            console.log("response:", response);
             dispatch(setAdminAuthStatus());
         } catch (error) {
             console.error("Logout error:", error);
@@ -29,47 +31,66 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange }) => {
         }
     };
 
-    return (
-        <aside className="w-64 bg-gray-800 text-white p-4 hidden md:flex flex-col justify-between min-h-screen">
-            <nav className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start" onClick={() => onPageChange("dashboard")}>
-                    <Users className="mr-2 h-4 w-4" />
-                    <span className="hover:text-slate-500">Dashboard</span>
-                </Button>
-                <Button variant="ghost" className="w-full justify-start" onClick={() => onPageChange("users")}>
-                    <Users className="mr-2 h-4 w-4" />
-                    <span className="hover:text-slate-500">Users</span>
-                </Button>
-                <Button variant="ghost" className="w-full justify-start" onClick={() => onPageChange("payments")}>
-                    <CreditCard className="mr-2 h-4 w-4" />
-                    <span className="hover:text-slate-500">Payments</span>
-                </Button>
-                <Button variant="ghost" className="w-full justify-start" onClick={() => onPageChange("categories")}>
-                    <Briefcase className="mr-2 h-4 w-4" />
-                    <span className="hover:text-slate-500">Categories</span>
-                </Button>
-                <Button variant="ghost" className="w-full justify-start" onClick={() => onPageChange("notifications")}>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span className="hover:text-slate-500">Notifications</span>
-                </Button>
-            </nav>
+    const menuItems = [
+        { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+        { id: "users", icon: Users, label: "Users" },
+        { id: "payments", icon: CreditCard, label: "Payments" },
+        { id: "categories", icon: Briefcase, label: "Categories" },
+        { id: "notifications", icon: Settings, label: "Notifications" },
+    ];
 
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger className="py-3 rounded-xl hover:bg-gray-100 hover:text-gray-800 transition duration-300 ease-in-out">Logout</DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Confirm Logout?</DialogTitle>
-                        <DialogDescription>Are you sure you want to logout?</DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-                        <Button variant="default" onClick={handleLogout}>
-                            Logout
+    return (
+        <Sidebar className="w-64 border-r border-gray-200 ">
+            <SidebarHeader className="p-4">
+                <h2 className="font-Poppins text-2xl font-extrabold text-slate-800">
+                    Opportune <span className="text-amber-800">.</span>
+                </h2>
+            </SidebarHeader>
+            <SidebarContent >
+                <SidebarGroup>
+                    <SidebarGroupLabel>Menu</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {menuItems.map((item) => (
+                                <SidebarMenuItem key={item.id}>
+                                    <SidebarMenuButton onClick={() => onPageChange(item.id)} isActive={activePage === item.id} className="flex items-center w-full">
+                                        <item.icon className="mr-2 h-4 w-4" />
+                                        <span>{item.label}</span>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+            </SidebarContent>
+            <div className="mt-auto p-4">
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="ghost" className="w-full justify-start">
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <span>Logout</span>
                         </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-        </aside>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Confirm Logout?</DialogTitle>
+                            <DialogDescription>Are you sure you want to logout?</DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setOpen(false)}>
+                                Cancel
+                            </Button>
+                            <Button variant="default" onClick={handleLogout}>
+                                Logout
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            </div>
+            <SidebarTrigger className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 rotate-180 rounded-full border bg-background p-1.5 text-foreground">
+                <ChevronRight className="h-4 w-4" />
+            </SidebarTrigger>
+        </Sidebar>
     );
 };
 

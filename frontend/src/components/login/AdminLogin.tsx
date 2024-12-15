@@ -7,8 +7,6 @@ import { LockIcon } from "lucide-react";
 import { useDispatch } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { setAdminAuthStatus } from "@/store/slices/userSlice"; 
-
-// Assume this function is imported from your API utilities
 import { loginAdmin } from "@/api/admin";
 
 export default function AdminLogin() {
@@ -33,7 +31,7 @@ export default function AdminLogin() {
             navigate('/admin/dashboard');
         } catch (err) {
             console.log(err);
-            setError("Invalid email or password. Please try again.");
+            setError(err.message);
         } finally {
             setIsLoading(false);
         }
