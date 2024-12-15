@@ -1,9 +1,11 @@
 import { ObjectId } from "mongoose";
-import { IJob } from "../../interfaces/IJob";
+import { IJob } from "../../types/IJob";
 import JobModel from "../../schema/job.schema";
 import { IJobRepository } from "../interfaces/IJobRepository";
 import { BaseRepository } from "./baseRepository";
+import { injectable } from "inversify";
 
+@injectable()
 export class JobRepository extends BaseRepository<IJob> implements IJobRepository {
     constructor() {
         super(JobModel);
@@ -32,8 +34,7 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
         return await JobModel.find(filters).sort(sortOption).skip(skip).limit(limit).exec();
     }
 
-    async getJobsCount(filters: any): Promise<number>{
+    async getJobsCount(filters: any): Promise<number> {
         return await JobModel.countDocuments(filters).exec();
     }
-    
 }

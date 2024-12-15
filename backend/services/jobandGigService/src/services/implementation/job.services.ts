@@ -1,29 +1,27 @@
-import { IJob } from "../../interfaces/IJob";
-import { JobRepository } from "../../repositories/implementation/job.repositoty";
+import { IJob } from "../../types/IJob";
 import mongoose, { Types } from "mongoose";
 import { IApplyJob, IJobService } from "../interfaces/IJobService";
-import { RabbitMQProducer } from "../../events/rabbitmq/Producer";
-import { IApproval } from "../../interfaces/IApproval";
+import { RabbitMQProducer } from "../../events/rabbitmq/producer/Producer";
+import { IApproval } from "../../types/IApproval";
 import axios from 'axios';
 import { IJobRepository } from "../../repositories/interfaces/IJobRepository";
-import { IOffer } from "../../interfaces/IOffer";
-import { IFilters } from "../../interfaces/IFilters";
+import { IOffer } from "../../types/IOffer";
+import { IFilters } from "../../types/IFilters";
 import { CustomError } from '@_opportune/common'
 import { ObjectId } from "mongoose";
+import { inject, injectable } from "inversify";
+import  { TYPES } from '../../types/types';
 
+@injectable()
 export class JobService implements IJobService {
-    private jobRepository: IJobRepository;
-    private producer = new RabbitMQProducer();
+
+    constructor(
+        @inject(TYPES.IJobRepository) private _jobRepository: IJobRepository,
+        @inject(TYPES.RabbitMQProducer) private producer: RabbitMQProducer
+    ){}
+
     private contractServiceUrl = process.env.CONTRACT_SERVICE_URL;
 
-    constructor() {
-        this.jobRepository = new JobRepository();
-        this.intialize();
-    }
-
-    async intialize() {
-        await this.producer.connect();
-    }
 
     async getJobs(
         page: number,
@@ -45,8 +43,8 @@ export class JobService implements IJobService {
         if (search) filters.jobTitle = new RegExp(search, "i");
 
         const sortOption = sort === "newest" ? { createdAt: -1 } : { createdAt: 1 };
-        const totalJobs = await this.jobRepository.getJobsCount(filters);
-        const Alljobs = await this.jobRepository.getFilteredJobs(page, limit, filters, sortOption);
+        const totalJobs = await this._jobRepository.getJobsCount(filters);
+        const Alljobs = await this._jobRepository.getFilteredJobs(page, limit, filters, sortOption);
 
         const totalPagesCount = Math.ceil(totalJobs / limit);
 
@@ -58,31 +56,33 @@ export class JobService implements IJobService {
 
     async getJobsByClient(id: string): Promise<IJob[] | null> {
         console.log("clientId:", id);
-        const jobs = await this.jobRepository.findActiveJobs(id);
+        const jobs = await this._jobRepository.findActiveJobs(id);
         return jobs;
     }
 
     async saveJob(data: IJob): Promise<IJob | null> {
-        const newJob = await this.jobRepository.create(data);
+        const newJob = await this._jobRepository.create(data);
         console.log("newGig:", newJob);
 
         return newJob;
     }
 
-
     async editJob(data: Partial<IJob>): Promise<IJob | null> {
         if (!data._id) {
             return null;
         }
-        return await this.jobRepository.update(data._id as ObjectId, data);
+        return await this._jobRepository.update(data._id as ObjectId, data);
     }
 
     async removeJob(id: string): Promise<IJob | null> {
         console.log("jobId to delete:", id);
-        return await this.jobRepository.updateActiveStatus(id);
+        return await this._jobRepository.updateActiveStatus(id);
     }
 
     async applyJob(data: IApplyJob) {
+
+        await this.producer.connect();
+
         const response = await axios.get(`${this.contractServiceUrl}/application`, {
             params: { jobId: data.jobId, freelancerId: data.freelancerId },
         });
@@ -102,7 +102,7 @@ export class JobService implements IJobService {
         await this.producer.publish("job.application.created", messagePayload);
 
         // update applicants count
-        await this.jobRepository.updateApplicantsCount(data.jobId);
+        await this._jobRepository.updateApplicantsCount(data.jobId);
 
         return {
             trackingId,
@@ -111,6 +111,8 @@ export class JobService implements IJobService {
     }
 
     async approveApplication(data: IApproval) {
+
+        await this.producer.connect();
         console.log("going to publish message with data:", data);
 
         const exchangeName = "job_approval_exchange";
@@ -119,7 +121,7 @@ export class JobService implements IJobService {
 
     async getJobDetails(jobIds: string[]): Promise<IJob[] | null> {
         console.log("jobIds to fetch jobs details:", jobIds);
-        return await this.jobRepository.find({ _id: { $in: jobIds } });
+        return await this._jobRepository.find({ _id: { $in: jobIds } });
     }
 
     /**
@@ -128,7 +130,7 @@ export class JobService implements IJobService {
      * @returns The job with the given jobId if exists, else null.
      */
     async getJobDetail(jobId: ObjectId): Promise<IJob | null> {
-        return await this.jobRepository.findById(jobId);
+        return await this._jobRepository.findById(jobId);
     }
 
     /**
@@ -137,6 +139,7 @@ export class JobService implements IJobService {
      * @returns A promise that resolves when the message has been published.
      */
     async sendOfferToFreelancer(data: IOffer) {
+        await this.producer.connect();
         console.log("going to publish message with data:", data);
 
         const exchangeName = "offer_created_exchange";

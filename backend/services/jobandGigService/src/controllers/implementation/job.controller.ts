@@ -1,16 +1,20 @@
 import { NextFunction, Request, Response } from "express";
-import { JobService } from "../services/implementation/job.services";
-import { IApplyJob, IJobService } from "../services/interfaces/IJobService";
-import { IApproval } from "../interfaces/IApproval";
-import { IFilters } from "../interfaces/IFilters";
+import { JobService } from "../../services/implementation/job.services";
+import { IApplyJob, IJobService } from "../../services/interfaces/IJobService";
+import { IApproval } from "../../types/IApproval";
+import { IFilters } from "../../types/IFilters";
 import { CustomError } from '@_opportune/common'
 import { ObjectId, Types } from "mongoose";
+import { inject, injectable } from "inversify";
+import { IJobController } from "../interface/IJobController";
+import { TYPES } from "../../types/types";
 
-export class JobController {
+@injectable()
+export class JobController implements IJobController{
     private _jobService: IJobService;
 
-    constructor() {
-        this._jobService = new JobService();
+    constructor(@inject(TYPES.IJobService) jobService: IJobService ) {
+        this._jobService = jobService;
     }
 
     /**
@@ -153,7 +157,7 @@ export class JobController {
             const applicationData: IApplyJob = req.body;
             const result = await this._jobService.applyJob(applicationData);
 
-            return res.status(201).json({
+            res.status(201).json({
                 success: true,
                 message: "Job application submitted successfully",
                 data: result,
@@ -246,3 +250,4 @@ export class JobController {
         }
     };
 }
+

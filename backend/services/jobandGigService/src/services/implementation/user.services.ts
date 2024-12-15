@@ -3,12 +3,13 @@ import { IUserRepository } from "../../repositories/interfaces/IUserRepository";
 import { IUser } from "../../entities/UserEntity";
 import { Document } from "mongoose";
 import { inject, injectable } from "inversify";
+import { TYPES } from "../../types/types";
 
 @injectable()
 export class UserService implements IUserService {
     private userRepository: IUserRepository;
 
-    constructor(@inject("IUserRepository") userRepository: IUserRepository) {
+    constructor(@inject(TYPES.IUserRepository) userRepository: IUserRepository) {
         this.userRepository = userRepository;
     }
 

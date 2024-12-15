@@ -1,5 +1,5 @@
 import mongoose, { Schema,Types } from "mongoose";
-import { IJob } from "../interfaces/IJob";
+import { IJob } from "../types/IJob";
 
 const jobSchema = new Schema<IJob>(
     {

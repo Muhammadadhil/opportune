@@ -1,23 +1,27 @@
-import { GigService } from "../services/implementation/gig.services";
+import { GigService } from "../../services/implementation/gig.services";
 import { NextFunction, Request, Response } from "express";
-import { IGigService } from "../services/interfaces/IGigService";
-import IUploadFile from "../interfaces/IUploadFile";
+import { IGigService } from "../../services/interfaces/IGigService";
+import IUploadFile from "../../types/IUploadFile";
 import { ObjectId, Schema, Types } from "mongoose";
+import { inject, injectable } from "inversify";
+import { IGigController } from "../interface/IGigController";
+import { TYPES } from "../../types/types";
 
-export class GigController {
+@injectable()
+export class GigController implements IGigController {
     private gigService: IGigService;
 
-    constructor() {
-        this.gigService = new GigService();
+    constructor(@inject(TYPES.IGigService) gigService: IGigService) {
+        this.gigService = gigService;
     }
 
-    postAGig = async (req: Request, res: Response, next: NextFunction) => {
+    postAGig = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-
             const files = req.files as IUploadFile[];
 
             if (!files) {
-                return res.status(400).json({ message: "No file uploaded" });
+                res.status(400).json({ message: "No file uploaded" });
+                return;
             }
 
             const savedGigData = await this.gigService.saveGig(files, req.body);
@@ -31,7 +35,8 @@ export class GigController {
         try {
             const updatedData = await this.gigService.editGig(req.body);
             if (!updatedData) {
-                return res.status(404).json({ message: "Error editing gig. no Database response" });
+                res.status(404).json({ message: "Error editing gig. no Database response" });
+                return ;
             }
             res.status(200).json(updatedData);
         } catch (error) {
@@ -68,3 +73,4 @@ export class GigController {
         }
     };
 }
+

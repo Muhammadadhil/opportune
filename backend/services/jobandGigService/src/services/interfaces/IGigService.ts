@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose";
-import { IGig } from "../../interfaces/IGig";
-import IUploadFile from "../../interfaces/IUploadFile";
+import { IGig } from "../../types/IGig";
+import IUploadFile from "../../types/IUploadFile";
 
 export interface IGigService {
     saveGig(files: IUploadFile[], data: IGig): Promise<IGig | null>;

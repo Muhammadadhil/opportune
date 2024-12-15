@@ -8,15 +8,37 @@ import { UserConsumer } from "../events/rabbitmq/consumers/UserConsumer";
 import IConsumer from "@_opportune/common/dist/interfaces/IConsumer";
 import { Model } from "mongoose";
 import { IUser } from "../entities/UserEntity";
+import { TYPES } from "../types/types";
+import { JobService } from "../services/implementation/job.services";
+import { IJobService } from "../services/interfaces/IJobService";
+import { JobRepository } from "../repositories/implementation/job.repositoty";
+import { IJobRepository } from "../repositories/interfaces/IJobRepository";
+import { JobController } from "../controllers/implementation/job.controller";
+import { IJobController } from "../controllers/interface/IJobController";
+import { GigController } from "../controllers/implementation/gig.controller";
+import { GigService } from "../services/implementation/gig.services";
+import { GigRepository } from "../repositories/implementation/gig.repository";
+import { RabbitMQProducer } from "../events/rabbitmq/producer/Producer";
+import { IGigController } from "../controllers/interface/IGigController";
+import { IGigService } from "../services/interfaces/IGigService";
+
 
 const container = new Container();
 
-// Bind UserService to IUserService
-container.bind<IUserService>("IUserService").to(UserService);
-container.bind<IUserRepository>("IUserRepository").to(UserRepository);
+container.bind(TYPES.RabbitMQProducer).to(RabbitMQProducer).inSingletonScope();
 
-container.bind<IConsumer>("IUserConsumer").to(UserConsumer);
-
+container.bind<IUserService>(TYPES.IUserService).to(UserService);
+container.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
 container.bind<Model<IUser>>("UserModel").toConstantValue(User);
+container.bind<IConsumer>(TYPES.IUserConsumer).to(UserConsumer);
+
+container.bind<IJobService>(TYPES.IJobService).to(JobService);
+container.bind<IJobRepository>(TYPES.IJobRepository).to(JobRepository);
+container.bind<IJobController>(TYPES.IJobController).to(JobController);
+
+container.bind<IGigController>(TYPES.IGigController).to(GigController);
+container.bind<IGigService>(TYPES.IGigService).to(GigService);
+container.bind(TYPES.IGigRepository).to(GigRepository);
+
 
 export default container;

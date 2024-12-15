@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose";
-import { IGig } from "../../interfaces/IGig";
+import { IGig } from "../../types/IGig";
 import { IBaseRepository } from "./IBaseRepository";
 
 export interface IGigRepositoy extends IBaseRepository<IGig> {

@@ -1,16 +1,19 @@
 import { Router } from "express";
-import { GigController } from "../controllers/gig.controller";
 import  applicationSchema  from "../validators/applicationValidator";
 import editGigValidator from "../validators/editGigValidator";
 // import { deleteGigValidator } from "../validators/deleteGigvalidator";
 import upload from "../utils/multerConfig";
-import { JobController } from "../controllers/job.controller";
 import { DataValidation } from '@_opportune/common'
 import { checkSchema } from "express-validator";
+import container from "../config/inversify";
+import { TYPES } from "../types/types";
+import { IJobController } from "../controllers/interface/IJobController";
+import { IGigController } from "../controllers/interface/IGigController";
 
 const router = Router();
-const gigController = new GigController();
-const jobController = new JobController();
+
+const jobController = container.get<IJobController>(TYPES.IJobController);
+const gigController = container.get<IGigController>(TYPES.IGigController);
 
 router.get("/gigs/:id", gigController.getGigs);
 router.get("/gigs", gigController.getAllGigs);
@@ -27,8 +30,6 @@ router.post("/job", jobController.postJob);
 
 router.patch("/job", jobController.editJob);
 router.patch("/job/:id", jobController.removeJob);
-
-
 
 router.post("/job/application",checkSchema(applicationSchema()), DataValidation, jobController.applyForJob);
 router.post("/job/approve",jobController.approveApplication);

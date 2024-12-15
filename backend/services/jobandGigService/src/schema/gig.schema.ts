@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IGig } from "../interfaces/IGig";
+import { IGig } from "../types/IGig";
 
 const gigSchema = new Schema<IGig>(
     {

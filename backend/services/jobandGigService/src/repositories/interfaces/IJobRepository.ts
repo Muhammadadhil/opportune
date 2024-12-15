@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose";
-import { IJob } from "../../interfaces/IJob";
+import { IJob } from "../../types/IJob";
 import { IBaseRepository } from "./IBaseRepository";
 
 export interface IJobRepository extends IBaseRepository<IJob> {

@@ -1,8 +1,8 @@
 import { ObjectId } from "mongoose";
-import { IApproval } from "../../interfaces/IApproval";
-import { IFilters } from "../../interfaces/IFilters";
-import { IJob } from "../../interfaces/IJob";
-import { IOffer } from "../../interfaces/IOffer";
+import { IApproval } from "../../types/IApproval";
+import { IFilters } from "../../types/IFilters";
+import { IJob } from "../../types/IJob";
+import { IOffer } from "../../types/IOffer";
  
 export interface IApplyJob {
     jobId: string;

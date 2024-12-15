@@ -1,7 +1,8 @@
 import amqplib from "amqplib";
-import { rabbitMQConnection } from "./RabbitMQConnection";
+import { rabbitMQConnection } from "@_opportune/common";
+import { IRabbitMQProducer } from "./IRabbitMqProducer";
 
-export class RabbitMQProducer {
+export class RabbitMQProducer implements IRabbitMQProducer {
     private channel: amqplib.Channel | null = null;
 
     async connect() {
@@ -12,7 +13,6 @@ export class RabbitMQProducer {
     }
 
     async publish(queue: string, message: any) {
-
         if (!this.channel) {
             throw new Error("RabbitMQ channel is not initialized");
         }
@@ -23,15 +23,13 @@ export class RabbitMQProducer {
     }
 
     async publishToMultiple(exchange: string, message: any) {
-
         if (!this.channel) {
             throw new Error("RabbitMQ channel is not initialized");
         }
 
-        // Declare the exchange (fanout type)
         await this.channel.assertExchange(exchange, "fanout", { durable: true });
-
-        this.channel.publish(exchange,"",Buffer.from(JSON.stringify(message)));
+        this.channel.publish(exchange, "", Buffer.from(JSON.stringify(message)));
         console.log(`Message sent to fanout exchange ${exchange}: ${message}`);
     }
 }
+

@@ -3,6 +3,7 @@ import { rabbitMQConnection } from "@_opportune/common";
 import { IUserService } from "../../../services/interfaces/IUserService";
 import { inject, injectable } from "inversify";
 import IConsumer from "@_opportune/common/dist/interfaces/IConsumer";
+import { TYPES } from "../../../types/types";
 
 @injectable()
 export class UserConsumer implements IConsumer{
@@ -10,7 +11,7 @@ export class UserConsumer implements IConsumer{
     private exchangeName = "user_exchange";
     private userService:IUserService;
 
-    constructor(@inject("IUserService") userService: IUserService) {
+    constructor(@inject(TYPES.IUserService) userService: IUserService) {
         this.userService = userService
     }
 
