@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { IGig } from "../../interfaces/IGig";
 import GigModel from "../../schema/gig.schema";
 import { IGigRepositoy } from "../interfaces/IGigRepository";
@@ -8,13 +9,12 @@ export class GigRepository extends BaseRepository<IGig> implements IGigRepositoy
         super(GigModel);
     }
 
-    async updateGigUsingFreelancerId(id: string, data: Partial<IGig>): Promise<IGig | null> {
-        return await GigModel.findOneAndUpdate({ freelancerId: id }, { $set: data }, { new: true, });
+    async updateGigUsingFreelancerId(id: ObjectId, data: Partial<IGig>): Promise<IGig | null> {
+        return await GigModel.findOneAndUpdate({ freelancerId: id }, { $set: data }, { new: true });
     }
 
     //change active status
-    async updateActiveStatus(id: string): Promise<IGig | null> {
-        console.log('updating acitve status !!!!',id);
+    async updateActiveStatus(id: ObjectId): Promise<IGig | null> {
         const gig = await GigModel.findById(id);
         if (!gig) {
             return null;

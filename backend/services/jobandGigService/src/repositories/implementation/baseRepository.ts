@@ -1,4 +1,4 @@
-import { Model, Document } from "mongoose";
+import { Model, Document, ObjectId } from "mongoose";
 import { IBaseRepository } from "../interfaces/IBaseRepository";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
@@ -14,7 +14,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
             return await newItem.save();
         } catch (error) {
             console.error("Error in create method:", error);
-            throw error; 
+            throw error;
         }
     }
 
@@ -23,34 +23,34 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
             return await this.model.find(query).sort({ createdAt: 1 }).exec();
         } catch (error) {
             console.error("Error in find method:", error);
-            throw error; 
+            throw error;
         }
     }
 
-    async findById(id: string): Promise<T | null> {
+    async findById(id: ObjectId): Promise<T | null> {
         try {
             return await this.model.findById(id).exec();
         } catch (error) {
             console.error("Error in findById method:", error);
-            throw error; 
+            throw error;
         }
     }
 
-    async update(id: string, data: Partial<T>): Promise<T | null> {
+    async update(id: ObjectId, data: Partial<T>): Promise<T | null> {
         try {
             return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
         } catch (error) {
             console.error("Error in update method:", error);
-            throw error; 
+            throw error;
         }
     }
 
-    async delete(id: string): Promise<T | null> {
+    async delete(id: ObjectId): Promise<T | null> {
         try {
             return await this.model.findByIdAndDelete(id).exec();
         } catch (error) {
             console.error("Error in delete method:", error);
-            throw error; 
+            throw error;
         }
     }
 
@@ -59,7 +59,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
             return await this.model.findOne(query).exec();
         } catch (error) {
             console.error("Error in findOne method:", error);
-            throw error; 
+            throw error;
         }
     }
 }

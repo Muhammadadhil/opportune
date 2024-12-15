@@ -4,6 +4,7 @@ import { IGigRepositoy } from "../../repositories/interfaces/IGigRepository";
 import { IGigService } from "../interfaces/IGigService";
 import { getSignedImageURL, uploadTosS3 } from "../../utils/uploadToS3";
 import IUploadFile from "../../interfaces/IUploadFile";
+import { ObjectId } from "mongoose";
 
 export class GigService implements IGigService {
     private gigRepository: IGigRepositoy;
@@ -24,10 +25,11 @@ export class GigService implements IGigService {
     }
 
     async editGig(data: IGig): Promise<IGig | null> {
-        return await this.gigRepository.update(data._id as string, data);
+        return await this.gigRepository.update(data._id as ObjectId, data);
     }
 
-    async changeGigStatus(id: string): Promise<IGig | null> {
+
+    async changeGigStatus(id: ObjectId): Promise<IGig | null> {
         return await this.gigRepository.updateActiveStatus(id);
     }
 

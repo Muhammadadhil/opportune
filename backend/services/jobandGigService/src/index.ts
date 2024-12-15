@@ -1,15 +1,15 @@
+import "reflect-metadata";
 import express from "express";
 import router from "./routes/router";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-import { connectMongoDB } from '@_opportune/common'
-import { errorHandler } from '@_opportune/common'
+import { connectMongoDB } from "@_opportune/common";
+import { errorHandler } from "@_opportune/common";
+import { InitialiseConsumers } from "./events/rabbitmq/InitialiseConsumers";
 
 const app = express();
 dotenv.config();
-
-// const jobService = new JobService();
 
 app.use(
     cors({
@@ -35,7 +35,7 @@ const startServer = async () => {
         app.listen(PORT, () => {
             console.log(`jobandGig server is running on the port ${PORT}`);
         });
-
+        InitialiseConsumers();
     } catch (error) {
         console.error("Failed to start server:", error);
         process.exit(1);

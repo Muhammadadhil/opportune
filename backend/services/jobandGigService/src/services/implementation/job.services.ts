@@ -9,6 +9,7 @@ import { IJobRepository } from "../../repositories/interfaces/IJobRepository";
 import { IOffer } from "../../interfaces/IOffer";
 import { IFilters } from "../../interfaces/IFilters";
 import { CustomError } from '@_opportune/common'
+import { ObjectId } from "mongoose";
 
 export class JobService implements IJobService {
     private jobRepository: IJobRepository;
@@ -73,7 +74,7 @@ export class JobService implements IJobService {
         if (!data._id) {
             return null;
         }
-        return await this.jobRepository.update(data._id as string, data);
+        return await this.jobRepository.update(data._id as ObjectId, data);
     }
 
     async removeJob(id: string): Promise<IJob | null> {
@@ -126,7 +127,7 @@ export class JobService implements IJobService {
      * @param jobId The id of the job to be fetched.
      * @returns The job with the given jobId if exists, else null.
      */
-    async getJobDetail(jobId: string): Promise<IJob | null> {
+    async getJobDetail(jobId: ObjectId): Promise<IJob | null> {
         return await this.jobRepository.findById(jobId);
     }
 

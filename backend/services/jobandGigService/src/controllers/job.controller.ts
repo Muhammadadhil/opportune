@@ -4,6 +4,7 @@ import { IApplyJob, IJobService } from "../services/interfaces/IJobService";
 import { IApproval } from "../interfaces/IApproval";
 import { IFilters } from "../interfaces/IFilters";
 import { CustomError } from '@_opportune/common'
+import { ObjectId, Types } from "mongoose";
 
 export class JobController {
     private _jobService: IJobService;
@@ -216,9 +217,9 @@ export class JobController {
 
     getJobDetail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const { id } = req.params;
-            console.log("id:", id);
-            const job = await this._jobService.getJobDetail(id as string);
+            const id = new Types.ObjectId(req.params.id);
+            
+            const job = await this._jobService.getJobDetail(id as unknown as ObjectId);
             console.log("job:", job);
             res.status(200).json(job);
         } catch (error) {

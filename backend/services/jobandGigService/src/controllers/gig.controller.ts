@@ -2,6 +2,7 @@ import { GigService } from "../services/implementation/gig.services";
 import { NextFunction, Request, Response } from "express";
 import { IGigService } from "../services/interfaces/IGigService";
 import IUploadFile from "../interfaces/IUploadFile";
+import { ObjectId, Schema, Types } from "mongoose";
 
 export class GigController {
     private gigService: IGigService;
@@ -40,8 +41,8 @@ export class GigController {
 
     changeStatus = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id = req.params.id;
-            await this.gigService.changeGigStatus(id);
+            const id = new Types.ObjectId(req.params.id);
+            await this.gigService.changeGigStatus(id as unknown as Schema.Types.ObjectId);
             res.status(200).json({ message: "status updated successfully!" });
         } catch (error) {
             next(error);

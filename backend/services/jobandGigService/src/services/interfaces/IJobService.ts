@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { IApproval } from "../../interfaces/IApproval";
 import { IFilters } from "../../interfaces/IFilters";
 import { IJob } from "../../interfaces/IJob";
@@ -20,6 +21,6 @@ export interface IJobService {
     applyJob(data: IApplyJob): void;
     approveApplication(data: IApproval): void;
     getJobDetails(jobIds: string[]): Promise<IJob[] | null>;
-    getJobDetail(jobId: string): Promise<IJob | null>;
+    getJobDetail(jobId: ObjectId): Promise<IJob | null>;
     sendOfferToFreelancer(data: IOffer): void;
 }
