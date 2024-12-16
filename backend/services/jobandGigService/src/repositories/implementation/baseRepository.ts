@@ -20,7 +20,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
 
     async find(query: object = {}): Promise<T[]> {
         try {
-            return await this.model.find(query).sort({ createdAt: 1 }).exec();
+            return await this.model.find(query).sort({ createdAt: -1 }).exec();
         } catch (error) {
             console.error("Error in find method:", error);
             throw error;

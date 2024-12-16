@@ -78,7 +78,7 @@ app.use(
 
 app.use(
     "/payment",
-    verifyToken(process.env.JWT_SECRET!),
+    // verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.payment,
         changeOrigin: true,

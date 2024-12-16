@@ -18,7 +18,12 @@ export class PaymentController {
             const { milestoneAmount, contractId, freelancerId, clientId, milestoneId } = req.body;
             console.log('creating checkout session:',milestoneAmount, contractId, freelancerId, clientId, milestoneId);
             const sessionId = await this._paymentService.createSession(milestoneId,milestoneAmount, contractId, freelancerId, clientId);
-            res.status(201).json(sessionId);
+            if(sessionId){
+                res.status(201).json(sessionId);
+            }else{
+                res.status(409).json({error: 'One payment already exists for this milestone'});
+            }
+            
         } catch (error) {
             next(error);
         }

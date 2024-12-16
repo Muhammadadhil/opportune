@@ -24,7 +24,14 @@ export class PaymentService implements IPaymentService {
     }
 
     async createSession(milestoneId: string, milestoneAmount: number, contractId: string, freelancerId: string, clientId: string): Promise<string | null> {
-        console.log("milestoneId:", milestoneId);
+
+
+        console.log("milestoneId:", milestoneAmount);
+        const amount = Number(Number(milestoneAmount).toFixed(2));
+        const paymentExist = await this._paymentRepository.findOne({ milestoneId });
+        if(paymentExist){
+            return null;
+        }
         
         const session = await this.stripe.checkout.sessions.create({
             payment_method_types: ["card"],
@@ -35,7 +42,7 @@ export class PaymentService implements IPaymentService {
                         product_data: {
                             name: `Milestone Payment for Contract ${contractId}`,
                         },
-                        unit_amount: milestoneAmount * 100, // Amount in cents
+                        unit_amount: amount * 100, // Amount in cents
                     },
                     quantity: 1,
                 },
@@ -45,7 +52,7 @@ export class PaymentService implements IPaymentService {
             cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
             metadata: {
                 milestoneId,
-                milestoneAmount,
+                milestoneAmount: amount,
                 contractId,
                 freelancerId,
                 clientId,
