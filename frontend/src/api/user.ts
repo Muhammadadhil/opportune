@@ -21,5 +21,7 @@ export const getClientProfileData = async (userId: string) => {
     return await apiClient.post("/user/clients/profile", { userId });
 };
 
-
+export const updateProfile = async (userId: string, formData: any) => {
+    return await apiClient.patch(`/user/freelancers/profile/${userId}`, formData);
+};
 

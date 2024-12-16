@@ -21,6 +21,7 @@ export class UserController {
         this.getClientData = this.getClientData.bind(this);
         this.getFreelancers = this.getFreelancers.bind(this);
         this.toggleBlockStatus = this.toggleBlockStatus.bind(this);
+        this.editUserProfile = this.editUserProfile.bind(this);
     }
 
     async registerUser(req: Request, res: Response) {
@@ -35,7 +36,7 @@ export class UserController {
             res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // true in production
-                sameSite: "strict", // Use 'none' in production with secure: true
+                sameSite: "strict",  // Use 'none' in production with secure: true
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
                 path: "/",
             });
@@ -186,6 +187,21 @@ export class UserController {
             const message = await this.userService.toggleBlockStatus(userId as unknown as ObjectId);
             res.status(200).json({ message });
         } catch (error) {
+            next(error);
+        }
+    }
+
+    async editUserProfile(req: Request, res: Response,next:NextFunction) {
+        try {
+            const  formData  = req.body;
+            const userId = req.params.userId;
+
+
+            console.log('editing profile id, formdata',userId,formData);
+            const profile = await this.userService.editProfile(userId, formData);
+            res.status(200).json(profile);
+        } catch (error) {
+            console.log("Error in editting profile :", error);
             next(error);
         }
     }

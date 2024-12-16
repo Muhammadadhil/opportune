@@ -9,38 +9,40 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RootState } from "@/store/store";
-import GigCard from "./GigCard";
-import { fetchGigs } from "@/api/gigs";
+// import GigCard from "./GigCard";
+// import { fetchGigs } from "@/api/gigs";
 import { IGig } from "@/types/IGig";
 import JobCard from "../client/JobCard";
 import { IJob } from "@/types/IJob";
 import { Link } from "react-router-dom";
 import NoItems from "../ui/NoJob";
 import { useGigs } from "@/hooks/gigs/useGigs";
-import {useFreelancerProfile} from '@/hooks/user/useFreelancerProfile';
-import { useClientProfile } from "@/hooks/user/useClientProfile";
-
+import { useFreelancerProfile } from "@/hooks/user/useFreelancerProfile";
+// import { useClientProfile } from "@/hooks/user/useClientProfile";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"; // Add this import
+import { EditProfileDialog } from "./EditProfile";
 
 export default function Profile() {
 
     const { userInfo, clientData } = useSelector((state: RootState) => state.user);
     const { theme } = useSelector((state: RootState) => state.app);
-    
-    const [profileImage, setProfileImage] = useState("");     
+
+    // const [profileImage, setProfileImage] = useState("");
     // const [gigs, setGigs] = useState<IGig[]>([]);
     const [jobs, setJobs] = useState<IJob[]>();
     const [isEdited, setIsEdited] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false); // Add this state
 
     const visibleJobs = jobs?.slice(0, 3);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { data:gigs, isLoading } = useGigs(userInfo._id);
-    const {data:freelancer} = useFreelancerProfile(userInfo._id);
+    const { data: gigs, isLoading } = useGigs(userInfo._id);
+    const { data: freelancer } = useFreelancerProfile(userInfo._id);
+    
     console.log("freelancer details :", freelancer);
     // const { data: client } = useClientProfile(userInfo._id);
-
 
     // async function getData() {
     //     try {
@@ -64,7 +66,7 @@ export default function Profile() {
     useEffect(() => {
         if (userInfo.role == "client") {
             getClientData();
-        } 
+        }
     }, []);
 
     // const fetchProjects = async () => {
@@ -116,15 +118,19 @@ export default function Profile() {
                         </div>
 
                         <div className="mt-6 flex justify-center">
-                            {userInfo.role=='freelancer' && !freelancer?.data ? (
+                            {userInfo.role == "freelancer" && !freelancer?.data ? (
                                 <Button className="w-full" onClick={() => navigate("/fr/complete-profile")} variant="outline">
                                     Complete your profile
                                 </Button>
                             ) : (
-                                // <Button className="w-44" variant={theme === "dark" ? "secondary" : "outline"}>
-                                //     {/* <Edit className="mr-2 h-4 w-4" /> Edit profile */}
-                                // </Button>
-                                <></>
+                                <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button className="w-44" variant={theme === "dark" ? "secondary" : "outline"}>
+                                            <Edit className="mr-2 h-4 w-4" /> Edit profile 
+                                        </Button>
+                                    </DialogTrigger>
+                                    <EditProfileDialog user={userInfo} onClose={() => setIsEditDialogOpen(false)} />
+                                </Dialog>
                             )}
                         </div>
 
@@ -209,7 +215,7 @@ export default function Profile() {
                     {userInfo.role == "freelancer" ? (
                         <CardContent className="grid grid-cols-12 justify-center ">
                             {gigs?.data?.length < 1 && <p>No posts yet.</p>}
-{/* 
+                            {/* 
                             {gigs?.data?.map((gig) => {
                                 return <GigCard key={gig._id} gig={gig} onUpdate={updateGig} />;
                             })} */}

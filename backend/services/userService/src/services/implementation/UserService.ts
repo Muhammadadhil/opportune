@@ -143,4 +143,9 @@ export class UserService implements IUserService {
         
         return user.isBlocked ? "Blocked" : "Unblocked";
     }
+
+    async editProfile(userId: string, data: Partial<IUser>) {
+        const user = await this.userRepository.update(userId, data);
+        return user;
+    }
 }
