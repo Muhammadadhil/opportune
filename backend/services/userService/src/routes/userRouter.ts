@@ -34,4 +34,7 @@ router.post("/freelancers/complete-profile", protect, upload.single("image"), us
 router.post("/freelancers/profile", protect, userController.getFreelancerData);
 router.get('/freelancers',userController.getFreelancers);
 
+//block user
+router.patch(`/users/:userId/block-toggle`, userController.toggleBlockStatus);
+
 export default router;

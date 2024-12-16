@@ -5,7 +5,7 @@ export function useJobs(clientId?:string) {
     return useQuery({
         queryKey:  clientId ? ["job", clientId] : ["jobs"],
         queryFn: () => getJobs(clientId), 
-        staleTime: 300000, // 5 minutes
+        staleTime: 10000,
         refetchOnWindowFocus: true,
         retry: 1, 
     });

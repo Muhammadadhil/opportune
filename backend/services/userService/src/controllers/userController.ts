@@ -1,10 +1,10 @@
 //The controller handles the HTTP request and interacts with the service layer.
 
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/implementation/UserService";
 import { OtpService } from "../services/implementation/OtpService";
 import IClientDetail from "../interfaces/IClientDetail";
-import { ObjectId } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 
 export class UserController {
     private userService: UserService;
@@ -19,13 +19,14 @@ export class UserController {
         this.saveFreelancerDetails = this.saveFreelancerDetails.bind(this);
         this.getFreelancerData = this.getFreelancerData.bind(this);
         this.getClientData = this.getClientData.bind(this);
-        this.getFreelancers= this.getFreelancers.bind(this);
+        this.getFreelancers = this.getFreelancers.bind(this);
+        this.toggleBlockStatus = this.toggleBlockStatus.bind(this);
     }
 
-    async registerUser(req: Request, res: Response){
+    async registerUser(req: Request, res: Response) {
         try {
             const response = await this.userService.registerUser(req.body.formData);
-            if(!response.success){
+            if (!response.success) {
                 return res.status(400).json({ message: response.message });
             }
 
@@ -50,12 +51,12 @@ export class UserController {
                 message: "User Registered in successfully",
             });
         } catch (error) {
-            console.log('Error in registering user:', error);
+            console.log("Error in registering user:", error);
             return res.status(500).json({ message: "Server error", error });
         }
-    };
+    }
 
-     async login(req: Request, res: Response): Promise<Response> {
+    async login(req: Request, res: Response): Promise<Response> {
         try {
             const { email, password } = req.body;
             const { user, accessToken, refreshToken } = await this.userService.login(email, password);
@@ -90,7 +91,7 @@ export class UserController {
 
             return res.status(500).json({ message: "Server error", error: error.message });
         }
-    };
+    }
 
     async logout(req: Request, res: Response) {
         res.cookie("jwt-refresh", {
@@ -161,12 +162,31 @@ export class UserController {
             }
 
             const freelancers = await this.userService.getFreelancers(ids as string[]);
-            console.log('freeelnacer and user details:',freelancers);
+            console.log("freeelnacer and user details:", freelancers);
             res.status(200).json(freelancers);
-
         } catch (error) {
             console.log("Error in fetching freelancers :", error);
             return res.status(500).json({ message: "Server error", error });
+        }
+    }
+
+    // block user call from admin
+    async toggleBlockStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            
+            console.log('handlling blocking in user service !!')
+
+            const id = req.params.userId;
+            const userId = new Types.ObjectId(id);
+
+            if (!userId) {
+                res.status(400).json({ message: "Invalid input" });
+                return;
+            }
+            const message = await this.userService.toggleBlockStatus(userId as unknown as ObjectId);
+            res.status(200).json({ message });
+        } catch (error) {
+            next(error);
         }
     }
 }

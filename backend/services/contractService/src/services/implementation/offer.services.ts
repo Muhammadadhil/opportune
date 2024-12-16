@@ -51,12 +51,7 @@ export class OfferService implements IOfferService {
             console.log("updateOffer accepted" );
 
         }   
-
-        // publish a message : " offer accepted " for notification service ,
-        // call createContract function : pass the offerId,
-        // get the offer datails from there
-        // save contract there
-
+        
         return updatedOffer;
     }
 }

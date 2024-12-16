@@ -37,9 +37,17 @@ apiClient.interceptors.response.use(
                 await logout();
                 return Promise.reject(error);
             }
+
+        } else if (error.response.status === 403) {
+            
+            console.error("Got 403 error, logging out the user!");
+            logoutTheUser();
+            await logout();
+            return Promise.reject(error);
         }
         return Promise.reject(error);
     }
 );
 
 export default apiClient;
+

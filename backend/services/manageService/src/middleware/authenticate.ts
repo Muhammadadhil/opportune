@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Unauthorised, CustomError } from "@_opportune/common";
+import { Unauthorised, CustomError, Forbidden } from "@_opportune/common";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface AuthenticatedRequest extends Request {
@@ -15,24 +15,30 @@ interface UserPayload extends JwtPayload {
 }
 
 export const adminAuth = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+
+    console.log('authenticating admin !!!');
+
     const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return new Unauthorised("Token not found");
-    }
-
-    const token = authHeader.split(" ")[1];
     try {
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return new Unauthorised("Token not found");
+        }
+
+        const token = authHeader.split(" ")[1];
+
         const user = jwt.verify(token, process.env.JWT_ACCESSTOKEN_SECRET!) as UserPayload;
         req.user = user;
 
         if (user.role !== "admin") {
-            const error = new CustomError("Access denied: insufficient permissions", 403);
+
+            const error = new Forbidden();
             next(error);
         }
 
         next();
     } catch (err) {
-        new CustomError("Invalid or expired token", 401);
+        console.log("err:", err);  
+        new Unauthorised('Invalid token');
+        next(err);
     }
 };

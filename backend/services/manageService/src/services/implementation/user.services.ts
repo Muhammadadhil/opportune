@@ -4,6 +4,7 @@ import { IUser } from "../../entities/UserEntity";
 import { Document, ObjectId } from "mongoose";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../interfaces/types";
+import axios from "axios";
 
 @injectable()
 export class UserService implements IUserService {
@@ -29,9 +30,13 @@ export class UserService implements IUserService {
         const user = await this.userRepository.toggleBlockStatus(userId);
         if (!user) throw new Error("User not found");
 
+        await axios.patch(`http://localhost:3015/users/${userId}/block-toggle`);
+
         return user.isBlocked ? "Blocked" : "Unblocked";
 
         // publish a message with the event type and the user data;
+
+        
     }
 
     async createUser(data: IUser): Promise<void> {

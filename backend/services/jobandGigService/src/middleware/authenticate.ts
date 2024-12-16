@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from "express";
-import { Forbidden } from '@_opportune/common'
-import { UserService } from "../services/implementation/user.services";
-import { User } from "../schema/user.schema";
-import { UserRepository } from "../repositories/implementation/user.repository";
+import { Forbidden } from "@_opportune/common";
+import container from "../config/inversify";
+import { TYPES } from "../types/types";
+import { IUserService } from "../services/interfaces/IUserService";
 
-const userRepository = new UserRepository(User);
-const userService = new UserService(userRepository);
+const userService = container.get<IUserService>(TYPES.IUserService);
 
 export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admin">) => async (req: Request, res: Response, next: NextFunction) => {
     try {
+        console.log('!!!! authenticting in service level !!!!');
         // const payload = req.user;
         if (req.headers["x-user-payload"]) {
             const user = JSON.parse(req.headers["x-user-payload"] as string);
@@ -21,11 +21,10 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
             const isBlocked = await userService.isUserBlocked(user.userId);
 
             if (isBlocked) {
-                console.log('!!!! user is blocked throwing error !!!!');
+                console.log("!!!! user is blocked throwing error !!!!");
                 const error = new Forbidden();
                 next(error);
             }
-
         } else {
             throw new Forbidden();
         }
@@ -35,9 +34,6 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
         next(error);
     }
 };
-
-
-
 
 
 
@@ -99,4 +95,3 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
 // const userRepository = new UserRepository(User);
 // const midddlewareService = new MidddlewareService(userRepository);
 // const authenticateMiddleware = new AuthenticateMiddleware(midddlewareService);
-

@@ -14,6 +14,7 @@ import { FreelancerRepository } from "../../repositories/implementation/Freelanc
 import { LoginUserResponse, RegisterUserResponse } from '../../interfaces/IAuthResponse';
 import IUserService from "../interfaces/IUserService";
 import { RabbitMQProducer } from "../../events/rabbitmq/producer";
+import { Unauthorised } from "@_opportune/common";
 
 export class UserService implements IUserService {
     private userRepository: UserRepository;
@@ -58,9 +59,15 @@ export class UserService implements IUserService {
 
     async login(email: string, password: string): LoginUserResponse {
         const user = await this.userRepository.findOne({ email });
+
         if (!user) {
             throw new Error("Invalid email or password");
         }
+
+        if (user?.isBlocked){
+            throw new Unauthorised("User is blocked");
+        }
+            
         console.log("user w/o password:", user);
 
         const isPasswordValid = bcrypt.compareSync(password, user.password ?? "");
@@ -125,5 +132,15 @@ export class UserService implements IUserService {
 
     async getFreelancers(ids: string[]): Promise<IFreelancer[] | IUser[]> {
         return await this.freelancerRepository.getFreelancersDatas(ids);
+    }
+
+    async toggleBlockStatus(userId:ObjectId) {
+        
+        const user = await this.userRepository.toggleBlockStatus(userId);
+        if (!user) throw new Error("User not found");
+
+        this.producer.publishToMultiple("user_exchange", user, "update");
+        
+        return user.isBlocked ? "Blocked" : "Unblocked";
     }
 }

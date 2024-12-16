@@ -1,7 +1,7 @@
 import { IUserService } from "../interfaces/IUserService";
 import { IUserRepository } from "../../repositories/interfaces/IUserRepository";
 import { IUser } from "../../entities/UserEntity";
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types/types";
 
@@ -11,6 +11,13 @@ export class UserService implements IUserService {
 
     constructor(@inject(TYPES.IUserRepository) userRepository: IUserRepository) {
         this.userRepository = userRepository;
+    }
+
+    async isUserBlocked(userId: ObjectId): Promise<boolean | undefined> {
+        console.log("user id to check isblock:", userId);
+        const user = (await this.userRepository.findById(userId)) as IUser & Document;
+        console.log("user:", user);
+        return user.isBlocked;
     }
 
     async createUser(data: IUser): Promise<void> {
@@ -27,6 +34,7 @@ export class UserService implements IUserService {
                 await this.createUser(data);
                 break;
             case "update":
+                console.log("!!! handling update user in job service !!!!");
                 await this.updateUser(data);
                 break;
             default:

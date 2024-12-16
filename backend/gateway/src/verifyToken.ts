@@ -48,6 +48,7 @@ export const verifyToken = (secret: string) => {
             next();
 
         } catch (err) {
+            console.log('Error in verifying token: gateway:',err)
             next(err);
         }
     };

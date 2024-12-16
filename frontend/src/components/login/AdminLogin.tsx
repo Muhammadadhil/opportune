@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { setAdminAuthStatus } from "@/store/slices/userSlice"; 
 import { loginAdmin } from "@/api/admin";
+import {setAccessToken} from '@/services/authService'
 
 export default function AdminLogin() {
     const [email, setEmail] = useState("");
@@ -28,10 +29,11 @@ export default function AdminLogin() {
             const response = await loginAdmin(email, password);
             console.log("Login successful", response);
             dispatch(setAdminAuthStatus());
+            setAccessToken(response.data.accessToken);
             navigate('/admin/dashboard');
         } catch (err) {
             console.log(err);
-            setError(err.message);
+            setError(err.response.data.message);
         } finally {
             setIsLoading(false);
         }

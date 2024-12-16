@@ -4,12 +4,15 @@ import { IApplicationService } from "../interfaces/IApplicationService";
 import { IApplication } from "../../interfaces/IApplication";
 import { IFreelancerData } from '../../interfaces/IFreelancerData';
 
+
+
 export class ApplicationSerivce implements IApplicationService {
     private _applicationRepository: IApplicationRepository;
-    private jobServiceURL = process.env.JOB_SERVICE_URL;
+    private jobServiceURL :string;
 
     constructor(private readonly applicationRepository: IApplicationRepository) {
         this._applicationRepository = applicationRepository;
+        this.jobServiceURL = process.env.JOB_SERVICE_URL || '';
     }
 
     async createApplication(data: IApplication): Promise<IApplication | null> {
@@ -46,8 +49,11 @@ export class ApplicationSerivce implements IApplicationService {
 
         const applications = await this._applicationRepository.find({ freelancerId });
         const jobIds = applications.map((app) => app.jobId);
+ 
+        console.log(`url :::::: ${this.jobServiceURL}/batch/jobs`);
 
-        const response = await axios.get(`${this.jobServiceURL}/batch/jobs`, { params: { jobIds } });
+        const response = await axios.get(`http://localhost:3020/batch/jobs`, { params: { jobIds } });
+
         const enrichedApplications = applications.map((application) => ({
             ...application.toObject(),
             jobDetails: response.data.find((j: any) => j._id === application.jobId.toString()),
