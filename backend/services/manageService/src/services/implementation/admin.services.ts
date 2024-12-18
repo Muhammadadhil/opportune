@@ -1,8 +1,9 @@
 import { AdminRepository } from "../../repositories/implementation/admin.repository";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../../utils/generateToken";
+import { IAdminService } from "../interfaces/IAdminService";
 
-export class AdminService {
+export class AdminService implements IAdminService {
     private adminRepository;
 
     constructor() {
@@ -10,13 +11,11 @@ export class AdminService {
     }
 
     async login(email: string, password: string) {
-        
         // gmail
         // const password1 = "aadhi1234";
         // const hash = bcrypt.hashSync(password1, 10);
         // console.log("Use this hash in MongoDB:", hash);
 
-    
         const admin = await this.adminRepository.findAdmin(email);
         if (!admin) {
             throw new Error("Invalid email or password");

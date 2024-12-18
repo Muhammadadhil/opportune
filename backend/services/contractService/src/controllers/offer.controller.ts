@@ -46,4 +46,5 @@ export class OfferController {
             next(error);
         }
     };
+    
 }    

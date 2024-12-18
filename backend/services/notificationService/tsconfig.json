@@ -5,8 +5,11 @@
         "esModuleInterop": true,
         "moduleResolution": "node",
         "skipLibCheck": true,
-        "strict": true
+        "strict": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "../manageService/src/controllers/interface/IUserController.ts"],
     "exclude": ["node_modules"]
 }
