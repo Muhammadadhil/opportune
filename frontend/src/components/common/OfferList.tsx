@@ -61,7 +61,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                 <Card key={offer._id} className="overflow-hidden">
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between">
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-4 ">
                                 <Avatar className="h-12 w-12">
                                     <AvatarImage src="/placeholder.svg" />
                                     <AvatarFallback>{userType === "client" ? offer.freelancerId.charAt(0).toUpperCase() : offer.clientId.charAt(0).toUpperCase()}</AvatarFallback>
@@ -74,6 +74,11 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                         </Badge>
                                     </h3>
                                     <p className="text-sm text-muted-foreground mt-1">{userType === "client" ? `Freelancer: ${offer.freelancerId}` : `Client: ${offer.clientId}`}</p>
+                                </div>
+                                <div className="">
+                                    <Button className="mt-4 ">
+                                        Chat with Client
+                                    </Button>
                                 </div>
                             </div>
                             <Button variant="ghost" size="icon" className="rounded-full"></Button>
@@ -131,11 +136,6 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                         <div className="w-full flex justify-end">
                             {userType === "freelancer" && offer.status === "pending" ? (
                                 <div className="flex justify-between w-full">
-                                    <div>
-                                        <Button className="">
-                                            Chat with Client
-                                        </Button>
-                                    </div>
                                     <div className="space-x-2">
                                         <Button className="bg-blue-800 hover:bg-blue-700" onClick={() => acceptOrReject(offer._id!, "rejected")}>
                                             Reject Offer

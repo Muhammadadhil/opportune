@@ -39,7 +39,8 @@ const targets = {
     jobandGig: process.env.JOBANDGIG_BASE_URL,
     contract: process.env.CONTRACT_BASE_URL,
     payment: process.env.PAYMENT_BASE_URL,
-    notification: process.env.NOTIFICATION_BASE_URL
+    notification: process.env.NOTIFICATION_BASE_URL,
+    messaging: process.env.MESSAGING_BASE_URL,
 };
 
 app.use(
@@ -90,6 +91,15 @@ app.use(
     verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.notification,
+        changeOrigin: true,
+    })
+);
+
+app.use(
+    "/messaging",
+    verifyToken(process.env.JWT_SECRET!),
+    createProxyMiddleware({
+        target: targets.messaging,
         changeOrigin: true,
     })
 );
