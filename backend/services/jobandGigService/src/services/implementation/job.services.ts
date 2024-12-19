@@ -32,7 +32,11 @@ export class JobService implements IJobService {
         search: string,
         sort: string
     ): Promise<{ Alljobs: IJob[] | null; totalPagesCount: number }> {
+
+        console.log('sort ::::::::::::::::::',sort);
+
         const filters = {} as any;
+        let sortOption;
 
         if (category) filters.category = category;
         if (applications) filters.applications = { $lte: Number(applications) };
@@ -40,9 +44,15 @@ export class JobService implements IJobService {
             const [min, max] = budgetRange.split("-").map(Number);
             filters.budget = max ? { $gte: min, $lte: max } : { $gte: min };
         }
+
         if (search) filters.jobTitle = new RegExp(search, "i");
 
-        const sortOption = sort === "newest" ? { createdAt: -1 } : { createdAt: 1 };
+        if(!sort){
+            sortOption = {createdAt: -1};
+        }else{
+            sortOption = sort == "newest" ? { createdAt: -1 } : { createdAt: 1 };
+        }
+
         const totalJobs = await this._jobRepository.getJobsCount(filters);
         const Alljobs = await this._jobRepository.getFilteredJobs(page, limit, filters, sortOption);
 

@@ -21,6 +21,7 @@ import SendOfferPage from '@/pages/client/ClientSendOfferPage';
 import SuccessPage from '@/components/common/SuccessPage';
 import PaymentSuccess from "../components/common/PaymentSuccess";
 import ExplorePage from "../pages/freelancer/ExplorePage";
+import ChatPage from '../pages/common/ChatPage';
 
 function UserRoute() {
     return (
@@ -35,6 +36,7 @@ function UserRoute() {
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route element={<UsersLayout />}>
                     <Route path="/explore" element={<ExplorePage />} />
+                    <Route path="/chat/:chatRoomId" element={<ChatPage />} />
                 </Route>
 
                 <Route path="" element={<ClientProtected />}>

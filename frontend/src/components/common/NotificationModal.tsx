@@ -48,7 +48,7 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
                                         <div className="flex items-start justify-between gap-4">
                                             <div className="flex-1 space-y-1">
                                                 <p className="text-sm text-gray-800 dark:text-gray-200">
-                                                    <span className="font-medium">{notification.username || "User"}</span> {notification.message}
+                                                    <span className="font-medium">{notification._id || "User"}</span> {notification.message}
                                                 </p>
                                                 <p className="text-xs text-gray-600 dark:text-gray-400">{getRelativeTime(notification.createdAt) || "Just now"}</p>
                                             </div>

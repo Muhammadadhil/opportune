@@ -5,16 +5,13 @@ const socketHandler = (io:Namespace) => {
 
         io.on('connection', (socket) => {
              
-            console.log('socket:',socket);
-            console.log('New User connected:', socket.id);
-
+            console.log('New User connected for chat :', socket.id);
 
             // join a chat room
             socket.on('joinRoom',(chatRoomId:string)=>{
                 socket.join(chatRoomId);
                 console.log('User joined room:', chatRoomId);
             });
-
 
             // send a message
             socket.on('sendMessage',(message:any)=>{
@@ -30,13 +27,10 @@ const socketHandler = (io:Namespace) => {
                 console.log('Client disconnected');
             });
 
-
-
-
         })
         
     } catch (error) {
-        
+        console.log('socketHandler error:',error);
     }
 }
 

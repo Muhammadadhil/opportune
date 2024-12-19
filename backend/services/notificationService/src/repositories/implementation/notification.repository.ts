@@ -12,6 +12,6 @@ export class NotificationRepository extends BaseRepository<INotification> implem
     }
 
     async getUnReadNotifications(userId: string): Promise<INotification[]> {
-        return await this.notificationModel.find({ userId, isRead: false });
+        return await this.notificationModel.find({ userId, isRead: false }).sort({ createdAt: -1 }).exec();
     }
 }

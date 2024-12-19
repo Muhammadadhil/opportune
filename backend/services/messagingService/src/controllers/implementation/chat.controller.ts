@@ -11,6 +11,7 @@ export class ChatController implements IChatController {
 
     constructor(@inject(TYPES.IChatService) private chatService: IChatService) {
         this._chatService = chatService;
+        this.chatRoomHandler = this.chatRoomHandler.bind(this);
     }
 
 

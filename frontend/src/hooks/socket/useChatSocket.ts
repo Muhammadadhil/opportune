@@ -1,19 +1,17 @@
-import { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
+import { useState, useEffect } from "react";
 import createSocketConnection from "@/utils/socketConnection";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+const SOCKET_URL = import.meta.env.VITE_CHAT_SOCKET_URL;
 
-export const useSocket = (userId?: string) => {
-
+export const useChatSocket = (userId?: string) => {
     const [socket, setSocket] = useState<Socket | null>(null);
 
     useEffect(() => {
-
-        console.log('userId for socket connection:',userId);
+        console.log("userId for socket connection:", userId);
 
         if (userId) {
-            const newSocket = createSocketConnection(SOCKET_URL,userId);
+            const newSocket = createSocketConnection(userId, SOCKET_URL);
             setSocket(newSocket);
 
             return () => {

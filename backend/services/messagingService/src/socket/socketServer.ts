@@ -1,18 +1,25 @@
-import { Server as WebSocketServer } from "socket.io";
+import { Server  } from "socket.io";
 import socketHandler from "./socketHandler";
 
-let io: WebSocketServer;
+let io: Server;
 
 export const initSocketServer = (httpServer: any) => {
 
-    io = new WebSocketServer(httpServer, {
+    console.log('initiialising socket server !!!!!');
+
+    io = new Server(httpServer, {
         cors: {
             origin: "*",
             methods: ["GET", "POST"],
         },
     });
+
+    // io.on('connection', (socket) => {     
+
+    //     console.log('New User connected for chat:', socket.id);
+    // });
     
-    const chatNameSpace =  io.of('/chat');  //
+    const chatNameSpace =  io.of('/chat'); 
 
     socketHandler(chatNameSpace);
 

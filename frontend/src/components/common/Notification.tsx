@@ -8,10 +8,12 @@ import { NotificationModal } from "./NotificationModal";
 import useNotification from '@/hooks/notification/useNotification'
 
 const Notification: React.FC = () => {
+    
     const { userInfo } = useSelector((state: RootState) => state.user);
-    const socket = useSocket(userInfo?._id);
 
-    const {data:notifications}=useNotification(userInfo?._id);
+    const socket = useSocket(userInfo?._id);
+    
+    const { data:notifications,refetch } = useNotification(userInfo?._id);
 
     useEffect(() => {
 
@@ -21,6 +23,7 @@ const Notification: React.FC = () => {
                     position: "top-right",
                     duration: 8000,
                 });
+                refetch();
             };
 
             socket.on("newNotification", handleNotification);

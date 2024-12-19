@@ -11,7 +11,7 @@ export default function ExplorePage() {
         applications: "",
         budgetRange: "",
         search: "",
-        sort: "latest",
+        sort: "newest",
     });
 
     console.log("filterState:", filterState);

@@ -22,7 +22,7 @@ export default function MouseTracker({ children, cursorElement }: MouseTrackerPr
     };
 
     return (
-        <div style={{ height: "100vh", position: "relative" }} onMouseMove={handleMouseMove}>
+        <div style={{ height: "100vh", position: "relative", width: "100%" }} onMouseMove={handleMouseMove}>
             {/* {render(position)} */}
             {cursorElement && (
                 <div

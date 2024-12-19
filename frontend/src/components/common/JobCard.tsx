@@ -26,7 +26,6 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         setEditingJob(job);
         setIsDialogOpen(true);
     };
-    // const { data: jobs, refetch } = useJobs(userInfo?._id as string);
 
     const removeJobMutation = useRemoveJob();
 

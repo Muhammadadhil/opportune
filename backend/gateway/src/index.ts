@@ -88,7 +88,7 @@ app.use(
 
 app.use(
     "/notification",
-    verifyToken(process.env.JWT_SECRET!),
+    // verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.notification,
         changeOrigin: true,

@@ -125,6 +125,8 @@ const Navbar: React.FC = () => {
                                 >
                                     {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
                                 </button>
+                            </div>
+                            <div className="mx-5">
                                 <Notification />
                             </div>
 

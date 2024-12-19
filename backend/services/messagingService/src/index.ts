@@ -25,21 +25,21 @@ app.use(morgan("dev"));
 app.use("/", router);
 app.use(errorHandler);
 
-connectMongoDB(process.env.MONGODB_URL!, "notification");
+connectMongoDB(process.env.MONGODB_URL!, "messaging");
 
-const PORT = process.env.PORT || 3050;
+const PORT = process.env.PORT || 3060;
 
 const server = http.createServer(app);
 
 const startServer = async () => {
     try {
         initSocketServer(server);
-        app.listen(PORT, () => {
-            console.log(`notification-server is running on the port ${PORT}`);
+        server.listen(PORT, () => {
+            console.log(`messaging-server is running on the port ${PORT}`);
         });
         // await intialiseConsumers()
     } catch (error) {
-        console.log("Error in starting notification Server", error);
+        console.log("Error in starting messaging Server", error);
         process.exit(1);
     }
 };

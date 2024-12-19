@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useFilterJobs } from "@/hooks/jobs/useFilterJobs";
 import { IJob } from "@/types/IJob";
@@ -6,16 +5,14 @@ import Nojobs from "../ui/NoJob";
 import SkeletonCard from "../common/LoadingSkelton";
 import JobCard from "../common/JobCard";
 import { Button } from "@/components/ui/button";
-import { getPaginationNumbers } from "@/utils/getPageNumbers";
+import { getPaginationNumbers } from "@/utils/getPageNumbers";        
 
 const JobList = ({ filters }: { filters?: any }) => {
     const [page, setPage] = useState(1);
     const [totalPages,setTotalPages]=useState(1);
     const limit = 3;
 
-    const { data: jobs, isLoading } = useFilterJobs(filters, page, limit);
-
-    // console.log('jobs:', jobs);
+    const { data: jobs, isLoading } = useFilterJobs(filters, page, limit);     
 
 
     useEffect(() => {

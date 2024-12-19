@@ -1,10 +1,11 @@
 import io from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+const createSocketConnection = (socketUrl:string,userId?: string) => {
 
-const createSocketConnection = (userId?: string) => {
+    console.log('socektUrl connection url:',socketUrl);
 
-    const socket = io(SOCKET_URL, {
+    const socket = io(socketUrl, {
+        transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,

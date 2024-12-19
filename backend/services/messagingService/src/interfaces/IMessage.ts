@@ -1,12 +1,12 @@
 import { Document,ObjectId } from "mongoose";
-import { messageStatus } from "../enums/MessageStatus";
+import { messageStatus, messageType } from "../enums/MessageStatus";
 
 export interface IMessage extends Document {
     sender: ObjectId;
     receiver: ObjectId;
     content: string;
     chatRoom: string;
-    type?: "text" | "image" | "file";
+    type?: messageType;
     status: messageStatus;
     attachmentUrl?: string | null;
 }

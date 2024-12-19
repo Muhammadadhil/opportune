@@ -16,7 +16,9 @@ import SkeletonCard from '../common/LoadingSkelton';
 import { useAcceptOffer } from '@/hooks/offers/useAcceptOffer';
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { truncateString } from '@/utils/truncateString';
-
+import {createNotification} from '@/api/notification';
+import {getChatRoom} from '@/api/chat';
+import { useNavigate } from 'react-router-dom';
 
 interface OffersListProps {
     userType: "client" | "freelancer";
@@ -35,10 +37,17 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
 
     const { mutateAsync: acceptOfferMutation } = useAcceptOffer();
 
-    const acceptOrReject = async (offerId: string,status:string) => {
+    const acceptOrReject = async (offerId: string,status:string,clientId:string) => {
         try {
             acceptOfferMutation({offerId,status});
             toast.success(`Offer ${status} !`);
+
+            await createNotification(
+                clientId,
+                `Freelancer ${userInfo?.firstname+ " "+ userInfo?.lastname} has accepted your offer.`,
+                "info"
+            );
+            
         } catch (error) {
             console.log("Error accepting offer:", error);
             toast.error("Failed to accept the offer.");
@@ -48,6 +57,14 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
     const toggleExpand = (offerId:string) => {
         setIsExpanded(!isExpanded);
     };
+
+    const navigate = useNavigate();
+
+    const handleInitChat = async  (freelancerId:string,clientId:string)=>{
+        const response = await getChatRoom(freelancerId,clientId);
+        console.log("response chatroom:",response);
+        navigate(`/chat/${response.data._id}`);
+    }
 
     return (
         <div className="space-y-6">
@@ -76,7 +93,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                     <p className="text-sm text-muted-foreground mt-1">{userType === "client" ? `Freelancer: ${offer.freelancerId}` : `Client: ${offer.clientId}`}</p>
                                 </div>
                                 <div className="">
-                                    <Button className="mt-4 ">
+                                    <Button className="mt-4 " onClick={() => handleInitChat(offer.freelancerId,offer.clientId)}>
                                         Chat with Client
                                     </Button>
                                 </div>
@@ -137,10 +154,10 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                             {userType === "freelancer" && offer.status === "pending" ? (
                                 <div className="flex justify-between w-full">
                                     <div className="space-x-2">
-                                        <Button className="bg-blue-800 hover:bg-blue-700" onClick={() => acceptOrReject(offer._id!, "rejected")}>
+                                        <Button className="bg-blue-800 hover:bg-blue-700" onClick={() => acceptOrReject(offer._id!, "rejected", offer.clientId)}>
                                             Reject Offer
                                         </Button>
-                                        <Button className="bg-green-800 hover:bg-green-700" onClick={() => acceptOrReject(offer._id!, "accepted")}>
+                                        <Button className="bg-green-800 hover:bg-green-700" onClick={() => acceptOrReject(offer._id!, "accepted", offer.clientId)}>
                                             Accept Offer
                                         </Button>
                                     </div>
