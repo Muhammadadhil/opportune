@@ -10,15 +10,16 @@ const socketHandler = (io:Namespace) => {
             // join a chat room
             socket.on('joinRoom',(chatRoomId:string)=>{
                 socket.join(chatRoomId);
-                console.log('User joined room:', chatRoomId);
+                console.log('User joined room: chatRoomId:', chatRoomId);
             });
 
             // send a message
             socket.on('sendMessage',(message:any)=>{
 
+                console.log('!!!!! sending message !!!!!!:',message);
                 // create a message in database
 
-                io.to(message.chatRoomId).emit('sendMessage',message);
+                io.emit("newMessage", message);
             });
 
 

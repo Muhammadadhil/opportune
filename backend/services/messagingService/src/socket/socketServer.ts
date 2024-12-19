@@ -14,11 +14,6 @@ export const initSocketServer = (httpServer: any) => {
         },
     });
 
-    // io.on('connection', (socket) => {     
-
-    //     console.log('New User connected for chat:', socket.id);
-    // });
-    
     const chatNameSpace =  io.of('/chat'); 
 
     socketHandler(chatNameSpace);

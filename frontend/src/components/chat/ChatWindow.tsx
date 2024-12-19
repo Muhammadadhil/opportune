@@ -14,8 +14,10 @@ import createSocketConnection from "@/utils/socketConnection";
 // });
 
 type chatwindowprops = {
-    chatRoomId:string
-}
+    chatRoomId: string;
+    senderId:string;
+    receiverId:string
+};
 
 export enum messageStatus {
     sent = "sent",
@@ -42,37 +44,58 @@ export interface IMessage {
 
 const chatsocketUrl = import.meta.env.VITE_CHAT_SOCKET_URL;
 
-
-
-const ChatWindow: React.FC<chatwindowprops> = ({chatRoomId}) => {
+const ChatWindow: React.FC<chatwindowprops> = ({chatRoomId,senderId,receiverId}) => {
 
    console.log('chatRoomId for chat window:',chatRoomId);
 
    const [messages, setMessages] = useState<IMessage[]>([]);
+   const socket = createSocketConnection(chatsocketUrl);
 
     useEffect(() => {
-        const socket = createSocketConnection(chatsocketUrl);
+
         // join the room
         socket.emit("joinRoom", chatRoomId);
 
-        // listen for new messages
-        socket.on("newMessage", (message) => {
-            setMessages((prevMessages) => [...prevMessages, message]);
-        });
+        // listen for new messages  
 
         return () => {
             socket.off("newMessage");
         };
 
-    }, [chatRoomId]);
+    }, []);
+
+    useEffect(()=>{
+        socket.on("newMessage", (message) => {
+            console.log("new Mssage arrived:", message);
+
+            setMessages((prevMessages) => [...prevMessages, message]);
+        });
+   
+    })
+
+    const sendMessage = (content: string) => {
+        
+        console.log("sending message:",content);
+
+        const message: IMessage = {
+            sender: senderId,
+            receiver: receiverId,
+            content,
+            chatRoom: chatRoomId,
+        };
+
+        setMessages((prevMessages) => [...prevMessages, message]);
+
+        socket.emit("sendMessage", message);
+    }
+
 
     return (
         <div className="w-8/12 max-h-[860px] flex flex-col bg-gray-50">
-            
             <div className="p-4 border-b bg-white">
-                <h1 className="font-bold text-lg">Bahir abdulla</h1>
+                <h1 className="font-bold text-lg">reciver :  {receiverId}</h1>
                 <span className="text-sm text-gray-500">freelancer</span>
-            </div>    
+            </div>
 
             {/* Messages */}
             <div className="flex-1 p-4 overflow-y-auto">
@@ -82,7 +105,7 @@ const ChatWindow: React.FC<chatwindowprops> = ({chatRoomId}) => {
             </div>
 
             {/* Input */}
-            <ChatInput />
+            <ChatInput onSend={sendMessage} />
         </div>
     );
 };

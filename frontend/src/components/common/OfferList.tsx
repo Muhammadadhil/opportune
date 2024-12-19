@@ -25,6 +25,7 @@ interface OffersListProps {
 }
 
 export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
+    
     const { userInfo } = useSelector((state: RootState) => state.user);
 
     const [isExpanded,setIsExpanded]=useState<boolean>(false);    
@@ -60,11 +61,11 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
 
     const navigate = useNavigate();
 
-    const handleInitChat = async  (freelancerId:string,clientId:string)=>{
-        const response = await getChatRoom(freelancerId,clientId);
-        console.log("response chatroom:",response);
-        navigate(`/chat/${response.data._id}`);
-    }
+    const handleInitChat = async (sender: string, receiver: string) => {
+        const response = await getChatRoom(sender, receiver);
+        console.log("response chatroom:", response);
+        navigate(`/chat/?chatRoomId=${response.data._id}&senderId=${sender}&receiverId=${receiver}`);
+    };
 
     return (
         <div className="space-y-6">

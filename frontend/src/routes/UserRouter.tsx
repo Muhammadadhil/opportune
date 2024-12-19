@@ -36,7 +36,7 @@ function UserRoute() {
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route element={<UsersLayout />}>
                     <Route path="/explore" element={<ExplorePage />} />
-                    <Route path="/chat/:chatRoomId" element={<ChatPage />} />
+                    <Route path="/chat" element={<ChatPage />} />
                 </Route>
 
                 <Route path="" element={<ClientProtected />}>

@@ -1,11 +1,23 @@
 // components/ChatInput.tsx
 import React, { useState } from "react";
 
-const ChatInput: React.FC = () => {
+export enum messageType {
+    text = "text",
+    image = "image",
+    file = "file",
+}
+
+interface chatInputProps {
+    onSend: (message:string) => void;
+}
+
+
+
+const ChatInput: React.FC<chatInputProps> = ({ onSend }) => {
     const [message, setMessage] = useState("");
 
     const sendMessage = () => {
-        console.log("Message Sent:", message);
+        onSend(message);
         setMessage("");
     };
 
