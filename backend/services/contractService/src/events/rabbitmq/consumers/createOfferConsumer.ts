@@ -1,6 +1,7 @@
 import { Channel } from "amqplib";
 import { IOfferService } from "../../../services/interfaces/IOfferService";
-import { rabbitMQConnection } from "../RabbitMQConnection";
+import { rabbitMQConnection } from "@_opportune/common";
+
 
 
 export class CreateOfferConsumer {

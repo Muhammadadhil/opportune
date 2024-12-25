@@ -1,7 +1,8 @@
 
 import { Channel } from "amqplib";
 import { IContractService } from "../../../services/interfaces/IContractService";
-import { rabbitMQConnection } from "../RabbitMQConnection";
+import { rabbitMQConnection } from "@_opportune/common";
+
 
 export class JobApprovalConsumer {
 

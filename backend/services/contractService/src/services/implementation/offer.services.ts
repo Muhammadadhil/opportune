@@ -34,11 +34,15 @@ export class OfferService implements IOfferService {
     }
 
     async getFreelancerOffers(freelancerId: string): Promise<IOffer[] | null> {
-        return this._offerRepository.find({ freelancerId });
+        const offers =await  this._offerRepository.populatedFreelancerOffers(freelancerId);
+        console.log("offers :", offers);
+        return offers;
     }
 
     async getClientOffers(clientId: string): Promise<IOffer[] | null> {
-        return this._offerRepository.find({ clientId });
+        const offers = await this._offerRepository.find({ clientId });
+        console.log('offers :',offers);
+        return offers
     }
 
     async acceptOffer(offerId: ObjectId, status: string): Promise<IOffer | null> {
@@ -49,7 +53,6 @@ export class OfferService implements IOfferService {
         if (updatedOffer && updatedOffer.status == "accepted") {
             this._contractService.createContract(updatedOffer);
             console.log("updateOffer accepted" );
-
         }   
         
         return updatedOffer;

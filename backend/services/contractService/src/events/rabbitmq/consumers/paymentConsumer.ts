@@ -1,5 +1,5 @@
 import { Channel } from "amqplib";
-import { rabbitMQConnection } from "../RabbitMQConnection";
+import { rabbitMQConnection } from "@_opportune/common";
 import { IContractService } from "../../../services/interfaces/IContractService";
 
 export class PaymentSuccessConsumer {

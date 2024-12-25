@@ -10,6 +10,7 @@ export class MessageController implements IMessageController {
 
     constructor(@inject(TYPES.IMessageService) private messageService: IMessageService) {
         this._messageService = messageService;
+        this.getMessagesHandler = this.getMessagesHandler.bind(this);
     }
 
     async sendMessageHandler(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -28,7 +29,6 @@ export class MessageController implements IMessageController {
     async getMessagesHandler(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { chatRoomId } = req.params;
-
             const messages = await this._messageService.getMessages(chatRoomId);
             res.status(200).json(messages);
         } catch (error) {

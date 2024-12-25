@@ -1,67 +1,36 @@
-import {useState} from 'react';
+import React from "react";
 import ChatSidebar from "@/components/chat/ChatSidebar";
-import ChatWindow from '@/components/chat/ChatWindow'
-import { FreelancerDetails } from "@/components/common/FreelancerDetailsCard";
-import { useEffect } from "react";
+import ChatWindow from "@/components/chat/ChatWindow";
 import MaxWidth from "@/layouts/MaxWidth";
-import { useParams } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { IUser } from "@/types/IUser";
+import { ChatState } from "@/types/IChat";
+
 
 const ChatPage: React.FC = () => {
+    const navigate = useNavigate();
 
-    const location = useLocation();
-
-    const [chatDetails, setChatDetails]=useState({
-        chatRoomId: '',
-        senderId: '',
-        receiverId: ''
-    })
-
-    console.log('location:',location);
-
-    const searchParams = new URLSearchParams(location.search);
-    const chatRoomId = searchParams.get("chatRoomId");
-    const senderId = searchParams.get("senderId");
-    const receiverId = searchParams.get("receiverId");
-
-    useEffect(() => {
-
-        if (chatRoomId && senderId && receiverId) {
-            setChatDetails({
-                chatRoomId: chatRoomId,
-                senderId: senderId,
-                receiverId: receiverId
-            })
-        }
-    }, [chatRoomId, senderId, receiverId]);
-
-    // const params = useParams();
-    // const chatRoomId = params.chatRoomId
-
-    // console.log('params for chat page:',params);
-
-
-    const handleChangeChatWindow = (chatRoomId: string, senderId: string, receiverId: string) => {
-
-        console.log("!!! changingChat !!!!");
-
-        setChatDetails({
-            chatRoomId,
-            senderId,
-            receiverId,
+    const handleChangeChatWindow = (chatRoomId: string, sender: IUser, receiver: IUser) => {
+        navigate("/chat", {
+            state: {
+                chatRoomId,
+                sender,
+                receiver,
+            } as ChatState,
         });
     };
 
     return (
-        <MaxWidth>
-            <div className="flex h-screen ">
-                <ChatSidebar onChangeChat={handleChangeChatWindow} />
-                <ChatWindow chatRoomId={chatDetails.chatRoomId!} senderId={chatDetails.senderId!} receiverId={chatDetails.receiverId!} />
-                <div className="w-3/12 p-4">
-                    <FreelancerDetails name="John Doe" imageUrl="/path-to-image.jpg" description="Experienced web developer specializing in React and Node.js with 5 years of industry experience." />
+        <div className="h-screen overflow-hidden">
+            <MaxWidth>
+                <div className="h-screen pt-6 pb-6">
+                    <div className="flex h-[calc(100vh-3rem)] w-full max-w-[1400px] mx-auto bg-white rounded-lg shadow-lg">
+                        <ChatSidebar onChangeChat={handleChangeChatWindow} />
+                        <ChatWindow />
+                    </div>
                 </div>
-            </div>
-        </MaxWidth>
+            </MaxWidth>
+        </div>
     );
 };
 

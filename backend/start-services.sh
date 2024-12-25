@@ -10,7 +10,6 @@ NOTIFICATION_SERVICE_PATH='./services/notificationService'
 MESSAGING_SERVICE_PATH='./services/messagingService'
 
 
-
 echo "Starting apiGateway..."
 (cd "$API_GATEWAY_PATH" && npm run dev) &
 

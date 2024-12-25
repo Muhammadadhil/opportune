@@ -1,6 +1,7 @@
 import { Channel } from "amqplib";
 import { IApplicationService } from "../../../services/interfaces/IApplicationService";
-import { rabbitMQConnection } from "../RabbitMQConnection";
+import { rabbitMQConnection } from "@_opportune/common";
+
 
 export class CreateApplicationConsumer {
 

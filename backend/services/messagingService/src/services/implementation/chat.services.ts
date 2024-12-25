@@ -37,7 +37,7 @@ export class ChatService implements IChatService {
     }
 
     async getAllChatRooms(userId:ObjectId): Promise<IChatRoom[]> {
-        return this._chatRepository.find({ participants: { $in: [userId] } });
+        return this._chatRepository.getPopulatedChatRoom(userId);
     }
 
     

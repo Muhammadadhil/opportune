@@ -4,20 +4,17 @@ import createSocketConnection from "@/utils/socketConnection";
 
 const SOCKET_URL = import.meta.env.VITE_CHAT_SOCKET_URL;
 
-export const useChatSocket = (userId?: string) => {
+export const useChatSocket = () => {
     const [socket, setSocket] = useState<Socket | null>(null);
 
     useEffect(() => {
-        console.log("userId for socket connection:", userId);
+         const newSocket = createSocketConnection(SOCKET_URL);
+         setSocket(newSocket);
 
-        if (userId) {
-            const newSocket = createSocketConnection(userId, SOCKET_URL);
-            setSocket(newSocket);
-
-            return () => {
-                newSocket.disconnect();
-            };
-        }
+         return () => {
+            newSocket.disconnect();
+         };
+             
     }, []);
 
     return socket;

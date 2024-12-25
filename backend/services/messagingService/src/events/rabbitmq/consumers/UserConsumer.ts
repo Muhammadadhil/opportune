@@ -1,23 +1,26 @@
 import { Channel } from "amqplib";
-import { IOfferService } from "../../../services/interfaces/IPaymentService";
-import { rabbitMQConnection } from "../RabbitMQConnection";
+import { rabbitMQConnection } from "@_opportune/common";
+import { IUserService } from "../../../services/interfaces/IUserService";
+import { inject, injectable } from "inversify";
+import IConsumer from "@_opportune/common/dist/interfaces/IConsumer";
+import { TYPES } from "../../../interfaces/types";
 
+@injectable()
+export class UserConsumer implements IConsumer{
+    private channel: Channel | null = null;
+    private exchangeName = "user_exchange";
+    private userService:IUserService;
 
-export class CreateOfferConsumer {
+    constructor(@inject(TYPES.IUserService) userService: IUserService) {
+        this.userService = userService
+    }
 
-    private channel : Channel | null = null
-    constructor(
-        private readonly offerService:IOfferService,
-        private readonly exchangeName:string
-    ){}
-
-    async initialise(){
+    async initialise() {
         try {
             this.channel = await rabbitMQConnection.createChannel();
             await this.channel.assertExchange(this.exchangeName, "fanout", { durable: true });
 
             const q = await this.channel.assertQueue("");
-
             await this.channel.bindQueue(q.queue, this.exchangeName, "");
 
             console.log(`Waiting for messages in queue ${q.queue} from exchange : ${this.exchangeName}`);
@@ -28,7 +31,11 @@ export class CreateOfferConsumer {
                     if (msg) {
                         try {
                             const messageContent = JSON.parse(msg.content.toString());
-                            await this.offerService.createOffer(messageContent);
+                            console.log('!! messagingService !!')
+                            console.log("consuming from the exchange:", this.exchangeName);
+                            console.log("consuming message:", messageContent);
+
+                            this.userService.handleEvent(messageContent.eventType, messageContent);
                             this.channel?.ack(msg);
                         } catch (error) {
                             console.error(`Error processing message from exchange ${this.exchangeName}:`, error);
@@ -37,10 +44,8 @@ export class CreateOfferConsumer {
                 },
                 { noAck: false }
             );
-
         } catch (error) {
             console.error("Error initializing offer consumer:", error);
         }
-
     }
 }

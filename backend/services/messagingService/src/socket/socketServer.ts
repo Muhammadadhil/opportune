@@ -8,6 +8,7 @@ export const initSocketServer = (httpServer: any) => {
     console.log('initiialising socket server !!!!!');
 
     io = new Server(httpServer, {
+        pingTimeout: 60000,
         cors: {
             origin: "*",
             methods: ["GET", "POST"],

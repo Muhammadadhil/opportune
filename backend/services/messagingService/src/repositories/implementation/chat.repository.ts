@@ -13,12 +13,15 @@ export class ChatRepository extends BaseRepository<IChatRoom> implements IChatRe
     }
 
     async createChatRoom(participants: ObjectId[]): Promise<IChatRoom> {
-        
         const chatRoom = new ChatRoom({
             participants,
             lastMessageAt: new Date(),
         });
 
         return chatRoom.save();
+    }
+
+    async getPopulatedChatRoom(userId: ObjectId): Promise<IChatRoom[]> {
+        return ChatRoom.find({ participants: { $in: [userId] } }).populate("participants");
     }
 }

@@ -8,6 +8,7 @@ import { connectMongoDB } from "@_opportune/common";
 import http from "http";
 import { initSocketServer } from "./socket/socketServer";
 import { errorHandler } from "@_opportune/common";
+import { InitialiseConsumers } from "./events/rabbitmq/InitialiseConsumers";
 
 const app = express();
 dotenv.config();
@@ -37,7 +38,8 @@ const startServer = async () => {
         server.listen(PORT, () => {
             console.log(`messaging-server is running on the port ${PORT}`);
         });
-        // await intialiseConsumers()
+        await InitialiseConsumers()
+        
     } catch (error) {
         console.log("Error in starting messaging Server", error);
         process.exit(1);

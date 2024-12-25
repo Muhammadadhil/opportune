@@ -14,15 +14,15 @@ export const initSocketServer = (httpServer:any)=> {
 
     io.on('connection', (socket) => {
 
-        console.log('New client connected:', socket.id);
+        // console.log('New client connected:', socket.id);
 
         socket.on('register',(userId) => {
             socket.join(userId);
-            console.log(`User ${userId} registered `);
+            // console.log(`User ${userId} registered `);
         })
 
         socket.on('disconnect', () => {
-            console.log('Client disconnected');
+            console.log('Notification : Client disconnected');
         });
 
     });

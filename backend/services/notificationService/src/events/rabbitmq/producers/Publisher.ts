@@ -1,5 +1,5 @@
 import amqplib from "amqplib";
-import { rabbitMQConnection } from "../rabbitmqConnection";
+import { rabbitMQConnection } from '@_opportune/common'
 
 export class Publisher {
     private channel: amqplib.Channel | null = null;

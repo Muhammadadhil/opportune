@@ -64,7 +64,16 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
     const handleInitChat = async (sender: string, receiver: string) => {
         const response = await getChatRoom(sender, receiver);
         console.log("response chatroom:", response);
-        navigate(`/chat/?chatRoomId=${response.data._id}&senderId=${sender}&receiverId=${receiver}`);
+
+        // navigate(`/chat/?chatRoomId=${response.data._id}&senderId=${sender}&receiverId=${receiver}`);   
+
+        navigate("/chat", {
+            state: {
+                chatRoomId:response.data._id,
+                sender,
+                receiver,
+            } ,
+        });
     };
 
     return (
@@ -82,7 +91,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                             <div className="flex items-center space-x-4 ">
                                 <Avatar className="h-12 w-12">
                                     <AvatarImage src="/placeholder.svg" />
-                                    <AvatarFallback>{userType === "client" ? offer.freelancerId.charAt(0).toUpperCase() : offer.clientId.charAt(0).toUpperCase()}</AvatarFallback>
+                                    <AvatarFallback>{userType === "client" ? offer.freelancerId.charAt(0).toUpperCase() : offer.clientId?.firstName?.charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <div>
                                     <h3 className="font-semibold text-lg">
@@ -91,10 +100,12 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                             {offer.status}
                                         </Badge>
                                     </h3>
-                                    <p className="text-sm text-muted-foreground mt-1">{userType === "client" ? `Freelancer: ${offer.freelancerId}` : `Client: ${offer.clientId}`}</p>
+                                    <p className="text-sm text-muted-foreground mt-1 font-bold">
+                                        {userType === "client" ? `Freelancer: ${offer.freelancerId}` : `${offer.clientId?.firstname + " " + offer.clientId?.lastname}`}
+                                    </p>
                                 </div>
                                 <div className="">
-                                    <Button className="mt-4 " onClick={() => handleInitChat(offer.freelancerId,offer.clientId)}>
+                                    <Button className="mt-4 " onClick={() => handleInitChat(offer.freelancerId, offer.clientId._id)}>
                                         Chat with Client
                                     </Button>
                                 </div>

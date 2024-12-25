@@ -42,6 +42,7 @@ export default function Profile() {
     const { data: freelancer } = useFreelancerProfile(userInfo._id);
     
     console.log("freelancer details :", freelancer);
+    
     // const { data: client } = useClientProfile(userInfo._id);
 
     // async function getData() {

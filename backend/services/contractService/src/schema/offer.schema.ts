@@ -7,8 +7,8 @@ const OfferSchema = new Schema<IOffer>(
     {
         applicationId: { type: mongoose.Types.ObjectId, required: true },
         jobId: { type: mongoose.Types.ObjectId, required: true },
-        freelancerId: { type: mongoose.Types.ObjectId, required: true },
-        clientId: { type: mongoose.Types.ObjectId, required: true },
+        freelancerId: { type: mongoose.Types.ObjectId, required: true , ref: 'User'},
+        clientId: { type: mongoose.Types.ObjectId, required: true , ref: 'User' },
         milestones: { type: [MilestoneSchema], required: true },
         workTitle: { type: String, required: true },
         workDescription: { type: String, required: true },

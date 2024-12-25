@@ -126,6 +126,8 @@ export class UserService implements IUserService {
 
         const imageUrl = await getSignedImageURL(imageName);
 
+        console.log('imageRul: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1',imageUrl)
+
         freelancerDetails.imageUrl = imageUrl;
         return freelancerDetails;
     }

@@ -31,7 +31,6 @@ const PORT = process.env.PORT || 3020;
 
 const startServer = async () => {
     try {
-        // await jobService.intialize();
         app.listen(PORT, () => {
             console.log(`jobandGig server is running on the port ${PORT}`);
         });

@@ -1,111 +1,185 @@
-// components/ChatWindow.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import React from "react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
-import { io } from "socket.io-client";
-import createSocketConnection from "@/utils/socketConnection";
+import { useLocation } from "react-router-dom";
+import { useChatSocket } from "@/hooks/socket/useChatSocket";
+import { IMessage } from "@/types/IMessage";
+import useMessages from "@/hooks/chat/useMessage";
+import { useQueryClient } from "@tanstack/react-query";
+import { Video } from "lucide-react";
+import { ChatState } from "@/types/IChat";
+import { newMessage } from "@/types/IMessage";
 
 
-// const socket = io("http://localhost:3060/", {
-//     reconnection: true,
-//     reconnectionAttempts: 5,
-//     reconnectionDelay: 1000,
-// });
+const ChatWindow: React.FC = () => {
+    
+    const socket = useChatSocket();
+    const location = useLocation();
+    const queryClient = useQueryClient();
+    const state = location.state as ChatState;
 
-type chatwindowprops = {
-    chatRoomId: string;
-    senderId:string;
-    receiverId:string
-};
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-export enum messageStatus {
-    sent = "sent",
-    delivered = "delivered",
-    read = "read",
-}
-
-export enum messageType {
-    text = "text",
-    image = "image",
-    file = "file",
-}
-
-
-export interface IMessage {
-    sender: string;
-    receiver: string;
-    content: string;
-    chatRoom: string;
-    type?: messageType;
-    status?: messageStatus;
-    attachmentUrl?: string | null;
-}
-
-const chatsocketUrl = import.meta.env.VITE_CHAT_SOCKET_URL;
-
-const ChatWindow: React.FC<chatwindowprops> = ({chatRoomId,senderId,receiverId}) => {
-
-   console.log('chatRoomId for chat window:',chatRoomId);
-
-   const [messages, setMessages] = useState<IMessage[]>([]);
-   const socket = createSocketConnection(chatsocketUrl);
-
+    const chatRoomId = state?.chatRoomId;
+    const { data: messages = [], isLoading, error } = useMessages(chatRoomId || "");
+    
     useEffect(() => {
-
-        // join the room
+        if (!socket || !chatRoomId) return;
         socket.emit("joinRoom", chatRoomId);
 
-        // listen for new messages  
+        return () => {
+            socket.off("joinRoom");
+        };
+    }, [chatRoomId, socket]);
+
+    useEffect(() => {
+        if (!socket) return;
+        socket.on("newMessage", (message) => {
+            if (!chatRoomId) return;
+            queryClient.setQueryData(["messages", chatRoomId], (oldData: IMessage[] = []) => {
+                return [...oldData, message];
+            });
+        });
 
         return () => {
             socket.off("newMessage");
         };
+    }, [socket, chatRoomId, queryClient]);
 
-    }, []);
+    useEffect(() => {
+        const scrollToBottom = () => {
+            if (messagesContainerRef.current) {
+                const { scrollHeight, clientHeight } = messagesContainerRef.current;
+                messagesContainerRef.current.scrollTop = scrollHeight - clientHeight;
+            }
+        };
 
-    useEffect(()=>{
-        socket.on("newMessage", (message) => {
-            console.log("new Mssage arrived:", message);
+        scrollToBottom();
+    }, [messages]);
 
-            setMessages((prevMessages) => [...prevMessages, message]);
-        });
-   
-    })
+    if (!state) {
+        return (
+            <div className="flex-1 flex items-center justify-center">
+                <p className="text-gray-500">No chat selected</p>
+            </div>
+        );
+    }
+
+    const { sender, receiver } = state;
+    const senderId = sender._id;
+    const receiverId = receiver._id;
 
     const sendMessage = (content: string) => {
-        
-        console.log("sending message:",content);
+        if (!socket || !chatRoomId) return;
 
-        const message: IMessage = {
+        const message: newMessage = {
             sender: senderId,
             receiver: receiverId,
             content,
             chatRoom: chatRoomId,
         };
 
-        setMessages((prevMessages) => [...prevMessages, message]);
+        queryClient.setQueryData(["messages", chatRoomId], (oldData: IMessage[] = []) => {
+            return [...oldData, message];
+        });
 
         socket.emit("sendMessage", message);
+    };
+
+    if (error) {
+        return (
+            <div className="w-full flex justify-center items-center h-full">
+                <div className="text-red-500">Error loading messages. Please try again later.</div>
+            </div>
+        );
     }
 
+    const formatMessageDate = (date: string | Date) => {
+        const messageDate = new Date(date);
+        const today = new Date();
+
+        if (messageDate.toDateString() === today.toDateString()) {
+            return "Today";
+        }
+
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (messageDate.toDateString() === yesterday.toDateString()) {
+            return "Yesterday";
+        }
+
+        return messageDate.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+        });
+    };
+
+    const groupMessagesByDate = (messages: IMessage[]) => {
+        const groups: { [key: string]: IMessage[] } = {};
+
+        messages.forEach((message) => {
+            const date = formatMessageDate(message.createdAt);
+            if (!groups[date]) {
+                groups[date] = [];
+            }
+            groups[date].push(message);
+        });
+
+        return groups;
+    };
+
+    const messageGroups = groupMessagesByDate(messages);
 
     return (
-        <div className="w-8/12 max-h-[860px] flex flex-col bg-gray-50">
-            <div className="p-4 border-b bg-white">
-                <h1 className="font-bold text-lg">reciver :  {receiverId}</h1>
-                <span className="text-sm text-gray-500">freelancer</span>
+        <div className="flex-1 flex flex-col h-[calc(100vh-8rem)] bg-white">
+            {/* Chat header */}
+            <div className="flex-none items-center justify-between px-4 py-3 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="relative">
+                            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">{receiver.firstname?.[0] || receiver._id.charAt(0)}</div>
+                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                        </div>
+                        <div>
+                            <h2 className="font-semibold">{receiver.firstname ? `${receiver.firstname} ${receiver.lastname || ""}` : receiver._id}</h2>
+                            <span className="text-sm text-gray-500">Freelancer</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <Video className="w-5 h-5 text-gray-600" />
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 p-4 overflow-y-auto">
-                {messages.map((msg, idx) => (
-                    <MessageBubble key={idx} sender={msg.sender} message={msg.content} />
-                ))}
+            {/* Messages area with containerRef */}
+            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-4 py-6">
+                {isLoading ? (
+                    <div className="flex justify-center items-center h-full">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                    </div>
+                ) : (
+                    Object.entries(messageGroups).map(([date, groupMessages]) => (
+                        <div key={date} className="space-y-3">
+                            <div className="flex justify-center">
+                                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-500">{date}</span>
+                            </div>
+                            {groupMessages.map((msg, idx) => (
+                                <MessageBubble key={idx} sender={msg.sender} message={msg.content} timestamp={msg.createdAt} isSender={msg.sender === senderId} />
+                            ))}
+                        </div>
+                    ))
+                )}
+                <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <ChatInput onSend={sendMessage} />
+            {/* Chat input */}
+            <div className="flex-none">
+                <ChatInput onSend={sendMessage} />
+            </div>
         </div>
     );
 };

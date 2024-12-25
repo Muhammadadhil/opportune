@@ -57,6 +57,11 @@ const Navbar: React.FC = () => {
         navigate(userInfo?.role == "freelancer" ? "/fr/profile" : "/cl/profile");
     };
 
+    const navigateToChat = () => {
+        setIsOpen(false);
+        navigate('/chat');
+    };
+
     const handleToggleTheme = () => {
         dispatch(toggleTheme());
     };
@@ -70,8 +75,8 @@ const Navbar: React.FC = () => {
                             {/* Logo on the left */}
                             <div className="flex-shrink-0">
                                 <Link to="/" className="flex items-center">
-                                    <h2 className={`font-Poppins text-2xl font-extrabold ${theme === "dark" ? "text-white" : "text-slate-800"}`}>
-                                        Opportune <span className="text-amber-500">.</span>
+                                    <h2 className="text-2xl font-bold text-slate-800">
+                                        Opportune<span className="text-green-600">.</span>
                                     </h2>
                                 </Link>
                             </div>
@@ -161,6 +166,7 @@ const Navbar: React.FC = () => {
                                             <p className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{userInfo.role}</p>
                                             <DropdownMenuSeparator className="px-16" />
                                             <DropdownMenuItem onClick={navigateToProfile}>Profile</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={navigateToChat}>Messages</DropdownMenuItem>
                                             <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
