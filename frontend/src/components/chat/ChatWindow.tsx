@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
@@ -10,21 +10,27 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Video } from "lucide-react";
 import { ChatState } from "@/types/IChat";
 import { newMessage } from "@/types/IMessage";
-
+import VideoCall from "./VideoCall";
+import VideoCallOverlay from "./VideoCallOverlay";
 
 const ChatWindow: React.FC = () => {
-    
     const socket = useChatSocket();
     const location = useLocation();
     const queryClient = useQueryClient();
     const state = location.state as ChatState;
+
+    const [isInCall, setIsInCall] = useState(false);
+
+    const handleCallEnd = () => {
+        setIsInCall(false);
+    };
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
 
     const chatRoomId = state?.chatRoomId;
     const { data: messages = [], isLoading, error } = useMessages(chatRoomId || "");
-    
+
     useEffect(() => {
         if (!socket || !chatRoomId) return;
         socket.emit("joinRoom", chatRoomId);
@@ -79,6 +85,7 @@ const ChatWindow: React.FC = () => {
             receiver: receiverId,
             content,
             chatRoom: chatRoomId,
+            createdAt: new Date(),
         };
 
         queryClient.setQueryData(["messages", chatRoomId], (oldData: IMessage[] = []) => {
@@ -147,11 +154,24 @@ const ChatWindow: React.FC = () => {
                             <span className="text-sm text-gray-500">Freelancer</span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+
+                    <div className="chat-room">
+                        <div className="chat-interface">
+                            {/* Your existing chat interface */}
+                            {/* <button onClick={() => setIsInCall(true)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Start Video Call
+                                </button> */}
+                            <button onClick={() => setIsInCall(true)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <Video className="w-5 h-5 text-gray-600" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* <div className="flex items-center gap-2">
+                        <button onClick={() => setIsInCall(true)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                             <Video className="w-5 h-5 text-gray-600" />
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -180,6 +200,9 @@ const ChatWindow: React.FC = () => {
             <div className="flex-none">
                 <ChatInput onSend={sendMessage} />
             </div>
+            {/* {isInCall && <VideoCall roomId={chatRoomId} userId={sender._id} userName={`${sender.firstname} ${sender.lastname}`} onCallEnd={handleCallEnd} />} */}
+
+            {isInCall && <VideoCallOverlay roomId={chatRoomId} userId={sender._id} userName={`${sender.firstname} ${sender.lastname}`} onCallEnd={handleCallEnd} onClose={handleCallEnd} />}
         </div>
     );
 };

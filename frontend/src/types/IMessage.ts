@@ -23,4 +23,4 @@ export interface IMessage {
 }
 
 
-export type newMessage = Omit<IMessage, "createdAt" | "_id">;   
+export type newMessage = Omit<IMessage,"_id">;   

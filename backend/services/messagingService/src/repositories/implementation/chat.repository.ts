@@ -24,4 +24,10 @@ export class ChatRepository extends BaseRepository<IChatRoom> implements IChatRe
     async getPopulatedChatRoom(userId: ObjectId): Promise<IChatRoom[]> {
         return ChatRoom.find({ participants: { $in: [userId] } }).populate("participants");
     }
+
+    async getPopulatedChatOfUsers(clientId:ObjectId, freelancerId:ObjectId): Promise<IChatRoom | null> {
+        return ChatRoom.findOne({
+            participants: { $all: [clientId, freelancerId] }
+        }).populate("participants");
+    }
 }

@@ -23,14 +23,16 @@ export class ChatService implements IChatService {
         this._chatRepository = chatRepository;
     }
 
-    async chatRoom(clientId: ObjectId, freelancerId: ObjectId): Promise<IChatRoom | null> {
+    async chatRoom(user1: ObjectId, user2: ObjectId): Promise<IChatRoom | null> {
 
-        let chatRoom = await this._chatRepository.findOne({
-            participants: { $all: [clientId, freelancerId] },
-        }); 
+        // let chatRoom = await this._chatRepository.findOne({
+        //     participants: { $all: [user1, user2] },
+        // }); 
+
+        let chatRoom = await this._chatRepository.getPopulatedChatOfUsers(user1, user2);
         
         if (!chatRoom) {
-            await this._chatRepository.createChatRoom([clientId, freelancerId]);
+            await this._chatRepository.createChatRoom([user1, user2]);
         }
 
         return chatRoom;

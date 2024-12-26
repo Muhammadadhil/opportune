@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Smile, Paperclip, Image, Send, Mic } from "lucide-react";
+import { Image, Send } from "lucide-react";
 
 export enum messageType {
     text = "text",
@@ -31,12 +31,12 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
     return (
         <div className="px-4 py-3 border-t border-gray-200 bg-white">
             <div className="flex items-center gap-2">
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                {/* <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <Smile className="w-5 h-5 text-gray-500" />
-                </button>
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                </button> */}
+                {/* <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <Paperclip className="w-5 h-5 text-gray-500" />
-                </button>
+                </button> */}
                 <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <Image className="w-5 h-5 text-gray-500" />
                 </button>
@@ -52,13 +52,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
                     />
                 </div>
 
-                {message.trim() ? (
+                {message.trim() && (
                     <button onClick={sendMessage} className="p-2 bg-blue-600 hover:bg-blue-700 rounded-full transition-colors">
                         <Send className="w-5 h-5 text-white" />
-                    </button>
-                ) : (
-                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <Mic className="w-5 h-5 text-gray-500" />
                     </button>
                 )}
             </div>

@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IChatRoom } from "@/types/IChatRoom";
 import { IUser } from "@/types/IUser";
 import { getRelativeTime } from "@/utils/relativeDateFormatter";
+import { getChatParticipants } from "@/utils/getChatUser";
 
 
 interface ChatSidebarProps {
@@ -36,12 +37,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
         }
     };
 
-    const getOtherParticipant = (chat: IChatRoom): IUser => {
-        return chat.participants.find((p) => p?._id !== userInfo?._id) || chat.participants[0];
-    };
-
     const filteredChatRooms = chatRooms.filter((chat) => {
-        const otherUser = getOtherParticipant(chat);
+        const { otherUser } = getChatParticipants(chat,userInfo._id);
         const searchTerm = searchQuery.toLowerCase();
         return otherUser.firstname?.toLowerCase().includes(searchTerm) || otherUser.lastname?.toLowerCase().includes(searchTerm) || otherUser.email?.toLowerCase().includes(searchTerm);
     });
@@ -70,7 +67,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
             
             <div className="flex-1 overflow-y-auto">
                 {filteredChatRooms.map((chat) => {
-                    const otherUser = getOtherParticipant(chat);
+                    const {otherUser} = getChatParticipants(chat,userInfo._id);
                     return (
                         <div
                             key={chat._id}
