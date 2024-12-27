@@ -10,7 +10,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Video } from "lucide-react";
 import { ChatState } from "@/types/IChat";
 import { newMessage } from "@/types/IMessage";
-import VideoCall from "./VideoCall";
 import VideoCallOverlay from "./VideoCallOverlay";
 
 const ChatWindow: React.FC = () => {
@@ -22,6 +21,9 @@ const ChatWindow: React.FC = () => {
     const [isInCall, setIsInCall] = useState(false);
 
     const handleCallEnd = () => {
+
+        
+
         setIsInCall(false);
     };
 
@@ -155,14 +157,10 @@ const ChatWindow: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="chat-room">
+                    <div className="flex items-center gap-2">
                         <div className="chat-interface">
-                            {/* Your existing chat interface */}
-                            {/* <button onClick={() => setIsInCall(true)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Start Video Call
-                                </button> */}
-                            <button onClick={() => setIsInCall(true)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                                <Video className="w-5 h-5 text-gray-600" />
+                            <button onClick={() => setIsInCall(true)} className="p-2 hover:bg-gray-100 rounded-full transition-colors ">
+                                <Video className="w-5 h-5 text-gray-600 " />
                             </button>
                         </div>
                     </div>
@@ -200,9 +198,11 @@ const ChatWindow: React.FC = () => {
             <div className="flex-none">
                 <ChatInput onSend={sendMessage} />
             </div>
-            {/* {isInCall && <VideoCall roomId={chatRoomId} userId={sender._id} userName={`${sender.firstname} ${sender.lastname}`} onCallEnd={handleCallEnd} />} */}
 
-            {isInCall && <VideoCallOverlay roomId={chatRoomId} userId={sender._id} userName={`${sender.firstname} ${sender.lastname}`} onCallEnd={handleCallEnd} onClose={handleCallEnd} />}
+            {/* video call  */}
+            {isInCall && (
+                <VideoCallOverlay roomId={`${chatRoomId}${Date.now()}`} userId={sender._id} userName={`${sender.firstname} ${sender.lastname}`} onCallEnd={handleCallEnd} onClose={handleCallEnd} />
+            )}
         </div>
     );
 };

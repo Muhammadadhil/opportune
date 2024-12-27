@@ -1,7 +1,7 @@
-// Create a new component VideoCallOverlay.tsx
 import { createPortal } from "react-dom";
 import VideoCall from "./VideoCall";
 import { X } from "lucide-react";
+// import { useEffect } from "react";
 
 interface VideoCallProps {
     roomId: string;
@@ -15,6 +15,14 @@ interface VideoCallOverlayProps extends VideoCallProps {
 }
 
 const VideoCallOverlay: React.FC<VideoCallOverlayProps> = ({ onClose, ...props }) => {
+
+    // useEffect(()=>{
+
+    //     document.body.style.overflow = "hidden";
+
+    // })
+
+
     return createPortal(
         <div className="fixed inset-0 z-50 bg-black">
             <button onClick={onClose} className="absolute top-4 right-4 z-50 p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700">
