@@ -1,14 +1,17 @@
 import mongoose, { Document, ObjectId } from "mongoose";
 import { PaymentStatus } from "../enums/PaymentStatus";
+
+
 export interface IPayment extends Document {
-    _id: mongoose.Types.ObjectId;
-    contractId: mongoose.Types.ObjectId;
-    milestoneId: mongoose.Types.ObjectId;
-    clientId: mongoose.Types.ObjectId;
-    freelancerId: mongoose.Types.ObjectId;
+    _id: ObjectId;
+    contractId: ObjectId;
+    milestoneId: ObjectId;
+    clientId: ObjectId;
+    freelancerId: ObjectId;
     amount: number;
     stripeSessionId?: string;
     stripePaymentIntentId?: string;
     stripeChargeId?: string;
     status: PaymentStatus;
+    escrowId: ObjectId;
 }

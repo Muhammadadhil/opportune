@@ -2,6 +2,7 @@ import mongoose,{Schema} from "mongoose";
 import { IContract } from "../interfaces/IContract";
 import { ContractStatus } from '../enums/ContractStatus';
 import MilestoneSchema from "./milestone.schema";
+import { EscrowStatus } from "../enums/EscrowStatus";
 
 const contractSchema = new mongoose.Schema<IContract>(
     {
@@ -43,6 +44,7 @@ const contractSchema = new mongoose.Schema<IContract>(
             enum: Object.values(ContractStatus),
             default: ContractStatus.PENDING,
         },
+
         currentMilestoneIndex: {
             type: Number,
             default: 0,

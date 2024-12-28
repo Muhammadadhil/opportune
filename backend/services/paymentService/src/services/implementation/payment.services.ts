@@ -3,22 +3,29 @@ import { IPaymentRepository } from "../../repositories/interfaces/IPaymentReposi
 import { IPaymentService } from "../interfaces/IPaymentService";
 // import { rabbitmqConnection } from '@_opportune/common'
 import {PaymentStatus} from '../../enums/PaymentStatus';
-
 import dotenv from "dotenv";
 import { IPayment } from "../../interfaces/IPayment";
-import mongoose from "mongoose";
+import mongoose, { ObjectId, Types } from "mongoose";
+import { IEscrowService } from "../interfaces/IEscrowService";
+import { IEscrowRepository } from "../../repositories/interfaces/IEscrowRepository";
+import { IEscrow } from "../../interfaces/IEscrow";
+import { EscrowStatus } from "../../enums/EscrowStatus";
+
 dotenv.config();
 
 export class PaymentService implements IPaymentService {
     private _paymentRepository: IPaymentRepository;
+    private _escrowRepository: IEscrowRepository;
     private _publisher: any
     private stripe: Stripe;
 
     constructor(
         private readonly paymentRepository: IPaymentRepository,
+        private readonly escrowRepository: IEscrowRepository,
         private readonly publisher: any
     ){
         this._paymentRepository = paymentRepository;
+        this._escrowRepository = escrowRepository;
         this._publisher = publisher;
         this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     }
@@ -67,8 +74,12 @@ export class PaymentService implements IPaymentService {
         switch (event.type) {
             case "checkout.session.completed":
                 const session = event.data.object as Stripe.Checkout.Session;
+
                 console.log("session: event.data.object :", session);
-                this.savePayment(session);
+                const payment = await this.savePayment(session);
+
+                this.createEscrow(payment);
+
                 break;
 
             case "checkout.session.async_payment_failed":
@@ -88,10 +99,10 @@ export class PaymentService implements IPaymentService {
         };
         
         const paymentData: Partial<IPayment> = {
-            contractId: this.toObjectId(contractId),
-            milestoneId: this.toObjectId(milestoneId),
-            clientId: this.toObjectId(clientId),
-            freelancerId: this.toObjectId(freelancerId),
+            contractId: new Types.ObjectId(contractId) as unknown as ObjectId,
+            milestoneId: new Types.ObjectId(milestoneId) as unknown as ObjectId,
+            clientId: new Types.ObjectId(clientId) as unknown as ObjectId,
+            freelancerId: new Types.ObjectId(freelancerId) as unknown as ObjectId,
             amount: Number(milestoneAmount),
             stripeSessionId: session.id,
             stripePaymentIntentId: session.payment_intent as string,
@@ -103,14 +114,39 @@ export class PaymentService implements IPaymentService {
         this._publisher.publish("payment_success_exchange", payment);
 
         // // Trigger events or notifications
+        // update the status of the milestone in contract service
         // this.notifyContractService(payment);
         // this.notifyUserService(payment);
         return payment
     }
 
-    private toObjectId(id: string): mongoose.Types.ObjectId {
-        return new mongoose.Types.ObjectId(id) ;
-    }
+    async createEscrow(payment:IPayment): Promise<IEscrow> {
+
+            const escrowData: Partial<IEscrow> = {
+                contractId: payment.contractId,
+                milestoneId: payment.milestoneId,
+                clientId: payment.clientId,
+                freelancerId: payment.freelancerId,
+                amount: payment.amount,
+                paymentId: payment._id,
+                status: EscrowStatus.HOLDING,
+            };
+    
+            if (!escrowData.contractId || !escrowData.milestoneId || !escrowData.clientId || !escrowData.freelancerId || !escrowData.amount || !escrowData.paymentId) {
+                throw new Error("Missing required escrow data fields");
+            }
+    
+            const escrow = await this._escrowRepository.create(escrowData as IEscrow);
+ 
+            await this._paymentRepository.update(payment._id, { escrowId: escrow._id as unknown as ObjectId });
+    
+            return escrow;
+        }
+
+
+    
+
+
 
 
 

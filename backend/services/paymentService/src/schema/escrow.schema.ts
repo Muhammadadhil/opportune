@@ -1,9 +1,8 @@
 import mongoose, { Schema } from "mongoose";
-import { IPayment } from "../interfaces/IPayment";
-import { PaymentStatus } from "../enums/PaymentStatus";
+import { IEscrow } from "../interfaces/IEscrow";
+import { EscrowStatus } from "../enums/EscrowStatus";
 
-
-const PaymentSchema = new mongoose.Schema<IPayment>(
+const EscrowSchema = new mongoose.Schema<IEscrow>(
     {
         contractId: {
             type: Schema.Types.ObjectId,
@@ -27,23 +26,20 @@ const PaymentSchema = new mongoose.Schema<IPayment>(
             type: Number,
             required: true,
         },
-        stripeSessionId: String,
-        stripePaymentIntentId: String,
-        stripeChargeId: String,
+        paymentId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+        },
         status: {
             type: String,
-            enum: Object.values(PaymentStatus),
-            default: PaymentStatus.PENDING,
-        },
-        escrowId: {
-            type: Schema.Types.ObjectId, 
-            ref: "Escrow",
+            enum: Object.values(EscrowStatus),
+            default: EscrowStatus.HOLDING, 
         },
     },
     {
         timestamps: true,
     }
 );
-const Payment = mongoose.model<IPayment>("Payment", PaymentSchema);
 
-export default Payment;
+const Escrow = mongoose.model<IEscrow>("Escrow", EscrowSchema);
+export default Escrow;

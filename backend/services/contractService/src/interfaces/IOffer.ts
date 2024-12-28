@@ -6,6 +6,7 @@ export interface IMilestone {
     amount: number;
     deadline: Date;
     status: string;
+    escrowStatus: string;
 }
 
 export interface IOffer extends Document {
