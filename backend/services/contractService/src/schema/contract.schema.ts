@@ -44,7 +44,6 @@ const contractSchema = new mongoose.Schema<IContract>(
             enum: Object.values(ContractStatus),
             default: ContractStatus.PENDING,
         },
-
         currentMilestoneIndex: {
             type: Number,
             default: 0,

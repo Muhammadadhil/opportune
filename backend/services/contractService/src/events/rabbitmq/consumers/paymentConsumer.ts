@@ -26,6 +26,9 @@ export class PaymentSuccessConsumer {
                     if (msg) {
                         try {
                             const messageContent = JSON.parse(msg.content.toString());
+
+                            console.log(`Received message from exchange ${this.exchangeName}:`, messageContent);
+
                             await this.contractService.postPaymentSuccess(messageContent);
                             this.channel?.ack(msg);
                         } catch (error) {

@@ -9,6 +9,7 @@ const MilestoneSchema = new Schema<IMilestone>({
     amount: { type: Number, required: true },
     deadline: { type: Date, required: true },
     status: { type: String, MilestoneStatus, default: MilestoneStatus.UNPAID },
+    escrowId: { type: Schema.Types.ObjectId },
     escrowStatus: {
         type: String,
         enum: Object.values(EscrowStatus),

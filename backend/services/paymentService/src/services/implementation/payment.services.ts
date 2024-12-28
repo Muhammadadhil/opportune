@@ -1,28 +1,24 @@
 import Stripe from "stripe";
 import { IPaymentRepository } from "../../repositories/interfaces/IPaymentRepository";
 import { IPaymentService } from "../interfaces/IPaymentService";
-// import { rabbitmqConnection } from '@_opportune/common'
 import {PaymentStatus} from '../../enums/PaymentStatus';
 import dotenv from "dotenv";
 import { IPayment } from "../../interfaces/IPayment";
-import mongoose, { ObjectId, Types } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import { IEscrowRepository } from "../../repositories/interfaces/IEscrowRepository";
 import { IEscrow } from "../../interfaces/IEscrow";
 import { EscrowStatus } from "../../enums/EscrowStatus";
+import { CustomError } from "@_opportune/common";
 
 dotenv.config();
 
 export class PaymentService implements IPaymentService {
     private _paymentRepository: IPaymentRepository;
     private _escrowRepository: IEscrowRepository;
-    private _publisher: any
+    private _publisher: any;
     private stripe: Stripe;
 
-    constructor(
-        private readonly paymentRepository: IPaymentRepository,
-        private readonly escrowRepository: IEscrowRepository,
-        private readonly publisher: any
-    ){
+    constructor(private readonly paymentRepository: IPaymentRepository, private readonly escrowRepository: IEscrowRepository, private readonly publisher: any) {
         this._paymentRepository = paymentRepository;
         this._escrowRepository = escrowRepository;
         this._publisher = publisher;
@@ -30,15 +26,13 @@ export class PaymentService implements IPaymentService {
     }
 
     async createSession(milestoneId: string, milestoneAmount: number, contractId: string, freelancerId: string, clientId: string): Promise<string | null> {
-
-
         console.log("milestoneId:", milestoneAmount);
         const amount = Number(Number(milestoneAmount).toFixed(2));
         const paymentExist = await this._paymentRepository.findOne({ milestoneId });
-        if(paymentExist){
+        if (paymentExist) {
             return null;
         }
-        
+
         const session = await this.stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: [
@@ -69,16 +63,13 @@ export class PaymentService implements IPaymentService {
     }
 
     async handleStripeWebhook(event: Stripe.Event) {
-
         switch (event.type) {
+
             case "checkout.session.completed":
+
                 const session = event.data.object as Stripe.Checkout.Session;
-
-                console.log("session: event.data.object :", session);
-                const payment = await this.savePayment(session);
-
-                this.createEscrow(payment);
-
+                this.handleSuccessPayment(session);
+                
                 break;
 
             case "checkout.session.async_payment_failed":
@@ -87,8 +78,24 @@ export class PaymentService implements IPaymentService {
         }
     }
 
-    async savePayment(session: Stripe.Checkout.Session): Promise<IPayment> {
+    async handleSuccessPayment(session: Stripe.Checkout.Session) {
+        try {
+            // console.log("session: event.data.object :", session);
+            const payment = await this.savePayment(session);
+            const escrow = await this.createEscrow(payment);
+            const paymentObject = payment.toObject();
 
+            const paymentAndEscrowInfo = { ...paymentObject, escrowId: escrow._id, escrowStatus: escrow.status };
+            console.log('payment and escrow info:',paymentAndEscrowInfo);
+            await this._paymentRepository.update(payment._id, { escrowId: escrow._id as unknown as ObjectId });
+            this._publisher.publish("payment_success_exchange", paymentAndEscrowInfo);
+
+        } catch (error) {
+            throw new CustomError("Error in handling successful payment", 500);
+        }
+    }
+
+    async savePayment(session: Stripe.Checkout.Session): Promise<IPayment> {
         const { milestoneId, milestoneAmount, contractId, freelancerId, clientId } = session.metadata as {
             milestoneId: string;
             milestoneAmount: string;
@@ -96,7 +103,7 @@ export class PaymentService implements IPaymentService {
             freelancerId: string;
             clientId: string;
         };
-        
+
         const paymentData: Partial<IPayment> = {
             contractId: new Types.ObjectId(contractId) as unknown as ObjectId,
             milestoneId: new Types.ObjectId(milestoneId) as unknown as ObjectId,
@@ -110,49 +117,27 @@ export class PaymentService implements IPaymentService {
         const data = { ...paymentData, status: PaymentStatus.SUCCEEDED } as IPayment;
         const payment = await this._paymentRepository.create(data);
 
-        this._publisher.publish("payment_success_exchange", payment);
-
-        // // Trigger events or notifications
-        // update the status of the milestone in contract service
-        // this.notifyContractService(payment);
-        // this.notifyUserService(payment);
-        return payment
+        return payment;
     }
 
-    async createEscrow(payment:IPayment): Promise<IEscrow> {
+    async createEscrow(payment: IPayment): Promise<IEscrow> {
+        const escrowData: Partial<IEscrow> = {
+            contractId: payment.contractId,
+            milestoneId: payment.milestoneId,
+            clientId: payment.clientId,
+            freelancerId: payment.freelancerId,
+            amount: payment.amount,
+            paymentId: payment._id,
+            status: EscrowStatus.HOLDING,
+        };
 
-            const escrowData: Partial<IEscrow> = {
-                contractId: payment.contractId,
-                milestoneId: payment.milestoneId,
-                clientId: payment.clientId,
-                freelancerId: payment.freelancerId,
-                amount: payment.amount,
-                paymentId: payment._id,
-                status: EscrowStatus.HOLDING,
-            };
-    
-            if (!escrowData.contractId || !escrowData.milestoneId || !escrowData.clientId || !escrowData.freelancerId || !escrowData.amount || !escrowData.paymentId) {
-                throw new Error("Missing required escrow data fields");
-            }
-    
-            const escrow = await this._escrowRepository.create(escrowData as IEscrow);
- 
-            await this._paymentRepository.update(payment._id, { escrowId: escrow._id as unknown as ObjectId });
-    
-            return escrow;
+        if (!escrowData.contractId || !escrowData.milestoneId || !escrowData.clientId || !escrowData.freelancerId || !escrowData.amount || !escrowData.paymentId) {
+            throw new Error("Missing required escrow data fields");
         }
 
-
-    
-
-
-
-
-
-
-
-
-
+        const escrow = await this._escrowRepository.create(escrowData as IEscrow);
+        return escrow;
+    }
 
 
 

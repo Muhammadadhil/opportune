@@ -12,6 +12,11 @@ import { IPayment } from "@_opportune/common";
 import { MilestoneStatus } from "../../enums/MIlestoneStatus";
 import mongoose, { ObjectId } from "mongoose";
 
+interface PaymentInfo extends IPayment {
+    escrowId: ObjectId;
+    escrowStatus: string;
+}
+
 
 export class ContractService implements IContractService {
     private contractRepository: IContractRepository;
@@ -75,16 +80,20 @@ export class ContractService implements IContractService {
         }
     }
 
-    async postPaymentSuccess(data: IPayment): Promise<void> {
+    async postPaymentSuccess(data: PaymentInfo): Promise<void> {
+
         console.log("payment success:", data);
-        this.updateMilestoneStatus(data.contractId as ObjectId, data.milestoneId, MilestoneStatus.ACTIVE);
+
+        this.updateMilestoneStatus(data.contractId as ObjectId, data.milestoneId, MilestoneStatus.ACTIVE, data.escrowId,data.escrowStatus);
         const contract = await this.contractRepository.findById(data.contractId);
+
         if (contract && contract.status == ContractStatus.PENDING) {
             await this.contractRepository.update(contract._id as ObjectId,{status:ContractStatus.IN_PROGRESS});
         }
     }
 
-    async updateMilestoneStatus(contractId: string | ObjectId, milestoneId: string | ObjectId, newStatus: string): Promise<IContract | null> {
+    async updateMilestoneStatus(contractId: string | ObjectId, milestoneId: string | ObjectId, newStatus: string,escrowId:ObjectId,escrowStatus:string): Promise<IContract | null> {
+        
         const contract = await this.contractRepository.findById(contractId as ObjectId);
         console.log('contract to update milestone dtila:',contract)
         console.log("milestoneId:", milestoneId);
@@ -92,7 +101,12 @@ export class ContractService implements IContractService {
         if (contract) {
             const milestone = contract.milestones.find((m) => m._id == milestoneId);
             console.log('milestone to update:',milestone);
-            if (milestone) milestone.status = newStatus;
+            
+            if (milestone) {
+                milestone.status = newStatus;
+                milestone.escrowId = escrowId;
+                milestone.escrowStatus = escrowStatus
+            };
 
             // Auto-complete contract if all milestones are completed
             if (contract.milestones.every((m) => m.status === MilestoneStatus.COMPLETED)) {
