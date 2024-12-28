@@ -12,8 +12,11 @@ import { IContract } from "@/types/IContract";
 import { truncateString } from "@/utils/truncateString";
 // import YourPaymentComponent from './Payment';
 import { loadStripe } from "@stripe/stripe-js";
-import { createChekcoutSession } from '@/api/contracts';
+import { createChekcoutSession, submitWork } from '@/api/contracts';
 import { IPaymentData } from '@/types/IPaymentData';
+import { MilestoneStatus } from "@/types/IMilestoneStatus";
+import { SubmitWorkDialog } from "../freelancer/SubmitWork";
+import { ISubmission } from "@/types/ISubmisssion";
 
 interface ContractsProps {
     userType: "client" | "freelancer";
@@ -25,10 +28,18 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     const userId = userInfo?._id;
 
-    // const [showPaymentComp,setShowPaymentComp] = useState(false);
 
     const { data: contracts } = useContracts(userId, userType);
     const [expandedContracts, setExpandedContracts] = useState<string[]>([]);
+
+    const [isSubmitWorkOpen, setIsSubmitWorkOpen] = useState(false);
+    const [selectedMilestone, setSelectedMilestone] = useState<{
+        id: string;
+        amount: number;
+        clientId: string;
+        contractId: string;
+        freelancerId: string;
+    } | null>(null);
 
     console.log('contracts:',contracts)
 
@@ -54,6 +65,24 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
 
     const toggleContractDetails = (contractId: string) => {
         setExpandedContracts((prev) => (prev.includes(contractId) ? prev.filter((id) => id !== contractId) : [...prev, contractId]));
+    };
+
+    const handleSubmitWork = async (message: string, file: File | null) => {
+
+        if (!selectedMilestone) return;
+
+        const submissionData: ISubmission = {
+            message,
+            file: file!,
+            clientId: selectedMilestone.clientId,
+            contractId: selectedMilestone.contractId,
+            freelancerId: selectedMilestone.freelancerId,
+            milestoneId: selectedMilestone.id,
+        };
+
+        // console.log("Submitting work:", submissionData);
+        const response = await submitWork(submissionData);
+        console.log("response submitt work:", response);
     };
 
     if (!contracts?.data?.length) {
@@ -125,7 +154,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                         <p className="text-sm text-muted-foreground">${milestone.amount.toFixed(2)}</p>
                                                     </div>
 
-                                                    {userType === "client" && milestone.status === "unpaid" && contract.currentMilestoneIndex == index && (
+                                                    {userType === "client" && milestone.status === MilestoneStatus.UNPAID && contract.currentMilestoneIndex == index && (
                                                         <Button
                                                             size="sm"
                                                             onClick={() =>
@@ -139,6 +168,23 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                             }
                                                         >
                                                             Pay Milestone
+                                                        </Button>
+                                                    )}
+                                                    {userType === "freelancer" && milestone.status === MilestoneStatus.ACTIVE && contract.currentMilestoneIndex == index && (
+                                                        <Button
+                                                            className="bg-green-700 hover:bg-green-600"
+                                                            onClick={() => {
+                                                                setSelectedMilestone({
+                                                                    id: milestone._id,
+                                                                    amount: milestone.amount,
+                                                                    clientId: contract.clientId,
+                                                                    contractId: contract._id,
+                                                                    freelancerId: contract.freelancerId,
+                                                                });
+                                                                setIsSubmitWorkOpen(true);
+                                                            }}
+                                                        >
+                                                            Submit Work for Payment
                                                         </Button>
                                                     )}
                                                     <div className="">
@@ -155,6 +201,18 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                     </Card>
                 );
             })}
+
+            {selectedMilestone && (
+                <SubmitWorkDialog
+                    isOpen={isSubmitWorkOpen}
+                    onClose={() => {
+                        setIsSubmitWorkOpen(false);
+                        setSelectedMilestone(null);
+                    }}
+                    onSubmit={handleSubmitWork}
+                    amount={selectedMilestone.amount}
+                />
+            )}
         </div>
     );
 };

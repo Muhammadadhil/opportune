@@ -1,11 +1,14 @@
 import { Router } from "express";
+import multer from "multer";
 
 import { offerController } from "../config/container";
 import { contractController } from "../config/container";
 import { applicationController } from "../config/container";
 import { authenticate } from "../middleware/authenticate";
+import { submissionController } from "../config/container";
 
 const router = Router();
+const upload = multer();
 
 //applications
 router.get("/application", applicationController.checkApplication);
@@ -23,6 +26,7 @@ router.get("/freelancer/offers",authenticate(['freelancer']), offerController.fr
 router.patch("/job/offer", authenticate(["freelancer"]), offerController.updateOffer);
 
 
-
+//submit work
+router.post("/submit-work", authenticate(['freelancer']), upload.single('file'), submissionController.submitWork);
 
 export default router;

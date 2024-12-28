@@ -1,3 +1,4 @@
+import { ISubmission } from "@/types/ISubmisssion";
 import apiClient from "./axiosInstance";
 import { IPaymentData } from "@/types/IPaymentData";
 
@@ -21,4 +22,6 @@ export const createChekcoutSession = async (data:IPaymentData) => {
     return await apiClient.post(`/payment/create/checkout-session`, { milestoneAmount:data.milestoneAmount,contractId:data.contractId,freelancerId:data.freelancerId, clientId:data.clientId,milestoneId:data.milestoneId });
 };
 
-;
+export const submitWork = async (data:ISubmission) => {
+    return await apiClient.post(`/contract//submit-work`, { data });
+};

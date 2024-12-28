@@ -21,6 +21,19 @@ import { UserService } from "../services/implementation/user.services";
 import { UserRepository } from "../repositories/implementation/user.repository";
 import { User } from "../schema/user.schema";
 
+import { SubmissionController } from "../controllers/submission.controller";
+import { SubmissionService } from "../services/implementation/submission.service";
+import { SubmissionRepository } from "../repositories/implementation/submission.repository";
+
+import { FileUploader } from "../utils/fileUploader";
+
+
+const fileUploader = new FileUploader();
+const submissionRepository = new SubmissionRepository();
+const submissionService = new SubmissionService(submissionRepository, fileUploader);
+const submissionController = new SubmissionController(submissionService);
+
+
 //repositories
 const applicationRepository = new ApplicationRepository(Application);
 const contractRepository = new ContractRepository(Contract);
@@ -54,4 +67,4 @@ export async function intialiseConsumers() {
     userConsumer.initialise();
 }
 
-export { offerController, contractController, applicationController };
+export { offerController, contractController, applicationController, submissionController };

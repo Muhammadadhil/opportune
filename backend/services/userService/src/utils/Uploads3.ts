@@ -11,6 +11,9 @@ const region = process.env.BUCKET_REGION;
 const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
 
+console.log("accessKeyId in user Service::::::::", accessKeyId);
+
+
 if (!accessKeyId || !secretAccessKey) {
     throw new Error("AWS credentials are not set");
 }
