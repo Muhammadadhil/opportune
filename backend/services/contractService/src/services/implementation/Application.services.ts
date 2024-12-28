@@ -31,7 +31,9 @@ export class ApplicationSerivce implements IApplicationService {
     async getApplicationOfClient(clientId: string, jobId: string) {
         const applications = await this._applicationRepository.find({ clientId, jobId });
         const freelancerIds = applications.map((app) => app.freelancerId);
-        console.log("freelancerIds to fetch:", freelancerIds);
+
+        // adCh1: take the user info from user service
+
         if (freelancerIds.length > 0) {
             const response = await axios.get(`http://localhost:4002/user/freelancers`, { params: { ids: freelancerIds } });
 

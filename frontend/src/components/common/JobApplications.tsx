@@ -24,7 +24,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
     const { data: Allapplications, isLoading } = useApplications(userId, jobId!, userType);
     const applications = Allapplications?.data.applications;
 
-    // console.log('applications:',applications);
+    console.log('applications:',applications);
     return (
         <div className="mx-auto px-4 py-8 h-screen">
             {applications?.length > 0 ? (

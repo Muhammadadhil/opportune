@@ -124,24 +124,23 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                         <p className="text-sm font-medium">{truncateString(milestone.description, 30)}</p>
                                                         <p className="text-sm text-muted-foreground">${milestone.amount.toFixed(2)}</p>
                                                     </div>
-                                                    
-                                                    {userType === "client" &&
-                                                        milestone.status === "unpaid" && contract.currentMilestoneIndex==index &&(
-                                                            <Button
-                                                                size="sm"
-                                                                onClick={() =>
-                                                                    handlePayMilestone({
-                                                                        milestoneId: milestone._id, 
-                                                                        contractId: contract._id,
-                                                                        milestoneAmount: milestone.amount.toString(), // Ensure amount is passed as a string
-                                                                        clientId: contract.clientId,
-                                                                        freelancerId: contract.freelancerId,
-                                                                    })
-                                                                }
-                                                            >
-                                                                Pay Milestone
-                                                            </Button>
-                                                        )}
+
+                                                    {userType === "client" && milestone.status === "unpaid" && contract.currentMilestoneIndex == index && (
+                                                        <Button
+                                                            size="sm"
+                                                            onClick={() =>
+                                                                handlePayMilestone({
+                                                                    milestoneId: milestone._id,
+                                                                    contractId: contract._id,
+                                                                    milestoneAmount: milestone.amount.toString(), // Ensure amount is passed as a string
+                                                                    clientId: contract.clientId,
+                                                                    freelancerId: contract.freelancerId,
+                                                                })
+                                                            }
+                                                        >
+                                                            Pay Milestone
+                                                        </Button>
+                                                    )}
                                                     <div className="">
                                                         <p className="text-sm font-medium text-gray-400">Milestone status</p>
                                                         <Badge variant={milestone.status === "unpaid" ? "default" : "secondary"}>{milestone.status}</Badge>

@@ -19,7 +19,6 @@ const paymentService = new PaymentService(paymentRepository, escrowRepository, p
 //controllers
 const paymentController = new PaymentController(paymentService);
 
-
 // consumers
 // const offerConsumer = new CreateOfferConsumer(offerService, "offer_created_exchange");
 

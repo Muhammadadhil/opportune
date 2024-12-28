@@ -26,6 +26,7 @@ export default function SendOffer() {
     const [description,setDescription]=useState(job?.data.description);
     const [milestones, setMilestones] = useState<IMilestone[]>([{ description: "", deadline: "", amount: budget }]);
 
+
     useEffect(() => {
         setTitle(job?.data.jobTitle);
         setDescription(job?.data.description);
@@ -114,6 +115,9 @@ export default function SendOffer() {
         }
     };
 
+    const today = new Date().toISOString().split("T")[0];
+    console.log('today:',today)
+
     return (
         <div className="container mx-auto py-8 px-4">
             <h1 className="text-2xl font-bold mb-6">Send Offer</h1>
@@ -127,7 +131,7 @@ export default function SendOffer() {
                         <label>Title</label>
                         <Input placeholder="Title" className="mb-4 mt-1" value={title} onChange={(e) => setTitle(e.target.value)} />
                         <label>Description</label>
-                        <Textarea placeholder="Job description" className="mb-4 mt-1 min-h-[150px]" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                        <Textarea placeholder="Job description" className="mb-4 mt-1 min-h-[150px]" value={description} onChange={(e) => setDescription(e.target.value)} />
 
                         <label>budget $</label>
                         <Input placeholder="budget" className=" mt-1 max-w-40" value={budget} onChange={(e) => setBudget(e.target.value)} />
@@ -151,7 +155,7 @@ export default function SendOffer() {
                                 <div className="space-y-2 md:col-span-3">
                                     <label className="text-sm font-medium">Due date (optional)</label>
                                     <div className="relative">
-                                        <Input type="date" value={milestone.deadline} onChange={(e) => updateMilestone(index, "deadline", e.target.value)} />
+                                        <Input type="date" min={today} value={milestone.deadline} onChange={(e) => updateMilestone(index, "deadline", e.target.value)} />
                                         {/* <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" /> */}
                                     </div>
                                 </div>

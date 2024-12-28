@@ -6,7 +6,6 @@ import {PaymentStatus} from '../../enums/PaymentStatus';
 import dotenv from "dotenv";
 import { IPayment } from "../../interfaces/IPayment";
 import mongoose, { ObjectId, Types } from "mongoose";
-import { IEscrowService } from "../interfaces/IEscrowService";
 import { IEscrowRepository } from "../../repositories/interfaces/IEscrowRepository";
 import { IEscrow } from "../../interfaces/IEscrow";
 import { EscrowStatus } from "../../enums/EscrowStatus";
