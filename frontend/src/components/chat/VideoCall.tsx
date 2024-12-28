@@ -10,28 +10,12 @@ interface VideoCallProps {
 
 const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallEnd }) => {
 
-    // console.log('on video call component !!!!!!!!!!!!!!!!!!!!!!!!!!');
-
-    // navigator.mediaDevices
-    //     .getUserMedia({ video: true, audio: true })
-    //     .then((stream) => {
-    //         // Start your video call here
-    //         console.log('chataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaat vidoeoo');
-    //     })
-    //     .catch((error) => {
-    //         console.error("Media device access error:", error);
-    //         // Handle errors appropriately
-    //     });
-
-    console.log("room id for video chat:", roomId);
-    console.log("room id for video chat:", userId);
-    console.log("room id for video chat:", userName);
-
     const zegoRef = useRef<any>(null);
 
     useEffect(() => {
         const initCall = async () => {
             try {
+
                 const appID = parseInt(import.meta.env.VITE_APPID);
                 const serverSecret = import.meta.env.VITE_SERVER_SECRET;
 
@@ -39,26 +23,23 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
                     throw new Error("AppID or ServerSecret is missing");
                 }
 
-                console.log("appId:", appID);
-                console.log("serverSEceter:", serverSecret);
                 const tokenExpiryTime = 3600;
-
                 const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomId.toString(), userId.toString(), userName, tokenExpiryTime);
-
-                console.log('kitToken:',kitToken);
+                // console.log("kitToken:", kitToken);
 
                 // create zego instance
-                // zegoRef.current = ZegoUIKitPrebuilt.create(kitToken);
-                const zc = ZegoUIKitPrebuilt.create(kitToken);
+                zegoRef.current = ZegoUIKitPrebuilt.create(kitToken);
+                // const zc = ZegoUIKitPrebuilt.create(kitToken);
 
-                console.log('zego instance:',zc);
+                console.log("zego instance:", zegoRef.current);
 
-                zc.joinRoom({
+                zegoRef.current.joinRoom({
                     container: document.querySelector("#video-container")!,
                     sharedLinks: [
                         {
                             name: "Copy Link",
-                            url: window.location.href,
+                            // url: window.location.origin+"?roomId="+roomId,
+                            url: `${window.location.origin}/video-chat?roomId=${roomId}`
                         },
                     ],
                     scenario: {
@@ -67,16 +48,11 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
                     showScreenSharingButton: true,
                     onLeaveRoom: onCallEnd,
                     onerror: (error: any) => {
-                        console.log("poyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-
                         console.error("ZEGO Error:", error);
                         onCallEnd?.();
                     },
                 });
             } catch (error) {
-
-                console.log("poyyyyyyyyyyyyyyyyy");
-
                 console.error("Failed to initialize video call:", error);
                 onCallEnd?.();
             }
@@ -85,6 +61,9 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
         initCall();
 
         return () => {
+
+            console.log('cleaning uppppppppppppppppp !!');
+
             if (zegoRef.current) {
                 try {
                     zegoRef.current.destroy();

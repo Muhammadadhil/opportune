@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
@@ -20,12 +20,16 @@ const ChatWindow: React.FC = () => {
 
     const [isInCall, setIsInCall] = useState(false);
 
-    const handleCallEnd = () => {
-
-        
+    const handleCallEnd = useCallback(() => {
 
         setIsInCall(false);
-    };
+        setTimeout(() => {
+            const container = document.querySelector("#video-container");
+            if (container) {
+                container.innerHTML = "";
+            }
+        }, 100);
+    }, []);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -41,6 +45,8 @@ const ChatWindow: React.FC = () => {
             socket.off("joinRoom");
         };
     }, [chatRoomId, socket]);
+
+
 
     useEffect(() => {
         if (!socket) return;
@@ -201,7 +207,7 @@ const ChatWindow: React.FC = () => {
 
             {/* video call  */}
             {isInCall && (
-                <VideoCallOverlay roomId={`${chatRoomId}${Date.now()}`} userId={sender._id} userName={`${sender.firstname} ${sender.lastname}`} onCallEnd={handleCallEnd} onClose={handleCallEnd} />
+                <VideoCallOverlay roomId={`${chatRoomId}${Date.now()}`} userId={sender._id} userName={`${sender.firstname} ${sender.lastname}`} onCallEnd={handleCallEnd} />
             )}
         </div>
     );

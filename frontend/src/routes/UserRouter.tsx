@@ -23,6 +23,7 @@ import PaymentSuccess from "../components/common/PaymentSuccess";
 import ExplorePage from "../pages/freelancer/ExplorePage";
 import ChatPage from '../pages/common/ChatPage';
 import UserProtected from "@/components/common/UserProtected";
+import VideoCallWrapper from "@/pages/common/VideoCallWrapper";
 
 function UserRoute() {
     return (
@@ -39,6 +40,7 @@ function UserRoute() {
                     <Route path="/explore" element={<ExplorePage />} />
                     <Route path="" element={<UserProtected />}>
                         <Route path="/chat" element={<ChatPage />} />
+                        <Route path="/video-chat" element={<VideoCallWrapper />} />
                     </Route>
                 </Route>
 

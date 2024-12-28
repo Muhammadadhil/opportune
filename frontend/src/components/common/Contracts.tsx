@@ -58,7 +58,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
 
     if (!contracts?.data?.length) {
         return (
-            <div className="text-center py-8">
+            <div className="text-center py-8 h-screen">
                 <h2 className="text-xl font-semibold text-gray-700">No contracts found</h2>
             </div>
         );
@@ -153,7 +153,6 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                 )}
                             </div>
                         </CardContent>
-                        {/* {showPaymentComp && <YourPaymentComponent />} */}
                     </Card>
                 );
             })}

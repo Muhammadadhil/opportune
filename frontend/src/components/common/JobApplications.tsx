@@ -24,12 +24,12 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
     const { data: Allapplications, isLoading } = useApplications(userId, jobId!, userType);
     const applications = Allapplications?.data.applications;
 
-    console.log('applications:',applications);
+    // console.log('applications:',applications);
     return (
-        <div className="mx-auto px-4 py-8">
+        <div className="mx-auto px-4 py-8 h-screen">
             {applications?.length > 0 ? (
                 <Table className="border">
-                    {isLoading && Array.from({ length: 5 }).map(() => <TableRowSkelton userType={userType} />)}
+                    {isLoading && Array.from({ length: 5 }).map((arr, index) => <TableRowSkelton key={index} userType={userType} />)}
                     <TableCaption>A list of your recent applications.</TableCaption>
                     <TableHeader>
                         <TableRow>

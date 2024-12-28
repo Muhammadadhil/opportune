@@ -8,7 +8,7 @@ const ClientJobsPage = () => {
     return (
         <MaxWidth>
             <div className="mx-auto py-8 max-w-7xl">
-                <div className="p-4 md:p-6 max-w-5xl">
+                <div className="p-4 md:p-6 max-w-5xl ">
                     <Tabs defaultValue="all-jobs">
                         <TabsList>
                             <TabsTrigger value="all-jobs">All Jobs</TabsTrigger>

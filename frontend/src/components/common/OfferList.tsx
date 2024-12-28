@@ -73,9 +73,9 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 ">
             {!offers?.length && (
-                <div className="text-center py-10">
+                <div className="text-center py-10 ">
                     <h2 className="text-xl font-semibold text-gray-700">No offers found</h2>
                 </div>
             )}

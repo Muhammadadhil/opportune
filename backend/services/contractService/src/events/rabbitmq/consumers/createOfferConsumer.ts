@@ -28,6 +28,9 @@ export class CreateOfferConsumer {
                 async (msg) => {
                     if (msg) {
                         try {
+
+                            console.log('consuming message from exchange offer_created:', this.exchangeName);
+
                             const messageContent = JSON.parse(msg.content.toString());
                             await this.offerService.createOffer(messageContent);
                             this.channel?.ack(msg);

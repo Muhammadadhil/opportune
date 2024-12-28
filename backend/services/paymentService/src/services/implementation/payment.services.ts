@@ -78,6 +78,7 @@ export class PaymentService implements IPaymentService {
     }
 
     async savePayment(session: Stripe.Checkout.Session): Promise<IPayment> {
+
         const { milestoneId, milestoneAmount, contractId, freelancerId, clientId } = session.metadata as {
             milestoneId: string;
             milestoneAmount: string;
