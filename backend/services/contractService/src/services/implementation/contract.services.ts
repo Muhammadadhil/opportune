@@ -1,4 +1,3 @@
-
 import { IContract } from "../../interfaces/IContract";
 import { IContractService } from "../interfaces/IContractService";
 import { ContractRepository } from "../../repositories/implementation/contract.repository";
@@ -8,7 +7,7 @@ import { ApplicationRepository } from "../../repositories/implementation/applica
 import { IMilestone, IOffer } from "../../interfaces/IOffer";
 import { ContractStatus } from "../../enums/ContractStatus";
 import { ApplicationStutus } from "../../enums/ApplicationStatus";
-import { IPayment } from "@_opportune/common";
+import { CustomError, IPayment } from "@_opportune/common";
 import { MilestoneStatus } from "../../enums/MIlestoneStatus";
 import mongoose, { ObjectId } from "mongoose";
 
@@ -92,30 +91,37 @@ export class ContractService implements IContractService {
         }
     }
 
-    async updateMilestoneStatus(contractId: string | ObjectId, milestoneId: string | ObjectId, newStatus: string,escrowId:ObjectId,escrowStatus:string): Promise<IContract | null> {
-        
-        const contract = await this.contractRepository.findById(contractId as ObjectId);
-        console.log('contract to update milestone dtila:',contract)
-        console.log("milestoneId:", milestoneId);
+    async updateMilestoneStatus(contractId: string | ObjectId, milestoneId: string | ObjectId, newStatus: string, escrowId?: ObjectId, escrowStatus?: string): Promise<IContract | null> {
+        try {
 
-        if (contract) {
-            const milestone = contract.milestones.find((m) => m._id == milestoneId);
-            console.log('milestone to update:',milestone);
+            console.log('milestoneId:',milestoneId)
+
+            const contract = await this.contractRepository.findById(contractId as ObjectId);
+            if (!contract) {
+                throw new Error("Contract not found");
+            }
+
+            console.log('contract to update milestone:',contract);
+
+            const milestone = contract.milestones.find((m) => m._id.toString() === milestoneId.toString());
             
-            if (milestone) {
-                milestone.status = newStatus;
-                milestone.escrowId = escrowId;
-                milestone.escrowStatus = escrowStatus
-            };
+            if (!milestone) {
+                throw new Error("Milestone not found");
+            }
+
+            milestone.status = newStatus;
+            if (escrowId) milestone.escrowId = escrowId;
+            if (escrowStatus) milestone.escrowStatus = escrowStatus;
 
             // Auto-complete contract if all milestones are completed
             if (contract.milestones.every((m) => m.status === MilestoneStatus.COMPLETED)) {
                 contract.status = ContractStatus.COMPLETED;
             }
+
             return this.contractRepository.update(contractId as ObjectId, contract);
-        } else {
-            throw new Error("Contract not found");
-            return null;
+
+        } catch (error) {
+            throw new Error(error instanceof Error ? error.message : String(error));
         }
     }
 }

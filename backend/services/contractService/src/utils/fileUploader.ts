@@ -4,8 +4,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const bucketName = process.env.S3_BUCKET_NAME;
-const region = process.env.S3_BUCKET_REGION;
+const bucketName = process.env.BUCKET_NAME;
+const region = process.env.BUCKET_REGION;
 const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
 
@@ -44,7 +44,7 @@ export class FileUploader {
         const command = new PutObjectCommand(params);
         await this.s3Client.send(command);
 
-        // return `https://${this.bucketName}.s3.amazonaws.com/${fileKey}`;
+        console.log('file upload success url:',`https://${this.bucketName}.s3.amazonaws.com/${fileKey}`);
         return fileKey;
     }
 }

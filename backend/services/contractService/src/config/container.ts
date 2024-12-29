@@ -27,29 +27,27 @@ import { SubmissionRepository } from "../repositories/implementation/submission.
 
 import { FileUploader } from "../utils/fileUploader";
 
-
 const fileUploader = new FileUploader();
-const submissionRepository = new SubmissionRepository();
-const submissionService = new SubmissionService(submissionRepository, fileUploader);
-const submissionController = new SubmissionController(submissionService);
-
 
 //repositories
 const applicationRepository = new ApplicationRepository(Application);
 const contractRepository = new ContractRepository(Contract);
 const offerRepository = new OfferRepository(Offer);
 const userRepository = new UserRepository(User);
+const submissionRepository = new SubmissionRepository();
 
 //services
 const applicationService = new ApplicationSerivce(applicationRepository);
 const contractService = new ContractService(contractRepository,applicationRepository);
 const offerService = new OfferService(offerRepository,applicationRepository,contractService);
 const userService = new UserService(userRepository);
+const submissionService = new SubmissionService(submissionRepository, contractService, fileUploader);
 
 //controllers
 const applicationController = new ApplicationController(applicationService);
 const contractController = new ContractController(contractService);
 const offerController = new OfferController(offerService);
+const submissionController = new SubmissionController(submissionService);
 
 // consumers
 const jobApproveConsumer = new JobApprovalConsumer(contractService, "job_approval_exchange");

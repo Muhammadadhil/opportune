@@ -10,5 +10,5 @@ export interface IContractService {
     getJobContracts(jobId: string): Promise<IContract[] | null>;
     getClientContracts(clientId: string): Promise<IContract[] | null>;
     postPaymentSuccess(data: IPayment): void;
-    updateMilestoneStatus(contractId: string | ObjectId, milestoneId: string | ObjectId, newStatus: string, escrowId: ObjectId, escrowStatus: string): Promise<IContract | null>;
+    updateMilestoneStatus(contractId: string | ObjectId, milestoneId: string | ObjectId, newStatus: string, escrowId?: ObjectId, escrowStatus?: string): Promise<IContract | null>;
 }

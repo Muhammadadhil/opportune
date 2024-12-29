@@ -10,6 +10,9 @@ export class SubmissionController {
 
     submitWork = async (req: Request, res: Response, next: NextFunction) => {
         try {
+
+            console.log("req.body and file:", req.body,req.file);
+
             const submission = await this._submissionService.submitWork(req.body, req.file!);
             return res.status(201).json(submission);
         } catch (error) {

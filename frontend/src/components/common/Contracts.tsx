@@ -12,11 +12,12 @@ import { IContract } from "@/types/IContract";
 import { truncateString } from "@/utils/truncateString";
 // import YourPaymentComponent from './Payment';
 import { loadStripe } from "@stripe/stripe-js";
-import { createChekcoutSession, submitWork } from '@/api/contracts';
-import { IPaymentData } from '@/types/IPaymentData';
+import { createChekcoutSession, submitWork } from "@/api/contracts";
+import { IPaymentData } from "@/types/IPaymentData";
 import { MilestoneStatus } from "@/types/IMilestoneStatus";
 import { SubmitWorkDialog } from "../freelancer/SubmitWork";
-import { ISubmission } from "@/types/ISubmisssion";
+import toast from "react-hot-toast";
+// import { ISubmission } from "@/types/ISubmisssion";
 
 interface ContractsProps {
     userType: "client" | "freelancer";
@@ -28,8 +29,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     const userId = userInfo?._id;
 
-
-    const { data: contracts } = useContracts(userId, userType);
+    const { data: contracts , refetch } = useContracts(userId, userType);
     const [expandedContracts, setExpandedContracts] = useState<string[]>([]);
 
     const [isSubmitWorkOpen, setIsSubmitWorkOpen] = useState(false);
@@ -41,23 +41,25 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
         freelancerId: string;
     } | null>(null);
 
-    console.log('contracts:',contracts)
+    // console.log('contracts:',contracts)
 
     const handleViewDetails = (contractId: string) => {
         console.log(`Viewing details for contract ${contractId}`);
     };
 
     const handlePayMilestone = async (data: IPaymentData) => {
-        console.log(`Processing payment for milestone ${data.milestoneAmount} in contract ${data.contractId} for freelancer ${data.freelancerId} and client ${data.clientId} milestoneId: ${data.milestoneId}`);
+        console.log(
+            `Processing payment for milestone ${data.milestoneAmount} in contract ${data.contractId} for freelancer ${data.freelancerId} and client ${data.clientId} milestoneId: ${data.milestoneId}`
+        );
 
         const stripe = await stripePromise;
         const response = await createChekcoutSession(data);
 
         if (!stripe) {
-            console.log('stripe not loaded yet');
+            console.log("stripe not loaded yet");
             return;
         }
-        
+
         stripe.redirectToCheckout({
             sessionId: response.data,
         });
@@ -68,21 +70,26 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     };
 
     const handleSubmitWork = async (message: string, file: File | null) => {
+        try {
+            if (!selectedMilestone) return;
 
-        if (!selectedMilestone) return;
+            const formData = new FormData();
+            formData.append("message", message);
+            formData.append("file", file!);
+            formData.append("clientId", selectedMilestone.clientId);
+            formData.append("contractId", selectedMilestone.contractId);
+            formData.append("freelancerId", selectedMilestone.freelancerId);
+            formData.append("milestoneId", selectedMilestone.id);
 
-        const submissionData: ISubmission = {
-            message,
-            file: file!,
-            clientId: selectedMilestone.clientId,
-            contractId: selectedMilestone.contractId,
-            freelancerId: selectedMilestone.freelancerId,
-            milestoneId: selectedMilestone.id,
-        };
-
-        // console.log("Submitting work:", submissionData);
-        const response = await submitWork(submissionData);
-        console.log("response submitt work:", response);
+            const response = await submitWork(formData);
+            console.log("response submit work:", response);
+            // adCh1 : mutate the data
+            refetch();
+            toast.success("Successfully submitted work for review to the client");
+        } catch (error) {
+            console.log("error submit work:", error);
+            toast.error("An error occurred while submitting work. Please try again later");
+        }
     };
 
     if (!contracts?.data?.length) {
@@ -93,7 +100,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
         );
     }
 
-    console.count('render count contract');
+    console.count("render count contract");
 
     return (
         <div className="space-y-4 mt-6">

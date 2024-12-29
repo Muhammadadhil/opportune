@@ -1,23 +1,23 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, ObjectId } from "mongoose";
 
 export interface ISubmission extends Document {
-    freelancerId: mongoose.Types.ObjectId;
-    clientId: mongoose.Types.ObjectId;
+    freelancerId: ObjectId;
+    clientId: ObjectId;
     message: string;
     attachment: string;
-    contractId: mongoose.Types.ObjectId;
-    milestoneId: mongoose.Types.ObjectId;
+    contractId: ObjectId;
+    milestoneId: ObjectId;
     isAccepted: boolean;
 }
 
 const SubmissionSchema: Schema = new Schema(
     {
-        freelancerId: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
-        clientId: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+        freelancerId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+        clientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
         message: { type: String, required: true },
         attachment: { type: String, required: true },
-        contractId: { type: mongoose.Types.ObjectId, required: true, ref: "Contract" },
-        milestoneId: { type: mongoose.Types.ObjectId, required: true, ref: "Milestone" },
+        contractId: { type: Schema.Types.ObjectId, required: true, ref: "Contract" },
+        milestoneId: { type: Schema.Types.ObjectId, required: true, ref: "Milestone" },
         isAccepted: { type: Boolean, default: false },
     },
     { timestamps: true }
