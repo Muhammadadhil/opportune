@@ -1,4 +1,5 @@
 export interface ISubmission {
+    _id?:string;
     freelancerId: string;
     clientId: string;
     contractId: string;

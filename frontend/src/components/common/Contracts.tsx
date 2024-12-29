@@ -16,6 +16,7 @@ import { createChekcoutSession } from "@/api/contracts";
 import { IPaymentData } from "@/types/IPaymentData";
 import { MilestoneStatus } from "@/types/IMilestoneStatus";
 import { SubmitWorkDialog } from "../freelancer/SubmitWork";
+import { PreviewSubmission } from "../client/PreviewSubmission";
 import { useNavigate } from "react-router-dom";
 import { handleInitChat } from "@/utils/chatUtils";
 import { handleSubmitWork } from "@/utils/contractUtils";
@@ -34,6 +35,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     const [expandedContracts, setExpandedContracts] = useState<string[]>([]);
 
     const [isSubmitWorkOpen, setIsSubmitWorkOpen] = useState(false);
+    const [isPreviewSubmissionOpen, setIsPreviewSubmissionOpen] = useState(false);
     const [selectedMilestone, setSelectedMilestone] = useState<{
         id: string;
         amount: number;
@@ -71,6 +73,16 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     };
 
     const navigate = useNavigate();
+
+    // const handleAcceptWork = async () => { 
+    //     console.log('Accepting the work');
+        
+    // }
+
+    const handlePreviewSubmission = (contractId: string, milestoneId: string) => {
+        setSelectedMilestone({ id: milestoneId, amount: 0, clientId: "", contractId, freelancerId: "" });
+        setIsPreviewSubmissionOpen(true);
+    };
 
     if (!contracts?.data?.length) {
         return (
@@ -177,11 +189,12 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                             Submit Work for Payment
                                                         </Button>
                                                     )}
-                                                    {userType === "client" && milestone.status === MilestoneStatus.SUBMITTED && contract.currentMilestoneIndex == index && (
-                                                        <Button className="bg-green-700 hover:bg-green-600" onClick={() => {}}>
-                                                            Accept the work
-                                                        </Button>
-                                                    )}
+                                                    {(userType === "client" && milestone.status === MilestoneStatus.SUBMITTED) ||
+                                                        MilestoneStatus.COMPLETED && contract.currentMilestoneIndex == index && (
+                                                            <Button className="bg-green-700 hover:bg-green-600" onClick={() => handlePreviewSubmission(contract._id, milestone._id)}>
+                                                                Preview Submission
+                                                            </Button>
+                                                        )}
                                                     <div className="">
                                                         <p className="text-sm font-medium text-gray-400">Milestone status</p>
                                                         <Badge variant={milestone.status === "unpaid" ? "default" : "secondary"}>{milestone.status}</Badge>
@@ -206,6 +219,18 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                     }}
                     onSubmit={handleSubmitWorkWrapper}
                     amount={selectedMilestone.amount}
+                />
+            )}
+
+            {selectedMilestone && (
+                <PreviewSubmission
+                    isOpen={isPreviewSubmissionOpen}
+                    onClose={() => {
+                        setIsPreviewSubmissionOpen(false);
+                        setSelectedMilestone(null);
+                    }}
+                    contractId={selectedMilestone.contractId}
+                    milestoneId={selectedMilestone.id}
                 />
             )}
         </div>

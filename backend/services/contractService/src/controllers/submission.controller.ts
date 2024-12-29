@@ -32,4 +32,27 @@ export class SubmissionController {
             next(error);
         }
     };
+
+    getSubmission = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { contractId, milestoneId } = req.params;
+            const submissions = await this._submissionService.getSubmissions(contractId, milestoneId);
+            return res.status(200).json(submissions);
+        } catch (error) {
+            console.log("Error in getting submissions:", error);
+            next(error);
+        }
+    };
+
+    acceptSubmission = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log('accepting submission:', req.body);
+            const { submissionId } = req.body;
+            const submission = await this._submissionService.acceptSubmission(submissionId);
+            return res.status(200).json(submission);
+        } catch (error) {
+            console.log("Error in accepting submission:", error);
+            next(error);
+        }
+    };
 }

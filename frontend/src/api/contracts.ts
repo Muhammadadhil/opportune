@@ -1,4 +1,3 @@
-// import { ISubmission } from "@/types/ISubmisssion";
 import { ISubmission } from "@/types/ISubmisssion";
 import apiClient from "./axiosInstance";
 import { IPaymentData } from "@/types/IPaymentData";
@@ -28,10 +27,21 @@ export const getUploadUrl = async (fileName: string, fileType: string) => {
     return response.data;
 };
 
+
+// by freelancer
 export const submitWork = async (data: ISubmission) => {
     return await apiClient.post(`/contract/submit-work`, data);
 };
 
-// export const submitWork = async (data: FormData) => {
-//     return await apiClient.post(`/contract/submit-work`, data, { headers: { "Content-Type": "multipart/form-data" } });
-// };
+
+// for client
+export const fetchSubmission = async (contractId: string, milestoneId: string) => {
+    const response = await apiClient.get(`/contract/submission/${contractId}/${milestoneId}`);
+    console.log('respose submisssion:',response)
+    return response.data;
+};
+
+// by client
+export const acceptSubmission = async (submissionId:string) => {
+    return await apiClient.patch(`/contract/submission/accept`, {submissionId});
+};
