@@ -1,5 +1,5 @@
 export interface ISubmission {
-    _id?:string;
+    _id?: string;
     freelancerId: string;
     clientId: string;
     contractId: string;
@@ -7,4 +7,5 @@ export interface ISubmission {
     message: string;
     attachment: string;
     isAccepted?: boolean;
+    createdAt?: Date;
 }

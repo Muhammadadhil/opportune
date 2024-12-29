@@ -141,8 +141,10 @@ export class PaymentService implements IPaymentService {
     }
 
     async releasePayment(escrowId: string): Promise<IEscrow> {
+        console.log('releasing payment in payment service layerrrrrr:', escrowId);
 
         const escrow = await this._escrowRepository.findOne({_id:escrowId});
+        console.log('escrow :', escrow);
 
         if (!escrow) {
             console.log('escrow not found: throwing error', escrow);

@@ -34,6 +34,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     const { data: contracts , refetch } = useContracts(userId, userType);
     const [expandedContracts, setExpandedContracts] = useState<string[]>([]);
 
+    const [isFinalMileStone, setIsFinalMileStone] = useState(false);
     const [isSubmitWorkOpen, setIsSubmitWorkOpen] = useState(false);
     const [isPreviewSubmissionOpen, setIsPreviewSubmissionOpen] = useState(false);
     const [selectedMilestone, setSelectedMilestone] = useState<{
@@ -72,10 +73,12 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
 
     const navigate = useNavigate();
 
-
-    const handlePreviewSubmission = (contractId: string, milestoneId: string) => {
+    
+    const handlePreviewSubmission = (contractId: string, milestoneId: string,currentMilestoneIndex:number,milestoneIndex:number) => {
+        setIsFinalMileStone(currentMilestoneIndex === milestoneIndex)
         setSelectedMilestone({ id: milestoneId, amount: 0, clientId: "", contractId, freelancerId: "" });
         setIsPreviewSubmissionOpen(true);
+
     };
 
     if (!contracts?.data?.length) {
@@ -186,7 +189,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
 
                                                     {(milestone.status === MilestoneStatus.SUBMITTED || milestone.status === MilestoneStatus.COMPLETED) &&
                                                         contract.currentMilestoneIndex == index && (
-                                                            <Button className="bg-green-700 hover:bg-green-600" onClick={() => handlePreviewSubmission(contract._id, milestone._id)}>
+                                                            <Button className="bg-green-700 hover:bg-green-600" onClick={() => handlePreviewSubmission(contract._id, milestone._id,contract.currentMilestoneIndex,index)}>
                                                                 Preview Submission
                                                             </Button>
                                                         )}
@@ -227,6 +230,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                     }}
                     contractId={selectedMilestone.contractId}
                     milestoneId={selectedMilestone.id}
+                    isFinalMilestone={isFinalMileStone}
                 />
             )}
         </div>

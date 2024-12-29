@@ -5,7 +5,7 @@ import { offerController } from "../config/container";
 import { contractController } from "../config/container";
 import { applicationController } from "../config/container";
 import { authenticate } from "../middleware/authenticate";
-import { submissionController } from "../config/container";
+import { submissionController, reviewController } from "../config/container";
 
 const router = Router();
 const upload = multer();
@@ -33,5 +33,8 @@ router.post("/generate-presigned-url", authenticate(['freelancer']), submissionC
 router.get("/submission/:contractId/:milestoneId", authenticate(["client","freelancer"]), submissionController.getSubmission);
 
 router.patch("/submission/accept", authenticate(["client"]), submissionController.acceptSubmission);
+
+//submit review
+router.post("/review/submit", authenticate(['client', 'freelancer']), reviewController.submitReview);
 
 export default router;

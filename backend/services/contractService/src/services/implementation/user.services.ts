@@ -2,12 +2,16 @@ import { IUserService } from "../interfaces/IUserService";
 import { IUserRepository } from "../../repositories/interfaces/IUserRepository";
 import { IUser } from "../../entities/UserEntity";
 import { Document, ObjectId } from "mongoose";
+import { IReview } from "../../schema/review.schema";
+import { IReviewRepository } from "../../repositories/interfaces/IReviewRepository";
 
 export class UserService implements IUserService {
     private _userRepository: IUserRepository;
+    private _reviewRepository: IReviewRepository;
 
-    constructor(userRepository: IUserRepository) {
+    constructor(userRepository: IUserRepository, reviewRepository: IReviewRepository) {
         this._userRepository = userRepository;
+        this._reviewRepository = reviewRepository;
     }
 
     async isUserBlocked(userId: ObjectId): Promise<boolean | undefined> {
@@ -25,13 +29,23 @@ export class UserService implements IUserService {
         await this._userRepository.update(data._id, data);
     }
 
+    async updateUserRating(userId: ObjectId): Promise<void> {
+        const reviews = await this._reviewRepository.getReviewsForUser(userId);
+
+        // Calculate average rating
+        const averageRating = reviews.reduce((acc:number, review:IReview) => acc + review.rating, 0) / reviews.length;
+
+        // Update user profile
+        await this._userRepository.update(userId as unknown as ObjectId, {averageRating});
+    }
+
     async handleEvent(eventType: string, data: any): Promise<void> {
         switch (eventType) {
             case "create":
                 await this.createUser(data);
                 break;
             case "update":
-                console.log(' !!! handling update user in contract service !!!!')
+                console.log(" !!! handling update user in contract service !!!!");
                 await this.updateUser(data);
                 break;
             default:

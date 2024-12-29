@@ -45,3 +45,7 @@ export const fetchSubmission = async (contractId: string, milestoneId: string) =
 export const acceptSubmission = async (submissionId:string) => {
     return await apiClient.patch(`/contract/submission/accept`, {submissionId});
 };
+
+export const submitReview = async (contractId: string, rating: number, comment: string, reviewerId:string) => {
+    return await apiClient.post(`/contract/submit-review`, { contractId, rating, comment,reviewerId });
+};

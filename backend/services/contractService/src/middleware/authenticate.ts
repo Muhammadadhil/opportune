@@ -3,9 +3,11 @@ import { Forbidden } from '@_opportune/common'
 import { UserService } from "../services/implementation/user.services";
 import { User } from "../schema/user.schema";
 import { UserRepository } from "../repositories/implementation/user.repository";
+import { ReviewRepository } from "../repositories/implementation/review.repository";
 
 const userRepository = new UserRepository(User);
-const userService = new UserService(userRepository);
+const reviewRepository = new ReviewRepository();
+const userService = new UserService(userRepository, reviewRepository);
 
 export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admin">) => async (req: Request, res: Response, next: NextFunction) => {
     try {
