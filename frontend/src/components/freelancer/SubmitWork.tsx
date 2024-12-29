@@ -14,6 +14,7 @@ interface SubmitWorkDialogProps {
 }
 
 export function SubmitWorkDialog({ isOpen, onClose, onSubmit, amount }: SubmitWorkDialogProps) {
+    
     const [message, setMessage] = useState("");
     const [file, setFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);

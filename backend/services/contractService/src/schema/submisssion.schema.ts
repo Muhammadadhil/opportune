@@ -15,7 +15,7 @@ const SubmissionSchema: Schema = new Schema(
         freelancerId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
         clientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
         message: { type: String, required: true },
-        attachment: { type: String, required: true },
+        attachment: { type: String },
         contractId: { type: Schema.Types.ObjectId, required: true, ref: "Contract" },
         milestoneId: { type: Schema.Types.ObjectId, required: true, ref: "Milestone" },
         isAccepted: { type: Boolean, default: false },

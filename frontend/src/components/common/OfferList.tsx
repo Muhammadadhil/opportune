@@ -17,11 +17,8 @@ import { useAcceptOffer } from "@/hooks/offers/useAcceptOffer";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { truncateString } from "@/utils/truncateString";
 import { createNotification } from "@/api/notification";
-import { getChatRoom } from "@/api/chat";
 import { useNavigate } from "react-router-dom";
-// import { IChatRoom } from "@/types/IChatRoom";
-// import { IUser } from "@/types/IUser";
-import { getChatParticipants } from "@/utils/getChatUser";
+import { handleInitChat } from "@/utils/chatUtils";
 
 interface OffersListProps {
     userType: "client" | "freelancer";
@@ -58,19 +55,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
 
     const navigate = useNavigate();
 
-    const handleInitChat = async (senderId: string, receiverId: string) => {
-        const response = await getChatRoom(senderId, receiverId);
-        // console.log("response chatroom:", response);
-        const { currentUser, otherUser } = getChatParticipants(response.data, userInfo._id);
-     
-        navigate("/chat", {
-            state: {
-                chatRoomId: response.data._id,
-                sender: currentUser,
-                receiver: otherUser,
-            },
-        });
-    };
+    
 
     return (
         <div className="space-y-6 ">
@@ -102,7 +87,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                 </div>
                             </div>
 
-                            <Button className="mt-4 " onClick={() => handleInitChat(offer.freelancerId, offer.clientId._id)}>
+                            <Button className="mt-4 " onClick={() => handleInitChat(offer.freelancerId, offer.clientId._id,userInfo, navigate)}>
                                 Chat with Client
                             </Button>
                         </div>

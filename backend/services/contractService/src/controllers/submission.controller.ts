@@ -11,12 +11,24 @@ export class SubmissionController {
     submitWork = async (req: Request, res: Response, next: NextFunction) => {
         try {
 
-            console.log("req.body and file:", req.body,req.file);
+            console.log("req.body and file:", req.body);
 
-            const submission = await this._submissionService.submitWork(req.body, req.file!);
+            const submission = await this._submissionService.submitWork(req.body);
             return res.status(201).json(submission);
         } catch (error) {
             console.log("Error in submitting work:", error);
+            next(error);
+        }
+    };
+
+    generatePresignedUrl = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { fileName, fileType } = req.body;
+            const { url, fileKey } = await this._submissionService.generatePresignedUrl(fileName, fileType);
+            return res.status(200).json({ url, fileKey });
+
+        } catch (error) {
+            console.log("Error in generating presigned URL:", error);
             next(error);
         }
     };

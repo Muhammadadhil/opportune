@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { MoreHorizontal, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+// import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { RootState } from "@/store/store";
@@ -12,12 +12,13 @@ import { IContract } from "@/types/IContract";
 import { truncateString } from "@/utils/truncateString";
 // import YourPaymentComponent from './Payment';
 import { loadStripe } from "@stripe/stripe-js";
-import { createChekcoutSession, submitWork } from "@/api/contracts";
+import { createChekcoutSession } from "@/api/contracts";
 import { IPaymentData } from "@/types/IPaymentData";
 import { MilestoneStatus } from "@/types/IMilestoneStatus";
 import { SubmitWorkDialog } from "../freelancer/SubmitWork";
-import toast from "react-hot-toast";
-// import { ISubmission } from "@/types/ISubmisssion";
+import { useNavigate } from "react-router-dom";
+import { handleInitChat } from "@/utils/chatUtils";
+import { handleSubmitWork } from "@/utils/contractUtils";
 
 interface ContractsProps {
     userType: "client" | "freelancer";
@@ -41,11 +42,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
         freelancerId: string;
     } | null>(null);
 
-    // console.log('contracts:',contracts)
 
-    const handleViewDetails = (contractId: string) => {
-        console.log(`Viewing details for contract ${contractId}`);
-    };
 
     const handlePayMilestone = async (data: IPaymentData) => {
         console.log(
@@ -69,28 +66,11 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
         setExpandedContracts((prev) => (prev.includes(contractId) ? prev.filter((id) => id !== contractId) : [...prev, contractId]));
     };
 
-    const handleSubmitWork = async (message: string, file: File | null) => {
-        try {
-            if (!selectedMilestone) return;
-
-            const formData = new FormData();
-            formData.append("message", message);
-            formData.append("file", file!);
-            formData.append("clientId", selectedMilestone.clientId);
-            formData.append("contractId", selectedMilestone.contractId);
-            formData.append("freelancerId", selectedMilestone.freelancerId);
-            formData.append("milestoneId", selectedMilestone.id);
-
-            const response = await submitWork(formData);
-            console.log("response submit work:", response);
-            // adCh1 : mutate the data
-            refetch();
-            toast.success("Successfully submitted work for review to the client");
-        } catch (error) {
-            console.log("error submit work:", error);
-            toast.error("An error occurred while submitting work. Please try again later");
-        }
+    const handleSubmitWorkWrapper = async (message: string, file: File | null) => {
+        await handleSubmitWork(selectedMilestone, message, file, refetch);
     };
+
+    const navigate = useNavigate();
 
     if (!contracts?.data?.length) {
         return (
@@ -115,20 +95,22 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                         <h3 className="font-semibold text-lg">{contract.workTitle}</h3>
                                         <p className="text-sm text-muted-foreground">Created {format(new Date(contract.startDate), "MMM d, yyyy")}</p>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                        <Badge variant={contract.status === "active" ? "default" : "secondary"}>{contract.status}</Badge>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                    <span className="sr-only">Open menu</span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleViewDetails(contract._id)}>View details</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
+
+                                    {userType === "client" ? (
+                                        <div
+                                            className="px-4 py-2 rounded-xl bg-white text-green-700 font-bold hover:text-green-600 hover:bg-gray-100 cursor-pointer"
+                                            onClick={() => handleInitChat(contract.clientId, contract.freelancerId, userInfo, navigate)}
+                                        >
+                                            Chat with Freelancer
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className="px-4 py-2 rounded-xl bg-white text-green-700 font-bold hover:text-green-600 hover:bg-gray-100 cursor-pointer"
+                                            onClick={() => handleInitChat(contract.freelancerId, contract.clientId, userInfo, navigate)}
+                                        >
+                                            Chat with Client
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="mt-4 grid grid-cols-3 gap-4">
                                     <div>
@@ -150,6 +132,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                         {isExpanded ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
                                     </span>
                                 </div>
+
                                 {isExpanded && contract.milestones && contract.milestones.length > 0 && (
                                     <div className="mt-6">
                                         <h4 className="text-sm font-medium mb-2">Milestones</h4>
@@ -194,6 +177,11 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                             Submit Work for Payment
                                                         </Button>
                                                     )}
+                                                    {userType === "client" && milestone.status === MilestoneStatus.SUBMITTED && contract.currentMilestoneIndex == index && (
+                                                        <Button className="bg-green-700 hover:bg-green-600" onClick={() => {}}>
+                                                            Accept the work
+                                                        </Button>
+                                                    )}
                                                     <div className="">
                                                         <p className="text-sm font-medium text-gray-400">Milestone status</p>
                                                         <Badge variant={milestone.status === "unpaid" ? "default" : "secondary"}>{milestone.status}</Badge>
@@ -216,7 +204,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                         setIsSubmitWorkOpen(false);
                         setSelectedMilestone(null);
                     }}
-                    onSubmit={handleSubmitWork}
+                    onSubmit={handleSubmitWorkWrapper}
                     amount={selectedMilestone.amount}
                 />
             )}

@@ -4,6 +4,6 @@ export interface ISubmission {
     contractId: string;
     milestoneId: string;
     message: string;
-    file: File;
+    attachment: string;
     isAccepted?: boolean;
 }

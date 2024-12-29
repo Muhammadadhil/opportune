@@ -27,6 +27,7 @@ router.patch("/job/offer", authenticate(["freelancer"]), offerController.updateO
 
 
 //submit work
-router.post("/submit-work", authenticate(['freelancer']), upload.single('file'), submissionController.submitWork);
+router.post("/submit-work", authenticate(['freelancer']), submissionController.submitWork);
+router.post("/generate-presigned-url", authenticate(['freelancer']), submissionController.generatePresignedUrl);
 
 export default router;

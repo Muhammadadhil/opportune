@@ -6,26 +6,26 @@ import { IContractService } from "../interfaces/IContractService";
 import { MilestoneStatus } from "../../enums/MIlestoneStatus";
 
 export class SubmissionService implements ISubmissionService {
-
     private submissionRepository: ISubmissionRepository;
     private contractService: IContractService;
     private fileUploader: FileUploader;
 
-    constructor(submissionRepository: ISubmissionRepository,contractService:IContractService, fileUploader: FileUploader) {
+    constructor(submissionRepository: ISubmissionRepository, contractService: IContractService, fileUploader: FileUploader) {
         this.submissionRepository = submissionRepository;
         this.contractService = contractService;
         this.fileUploader = fileUploader;
     }
 
-    async submitWork(data: ISubmission, file: Express.Multer.File): Promise<ISubmission> {
-        
-        const filekey = await this.fileUploader.uploadFile(file);
-        const submissionData = { ...data, attachment: filekey };
-        const submission = await this.submissionRepository.create(submissionData as ISubmission);
+    async submitWork(data: ISubmission): Promise<ISubmission> {
 
+        const submission = await this.submissionRepository.create(data as ISubmission);
         await this.contractService.updateMilestoneStatus(submission.contractId, submission.milestoneId, MilestoneStatus.SUBMITTED);
-        
-        return submission;
 
+        return submission;
+    }
+
+    generatePresignedUrl(fileName: string, fileType: string): Promise<{ url: string; fileKey: string }> {
+        console.log('geneating presigned url for uploaddd !!!!')
+        return this.fileUploader.generatePresignedUrl(fileName, fileType);
     }
 }
