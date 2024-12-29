@@ -13,8 +13,11 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
         if (req.headers["x-user-payload"]) {
             const user = JSON.parse(req.headers["x-user-payload"] as string);
 
+            console.log("user payload user:", user);
+
             if (!allowedRoles.includes(user.role)) {
                 const error = new Forbidden();
+                console.log('!!!! user role is not allowed throwing error !!!!',error);
                 next(error);
             }
 
@@ -27,6 +30,7 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
             }
 
         } else {
+            console.log("NO user payload on headers !! throwoing forbidden");
             throw new Forbidden();
         }
 

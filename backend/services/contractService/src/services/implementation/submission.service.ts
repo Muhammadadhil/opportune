@@ -5,6 +5,7 @@ import { FileUploader } from "../../utils/fileUploader";
 import { IContractService } from "../interfaces/IContractService";
 import { MilestoneStatus } from "../../enums/MIlestoneStatus";
 import { ObjectId } from "mongoose";
+import axios from "axios";
 
 export class SubmissionService implements ISubmissionService {
     private submissionRepository: ISubmissionRepository;
@@ -34,14 +35,17 @@ export class SubmissionService implements ISubmissionService {
     }
 
     async acceptSubmission(submissionId: string): Promise<ISubmission | null> {
-        
+
         const submission = await this.submissionRepository.update(submissionId as unknown as ObjectId,{isAccepted: true});
         
         // update milestone status
         if(submission){
-            await this.contractService.updateMilestoneStatus(submission.contractId, submission.milestoneId, MilestoneStatus.COMPLETED);
+            const contract = await this.contractService.updateMilestoneStatus(submission.contractId, submission.milestoneId, MilestoneStatus.COMPLETED);
 
+            //adCh1 - event publish ?
             // release payment to the freeelancer , publish event to payment service, 
+            const response = await axios.post("http://localhost:3040/release", { escrowId: contract?.milestones.find((milestone) => milestone._id.toString() === submission.milestoneId.toString())?.escrowId });
+            console.log("Payment Release : response from payment service:", response);
         }
 
 

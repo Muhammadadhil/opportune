@@ -42,8 +42,26 @@ const UserSchema: Schema = new Schema({
     },
     isBlocked: {
         type: Boolean,
-        default: false  
-    }
+        default: false,
+    },
+    walletAmount: {
+        type: Number,
+        default: 0,
+    },
+    walletHistory: [
+        {
+            amount: {
+                type: Number,
+                default: 0,
+            },
+            description: {
+                type: String,
+            },
+            date: {
+                type: Date,
+            },
+        },
+    ],
 });
 
 export const User = mongoose.model<IUser>("User", UserSchema);

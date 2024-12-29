@@ -15,6 +15,7 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
 
             if (!allowedRoles.includes(user.role)) {
                 const error = new Forbidden();
+                console.log("!!!! user role is not allowed throwing error !!!! jobService : ", error);
                 next(error);
             }
 
@@ -26,6 +27,8 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
                 next(error);
             }
         } else {
+            
+            console.log("NO user payload on headers !! throwoing forbidden");
             throw new Forbidden();
         }
 

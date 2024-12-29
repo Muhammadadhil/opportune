@@ -5,26 +5,26 @@ import useSubmission from "@/hooks/contracts/useSubmission";
 import { acceptSubmission } from "@/api/contracts";
 
 interface PreviewSubmissionProps {
+    userType: "client" | "freelancer";
     isOpen: boolean;
     onClose: () => void;
     contractId: string;
     milestoneId: string;
 }
 
-export function PreviewSubmission({ isOpen, onClose, contractId, milestoneId }: PreviewSubmissionProps) {
-    
-    const { data: submission,isLoading,error,refetch } = useSubmission(contractId, milestoneId);
+export function PreviewSubmission({ userType,isOpen, onClose, contractId, milestoneId }: PreviewSubmissionProps) {
+    const { data: submission, isLoading, error, refetch } = useSubmission(contractId, milestoneId);
 
     const handleAcceptSubmission = async (submissionId: string) => {
-        console.log('submissionid:',submissionId)
+        console.log("submissionid:", submissionId);
         if (submissionId) {
             await acceptSubmission(submissionId);
-            
+
             // adCh1: refetch the submission data after accepting it
             refetch();
             onClose();
         }
-    }
+    };
 
     if (isLoading) {
         return (
@@ -77,8 +77,8 @@ export function PreviewSubmission({ isOpen, onClose, contractId, milestoneId }: 
                     )}
                 </div>
 
-                {!submission?.isAccepted && (
-                    <Button  className="w-full bg-green-700 hover:bg-green-600" onClick={() => handleAcceptSubmission(submission?._id as string)}> 
+                {userType == "client" && !submission?.isAccepted && (
+                    <Button className="w-full bg-green-700 hover:bg-green-600" onClick={() => handleAcceptSubmission(submission?._id as string)}>
                         Accept Work
                     </Button>
                 )}

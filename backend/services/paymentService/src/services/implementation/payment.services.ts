@@ -9,6 +9,7 @@ import { IEscrowRepository } from "../../repositories/interfaces/IEscrowReposito
 import { IEscrow } from "../../interfaces/IEscrow";
 import { EscrowStatus } from "../../enums/EscrowStatus";
 import { CustomError } from "@_opportune/common";
+import e from "express";
 
 dotenv.config();
 
@@ -139,48 +140,22 @@ export class PaymentService implements IPaymentService {
         return escrow;
     }
 
+    async releasePayment(escrowId: string): Promise<IEscrow> {
 
+        const escrow = await this._escrowRepository.findOne({_id:escrowId});
 
+        if (!escrow) {
+            console.log('escrow not found: throwing error', escrow);
+            throw new CustomError("Escrow not found", 404);
+        }
 
-    // async createPaymentIntent(amount: number, currency: string = "usd") {
-    //     try {
-    //         const paymentIntent = await this.stripe.paymentIntents.create({
-    //             amount: amount * 100, // Convert to cents
-    //             currency: currency,
-    //         });
+        if (escrow.status !== EscrowStatus.HOLDING) {
+            throw new CustomError("Escrow is not in holding status", 400);
+        }
 
-    //         // Publish payment intent creation event to message queue
-    //         await this.publishPaymentEvent("payment_intent_created", {
-    //             paymentIntentId: paymentIntent.id,
-    //             amount: amount,
-    //         });
+        const updatedEscrow = await this._escrowRepository.update(escrowId as unknown as ObjectId, { status: EscrowStatus.RELEASED });
+        return escrow;
+        
+    }
 
-    //         return paymentIntent.client_secret;
-    //     } catch (error) {
-    //         console.error("Payment Intent Creation Error:", error);
-    //         throw error;
-    //     }
-    // }
-
-    // async confirmPayment(paymentIntentId: string) {
-    //     try {
-    //         const paymentIntent = await this.stripe.paymentIntents.confirm(paymentIntentId);
-
-    //         // Publish payment confirmation event
-    //         await this.publishPaymentEvent("payment_confirmed", {
-    //             paymentIntentId: paymentIntent.id,
-    //             status: paymentIntent.status,
-    //         });
-
-    //         return paymentIntent;
-    //     } catch (error) {
-    //         console.error("Payment Confirmation Error:", error);
-    //         throw error;
-    //     }
-    // }
-
-    // private async publishPaymentEvent(eventType: string, eventData: any) {
-    //     const channel = await rabbitmqConnection(process.env.RABBITMQ_CONNECTION_URL!);
-    //     channel.publish("payment_exchange", eventType, Buffer.from(JSON.stringify(eventData)));
-    // }
 }

@@ -4,4 +4,6 @@ export interface IMilestone {
     amount: number;
     deadline: Date;
     status: string;
+    escrowId?: string;
+    escrowStatus?: string;
 }

@@ -44,8 +44,6 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
         freelancerId: string;
     } | null>(null);
 
-
-
     const handlePayMilestone = async (data: IPaymentData) => {
         console.log(
             `Processing payment for milestone ${data.milestoneAmount} in contract ${data.contractId} for freelancer ${data.freelancerId} and client ${data.clientId} milestoneId: ${data.milestoneId}`
@@ -74,10 +72,6 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
 
     const navigate = useNavigate();
 
-    // const handleAcceptWork = async () => { 
-    //     console.log('Accepting the work');
-        
-    // }
 
     const handlePreviewSubmission = (contractId: string, milestoneId: string) => {
         setSelectedMilestone({ id: milestoneId, amount: 0, clientId: "", contractId, freelancerId: "" });
@@ -189,8 +183,9 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                             Submit Work for Payment
                                                         </Button>
                                                     )}
-                                                    {(userType === "client" && milestone.status === MilestoneStatus.SUBMITTED) ||
-                                                        MilestoneStatus.COMPLETED && contract.currentMilestoneIndex == index && (
+
+                                                    {(milestone.status === MilestoneStatus.SUBMITTED || milestone.status === MilestoneStatus.COMPLETED) &&
+                                                        contract.currentMilestoneIndex == index && (
                                                             <Button className="bg-green-700 hover:bg-green-600" onClick={() => handlePreviewSubmission(contract._id, milestone._id)}>
                                                                 Preview Submission
                                                             </Button>
@@ -224,6 +219,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
 
             {selectedMilestone && (
                 <PreviewSubmission
+                    userType={userType}
                     isOpen={isPreviewSubmissionOpen}
                     onClose={() => {
                         setIsPreviewSubmissionOpen(false);

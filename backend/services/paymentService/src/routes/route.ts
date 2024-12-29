@@ -7,5 +7,7 @@ const router = Router();
 
 router.post("/create/checkout-session", paymentController.createCheckoutSession.bind(paymentController));
 
+// release payment
+router.post("/release", paymentController.handleReleasePayment);
 
 export default router;
