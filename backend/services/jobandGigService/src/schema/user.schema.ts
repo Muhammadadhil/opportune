@@ -44,6 +44,10 @@ const UserSchema: Schema = new Schema({
         type: Boolean,
         default: false,
     },
+    averageRating: {
+        type: Number,
+        default: 0,
+    },
     walletAmount: {
         type: Number,
         default: 0,

@@ -47,5 +47,5 @@ export const acceptSubmission = async (submissionId:string) => {
 };
 
 export const submitReview = async (contractId: string, rating: number, comment: string, reviewerId:string) => {
-    return await apiClient.post(`/contract/submit-review`, { contractId, rating, comment,reviewerId });
+    return await apiClient.post(`/contract/review/submit`, { contractId, rating, comment, reviewerId });
 };

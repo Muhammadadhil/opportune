@@ -148,6 +148,8 @@ export class UserService implements IUserService {
 
     async editProfile(userId: string, data: Partial<IUser>) {
         const user = await this.userRepository.update(userId, data);
+        this.producer.publishToMultiple("user_exchange", user, "update");
+
         return user;
     }
 }

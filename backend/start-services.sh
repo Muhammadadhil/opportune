@@ -36,3 +36,6 @@ echo "Starting messaging service ... "
 
 wait
 echo "All services are now running."
+
+
+stripe listen --forward-to localhost:4002/payment/webhook

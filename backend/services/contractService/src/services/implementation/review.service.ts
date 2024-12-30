@@ -19,6 +19,9 @@ export class ReviewService implements IReviewService {
     }
 
     async submitReview(reviewData: ReviewDTO, reviewerId: ObjectId): Promise<IReview> {
+
+        console.log('submitting review in Service layer !!!!!!')
+
         const contract = await this._contractRepository.findById(reviewData.contractId);
 
         if (!contract) {

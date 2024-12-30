@@ -193,9 +193,11 @@ export class UserController {
 
     async editUserProfile(req: Request, res: Response,next:NextFunction) {
         try {
+
+            console.log('editing user in user service !!');;
+
             const  formData  = req.body;
             const userId = req.params.userId;
-
 
             console.log('editing profile id, formdata',userId,formData);
             const profile = await this.userService.editProfile(userId, formData);

@@ -7,6 +7,7 @@ export class ReviewController {
 
     constructor(reviewService: IReviewService) {
         this._reviewService = reviewService;
+        this.submitReview = this.submitReview.bind(this);
     }
 
     async submitReview(req: Request, res: Response, next: NextFunction) {

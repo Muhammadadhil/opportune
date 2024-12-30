@@ -4,6 +4,7 @@ import { IUser } from "../../entities/UserEntity";
 import { Document, ObjectId } from "mongoose";
 import { IReview } from "../../schema/review.schema";
 import { IReviewRepository } from "../../repositories/interfaces/IReviewRepository";
+import axios from "axios";
 
 export class UserService implements IUserService {
     private _userRepository: IUserRepository;
@@ -31,12 +32,13 @@ export class UserService implements IUserService {
 
     async updateUserRating(userId: ObjectId): Promise<void> {
         const reviews = await this._reviewRepository.getReviewsForUser(userId);
-
-        // Calculate average rating
         const averageRating = reviews.reduce((acc:number, review:IReview) => acc + review.rating, 0) / reviews.length;
 
         // Update user profile
-        await this._userRepository.update(userId as unknown as ObjectId, {averageRating});
+        const updatedUser = await this._userRepository.update(userId as unknown as ObjectId, {averageRating});
+
+        await axios.post(`http://localhost:3015/average-rating/add/${updatedUser?._id}`,  updatedUser );
+
     }
 
     async handleEvent(eventType: string, data: any): Promise<void> {

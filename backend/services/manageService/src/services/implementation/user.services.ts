@@ -30,6 +30,7 @@ export class UserService implements IUserService {
         const user = await this.userRepository.toggleBlockStatus(userId);
         if (!user) throw new Error("User not found");
 
+        //adCh1
         await axios.patch(`http://localhost:3015/users/${userId}/block-toggle`);
 
         return user.isBlocked ? "Blocked" : "Unblocked";
