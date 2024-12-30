@@ -3,10 +3,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {JobApplications} from "@/components/common/JobApplications";
 import {Contracts} from "@/components/common/Contracts";
 import {OffersList} from '@/components/common/OfferList';
-
+import { useRoleUser } from "@/hooks/user/useRoleUser";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+ 
 const ManageWorkPage = () => {
 
-    
+    const { userInfo } = useSelector((state: RootState) => state.user);
+    const { data :user } = useRoleUser(userInfo._id,'freelancer');
+
+
     return (
         <div className="mx-auto py-8 max-w-7xl">
             <div className="p-4 md:p-6 max-w-7xl">
