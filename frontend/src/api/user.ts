@@ -26,5 +26,6 @@ export const updateProfile = async (userId: string, formData: any) => {
 };
 
 export const fetchUserInfo = async (userId: string,userType:'client'|'freelancer') => {
-    return await apiClient.get(`/user/${userType}/${userId}`);
+    const response = await apiClient.get(`/user/${userType}/${userId}`);
+    return response.data;
 }

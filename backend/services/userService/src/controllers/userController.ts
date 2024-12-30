@@ -37,7 +37,7 @@ export class UserController {
             res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // true in production
-                sameSite: "strict",  // Use 'none' in production with secure: true
+                sameSite: "strict", // Use 'none' in production with secure: true
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
                 path: "/",
             });
@@ -175,8 +175,7 @@ export class UserController {
     // block user call from admin
     async toggleBlockStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            
-            console.log('handlling blocking in user service !!')
+            console.log("handlling blocking in user service !!");
 
             const id = req.params.userId;
             const userId = new Types.ObjectId(id);
@@ -192,15 +191,14 @@ export class UserController {
         }
     }
 
-    async editUserProfile(req: Request, res: Response,next:NextFunction) {
+    async editUserProfile(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log("editing user in user service !!");
 
-            console.log('editing user in user service !!');
-
-            const  formData  = req.body;
+            const formData = req.body;
             const userId = req.params.userId;
 
-            console.log('editing profile id, formdata',userId,formData);
+            console.log("editing profile id, formdata", userId, formData);
             const profile = await this.userService.editProfile(userId, formData);
             res.status(200).json(profile);
         } catch (error) {
@@ -209,20 +207,50 @@ export class UserController {
         }
     }
 
-    async updateWallet(req: Request, res: Response,next:NextFunction) {
+    getUserInfo = async (req: Request, res: Response) => {
         try {
-            console.log('updating wallet in user service !!');
 
-            const  updatedEscrow  = req.body;
+            console.log('getting user info in user service !!');
+
+            const { userId, userType } = req.params;
+
+            if (!userId || !userType) {
+                return res.status(400).json({
+                    status: "error",
+                    message: "User ID and type are required",
+                });
+            }
+
+            const userData = await this.userService.getUserInfo(userId, userType as "client" | "freelancer");
+
+            return res.status(200).json({
+                status: "success",
+                data: userData,
+            });
+            
+        } catch (error: any) {
+            console.error("Error fetching user info:", error);
+            return res.status(error.message.includes("not found") ? 404 : 500).json({
+                status: "error",
+                message: error.message || "Internal server error",
+            });
+        }
+    };
+
+    async updateWallet(req: Request, res: Response, next: NextFunction) {
+        try {
+            console.log("updating wallet in user service !!");
+
+            const updatedEscrow = req.body;
             const userId = req.params.userId;
 
-            console.log('updating wallet id, formdata',userId,updatedEscrow);
+            console.log("updating wallet id, formdata", userId, updatedEscrow);
             const profile = await this.userService.updateWallet(userId, updatedEscrow);
             res.status(200).json(profile);
         } catch (error) {
             console.log("Error in updating wallet :", error);
             next(error);
+        }
     }
 }
 
-}

@@ -159,4 +159,33 @@ export class UserService implements IUserService {
         this.producer.publishToMultiple("user_exchange", user, "update");
         return user;
     }
+
+     async getUserInfo(userId: string | ObjectId, userType: 'client' | 'freelancer') {
+        if (userType === 'freelancer') {
+
+            const userData = await this.userRepository.findUserWithFreelancerDetails(userId);
+
+            console.log('userData:',userData)
+            if (!userData) {
+                throw new Error('Freelancer not found');
+            }
+            
+            // Remove sensitive information
+            const {password,...safeUserData } = userData;
+
+            return safeUserData;
+        } else {
+
+            const userData = await this.userRepository.findUserWithClientDetails(userId);
+            console.log("userData: cl", userData);
+            
+            if (!userData) {
+                throw new Error('Client not found');
+            }
+             
+            // Remove sensitive information
+            const {password,...safeUserData } = userData;
+            return safeUserData;
+        }
+    }
 }

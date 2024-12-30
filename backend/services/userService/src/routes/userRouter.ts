@@ -42,4 +42,6 @@ router.post("/average-rating/add/:userId", userController.editUserProfile);
 
 router.post("/wallet/update/:userId", userController.updateWallet); 
 
+router.get("/:userType/:userId", userController.getUserInfo);
+
 export default router;

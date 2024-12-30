@@ -8,9 +8,15 @@ export default interface IUser extends Document {
     country?: string;
     password?: string;
     role: string;
-    isOAuthUser?:boolean;
+    isOAuthUser?: boolean;
     isBlocked?: boolean;
     averageRating?: number;
     walletAmount?: number;
-    walletHistory?: Array<any>;
+    walletHistory?: Array<{
+        amount: number;
+        description: string;
+        paymentId: ObjectId;
+        date: Date;
+    }>;
 }
+
