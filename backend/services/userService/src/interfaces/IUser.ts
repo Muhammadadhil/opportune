@@ -10,4 +10,7 @@ export default interface IUser extends Document {
     role: string;
     isOAuthUser?:boolean;
     isBlocked?: boolean;
+    averageRating?: number;
+    walletAmount?: number;
+    walletHistory?: Array<any>;
 }

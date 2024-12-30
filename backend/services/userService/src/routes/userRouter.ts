@@ -40,4 +40,6 @@ router.patch("/freelancers/profile/:userId", userController.editUserProfile);
 
 router.post("/average-rating/add/:userId", userController.editUserProfile);
 
+router.post("/wallet/update/:userId", userController.updateWallet); 
+
 export default router;

@@ -22,6 +22,7 @@ export class UserController {
         this.getFreelancers = this.getFreelancers.bind(this);
         this.toggleBlockStatus = this.toggleBlockStatus.bind(this);
         this.editUserProfile = this.editUserProfile.bind(this);
+        this.updateWallet = this.updateWallet.bind(this);
     }
 
     async registerUser(req: Request, res: Response) {
@@ -194,7 +195,7 @@ export class UserController {
     async editUserProfile(req: Request, res: Response,next:NextFunction) {
         try {
 
-            console.log('editing user in user service !!');;
+            console.log('editing user in user service !!');
 
             const  formData  = req.body;
             const userId = req.params.userId;
@@ -207,4 +208,21 @@ export class UserController {
             next(error);
         }
     }
+
+    async updateWallet(req: Request, res: Response,next:NextFunction) {
+        try {
+            console.log('updating wallet in user service !!');
+
+            const  updatedEscrow  = req.body;
+            const userId = req.params.userId;
+
+            console.log('updating wallet id, formdata',userId,updatedEscrow);
+            const profile = await this.userService.updateWallet(userId, updatedEscrow);
+            res.status(200).json(profile);
+        } catch (error) {
+            console.log("Error in updating wallet :", error);
+            next(error);
+    }
+}
+
 }

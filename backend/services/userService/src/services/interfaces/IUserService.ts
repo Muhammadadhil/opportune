@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import IAccounts from "../../interfaces/IAccounts";
 import { LoginUserResponse, RegisterUserResponse } from "../../interfaces/IAuthResponse";
 import IClientDetail from "../../interfaces/IClientDetail";
@@ -13,4 +14,5 @@ export default interface IUserService {
     saveFreelancerDetails(file: Express.Multer.File, userId: string, title: string, skills: string[], accounts: IAccounts): Promise<IFreelancer>;
     getFreelancerProfile(userId: string): Promise<IFreelancer>;
     getFreelancers(ids: string[]): Promise<IFreelancer[] | IUser[]>;
+    updateWallet(userId: string,updatedEscrow:any): void;
 }

@@ -10,6 +10,7 @@ import { IEscrow } from "../../interfaces/IEscrow";
 import { EscrowStatus } from "../../enums/EscrowStatus";
 import { CustomError } from "@_opportune/common";
 import e from "express";
+import axios from "axios";
 
 dotenv.config();
 
@@ -156,6 +157,12 @@ export class PaymentService implements IPaymentService {
         }
 
         const updatedEscrow = await this._escrowRepository.update(escrowId as unknown as ObjectId, { status: EscrowStatus.RELEASED });
+
+        // add money to user wallet
+
+        //adCh1
+        await axios.post(`http://localhost:3015/wallet/update/${updatedEscrow?.freelancerId}`, updatedEscrow);
+
         return escrow;
         
     }

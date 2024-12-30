@@ -23,4 +23,34 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
 
         return updatedUser;
     }
+
+    async updateUserWallet(userId: string, amount: number, description: string, paymentId: ObjectId) {
+            const user = await User.findById(userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+    
+            if (user.walletAmount !== undefined && user.walletHistory !== undefined) {
+                user.walletAmount += amount;
+                user.walletHistory.push({
+                    amount,
+                    description,
+                    paymentId,
+                    date: new Date(),
+                });
+    
+            } else {
+                user.walletAmount = amount;
+                user.walletHistory = [{
+                    amount,
+                    description,
+                    paymentId,
+                    date: new Date(),
+                }];
+            }
+            
+    
+            await user.save();    
+            return user;
+        }
 }

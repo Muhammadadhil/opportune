@@ -61,6 +61,9 @@ const UserSchema: Schema = new Schema({
             description: {
                 type: String,
             },
+            paymentId: {
+                type: Schema.Types.ObjectId,
+            },
             date: {
                 type: Date,
             },

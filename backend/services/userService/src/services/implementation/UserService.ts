@@ -152,4 +152,11 @@ export class UserService implements IUserService {
 
         return user;
     }
+
+    async updateWallet(userId: string, updatedEscrow:any) {
+
+        const user = await this.userRepository.updateUserWallet(userId, updatedEscrow.amount, updatedEscrow.description, updatedEscrow.paymentId);
+        this.producer.publishToMultiple("user_exchange", user, "update");
+        return user;
+    }
 }
