@@ -120,8 +120,9 @@ export class UserService implements IUserService {
         return await this.freelancerRepository.create({ userId, title, skills, accounts, image , prefferedJobs } as IFreelancer);
     }
 
-    async getFreelancerProfile(userId: string) {
-        const freelancerDetails = await this.freelancerRepository.findOne({ userId });
+    async getFreelancerProfile(userId: string) : Promise<IFreelancer> {
+
+        let freelancerDetails = await this.freelancerRepository.findOne({ userId });
         console.log("freelancerDetails:", freelancerDetails);
         const imageName = freelancerDetails?.image;
 
@@ -132,9 +133,19 @@ export class UserService implements IUserService {
         const imageUrl = await getSignedImageURL(imageName);
 
         console.log("imageRul: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1", imageUrl);
+        const result = {
+            accounts: freelancerDetails.accounts,
+            _id: freelancerDetails._id,
+            userId: freelancerDetails.userId,
+            title: freelancerDetails.title,
+            skills: freelancerDetails.skills,
+            image: freelancerDetails.image,
+            prefferedJobs: freelancerDetails.prefferedJobs,
+            imageUrl: imageUrl, // Add the signed image URL
+        };
 
-        freelancerDetails.imageUrl = imageUrl;
-        return freelancerDetails;
+        console.log("Result:", result);
+        return result as IFreelancer;
     }
 
     async getFreelancers(ids: string[]): Promise<IFreelancer[] | IUser[]> {
