@@ -1,5 +1,5 @@
 import React from "react";
-import DetailsClient from "@/components/client/DetailsClient";
+import DetailsClient from "@/components/client/ClientDetails";
 
 const ClientDetailsPage = () => {
     return (

@@ -1,15 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userState } from "../../types/Iuser";
+import { userState } from "../../types/IUserState";
 
 const initialState: userState = {
     userInfo: {
         _id: "",
-        firstname:"",
-        lastname:"",
-        country:"",
-        email:"",
-        role:""
-
+        firstname: "",
+        lastname: "",
+        country: "",
+        email: "",
+        role: "",
     },
     freelancerData: {
         userId: "",
@@ -19,7 +18,13 @@ const initialState: userState = {
         image: "",
         imageUrl: "",
     },
-    clientData: {},
+    clientData: {
+        userId: "",
+        companyName: "",
+        companyDiscription:"",
+        projectNeeds:[],
+        website:""
+    },
     isAdminAuthenticated: false,
 };
 
@@ -45,7 +50,13 @@ export const userSlice = createSlice({
                 image:"",
                 skills:[]
             };
-            state.clientData = {};
+            state.clientData = {
+                userId: "",
+                companyName: "",
+                companyDiscription: "",
+                projectNeeds: [],
+                website: "",
+            };
             localStorage.removeItem("token");
         },
         setAdminAuthStatus: (state) => {

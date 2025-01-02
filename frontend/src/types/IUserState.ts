@@ -1,18 +1,18 @@
 export interface userState {
-    userInfo: userInfo ;
+    userInfo: userInfo;
     freelancerData: IFreelancer;
-    clientData: object;
+    clientData: IClientData;
     isAdminAuthenticated: boolean;
 }
 
-export interface userInfo {
+export type userInfo = {
     _id: string;
     firstname: string;
     lastname: string;
     email: string;
     role: string;
     country: string;
-}
+} | null
 
 export interface IFreelancer {
     userId: string;
@@ -21,4 +21,12 @@ export interface IFreelancer {
     accounts: any;
     image: string;
     imageUrl?:string;
+}
+
+export interface IClientData {
+    userId: string;
+    companyName?: string;
+    companyDiscription?: string;
+    projectNeeds: string[];
+    website?: string;
 }

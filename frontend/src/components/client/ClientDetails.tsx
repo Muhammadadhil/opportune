@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import IClientData from "@/types/IClientData";
 import MultiSelect from "../ui/MultiSelect";
+import { RootState } from "@/store/store";
 
 
 const DetailsClient: React.FC = () => {
@@ -19,7 +20,7 @@ const DetailsClient: React.FC = () => {
     const [selectedProjectNeeds, setSelectedProjectNeeds] = useState<Option[]>([]);
     const [error, setError] = useState<string>("");
 
-    const { userInfo } = useSelector((state) => state.user);
+    const { userInfo } = useSelector((state:RootState) => state.user);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -29,8 +30,8 @@ const DetailsClient: React.FC = () => {
             return;
         }
         try {
-            const userId = userInfo._id;
-            const projectNeeds = selectedProjectNeeds;
+            const userId = userInfo?._id;
+            const projectNeeds = selectedProjectNeeds.map(option => option.value);
             const clientData = { userId, companyName, companyDescription, projectNeeds, website };
             await saveClientDetails(clientData as IClientData);
             navigate("/cl/dashboard");
