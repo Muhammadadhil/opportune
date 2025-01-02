@@ -23,6 +23,7 @@ export class UserController {
         this.toggleBlockStatus = this.toggleBlockStatus.bind(this);
         this.editUserProfile = this.editUserProfile.bind(this);
         this.updateWallet = this.updateWallet.bind(this);
+        this.generatePresignedUrl = this.generatePresignedUrl.bind(this);
     }
 
     async registerUser(req: Request, res: Response) {
@@ -115,15 +116,23 @@ export class UserController {
         }
     }
 
+    async generatePresignedUrl(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { fileName, fileType } = req.body;
+            const { url, fileKey } = await this.userService.generatePresignedUrl(fileName, fileType);
+            return res.status(200).json({ url, fileKey });
+        } catch (error) {
+            console.log("Error in generating presigned URL:", error);
+            next(error);
+        }
+    };
+
     async saveFreelancerDetails(req: Request, res: Response) {
         try {
-            const file = req.file;
-            const { userId, title, skills, accounts } = req.body;
+            const { userId, title, skills, accounts,image,prefferedJobs } = req.body;
 
-            if (!file) {
-                return res.status(400).json({ message: "No file uploaded" });
-            }
-            const savedData = await this.userService.saveFreelancerDetails(file, JSON.parse(userId), title, JSON.parse(skills), JSON.parse(accounts));
+            console.log('complete profile req. body:',req.body);
+            const savedData = await this.userService.saveFreelancerDetails(image, userId, title, skills, accounts,prefferedJobs);
             res.json(savedData);
         } catch (error) {
             console.log("Error in saving freelaner data:", error);
@@ -209,8 +218,7 @@ export class UserController {
 
     getUserInfo = async (req: Request, res: Response) => {
         try {
-
-            console.log('getting user info in user service !!');
+            console.log("getting user info in user service !!");
 
             const { userId, userType } = req.params;
 
@@ -227,7 +235,6 @@ export class UserController {
                 status: "success",
                 data: userData,
             });
-            
         } catch (error: any) {
             console.error("Error fetching user info:", error);
             return res.status(error.message.includes("not found") ? 404 : 500).json({

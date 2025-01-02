@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { Check, X, ChevronDown } from "lucide-react";
 
 interface MultiSelectProps {
@@ -31,7 +31,7 @@ export default function MultiSelect({ options, maxSelections = 5, onSelectionCha
         onSelectionChange(newSelectedOptions);
     };
 
-    const filteredOptions = options.filter((option) => option.toLowerCase().includes(inputValue.toLowerCase()) && !selectedOptions.includes(option));
+    const filteredOptions = options?.filter((option) => option.toLowerCase().includes(inputValue.toLowerCase()) && !selectedOptions.includes(option));
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

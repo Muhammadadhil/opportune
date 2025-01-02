@@ -31,24 +31,6 @@ export class FileUploader {
         this.bucketName = bucketName!;
     }
 
-    // async uploadFile(file: Express.Multer.File): Promise<string> {
-
-    //     const fileKey = `${file.originalname}-${uuidv4()}`;
-
-    //     const params = {
-    //         Bucket: this.bucketName,
-    //         Key: fileKey,
-    //         Body: file.buffer,
-    //         ContentType: file.mimetype,
-    //     };
-
-    //     const command = new PutObjectCommand(params);
-    //     await this.s3Client.send(command);
-
-    //     console.log('file upload success url:',`https://${this.bucketName}.s3.amazonaws.com/${fileKey}`);
-    //     return fileKey;
-    // }
-
     async generatePresignedUrl(fileName: string, fileType: string): Promise<{ url: string; fileKey: string }> {
         const fileKey = `${fileName}-${uuidv4()}`;
 

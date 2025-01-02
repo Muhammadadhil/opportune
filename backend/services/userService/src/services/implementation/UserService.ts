@@ -5,7 +5,8 @@ import { generateAccessToken, generateRefreshToken } from "../../utils/jwt/gener
 import IClientDetail from "../../interfaces/IClientDetail";
 import IFreelancer from "../../interfaces/IFreelancer";
 import IAccounts from "../../interfaces/IAccounts";
-import { uploadTosS3,getSignedImageURL } from "../../utils/Uploads3";
+import { getSignedImageURL } from "../../utils/fileUploader";
+import { FileUploader } from "../../utils/fileUploader";
 import sharp from "sharp";
 import { ObjectId } from "mongoose";
 import { ClientRepository } from "../../repositories/implementation/ClientRepository";
@@ -20,6 +21,8 @@ export class UserService implements IUserService {
     private userRepository: UserRepository;
     private clientRepository: ClientRepository;
     private freelancerRepository: IFreelancerRepository;
+    private fileUploader: FileUploader;
+
     private producer;
 
     constructor() {
@@ -28,6 +31,7 @@ export class UserService implements IUserService {
         this.freelancerRepository = new FreelancerRepository();
         this.producer = new RabbitMQProducer();
         this.intialize();
+        this.fileUploader = new FileUploader();
     }
 
     async intialize() {
@@ -64,10 +68,10 @@ export class UserService implements IUserService {
             throw new Error("Invalid email or password");
         }
 
-        if (user?.isBlocked){
+        if (user?.isBlocked) {
             throw new Unauthorised("User is blocked");
         }
-            
+
         console.log("user w/o password:", user);
 
         const isPasswordValid = bcrypt.compareSync(password, user.password ?? "");
@@ -101,18 +105,19 @@ export class UserService implements IUserService {
         return clientDetails;
     }
 
-    async saveFreelancerDetails(file: Express.Multer.File, userId: string, title: string, skills: string[], accounts: IAccounts) {
-        // const existDetail = await this.freelancerRepository.getFreelancerDetails(userId);
+    async generatePresignedUrl(fileName: string, fileType: string): Promise<{ url: string; fileKey: string }> {
+        console.log("generating presigned url for upload");
+        return this.fileUploader.generateUploadPresignedUrl(fileName, fileType);
+    }
+
+    async saveFreelancerDetails(image: string, userId: string, title: string, skills: string[], accounts: IAccounts, prefferedJobs:string[]) {
         const existDetail = await this.freelancerRepository.findOne({ userId });
 
         if (existDetail) {
             throw new Error("Detail already exists");
         }
 
-        const buffer = await sharp(file.buffer).resize({ height: 1080, width: 1080, fit: "contain" }).toBuffer();
-        const image = await uploadTosS3(buffer, file.mimetype);
-
-        return await this.freelancerRepository.create({ userId, title, skills, accounts, image } as IFreelancer);
+        return await this.freelancerRepository.create({ userId, title, skills, accounts, image , prefferedJobs } as IFreelancer);
     }
 
     async getFreelancerProfile(userId: string) {
@@ -126,7 +131,7 @@ export class UserService implements IUserService {
 
         const imageUrl = await getSignedImageURL(imageName);
 
-        console.log('imageRul: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1',imageUrl)
+        console.log("imageRul: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1", imageUrl);
 
         freelancerDetails.imageUrl = imageUrl;
         return freelancerDetails;
@@ -136,13 +141,12 @@ export class UserService implements IUserService {
         return await this.freelancerRepository.getFreelancersDatas(ids);
     }
 
-    async toggleBlockStatus(userId:ObjectId) {
-        
+    async toggleBlockStatus(userId: ObjectId) {
         const user = await this.userRepository.toggleBlockStatus(userId);
         if (!user) throw new Error("User not found");
 
         this.producer.publishToMultiple("user_exchange", user, "update");
-        
+
         return user.isBlocked ? "Blocked" : "Unblocked";
     }
 
@@ -153,38 +157,35 @@ export class UserService implements IUserService {
         return user;
     }
 
-    async updateWallet(userId: string, updatedEscrow:any) {
-
+    async updateWallet(userId: string, updatedEscrow: any) {
         const user = await this.userRepository.updateUserWallet(userId, updatedEscrow.amount, updatedEscrow.description, updatedEscrow.paymentId);
         this.producer.publishToMultiple("user_exchange", user, "update");
         return user;
     }
 
-     async getUserInfo(userId: string | ObjectId, userType: 'client' | 'freelancer') {
-        if (userType === 'freelancer') {
-
+    async getUserInfo(userId: string | ObjectId, userType: "client" | "freelancer") {
+        if (userType === "freelancer") {
             const userData = await this.userRepository.findUserWithFreelancerDetails(userId);
 
-            console.log('userData:',userData)
+            console.log("userData:", userData);
             if (!userData) {
-                throw new Error('Freelancer not found');
+                throw new Error("Freelancer not found");
             }
-            
+
             // Remove sensitive information
-            const {password,...safeUserData } = userData;
+            const { password, ...safeUserData } = userData;
 
             return safeUserData;
         } else {
-
             const userData = await this.userRepository.findUserWithClientDetails(userId);
             console.log("userData: cl", userData);
-            
+
             if (!userData) {
-                throw new Error('Client not found');
+                throw new Error("Client not found");
             }
-             
+
             // Remove sensitive information
-            const {password,...safeUserData } = userData;
+            const { password, ...safeUserData } = userData;
             return safeUserData;
         }
     }

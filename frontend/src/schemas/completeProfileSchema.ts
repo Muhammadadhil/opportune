@@ -12,5 +12,5 @@ export const completeProfileSchema = z.object({
         .refine((file) => ["image/jpeg", "image/png"].includes(file.type), { message: "File must be a valid image (jpg or png)" })
         .optional(),
 });
-
+    
 export type CompleteProfileForm = z.infer<typeof completeProfileSchema>;

@@ -22,7 +22,11 @@ const freelancerDetails: Schema = new Schema<IFreelancer>(
         },
         image: {
             type: String,
-        }
+        },
+        prefferedJobs: {   
+            type: [String],
+            required: true,
+        },
     },
     { timestamps: true }
 );

@@ -30,7 +30,9 @@ router.post("/clients/details", userController.saveClientDetails);
 router.post("/clients/profile", protect, userController.getClientData);
 
 //freelancer routes
-router.post("/freelancers/complete-profile", protect, upload.single("image"), userController.saveFreelancerDetails);
+router.post('/generate-presigned-url',userController.generatePresignedUrl);
+
+router.post("/freelancers/complete-profile", protect, userController.saveFreelancerDetails);
 router.post("/freelancers/profile", protect, userController.getFreelancerData);
 router.get('/freelancers',userController.getFreelancers);
 

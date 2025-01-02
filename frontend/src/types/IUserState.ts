@@ -26,7 +26,7 @@ export interface IFreelancer {
 export interface IClientData {
     userId: string;
     companyName?: string;
-    companyDiscription?: string;
+    companyDescription?: string;
     projectNeeds: string[];
     website?: string;
 }

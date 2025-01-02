@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import IClientData from "@/types/IClientData";
 import MultiSelect from "../ui/MultiSelect";
 import { RootState } from "@/store/store";
+import { useCategories } from "@/hooks/useCategories";
+import { ICategory } from "@/types/ICategory";
 
 
 const DetailsClient: React.FC = () => {
@@ -41,7 +43,9 @@ const DetailsClient: React.FC = () => {
         }
     };
 
-    const options = ["web development", "mobile app development", "content writing", "graphic designing", "copy writing", "ui-ux designing"];
+    const {data: categories} = useCategories();
+    const categoryOptions = categories?.data?.map((category: ICategory) => category.name);
+
 
     const handleSelectionChange = (newSelectedOptions: Option[]) => {
         setSelectedProjectNeeds(newSelectedOptions);
@@ -57,7 +61,7 @@ const DetailsClient: React.FC = () => {
                     <Label htmlFor="company-name" className="block mb-2">
                         Company Name
                     </Label>
-                    <span className="absolute right-0 text-xs text-gray-600"> *optional</span>
+                    <span className="absolute right-0 text-xs text-gray-600"> * optional</span>
                     <Input id="company-name" placeholder="eg: opportune" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full placeholder:text-xs" />
                 </div>
                 <div className="mb-4">
@@ -78,7 +82,7 @@ const DetailsClient: React.FC = () => {
                         Project Needs
                     </Label>
 
-                    <MultiSelect options={options} maxSelections={5} onSelectionChange={handleSelectionChange} error={error} />
+                    <MultiSelect options={categoryOptions} maxSelections={5} onSelectionChange={handleSelectionChange} error={error} />
                     {error ? <span className="text-xs text-red-500 mt-2">choose the project needs</span> : ""}
                 </div>
 

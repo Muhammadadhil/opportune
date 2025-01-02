@@ -12,7 +12,6 @@ const router = Router();
 
 router.post('/chat-room',chatController.chatRoomHandler);
 router.get("/messages/:chatRoomId", messageController.getMessagesHandler);
-
 router.get('/user/chats/:userId',chatController.getAllChatRooms);
 
 

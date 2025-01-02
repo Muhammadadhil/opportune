@@ -8,4 +8,5 @@ export default interface IFreelancer extends Document {
     accounts: IAccounts;
     image: string;
     imageUrl?: string;
+    prefferedJobs: string[];
 }

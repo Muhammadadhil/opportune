@@ -21,9 +21,9 @@ const initialState: userState = {
     clientData: {
         userId: "",
         companyName: "",
-        companyDiscription:"",
-        projectNeeds:[],
-        website:""
+        companyDescription: "",
+        projectNeeds: [],
+        website: "",
     },
     isAdminAuthenticated: false,
 };
@@ -53,7 +53,7 @@ export const userSlice = createSlice({
             state.clientData = {
                 userId: "",
                 companyName: "",
-                companyDiscription: "",
+                companyDescription: "",
                 projectNeeds: [],
                 website: "",
             };

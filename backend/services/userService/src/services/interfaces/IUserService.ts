@@ -11,7 +11,7 @@ export default interface IUserService {
     login(email: string, password: string): LoginUserResponse;
     saveClientDetail(details: IClientDetail): Promise<IClientDetail>;
     getClientProfile(userId: string): Promise<IClientDetail>;
-    saveFreelancerDetails(file: Express.Multer.File, userId: string, title: string, skills: string[], accounts: IAccounts): Promise<IFreelancer>;
+    saveFreelancerDetails(image: string, userId: string, title: string, skills: string[], accounts: IAccounts, prefferedJobs:string[]): Promise<IFreelancer>;
     getFreelancerProfile(userId: string): Promise<IFreelancer>;
     getFreelancers(ids: string[]): Promise<IFreelancer[] | IUser[]>;
     updateWallet(userId: string, updatedEscrow: any): void;

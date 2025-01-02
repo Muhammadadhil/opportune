@@ -16,16 +16,16 @@ type KeywordInputProps<T extends FieldValues> = {
 const KeywordInput = <T extends FieldValues>({ newKeyword, setNewKeyword, keywords, setKeywords, formFieldName, setValue }: KeywordInputProps<T>) => {
 
     const addKeyword = useCallback(
-        (event) => {
+        (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement>) => {
             event.preventDefault();
             if (newKeyword && keywords.length < 10) {
-                const updatedKeywords = [...keywords, newKeyword];
+                const updatedKeywords: string[] = [...keywords, newKeyword];
                 setKeywords(updatedKeywords);
                 setNewKeyword("");
                 setValue(formFieldName, updatedKeywords as PathValue<T, Path<T>>);
             }
         },
-        [newKeyword, keywords]
+        [newKeyword, keywords, setKeywords, setNewKeyword, setValue, formFieldName]
     );
 
     return (
@@ -37,7 +37,7 @@ const KeywordInput = <T extends FieldValues>({ newKeyword, setNewKeyword, keywor
                 onChange={(e) => setNewKeyword(e.target.value)}
                 onKeyDown={(e) => {
                     if (e.key == "Enter") {
-                        addKeyword(newKeyword);
+                        addKeyword(e);
                     }
                 }}
             />

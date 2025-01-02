@@ -21,7 +21,6 @@ export const handleSubmitWork = async (
 
         if (file) {
             presignedData = await getUploadUrl(file.name, file.type);
-            console.log('presignedData:', presignedData);
             await axios.put(presignedData.url, file, {
                 headers: {
                     "Content-Type": file.type,

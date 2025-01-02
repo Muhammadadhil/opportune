@@ -1,6 +1,5 @@
 import apiClient from "./axiosInstance";
 import IClientData from "../types/IClientData";
-import {IFormData} from "../types/IAuth";
 
 
 export const saveClientDetails = async (clientData: IClientData) => {
@@ -9,8 +8,14 @@ export const saveClientDetails = async (clientData: IClientData) => {
     });
 };
 // freelancer
-export const completeProfle = async (formData:IFormData) => {
-    return await apiClient.post("/user/freelancers/complete-profile", formData, { headers: { "Content-Type": "multipart/form-data" } });
+
+export const getUploadSignedUrl= async (fileName:string,fileType:string)=>{
+     const response = await apiClient.post("/user/generate-presigned-url", { fileName, fileType });
+     return response.data;
+}
+
+export const completeProfle = async (data:any) => {
+    return await apiClient.post("/user/freelancers/complete-profile", data);
 };
 
 export const getProfileData = async (userId: string) => {

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import profilePicture from "@/assets/profilePicture.jpg";
 import { IoIosClose } from "react-icons/io";
 // import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { completeProfle } from "@/api/user";
+import { completeProfle, getUploadSignedUrl } from "@/api/user";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LoadingSpinner from "../loading/Loading";
@@ -16,6 +16,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { completeProfileSchema } from "@/schemas/completeProfileSchema";
 import { CompleteProfileForm } from "@/schemas/completeProfileSchema";
 import { toast } from "react-hot-toast";
+import { Label } from "../ui/label";
+import MultiSelect from "../ui/MultiSelect";
+import { useCategories } from "@/hooks/useCategories";
+import { ICategory } from "@/types/ICategory";
 
 const CompleteProfile = () => {
     const {
@@ -25,14 +29,23 @@ const CompleteProfile = () => {
         formState: { errors },
     } = useForm<CompleteProfileForm>({ resolver: zodResolver(completeProfileSchema) });
 
+    console.log('hook form errors:', errors)
+
     const [image, setImage] = useState<File | string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [skills, setSkills] = useState<string[]>([]);
     const [newSkill, setNewSkill] = useState("");
+
+    const [prefferedJobs, setPrefferedJobs] = useState<Option[]>([]);
+    const [error, setError] = useState<string>("");
+
     const { userInfo } = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
 
     // const [showPortfolioInputs, setShowPortfolioInputs] = useState(false);
+
+    const {data: categories} = useCategories();
+    const categoryOptions = categories?.data?.map((category: ICategory) => category.name);
 
     const addSkill = () => {
         if (newSkill && skills.length < 10) {
@@ -40,33 +53,45 @@ const CompleteProfile = () => {
             setSkills(updatedSkills);
             setNewSkill("");
             setValue("skills", updatedSkills);
-        }
+        }showPortfolioInputs;
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            // setImage(URL.createObjectURL(e.target.files[0])); //?URL is the global object provided by browser : part of webapi
             setImage(e.target.files[0]);
             setValue("image", e.target.files[0]);
         }
     };
 
     const onSubmit = async (data: any) => {
+
+        console.log('aldf;jasdlfja;dfjalfdjaslfjasjoikpjawklejfalksdjfaslkfdjpoaskj')
+
         try {
-            const formData = new FormData();
-            formData.append("image", data.image);
-            formData.append("title", data.title);
-            formData.append("skills", JSON.stringify(data.skills));
-            formData.append("accounts", JSON.stringify(data.accounts));
-            formData.append("userId", JSON.stringify(userInfo?._id));
+
+            const file = data.image;
+            const presignedData = await getUploadSignedUrl(data.image.name, data.image.type);
+
+            await axios.put(presignedData.url, file, {
+                headers: {
+                    "Content-Type": file.type,
+                },
+            });
+
+            const uploadData = {
+                title: data.title,
+                skills: data.skills,
+                accounts: data.accounts,
+                userId: userInfo?._id,
+                image: presignedData?.fileKey,
+                prefferedJobs
+            };
 
             setIsLoading(true);
-            const response = await completeProfle(formData);
-            console.log("response: complete profile:", response);
-
+            await completeProfle(uploadData);
             navigate(-1);
         } catch (error) {
-            const axiosError = error as AxiosError; 
+            const axiosError = error as AxiosError;
             console.log("error in complete-profile:", axiosError);
 
             if (axiosError.response) {
@@ -84,6 +109,11 @@ const CompleteProfile = () => {
             setIsLoading(false);
         }
     };
+
+    const handleSelectionChange = (newSelectedOptions: Option[]) => {
+        setPrefferedJobs(newSelectedOptions);
+    };
+    
 
     return (
         <div className=" md:max-w-[1100px] md:mx-auto p-6 rounded-lg ">
@@ -104,7 +134,7 @@ const CompleteProfile = () => {
                                 <img
                                     src={typeof image === "string" ? profilePicture : URL.createObjectURL(image)}
                                     alt="Profile"
-                                    className="shadow-sm w-full h-full rounded-full bg-gray-100 object-cover" 
+                                    className="shadow-sm w-full h-full rounded-full bg-gray-100 object-cover"
                                 />
                                 <label
                                     htmlFor="imageInput"
@@ -134,14 +164,16 @@ const CompleteProfile = () => {
                                     value={newSkill}
                                     onChange={(e) => setNewSkill(e.target.value)}
                                     onKeyDown={(e) => {
-                                        if(e.key == "Enter" ){
+                                        if (e.key == "Enter") {
                                             e.preventDefault();
-                                            addSkill()
+                                            addSkill();
                                         }
                                     }}
                                     className="w-[30rem]"
                                 />
-                                <Button variant='outline' onClick={addSkill}>add</Button>
+                                <Button variant="outline" onClick={addSkill}>
+                                    add
+                                </Button>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {skills.map((skill, index) => (
@@ -165,17 +197,29 @@ const CompleteProfile = () => {
 
                         {/* Portfolio Section */}
                         {/* <div>
-                        <h2 className="font-bold text-slate-800 mb-2">Portfolio</h2>
-                        <Button onClick={() => setShowPortfolioInputs(!showPortfolioInputs)}>{showPortfolioInputs ? "Hide Portfolio Inputs" : "Add Portfolio Item"}</Button>
-                        {showPortfolioInputs && (
-                            <div className="mt-4 space-y-4">
-                                <Input type="text" placeholder="Project Title" className="w-full" />
-                                <Textarea placeholder="Project Description" className="w-full" />
-                                <Input type="text" placeholder="Skills Used " className="w-full" />
-                                <Input type="file" className="w-full" />
-                            </div>
-                        )}
+                            <h2 className="font-bold text-slate-800 mb-2">Portfolio</h2>
+                            <Button type="button" onClick={() => setShowPortfolioInputs(!showPortfolioInputs)}>
+                                {showPortfolioInputs ? "Hide Portfolio Inputs" : "Add Portfolio Item"}
+                            </Button>
+                            {showPortfolioInputs && (
+                                <div className="mt-4 space-y-4">
+                                    <Input type="text" placeholder="Project Title" className="w-full" />
+                                    <Textarea placeholder="Project Description" className="w-full" />
+                                    <Input type="text" placeholder="Skills Used " className="w-full" />
+                                    <Input type="file" className="w-full" />
+                                </div>
+                            )}
                         </div> */}
+
+                        {/* preffered jobs */}
+                        <div className="mb-4">
+                            <Label htmlFor="project-needs" className="block mb-2">
+                                Preferred Jobs Fields
+                            </Label>
+
+                            <MultiSelect options={categoryOptions} maxSelections={5} onSelectionChange={handleSelectionChange} error={error} />
+                            {error ? <span className="text-xs text-red-500 mt-2">Choose your preffered jobs</span> : ""}
+                        </div>
 
                         {/* Linked Accounts Section */}
                         <div className="">
@@ -186,7 +230,6 @@ const CompleteProfile = () => {
                             {errors.accounts?.github && <p className="text-red-500 text-xs">{errors.accounts.github.message}</p>}
                             <Input type="text" {...register("accounts.other")} placeholder="Other social media profile URL" className="md:w-[35rem]" />
                         </div>
-
                         {/* Save Profile Button */}
                         <div className="flex justify-center mt-11">
                             <Button className="w-[500px] bg-green-900" type="submit">
