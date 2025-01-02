@@ -9,5 +9,6 @@ router.post("/create/checkout-session", paymentController.createCheckoutSession.
 
 // release payment
 router.post("/release", paymentController.handleReleasePayment);
+router.get("/payments",paymentController.getAllPayments);
 
 export default router;

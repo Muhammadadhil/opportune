@@ -1,11 +1,13 @@
 import { Card, CardTitle } from "../ui/card";
 import { Link } from "react-router-dom";
-import MaxWidth from "@/layouts/MaxWidth";
+// import MaxWidth from "@/layouts/MaxWidth";
+import ClientJobs from "@/components/client/ClientJobs";
 
 const ClientDashboard: React.FC = () => {
     return (
-        <MaxWidth>
-            <div className="flex flex-row mt-16 h-screen">
+        // <MaxWidth>
+        <div>
+            <div className="container mx-auto flex flex-row mt-16 ">
                 <Link to="/cl/postjob">
                     <Card className="px-4 max-w-80 md:min-w-80 h-28 hover:shadow-lg hover:bg-gray-100 bg-gray-50 rounded-xl mr-9 shadow-md  border flex flex-col items-center justify-center overflow-hidden">
                         <CardTitle className="text-base md:text-lg font-bold text-center text-gray-700 static">Post a job</CardTitle>
@@ -19,7 +21,11 @@ const ClientDashboard: React.FC = () => {
                 </Card>
             </div>
             {/* <GigList /> */}
-        </MaxWidth>
+
+            <ClientJobs />
+        </div>
+
+        // </MaxWidth>
     );
 };
 

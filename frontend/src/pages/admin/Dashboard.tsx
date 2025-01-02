@@ -8,6 +8,7 @@ import Categories from "@/components/admin/Categories";
 import TopBar from "@/components/admin/AdminNavbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import UserList from '@/components/admin/UsersList';
+import { PaymentListing } from "@/components/admin/Payments";
 
 export default function AdminDashboardPage() {
     const [activePage, setActivePage] = useState("dashboard");
@@ -15,11 +16,13 @@ export default function AdminDashboardPage() {
     const renderActivePage = () => {
         switch (activePage) {
             case "dashboard":
-                return <Dashboard />;
+                return <UserList />;
             case "categories":
                 return <Categories />;
             case "users":
                 return <UserList />;    
+            case "payments" :
+                return <Categories />;  
             
             default:
                 return <Dashboard />;

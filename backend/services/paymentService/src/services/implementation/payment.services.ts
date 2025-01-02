@@ -164,7 +164,11 @@ export class PaymentService implements IPaymentService {
         await axios.post(`http://localhost:3015/wallet/update/${updatedEscrow?.freelancerId}`, updatedEscrow);
 
         return escrow;
-        
+
+    }
+
+    async getAllPayments(){
+        return await this._paymentRepository.find();
     }
 
 }

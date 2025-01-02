@@ -8,6 +8,7 @@ export class PaymentController {
     constructor(private readonly paymentService: IPaymentService) {
         this._paymentService = paymentService;
         this.handleReleasePayment = this.handleReleasePayment.bind(this);
+        this.getAllPayments = this.getAllPayments.bind(this);
     }
 
     async createCheckoutSession(req: Request, res: Response, next: NextFunction) {
@@ -53,4 +54,12 @@ export class PaymentController {
         }
     }
 
-}    
+    async getAllPayments(req: Request, res: Response, next: NextFunction) {
+        try {
+            const payments = await this._paymentService.getAllPayments();
+            res.json(payments);
+        } catch (error) {
+            next(error);
+        }
+    }
+}
