@@ -202,6 +202,7 @@ export class UserController {
 
     async editUserProfile(req: Request, res: Response, next: NextFunction) {
         try {
+
             const { userId } = req.params;
             const { userData, roleSpecificData } = req.body;
 

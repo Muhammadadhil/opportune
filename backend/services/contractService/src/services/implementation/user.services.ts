@@ -33,13 +33,17 @@ export class UserService implements IUserService {
     async updateUserRating(userId: ObjectId): Promise<void> {
         const reviews = await this._reviewRepository.getReviewsForUser(userId);
         const averageRating = reviews.reduce((acc:number, review:IReview) => acc + review.rating, 0) / reviews.length;
+        
+        const reviewCount = reviews.length;
+
+        console.log('avg Rating and reviewsCount:',{ averageRating, reviewCount });
 
         // Update user profile
-        const updatedUser = await this._userRepository.update(userId as unknown as ObjectId, {averageRating});
-
+        const updatedUser = await this._userRepository.update(userId as unknown as ObjectId, { averageRating, reviewCount });
+        console.log('updated user:',updatedUser);
 
         //adCh1
-        await axios.post(`http://localhost:3015/average-rating/add/${updatedUser?._id}`,  updatedUser );
+        await axios.post(`http://localhost:3015/average-rating/add/${updatedUser?._id}`, { userData:updatedUser });
 
     }
 

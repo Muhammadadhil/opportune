@@ -42,9 +42,12 @@ export class ReviewService implements IReviewService {
             type: isClientReview ? "CLIENT_TO_FREELANCER" : "FREELANCER_TO_CLIENT",
         };
 
+        console.log("review data:", createReviewData);
+
         const review = await this._reviewRepository.createReview(createReviewData);
 
-        // Update user's average rating (via User Service)
+        console.log('review saved:',review)
+        
         await this._userService.updateUserRating(review.revieweeId);
 
         return review;

@@ -20,6 +20,7 @@ import { PreviewSubmission } from "../client/PreviewSubmission";
 import { useNavigate } from "react-router-dom";
 import { handleInitChat } from "@/utils/chatUtils";
 import { handleSubmitWork } from "@/utils/contractUtils";
+import { ReviewForm } from "./ReviewForm";
 
 interface ContractsProps {
     userType: "client" | "freelancer";
@@ -37,6 +38,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     const [isFinalMileStone, setIsFinalMileStone] = useState(false);
     const [isSubmitWorkOpen, setIsSubmitWorkOpen] = useState(false);
     const [isPreviewSubmissionOpen, setIsPreviewSubmissionOpen] = useState(false);
+    const [showReviewForm,setShowReviewForm]=useState(true);
     const [selectedMilestone, setSelectedMilestone] = useState<{
         id: string;
         amount: number;
@@ -88,6 +90,10 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
             </div>
         );
     }
+
+    const handleReviewSubmit = () => {
+        setShowReviewForm(false);
+    };
 
     console.count("render count contract");
 
@@ -169,6 +175,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                             Pay Milestone
                                                         </Button>
                                                     )}
+
                                                     {userType === "freelancer" && milestone.status === MilestoneStatus.ACTIVE && contract.currentMilestoneIndex == index && (
                                                         <Button
                                                             className="bg-green-700 hover:bg-green-600"
@@ -187,18 +194,26 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                         </Button>
                                                     )}
 
-                                                    {(milestone.status === MilestoneStatus.SUBMITTED || milestone.status === MilestoneStatus.COMPLETED) &&
-                                                        contract.currentMilestoneIndex == index && (
-                                                            <Button className="bg-green-700 hover:bg-green-600" onClick={() => handlePreviewSubmission(contract._id, milestone._id,contract.currentMilestoneIndex,index)}>
-                                                                Preview Submission
-                                                            </Button>
-                                                        )}
+                                                    {(milestone.status === MilestoneStatus.SUBMITTED || milestone.status === MilestoneStatus.COMPLETED) && contract.currentMilestoneIndex == index && (
+                                                        <Button
+                                                            className="bg-green-700 hover:bg-green-600"
+                                                            onClick={() => handlePreviewSubmission(contract._id, milestone._id, contract.currentMilestoneIndex, index)}
+                                                        >
+                                                            Preview Submission
+                                                        </Button>
+                                                    )}
                                                     <div className="">
                                                         <p className="text-sm font-medium text-gray-400">Milestone status</p>
                                                         <Badge variant={milestone.status === "unpaid" ? "default" : "secondary"}>{milestone.status}</Badge>
                                                     </div>
                                                 </div>
                                             ))}
+                                            {showReviewForm && (
+                                                <div className="mt-6">
+                                                    <h3 className="text-lg font-semibold mb-2">Leave a Review</h3>
+                                                    <ReviewForm contractId={contract._id} onSubmit={handleReviewSubmit} />
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 )}

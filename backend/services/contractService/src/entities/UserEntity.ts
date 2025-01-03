@@ -11,6 +11,7 @@ export interface IUser extends Document {
     isOAuthUser?: boolean;
     isBlocked?: boolean;
     averageRating?: number;
+    reviewCount?: number;
     walletAmount?: number;
     walletHistory?: Array<{ amount: number; createdAt: Date }>;
 }

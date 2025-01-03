@@ -28,7 +28,7 @@ export default function Profile() {
     const navigate = useNavigate();
     const { data: gigs } = useGigs(userInfo?._id);
 
-    const { data: freelancer } = useFreelancerProfile(userInfo?.role, userInfo?._id);
+    const { data: freelancer, refetch } = useFreelancerProfile(userInfo?.role, userInfo?._id);
     const visibleJobs = jobs?.slice(0, 3);
 
     const getClientData = async () => {
@@ -62,7 +62,7 @@ export default function Profile() {
                             {/* Profile Image */}
                             <div className="relative">
                                 <img
-                                    src={freelancer?.data?.imageUrl || profileimg}
+                                    src={freelancer?.imageUrl || profileimg}
                                     alt="profile image"
                                     className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-4 border-white object-cover"
                                 />
@@ -85,7 +85,7 @@ export default function Profile() {
 
                                 {/* Action Buttons */}
                                 <div className="flex gap-3 mt-4">
-                                    {userInfo?.role === "freelancer" && !freelancer?.data ? (
+                                    {userInfo?.role === "freelancer" && !freelancer ? (
                                         <Button className="bg-green-600 text-white hover:bg-green-500 " onClick={() => navigate("/fr/complete-profile")} variant="secondary">
                                             Complete your profile
                                         </Button>
@@ -97,7 +97,7 @@ export default function Profile() {
                                                         <Edit className="mr-2 h-4 w-4" /> Edit profile
                                                     </Button>
                                                 </DialogTrigger>
-                                                <EditProfileDialog user={userInfo} onClose={() => setIsEditDialogOpen(false)} />
+                                                <EditProfileDialog user={userInfo} onClose={() => setIsEditDialogOpen(false)} onUpdate={refetch} />
                                             </Dialog>
                                         </>
                                     )}
@@ -108,69 +108,92 @@ export default function Profile() {
                 </div>
 
                 {/* Main Content */}
-                <div className="container mx-auto px-4 mt-24 sm:mt-28">
-                    <div className="max-w-2xl space-y-6">
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2">
-                                <Mail className="w-5 h-5 text-muted-foreground" />
-                                <span>{userInfo?.email}</span>
-                            </div>
-                            {userInfo?.role === "freelancer" && <p className="">{freelancer?.data?.title}</p>}
-
-                            {userInfo?.role === "freelancer" && freelancer?.data?.skills && (
-                                <div className="flex items-start gap-2">
-                                    <Lightbulb className="w-5 h-5 text-muted-foreground mt-1" />
-                                    <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                                        {freelancer.data.skills.map((skill: string, index: number) => (
-                                            <Badge key={index} variant="secondary">
-                                                {skill}
-                                            </Badge>
-                                        ))}
-                                    </div>
+                <div className="container mx-auto px-4 mt-24 sm:mt-28 ">
+                    <div className="flex justify-between">
+                        <div className="max-w-2xl space-y-6">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2">
+                                    <Mail className="w-5 h-5 text-muted-foreground" />
+                                    <span>{userInfo?.email}</span>
                                 </div>
-                            )}
+                                {userInfo?.role === "freelancer" && <p className="">{freelancer?.title}</p>}
 
-                            {userInfo?.role === "client" && (
-                                <>
-                                    {clientData?.companyName && (
-                                        <div className="flex items-start gap-2">
-                                            <Building2 className="w-5 h-5 text-muted-foreground mt-1" />
-                                            <div>
-                                                <h3 className="font-medium">{clientData.companyName}</h3>
-                                                <p className="text-muted-foreground">{clientData.companyDescription}</p>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {clientData?.website && (
-                                        <div className="flex items-center gap-2">
-                                            <Globe className="w-5 h-5 text-muted-foreground" />
-                                            <a
-                                                href={clientData.website.startsWith("http") ? clientData.website : `https://${clientData.website}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
-                                            >
-                                                {clientData.website}
-                                            </a>
-                                        </div>
-                                    )}
-
+                                {userInfo?.role === "freelancer" && freelancer?.skills && (
                                     <div className="flex items-start gap-2">
-                                        <Briefcase className="w-5 h-5 text-muted-foreground mt-1" />
-                                        <div>
-                                            <h3 className="font-medium">Project Needs</h3>
-                                            <div className="flex flex-wrap gap-2 justify-center sm:justify-start mt-2">
-                                                {clientData?.projectNeeds?.map((need: string, index: number) => (
-                                                    <Badge key={index} variant="secondary">
-                                                        {need}
-                                                    </Badge>
-                                                ))}
-                                            </div>
+                                        <Lightbulb className="w-5 h-5 text-muted-foreground mt-1" />
+                                        <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                                            {freelancer?.skills.map((skill: string, index: number) => (
+                                                <Badge key={index} variant="secondary">
+                                                    {skill}
+                                                </Badge>
+                                            ))}
                                         </div>
                                     </div>
-                                </>
-                            )}
+                                )}
+
+                                {userInfo?.role === "client" && (
+                                    <>
+                                        {clientData?.companyName && (
+                                            <div className="flex items-start gap-2">
+                                                <Building2 className="w-5 h-5 text-muted-foreground mt-1" />
+                                                <div>
+                                                    <h3 className="font-medium">{clientData.companyName}</h3>
+                                                    <p className="text-muted-foreground">{clientData.companyDescription}</p>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {clientData?.website && (
+                                            <div className="flex items-center gap-2">
+                                                <Globe className="w-5 h-5 text-muted-foreground" />
+                                                <a
+                                                    href={clientData.website.startsWith("http") ? clientData.website : `https://${clientData.website}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:underline"
+                                                >
+                                                    {clientData.website}
+                                                </a>
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-start gap-2">
+                                            <Briefcase className="w-5 h-5 text-muted-foreground mt-1" />
+                                            <div>
+                                                <h3 className="font-medium">Project Needs</h3>
+                                                <div className="flex flex-wrap gap-2 justify-center sm:justify-start mt-2">
+                                                    {clientData?.projectNeeds?.map((need: string, index: number) => (
+                                                        <Badge key={index} variant="secondary">
+                                                            {need}
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                        <div>
+                            <div className="flex flex-col items-center space-y-2">
+                                <div className="flex items-center space-x-1">
+                                    {Array.from({ length: 5 }, (_, index) => (
+                                        <svg
+                                            key={index}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill={index < Math.floor(userInfo?.averageRating) ? "currentColor" : "none"}
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            className={`w-6 h-6 ${index < Math.floor(userInfo?.averageRating) ? "text-yellow-500" : "text-gray-400"}`}
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22l1.18-7.86-5-4.87 6.91-1L12 2z" />
+                                        </svg>
+                                    ))}
+                                </div>
+                                <span className="text-sm text-muted-foreground">{userInfo?.averageRating?.toFixed(1) || "0.0"} / 5.0</span>
+                                <span className="text-sm text-gray-500">({userInfo?.reviewCount} reviews)</span>
+                            </div>
                         </div>
                     </div>
 

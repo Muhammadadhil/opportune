@@ -48,6 +48,10 @@ const UserSchema: Schema = new Schema({
         type: Number,
         default: 0,
     },
+    reviewCount: {
+        type: Number,
+        default: 0,
+    },
     walletAmount: {
         type: Number,
         default: 0,

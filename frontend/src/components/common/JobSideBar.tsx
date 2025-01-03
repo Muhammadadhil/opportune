@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import {useState} from 'react';
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input";
+import { Label } from "../ui/label";
 
 interface JobSideBarProps {
     job: IJob;
@@ -78,8 +79,10 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
                         <SheetFooter className="mt-6 pt-6 border-t ">
                             {isApplyOpen && (
                                 <div className="w-full space-y-4 flex flex-col p-2">
+                                    <Label>Your Message</Label>
                                     <Textarea placeholder="Enter your message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
-                                    <Input placeholder="Your price $" type="number" value={price} onChange={(e) => setPrice(e.target.value)}/>
+                                    <Label>Your Price</Label>
+                                    <Input placeholder="Your price $" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
                                     <Button onClick={handleJobApply} className="self-end  bg-blue-800 hover:bg-blue-700 mt-8 justify-end">
                                         Submit Application
                                     </Button>

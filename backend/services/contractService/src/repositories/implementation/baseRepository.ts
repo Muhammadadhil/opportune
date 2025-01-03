@@ -39,7 +39,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
 
     async update(id: ObjectId, data: Partial<T>): Promise<T | null> {
         try {
-            return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
+            return await this.model.findByIdAndUpdate(id, { $set: data }, { new: true }).exec();
         } catch (error) {
             console.log("Error in updating:", error);
             throw error;
@@ -64,4 +64,3 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         }
     }
 }
-

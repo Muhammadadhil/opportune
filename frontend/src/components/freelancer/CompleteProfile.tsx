@@ -53,7 +53,7 @@ const CompleteProfile = () => {
             setSkills(updatedSkills);
             setNewSkill("");
             setValue("skills", updatedSkills);
-        }showPortfolioInputs;
+        };
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

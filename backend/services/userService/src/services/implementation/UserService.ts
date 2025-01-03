@@ -159,6 +159,9 @@ export class UserService implements IUserService {
     }
 
     async editProfile(userId: string, data: Partial<IUser>) {
+
+        console.log('updating user data Serviccceee:', userId, data);
+
         const user = await this.userRepository.updateById(userId, data);
         this.producer.publishToMultiple("user_exchange", user, "update");
 
@@ -184,18 +187,15 @@ export class UserService implements IUserService {
         if (userType === "freelancer") {
             const userData = await this.userRepository.findUserWithFreelancerDetails(userId);
 
-            console.log("userData:", userData);
             if (!userData) {
                 throw new Error("Freelancer not found");
             }
 
-            // Remove sensitive information
             const { password, ...safeUserData } = userData;
 
             return safeUserData;
         } else {
             const userData = await this.userRepository.findUserWithClientDetails(userId);
-            console.log("userData: cl", userData);
 
             if (!userData) {
                 throw new Error("Client not found");
