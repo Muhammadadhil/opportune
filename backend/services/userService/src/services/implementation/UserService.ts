@@ -159,8 +159,7 @@ export class UserService implements IUserService {
     }
 
     async editProfile(userId: string, data: Partial<IUser>) {
-
-        console.log('updating user data Serviccceee:', userId, data);
+        console.log("updating user data Serviccceee:", userId, data);
 
         const user = await this.userRepository.updateById(userId, data);
         this.producer.publishToMultiple("user_exchange", user, "update");
@@ -173,7 +172,7 @@ export class UserService implements IUserService {
     }
 
     async updateClientDetails(userId: string, data: Partial<IClientDetail>) {
-        return await this.clientRepository.update(userId, data);   
+        return await this.clientRepository.update(userId, data);
     }
 
     async updateWallet(userId: string, updatedEscrow: any) {
@@ -183,7 +182,6 @@ export class UserService implements IUserService {
     }
 
     async getUserInfo(userId: string | ObjectId, userType: "client" | "freelancer") {
-
         if (userType === "freelancer") {
             const userData = await this.userRepository.findUserWithFreelancerDetails(userId);
 
@@ -205,5 +203,23 @@ export class UserService implements IUserService {
             const { password, ...safeUserData } = userData;
             return safeUserData;
         }
+    }
+
+    async getAllFreelancersDetails() {
+        const freelancers = await this.freelancerRepository.find();
+
+        const freelancerDetails = await Promise.all(freelancers.map(async (freelancer) => {
+            const userInfo = await this.userRepository.findById(freelancer.userId as string);
+            const imageUrl = await getSignedImageURL(freelancer.image);
+
+            return {
+                freelancerDetails: { 
+                    ...freelancer.toObject(),
+                    imageUrl: imageUrl
+                },
+                userInfo: userInfo ? userInfo.toObject() : null,
+            };
+        }));
+        return freelancerDetails;
     }
 }

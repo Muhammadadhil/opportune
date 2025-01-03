@@ -181,10 +181,10 @@ export default function Profile() {
                                         <svg
                                             key={index}
                                             xmlns="http://www.w3.org/2000/svg"
-                                            fill={index < Math.floor(userInfo?.averageRating) ? "currentColor" : "none"}
+                                            fill={index < Math.floor(userInfo?.averageRating ?? 0) ? "currentColor" : "none"}
                                             stroke="currentColor"
                                             strokeWidth="2"
-                                            className={`w-6 h-6 ${index < Math.floor(userInfo?.averageRating) ? "text-yellow-500" : "text-gray-400"}`}
+                                            className={`w-6 h-6 ${index < Math.floor(userInfo?.averageRating ?? 0) ? "text-yellow-500" : "text-gray-400"}`}
                                             viewBox="0 0 24 24"
                                         >
                                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22l1.18-7.86-5-4.87 6.91-1L12 2z" />
@@ -262,7 +262,38 @@ export default function Profile() {
 
 
 
+// const { userInfo, clientData } = useSelector((state: RootState) => state.user);
+// // const { theme } = useSelector((state: RootState) => state.app);
+// const [jobs, setJobs] = useState<IJob[]>();
+// const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
+// const dispatch = useDispatch();
+// const navigate = useNavigate();
+// const { data: gigs } = useGigs(userInfo?._id);
+
+// const { data: freelancer, refetch } = useFreelancerProfile(userInfo?.role, userInfo?._id);
+// const visibleJobs = jobs?.slice(0, 3);
+
+// const getClientData = async () => {
+//     try {
+//         const response = await getClientProfileData(userInfo?._id);
+//         dispatch(setClientData(response.data));
+//     } catch (error) {
+//         console.log("error fetching profile data:", error);
+//     }
+// };
+
+// const fetchJobs = async () => {
+//     const response = await getJobs(userInfo?._id as string);
+//     setJobs(response.data);
+// };
+
+// useEffect(() => {
+//     if (userInfo?.role === "client") {
+//         getClientData();
+//         fetchJobs();
+//     }
+// }, [userInfo]);
 
 
 // export default function Profile() {

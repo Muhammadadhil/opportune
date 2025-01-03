@@ -24,6 +24,7 @@ export class UserController {
         this.editUserProfile = this.editUserProfile.bind(this);
         this.updateWallet = this.updateWallet.bind(this);
         this.generatePresignedUrl = this.generatePresignedUrl.bind(this);
+        this.getAllFreelancersDetails = this.getAllFreelancersDetails.bind(this);
     }
 
     async registerUser(req: Request, res: Response) {
@@ -165,18 +166,15 @@ export class UserController {
 
     async getFreelancers(req: Request, res: Response) {
         try {
-            // const { freelancerIds } = req.body;
             const ids = req.query.ids;
-            console.log("ids:", ids);
+
             if (!ids || !Array.isArray(ids)) {
                 throw new Error("Invalid or missing 'ids' query parameter");
             }
 
             const freelancers = await this.userService.getFreelancers(ids as string[]);
-            console.log("freeelnacer and user details:", freelancers);
             res.status(200).json(freelancers);
         } catch (error) {
-            console.log("Error in fetching freelancers :", error);
             return res.status(500).json({ message: "Server error", error });
         }
     }
@@ -184,7 +182,6 @@ export class UserController {
     // block user call from admin
     async toggleBlockStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log("handlling blocking in user service !!");
 
             const id = req.params.userId;
             const userId = new Types.ObjectId(id);
@@ -265,6 +262,17 @@ export class UserController {
             res.status(200).json(profile);
         } catch (error) {
             console.log("Error in updating wallet :", error);
+            next(error);
+        }
+    }
+
+
+    async getAllFreelancersDetails(req: Request, res: Response, next: NextFunction) {   
+        try {
+            const freelancers = await this.userService.getAllFreelancersDetails();
+            res.status(200).json(freelancers);
+        } catch (error) {
+
             next(error);
         }
     }

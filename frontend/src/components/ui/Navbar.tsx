@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
     const clientMenu: NavItem[] = [
         { path: "/cl/dashboard", label: "Dashboard" },
         { path: "/cl/manage-jobs", label: "Your Jobs" },
-        { path: "/", label: "Find Talents" },
+        { path: "/talents", label: "Find Talents" },
     ];
 
     const { userInfo } = useSelector((state: RootState) => state.user);

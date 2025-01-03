@@ -9,6 +9,10 @@ const initialState: userState = {
         country: "",
         email: "",
         role: "",
+        averageRating: "",
+        reviewCount: "",
+        walletAmount: 0,
+        walletHistory: [],
     },
     freelancerData: {
         userId: "",
@@ -17,7 +21,7 @@ const initialState: userState = {
         accounts: {},
         image: "",
         imageUrl: "",
-        preferredJobs:[]
+        preferredJobs: [],
     },
     clientData: {
         userId: "",

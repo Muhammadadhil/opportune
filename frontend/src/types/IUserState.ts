@@ -12,7 +12,16 @@ export type userInfo = {
     email: string;
     role: string;
     country: string;
-} | null
+    averageRating: number;
+    reviewCount: string;
+    walletAmount?: number;
+    walletHistory?: Array<{
+        amount: number;
+        description: string;
+        paymentId: string;
+        date: Date;
+    }>;
+} | null;
 
 export interface IFreelancer {
     userId: string;
@@ -21,7 +30,7 @@ export interface IFreelancer {
     accounts: any;
     image: string;
     imageUrl?: string;
-    preferredJobs: string[];
+    preferredJobs?: string[];
 }
 
 export interface IClientData {

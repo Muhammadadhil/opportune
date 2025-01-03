@@ -38,13 +38,14 @@ router.get('/freelancers',userController.getFreelancers);
 
 //block user
 router.patch(`/users/:userId/block-toggle`, userController.toggleBlockStatus);
-//edit profile
+
 router.patch("/profile/:userId", userController.editUserProfile);
 
 router.post("/average-rating/add/:userId", userController.editUserProfile);
 
 router.post("/wallet/update/:userId", userController.updateWallet); 
 
-router.get("/:userType/:userId", userController.getUserInfo);
+// router.get("/:userType/:userId", userController.getUserInfo);
+router.get("/freelancers/list1", userController.getAllFreelancersDetails);
 
 export default router;
