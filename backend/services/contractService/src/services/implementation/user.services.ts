@@ -49,7 +49,7 @@ export class UserService implements IUserService {
                 await this.createUser(data);
                 break;
             case "update":
-                console.log(" !!! handling update user in contract service !!!!");
+                // console.log(" !!! handling update user in contract service !!!!");
                 await this.updateUser(data);
                 break;
             default:

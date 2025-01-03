@@ -33,8 +33,11 @@ const DetailsClient: React.FC = () => {
         }
         try {
             const userId = userInfo?._id;
-            const projectNeeds = selectedProjectNeeds.map(option => option.value);
+            console.log("selectedProjectNeeds", selectedProjectNeeds);
+            const projectNeeds = selectedProjectNeeds;
+            console.log('project needs:',projectNeeds)
             const clientData = { userId, companyName, companyDescription, projectNeeds, website };
+            console.log("clientData:", clientData);
             await saveClientDetails(clientData as IClientData);
             navigate("/cl/dashboard");
         } catch (error) {

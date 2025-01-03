@@ -17,6 +17,7 @@ const initialState: userState = {
         accounts: {},
         image: "",
         imageUrl: "",
+        preferredJobs:[]
     },
     clientData: {
         userId: "",
@@ -39,6 +40,7 @@ export const userSlice = createSlice({
             state.freelancerData = action.payload;
         },
         setClientData: (state, action) => {
+            console.log('updating client state in reduxxxxxxxx:  ',action.payload);
             state.clientData = action.payload;
         },
         logoutUser: (state) => {
@@ -48,7 +50,8 @@ export const userSlice = createSlice({
                 title:"",
                 accounts:"",
                 image:"",
-                skills:[]
+                skills:[],
+                preferredJobs:[]
             };
             state.clientData = {
                 userId: "",

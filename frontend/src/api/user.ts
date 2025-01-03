@@ -27,7 +27,8 @@ export const getClientProfileData = async (userId?: string) => {
 };
 
 export const updateProfile = async (userId: string, formData: any) => {
-    return await apiClient.patch(`/user/freelancers/profile/${userId}`, formData);
+    const response = await apiClient.patch(`/user/profile/${userId}`, formData);
+    return response.data;
 };
 
 export const fetchUserInfo = async (userId: string,userType:'client'|'freelancer') => {

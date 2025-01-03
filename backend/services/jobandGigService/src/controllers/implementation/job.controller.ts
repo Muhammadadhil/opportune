@@ -73,7 +73,6 @@ export class JobController implements IJobController{
         try {
             const id = req.params.id;
             const jobs = await this._jobService.getJobsByClient(id);
-            console.log("jobs Active now:", jobs);
             res.status(200).json(jobs);
         } catch (error) {
             next(error);

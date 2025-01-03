@@ -125,14 +125,14 @@ export class UserController {
             console.log("Error in generating presigned URL:", error);
             next(error);
         }
-    };
+    }
 
     async saveFreelancerDetails(req: Request, res: Response) {
         try {
-            const { userId, title, skills, accounts,image,prefferedJobs } = req.body;
+            const { userId, title, skills, accounts, image, prefferedJobs } = req.body;
 
-            console.log('complete profile req. body:',req.body);
-            const savedData = await this.userService.saveFreelancerDetails(image, userId, title, skills, accounts,prefferedJobs);
+            console.log("complete profile req. body:", req.body);
+            const savedData = await this.userService.saveFreelancerDetails(image, userId, title, skills, accounts, prefferedJobs);
             res.json(savedData);
         } catch (error) {
             console.log("Error in saving freelaner data:", error);
@@ -202,16 +202,24 @@ export class UserController {
 
     async editUserProfile(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log("editing user in user service !!");
+            const { userId } = req.params;
+            const { userData, roleSpecificData } = req.body;
 
-            const formData = req.body;
-            const userId = req.params.userId;
+            // Update basic user data
+            const updatedUser = await this.userService.editProfile(userId, userData);
 
-            console.log("editing profile id, formdata", userId, formData);
-            const profile = await this.userService.editProfile(userId, formData);
-            res.status(200).json(profile);
+            // Update role-specific data if provided
+            if (roleSpecificData && updatedUser) {
+                if (updatedUser.role === "freelancer") {
+                    await this.userService.updateFreelancerDetails(userId, roleSpecificData);
+                } else if (updatedUser.role === "client") {
+                    await this.userService.updateClientDetails(userId, roleSpecificData);
+                }
+            }
+
+            res.status(200).json({updatedUser, roleSpecificData});
+            
         } catch (error) {
-            console.log("Error in editting profile :", error);
             next(error);
         }
     }

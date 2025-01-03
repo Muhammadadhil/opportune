@@ -47,9 +47,18 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         }
     }
 
+    async updateById(id: string, data: Partial<T>): Promise<T | null> {
+        try {
+            return await this.model.findByIdAndUpdate(id, {$set:data}, { new: true }).exec();
+        } catch (error) {
+            console.error("Error in update method:", error);
+            throw error;
+        }
+    }
+
     async update(id: string, data: Partial<T>): Promise<T | null> {
         try {
-            return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
+            return await this.model.findOneAndUpdate({userId:id}, data, { new: true }).exec();
         } catch (error) {
             console.error("Error in update method:", error);
             throw error;

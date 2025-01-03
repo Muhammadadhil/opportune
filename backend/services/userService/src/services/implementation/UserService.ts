@@ -106,24 +106,21 @@ export class UserService implements IUserService {
     }
 
     async generatePresignedUrl(fileName: string, fileType: string): Promise<{ url: string; fileKey: string }> {
-        console.log("generating presigned url for upload");
         return this.fileUploader.generateUploadPresignedUrl(fileName, fileType);
     }
 
-    async saveFreelancerDetails(image: string, userId: string, title: string, skills: string[], accounts: IAccounts, prefferedJobs:string[]) {
+    async saveFreelancerDetails(image: string, userId: string, title: string, skills: string[], accounts: IAccounts, prefferedJobs: string[]) {
         const existDetail = await this.freelancerRepository.findOne({ userId });
 
         if (existDetail) {
             throw new Error("Detail already exists");
         }
 
-        return await this.freelancerRepository.create({ userId, title, skills, accounts, image , prefferedJobs } as IFreelancer);
+        return await this.freelancerRepository.create({ userId, title, skills, accounts, image, prefferedJobs } as IFreelancer);
     }
 
-    async getFreelancerProfile(userId: string) : Promise<IFreelancer> {
-
+    async getFreelancerProfile(userId: string): Promise<IFreelancer> {
         let freelancerDetails = await this.freelancerRepository.findOne({ userId });
-        console.log("freelancerDetails:", freelancerDetails);
         const imageName = freelancerDetails?.image;
 
         if (!imageName) {
@@ -132,7 +129,6 @@ export class UserService implements IUserService {
 
         const imageUrl = await getSignedImageURL(imageName);
 
-        console.log("imageRul: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1", imageUrl);
         const result = {
             accounts: freelancerDetails.accounts,
             _id: freelancerDetails._id,
@@ -141,10 +137,9 @@ export class UserService implements IUserService {
             skills: freelancerDetails.skills,
             image: freelancerDetails.image,
             prefferedJobs: freelancerDetails.prefferedJobs,
-            imageUrl: imageUrl, // Add the signed image URL
+            imageUrl: imageUrl,
         };
 
-        console.log("Result:", result);
         return result as IFreelancer;
     }
 
@@ -162,10 +157,18 @@ export class UserService implements IUserService {
     }
 
     async editProfile(userId: string, data: Partial<IUser>) {
-        const user = await this.userRepository.update(userId, data);
+        const user = await this.userRepository.updateById(userId, data);
         this.producer.publishToMultiple("user_exchange", user, "update");
 
         return user;
+    }
+
+    async updateFreelancerDetails(userId: string, data: Partial<IFreelancer>) {
+        return await this.freelancerRepository.update(userId, data);
+    }
+
+    async updateClientDetails(userId: string, data: Partial<IClientDetail>) {
+        return await this.clientRepository.update(userId, data);   
     }
 
     async updateWallet(userId: string, updatedEscrow: any) {
@@ -175,6 +178,7 @@ export class UserService implements IUserService {
     }
 
     async getUserInfo(userId: string | ObjectId, userType: "client" | "freelancer") {
+
         if (userType === "freelancer") {
             const userData = await this.userRepository.findUserWithFreelancerDetails(userId);
 

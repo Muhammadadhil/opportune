@@ -20,7 +20,8 @@ export interface IFreelancer {
     skills: string[];
     accounts: any;
     image: string;
-    imageUrl?:string;
+    imageUrl?: string;
+    preferredJobs: string[];
 }
 
 export interface IClientData {

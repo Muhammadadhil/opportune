@@ -132,7 +132,7 @@ export default function Profile() {
 
                             {userInfo?.role === "client" && (
                                 <>
-                                    {clientData.companyName && (
+                                    {clientData?.companyName && (
                                         <div className="flex items-start gap-2">
                                             <Building2 className="w-5 h-5 text-muted-foreground mt-1" />
                                             <div>
@@ -142,7 +142,7 @@ export default function Profile() {
                                         </div>
                                     )}
 
-                                    {clientData.website && (
+                                    {clientData?.website && (
                                         <div className="flex items-center gap-2">
                                             <Globe className="w-5 h-5 text-muted-foreground" />
                                             <a

@@ -38,7 +38,8 @@ router.get('/freelancers',userController.getFreelancers);
 
 //block user
 router.patch(`/users/:userId/block-toggle`, userController.toggleBlockStatus);
-router.patch("/freelancers/profile/:userId", userController.editUserProfile);
+//edit profile
+router.patch("/profile/:userId", userController.editUserProfile);
 
 router.post("/average-rating/add/:userId", userController.editUserProfile);
 
