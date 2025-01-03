@@ -140,6 +140,8 @@ export class UserService implements IUserService {
             imageUrl: imageUrl,
         };
 
+        console.log("freelancer detailsss  result:", result);
+
         return result as IFreelancer;
     }
 
