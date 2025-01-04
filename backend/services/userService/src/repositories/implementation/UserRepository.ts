@@ -94,27 +94,5 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
             ...user,
             clientDetails: clientDetails || undefined,
         };
-
-        // const user = await User.aggregate([
-        //     {
-        //         $match: { _id: userId, role: "client" },
-        //     },
-        //     {
-        //         $lookup: {
-        //             from: "clientdetails",
-        //             localField: "_id",
-        //             foreignField: "userId",
-        //             as: "clientDetails",
-        //         },
-        //     },
-        //     {
-        //         $unwind: {
-        //             path: "$clientDetails",
-        //             preserveNullAndEmptyArrays: true,
-        //         },
-        //     },
-        // ]);
-
-        // return user[0];
     }
 }

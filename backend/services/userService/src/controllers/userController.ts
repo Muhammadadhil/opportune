@@ -219,35 +219,8 @@ export class UserController {
         }
     }
 
-    getUserInfo = async (req: Request, res: Response) => {
-        try {
-            console.log("getting user info in user service !!");
 
-            const { userId, userType } = req.params;
-
-            if (!userId || !userType) {
-                return res.status(400).json({
-                    status: "error",
-                    message: "User ID and type are required",
-                });
-            }
-
-            const userData = await this.userService.getUserInfo(userId);
-
-            return res.status(200).json({
-                status: "success",
-                data: userData,
-            });
-        } catch (error: any) {
-            console.error("Error fetching user info:", error);
-            return res.status(error.message.includes("not found") ? 404 : 500).json({
-                status: "error",
-                message: error.message || "Internal server error",
-            });
-        }
-    };
-
-    getUserInfo2 = async (req: Request, res: Response, next:NextFunction) => {
+    getUserInfo = async (req: Request, res: Response, next:NextFunction) => {
         try {
             console.log("getting user info in user service !!");
 
@@ -289,7 +262,6 @@ export class UserController {
 
     async getAllFreelancersDetails(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log("getting all freelancers in user controlllerrrrrrrrrrrrrrr !!");
             const freelancers = await this.userService.getAllFreelancersDetails();
             res.status(200).json(freelancers);
         } catch (error) {

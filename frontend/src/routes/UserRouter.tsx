@@ -25,6 +25,7 @@ import ChatPage from '../pages/common/ChatPage';
 import UserProtected from "@/components/common/UserProtected";
 import VideoCallWrapper from "@/pages/common/VideoCallWrapper";
 import Freelancer from "@/pages/common/Freelancer";
+import NotFound from "@/components/ui/NotFound";
 
 function UserRoute() {
     return (
@@ -37,6 +38,8 @@ function UserRoute() {
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/offer-success" element={<SuccessPage />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/not-found" element={<NotFound />} />
+
                 <Route element={<UsersLayout />}>
                     <Route path="/explore" element={<ExplorePage />} />
                     <Route path="" element={<UserProtected />}>

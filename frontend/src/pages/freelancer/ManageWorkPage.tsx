@@ -8,7 +8,7 @@ import { RootState } from "@/store/store";
 
 const ManageWorkPage = () => {
     const { userInfo } = useSelector((state: RootState) => state.user);
-    const { data: user } = useRoleUser(userInfo._id, "freelancer");
+    const { data: user } = useRoleUser(userInfo?._id ?? '' );
     
 
     return (

@@ -15,6 +15,7 @@ import { LoginUserResponse, RegisterUserResponse } from "../../interfaces/IAuthR
 import IUserService from "../interfaces/IUserService";
 import { RabbitMQProducer } from "../../events/rabbitmq/producer";
 import { Unauthorised } from "@_opportune/common";
+import { FreelancerResponseDTO } from "../../dto/user/user-response.dto";
 
 export class UserService implements IUserService {
     private userRepository: UserRepository;
@@ -182,29 +183,58 @@ export class UserService implements IUserService {
 
     async getUserInfo(userId: string | ObjectId) {
         const userData = await this.userRepository.findById(userId as string);
-        console.log('userDAta in service for client :', userData);
 
         if (userData && userData.role === "freelancer") {
             const freelancerData = await this.userRepository.findUserWithFreelancerDetails(userId);
             if (freelancerData && freelancerData.freelancerDetails) {
                 freelancerData.freelancerDetails.imageUrl = await this.fileUploader.generateDownloadPresignedUrl(freelancerData.freelancerDetails.image);
             }
+            console.log("freelancerData:", freelancerData);
+
+            // const responseDTO: FreelancerResponseDTO = {
+            //     _id: freelancerData?._id.toString() || ,
+            //     firstname: freelancerData?.firstname || "",
+            //     lastname: freelancerData?.lastname || "",
+            //     email: freelancerData?.email || "",
+            //     country: freelancerData?.country || "",
+            //     role: freelancerData?.role || "",
+            //     isVerified: freelancerData?.isVerified || false,
+            //     isBlocked: freelancerData?.isBlocked || false,
+            //     averageRating: freelancerData?.averageRating || 0,
+            //     reviewCount: freelancerData?.reviewCount || 0,
+            //     freelancerDetails: freelancerData?.freelancerDetails
+            //         ? {
+            //               _id: freelancerData?.freelancerDetails._id.toString(),
+            //               userId: freelancerData?.freelancerDetails.userId.toString(), // Convert ObjectId to string
+            //               title: freelancerData?.freelancerDetails.title || "",
+            //               skills: freelancerData?.freelancerDetails.skills || [],
+            //               accounts: freelancerData?.freelancerDetails.accounts || {
+            //                   linkedin: "",
+            //                   github: "",
+            //                   other: "",
+            //               },
+            //               imageUrl: freelancerData?.freelancerDetails.imageUrl || "",
+            //               prefferedJobs: freelancerData?.freelancerDetails.prefferedJobs || [],
+            //           }
+            //         : undefined,
+            // };
+
+            // return responseDTO;
+
+            //  const { walletAmount, walletHistory, ...userDataWithoutWallet } = freelancerData;
+            //  return userDataWithoutWallet;
             return freelancerData;
-
+            
         } else if (userData && userData.role === "client") {
-
             const clientData = await this.userRepository.findUserWithClientDetails(userId);
-
-            console.log("client DAtatataaaaaa data in service:", clientData);
-
-            return clientData;
+            return clientData ? clientData.toObject() : null;
         }
+
+        throw new Error("User not found");
     }
 
     async getAllFreelancersDetails() {
-        console.log("get All freelancers in service!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
         const freelancers = await this.freelancerRepository.find();
-        console.log("freelancers get All freelancers in service:", freelancers);
         const freelancerDetails = await Promise.all(
             freelancers.map(async (freelancer) => {
                 const userInfo = await this.userRepository.findById(freelancer.userId as string);

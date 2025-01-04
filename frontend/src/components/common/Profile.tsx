@@ -62,7 +62,7 @@ export default function Profile() {
 
         } catch (error) {
             console.log("Error fetching user profile:", error);
-            navigate("/404"); // Redirect if user not found
+            navigate("/not-found"); // Redirect if user not found
         }
     };
 
