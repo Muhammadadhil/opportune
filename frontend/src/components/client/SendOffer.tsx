@@ -12,6 +12,8 @@ import {sendOffer} from "@/api/offers";
 import toast from "react-hot-toast";
 import {useNavigate} from 'react-router-dom';
 import {createNotification} from '@/api/notification';
+import { getUserDetails } from "@/api/user";
+import { userInfo } from "@/types/IUserState";
 
 
 export default function SendOffer() {
@@ -25,7 +27,9 @@ export default function SendOffer() {
     const [title,setTitle]=useState(job?.data.jobTitle);
     const [description,setDescription]=useState(job?.data.description);
     const [milestones, setMilestones] = useState<IMilestone[]>([{ description: "", deadline: "", amount: budget }]);
+    const [clientDetails,setClientDetails]=useState<userInfo>();
 
+    console.log("clientDetails:", clientDetails);
 
     useEffect(() => {
         setTitle(job?.data.jobTitle);
@@ -77,6 +81,14 @@ export default function SendOffer() {
         setMilestones(updatedMilestones);
     };
 
+    useEffect(() => {
+        const fetchDetails = async () => {
+            const details = await getUserDetails(application.clientId);
+            setClientDetails(details);
+        };
+        if (application.clientId) fetchDetails();
+    }, [application.clientId]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const isValidMilestones = milestones.every(milestone => milestone.description.trim() !== "" && milestone.deadline !== "" );
@@ -102,8 +114,7 @@ export default function SendOffer() {
             // notify freelancer
             await createNotification(
                 application.freelancerId,
-                `You have a new offer from the client ${application.clientId}
-                check your offers page`,
+                `You have a new offer from the client ${clientDetails?.firstname} ${clientDetails?.lastname}. Please check your offers page`,
                 "info"
             );
 

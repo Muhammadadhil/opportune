@@ -44,6 +44,7 @@ router.patch("/profile/:userId", userController.editUserProfile);
 router.post("/average-rating/add/:userId", userController.editUserProfile);
 
 router.post("/wallet/update/:userId", userController.updateWallet); 
+router.get("/details/:userId", userController.getUserDetails);
 
 router.get('/:userId', userController.getUserInfo);
 router.get("/freelancers/list", userController.getAllFreelancersDetails);

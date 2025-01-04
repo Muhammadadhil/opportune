@@ -10,7 +10,6 @@ export const createNotification = async (userId: string, message: string, type: 
     return response.data;
 };
 
-
 export const getUserNotifications = async (userId: string): Promise<INotification[]> => {
     const response = await apiClient.get(`/notification/notifications/${userId}`);
     return response.data;

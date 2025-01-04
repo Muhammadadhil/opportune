@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
+import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useClientOffers from "@/hooks/offers/useClientOffers";
 import useFreelancerOffers from "@/hooks/offers/useFreelancerOffers";
@@ -58,7 +58,7 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
     
 
     return (
-        <div className="space-y-6 ">
+        <motion.div initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}} transition={{duration:0.5}} className="space-y-6 ">
             {!offers?.length && (
                 <div className="text-center py-10 ">
                     <h2 className="text-xl font-semibold text-gray-700">No offers found</h2>
@@ -160,6 +160,6 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                     </CardFooter>
                 </Card>
             ))}
-        </div>
+        </motion.div>
     );
 };

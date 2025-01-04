@@ -181,6 +181,10 @@ export class UserService implements IUserService {
         return user;
     }
 
+    async getUserDetails(userId: string) {
+        return await this.userRepository.findById(userId);
+    }
+
     async getUserInfo(userId: string | ObjectId) {
         const userData = await this.userRepository.findById(userId as string);
 

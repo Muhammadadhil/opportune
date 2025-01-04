@@ -15,11 +15,6 @@ const Home: React.FC = () => {
         <div className={`min-h-screen ${theme === "dark" ? "dark" : ""}`}>
             <div className="min-h-screen  dark:bg-black ">
                 <MouseTracker
-                    // render={(position) => (
-                    //     <h1 className=" bg-background text-foreground">
-                    //         The mouse position is ({position.x}, {position.y})
-                    //     </h1>
-                    // )}
                     cursorElement={<div className="w-5 h-5 rounded-full bg-green-500 opacity-50" />}
                 >
                     <div>

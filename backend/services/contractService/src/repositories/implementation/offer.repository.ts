@@ -18,7 +18,7 @@ export class OfferRepository extends BaseRepository<IOffer> implements IOfferRep
     
 
     async populatedFreelancerOffers (freelancerId: string): Promise<IOffer[] | null> {
-        const offers = await this.offerModel.find({ freelancerId }).populate('clientId', 'firstname lastname email').exec();
+        const offers = await this.offerModel.find({ freelancerId }).sort({createdAt:-1}).populate('clientId', 'firstname lastname email').exec();
         return offers;
     }
 }

@@ -34,7 +34,7 @@ export class OfferService implements IOfferService {
     }
 
     async getFreelancerOffers(freelancerId: string): Promise<IOffer[] | null> {
-        const offers =await  this._offerRepository.populatedFreelancerOffers(freelancerId);
+        const offers = await  this._offerRepository.populatedFreelancerOffers(freelancerId);
         console.log("offers :", offers);
         return offers;
     }

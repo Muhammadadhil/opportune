@@ -40,6 +40,12 @@ const jobSchema = new Schema<IJob>(
             type: [String],
             required: true,
         },
+        applicants:[
+            {
+                type: Types.ObjectId,
+                ref: "User",
+            }
+        ],
         applicantsCount: {
             type: Number,
             default: 0,

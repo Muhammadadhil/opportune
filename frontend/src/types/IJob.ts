@@ -18,6 +18,8 @@ export interface IJob {
     skillsRequired: string[];
     isActive: boolean;
     searchTags: string[];
+    applicants?: string[];
     applicantsCount?: number;
     createdAt?: string;
+    isApplied?: boolean;
 }

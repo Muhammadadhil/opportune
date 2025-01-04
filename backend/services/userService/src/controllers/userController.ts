@@ -25,6 +25,8 @@ export class UserController {
         this.updateWallet = this.updateWallet.bind(this);
         this.generatePresignedUrl = this.generatePresignedUrl.bind(this);
         this.getAllFreelancersDetails = this.getAllFreelancersDetails.bind(this);
+        this.getUserInfo = this.getUserInfo.bind(this);
+        this.getUserDetails = this.getUserDetails.bind(this);
     }
 
     async registerUser(req: Request, res: Response) {
@@ -219,8 +221,17 @@ export class UserController {
         }
     }
 
+    async getUserDetails(req: Request, res: Response, next: NextFunction){
+        try {
+            const { userId } = req.params;
+            const user = await this.userService.getUserDetails(userId);
+            res.status(200).json(user);
+        } catch (error) {
+            next(error);
+        }
+    }
 
-    getUserInfo = async (req: Request, res: Response, next:NextFunction) => {
+    getUserInfo = async (req: Request, res: Response, next: NextFunction) => {
         try {
             console.log("getting user info in user service !!");
 

@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { truncateString } from "@/utils/truncateString";
 import { Skeleton } from "@/components/ui/skeleton";
+import {motion} from "framer-motion";
 
 interface JobApplicationsProps {
     userType: "client" | "freelancer";
@@ -57,7 +58,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+            <motion.div  initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}} transition={{duration:0.5}} className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
                 {applications.map((app: IApplication) => (
                     <Card key={app._id} className="w-full">
                         <CardHeader>
@@ -123,7 +124,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                         </CardFooter>
                     </Card>
                 ))}
-            </div>
+            </motion.div>
         </div>
     );
 };

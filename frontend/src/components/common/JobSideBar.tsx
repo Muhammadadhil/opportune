@@ -19,45 +19,44 @@ interface JobSideBarProps {
     job: IJob;
     sheetOpen: boolean;
     setSheetOpen: (open: boolean) => void;
+    onApply?: () => void;
 }
 
-const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen }) => {
-
+const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, onApply }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     const [isApplyOpen, setIsApplyOpen] = useState(false);
-    const [message,setMessage]=useState('');
+    const [message, setMessage] = useState("");
     const [price, setPrice] = useState("");
-
 
     const applicationData: IApplication = {
         jobId: job._id!,
         clientId: job.clientId?._id,
-        freelancerId: userInfo?._id ?? '',
-        freelancerNotes:message,
-        freelancerPrice: Number(price)
+        freelancerId: userInfo?._id ?? "",
+        freelancerNotes: message,
+        freelancerPrice: Number(price),
     };
 
-    const handleJobApply= async()=>{
-        try{
+    const handleJobApply = async () => {
+        try {
             await applyJob(applicationData);
             toast.success("Your application has sent successfully");
             setSheetOpen(false);
-        }catch(error){
-            console.log('Error in apply job:',error);
+            if(onApply) onApply();
+        } catch (error) {
+            console.log("Error in apply job:", error);
             const axiosError = error as AxiosError;
             const data = axiosError.response?.data as { message: string };
-            toast.error(data?.message || 'An error occurred');
+            toast.error(data?.message || "An error occurred");
         }
-    }
+    };
 
     const navigate = useNavigate();
 
-    const handleNavigateProfile=(userId:string)=>{
-        navigate('/freelancer/'+userId)
-    }
+    const handleNavigateProfile = (userId: string) => {
+        navigate("/freelancer/" + userId);
+    };
 
     const fullStars = Math.floor(job.clientId.averageRating || 0);
-
 
     return (
         <div>
@@ -76,7 +75,9 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
                         <div className="space-y-6">
                             <div>
                                 <h3 className="font-semibold mb-2">Client Details</h3>
-                                <p className="hover:text-blue-600 cursor-pointer " onClick={()=> handleNavigateProfile(job.clientId._id)}>{job.clientId.firstname + " " + job.clientId.lastname}</p>
+                                <p className="hover:text-blue-600 cursor-pointer " onClick={() => handleNavigateProfile(job.clientId._id)}>
+                                    {job.clientId.firstname + " " + job.clientId.lastname}
+                                </p>
                                 <p>{job.clientId.email}</p>
                                 {/* Rating */}
                                 <div className="flex items-center gap-1">
@@ -114,7 +115,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
                                 </div>
                             )}
 
-                            {!isApplyOpen && (
+                            {!isApplyOpen && job.isApplied !== true && (
                                 <Button onClick={() => setIsApplyOpen(true)} className="bg-green-800 hover:bg-green-700 mt-8 justify-end">
                                     Apply Now
                                 </Button>

@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,7 +99,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     console.count("render count contract");
 
     return (
-        <div className="space-y-4 mt-6">
+        <motion.div initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}} transition={{duration:0.5}} className="space-y-4 mt-6">
             {contracts.data.map((contract: IContract) => {
                 const isExpanded = expandedContracts.includes(contract._id);
                 return (
@@ -248,6 +249,6 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                     isFinalMilestone={isFinalMileStone}
                 />
             )}
-        </div>
+        </motion.div>
     );
 };

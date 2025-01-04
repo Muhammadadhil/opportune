@@ -14,14 +14,9 @@ import  { TYPES } from '../../types/types';
 
 @injectable()
 export class JobService implements IJobService {
-
-    constructor(
-        @inject(TYPES.IJobRepository) private _jobRepository: IJobRepository,
-        @inject(TYPES.RabbitMQProducer) private producer: RabbitMQProducer
-    ){}
+    constructor(@inject(TYPES.IJobRepository) private _jobRepository: IJobRepository, @inject(TYPES.RabbitMQProducer) private producer: RabbitMQProducer) {}
 
     private contractServiceUrl = process.env.CONTRACT_SERVICE_URL;
-
 
     async getJobs(
         page: number,
@@ -30,11 +25,9 @@ export class JobService implements IJobService {
         applications: string,
         budgetRange: string,
         search: string,
-        sort: string
-    ): Promise<{ Alljobs: IJob[] | null; totalPagesCount: number }> {
-
-        console.log('sort ::::::::::::::::::',sort);
-
+        sort: string,
+        userId?: ObjectId
+    ): Promise<{ Alljobs: IJob[] | null; totalPagesCount: number; jobs?: IJob[] | null }> {
         const filters = {} as any;
         let sortOption;
 
@@ -47,16 +40,28 @@ export class JobService implements IJobService {
 
         if (search) filters.jobTitle = new RegExp(search, "i");
 
-        if(!sort){
-            sortOption = {createdAt: -1};
-        }else{
+        if (!sort) {
+            sortOption = { createdAt: -1 };
+        } else {
             sortOption = sort == "newest" ? { createdAt: -1 } : { createdAt: 1 };
         }
 
         const totalJobs = await this._jobRepository.getJobsCount(filters);
-        const Alljobs = await this._jobRepository.getFilteredJobs(page, limit, filters, sortOption);
+        let Alljobs = await this._jobRepository.getFilteredJobs(page, limit, filters, sortOption);
 
         const totalPagesCount = Math.ceil(totalJobs / limit);
+
+        // let jobs = null;
+        // if (userId) {
+        //     jobs = Alljobs?.map((job) => {
+        //         if (job.applicants.includes(userId)) {
+        //             return {
+        //                 ...job,
+        //                 isApplied: true,
+        //             };
+        //         }
+        //     });
+        // }
 
         return {
             Alljobs,
@@ -90,16 +95,15 @@ export class JobService implements IJobService {
     }
 
     async applyJob(data: IApplyJob) {
-
         await this.producer.connect();
 
-        const response = await axios.get(`${this.contractServiceUrl}/application`, {
-            params: { jobId: data.jobId, freelancerId: data.freelancerId },
-        });
+        // const response = await axios.get(`${this.contractServiceUrl}/application`, {
+        //     params: { jobId: data.jobId, freelancerId: data.freelancerId },
+        // });
 
-        if (response.data.exists) {
-            throw new CustomError("You have already applied for this job", 400);
-        }
+        // if (response.data.exists) {
+        //     throw new CustomError("You have already applied for this job", 400);
+        // }
 
         console.log("In service layer: going to publish the message with data:", data);
         const trackingId = new mongoose.Types.ObjectId().toString();
@@ -112,7 +116,8 @@ export class JobService implements IJobService {
         await this.producer.publish("job.application.created", messagePayload);
 
         // update applicants count
-        await this._jobRepository.updateApplicantsCount(data.jobId);
+        const updated = await this._jobRepository.updateApplicantsCount(data.jobId, data.freelancerId);
+        console.log("updated:", updated);
 
         return {
             trackingId,
@@ -121,7 +126,6 @@ export class JobService implements IJobService {
     }
 
     async approveApplication(data: IApproval) {
-
         await this.producer.connect();
         console.log("going to publish message with data:", data);
 

@@ -6,14 +6,42 @@ import SkeletonCard from "../common/LoadingSkelton";
 import JobCard from "../common/JobCard";
 import { Button } from "@/components/ui/button";
 import { getPaginationNumbers } from "@/utils/getPageNumbers";        
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const JobList = ({ filters }: { filters?: any }) => {
     
+    const {userInfo} = useSelector((state: RootState) => state.user);
+
     const [page, setPage] = useState(1);
     const [totalPages,setTotalPages]=useState(1);
     const limit = 3;
 
-    const { data: jobs, isLoading } = useFilterJobs(filters, page, limit);     
+    const { data: jobs, isLoading ,refetch} = useFilterJobs(filters, page, limit);  
+
+    const [jobss,setJobss] = useState<IJob[]>([]);
+    
+    useEffect(() => {
+        const jobss = jobs?.data?.jobs?.map((job: IJob) => {
+            console.log(job);
+            if (job.applicants?.includes(userInfo?._id || '')) {
+                return {
+                    ...job,
+                    isApplied: true,
+                };
+            }else{
+                return {
+                    ...job,
+                    isApplied: false,
+                };
+            }
+        });
+
+        setJobss(jobss);
+    }, [jobs]);
+
+
+    console.log('check applied jobss::',jobss);
 
 
     useEffect(() => {
@@ -37,7 +65,7 @@ const JobList = ({ filters }: { filters?: any }) => {
                 ) : jobs?.data?.length === 0 ? (
                     <Nojobs />
                 ) : (
-                    jobs?.data?.jobs?.map((job: IJob) => <JobCard job={job} key={job._id} />)
+                    jobss?.map((job: IJob) => <JobCard job={job} key={job._id} onApply={refetch} />)
                 )}
             </ul>
 

@@ -25,8 +25,8 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
         return await job.save();
     }
 
-    async updateApplicantsCount(jobId: string) {
-        return await JobModel.findByIdAndUpdate({ _id: jobId }, { $inc: { applicantsCount: 1 } }, { new: true }).exec();
+    async updateApplicantsCount(jobId: string, userId: string): Promise<IJob | null> {
+        return await JobModel.findByIdAndUpdate({ _id: jobId }, { $addToSet: { applicants: userId }, $inc: { applicantsCount: 1 } }).exec();
     }
 
     async getFilteredJobs(page: number, limit: number, filters: any, sortOption: any): Promise<IJob[] | null> {

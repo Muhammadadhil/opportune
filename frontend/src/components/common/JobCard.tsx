@@ -13,8 +13,10 @@ import {getRelativeTime} from "@/utils/relativeDateFormatter";
 
 interface JobCardProps {
     job: IJob;
+    onApply?: () => void;
 }
-const JobCard: React.FC<JobCardProps> = ({ job }) => {
+
+const JobCard: React.FC<JobCardProps> = ({ job,onApply }) => {
     const [editingJob, setEditingJob] = useState<IJob | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [open, setOpen] = useState(false);
@@ -109,7 +111,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
                     <span className="text-gray-500">posted {getRelativeTime(job.createdAt!)}</span>
                 </div>
 
-                {sheetOpen && <JobSideBar job={job} sheetOpen={sheetOpen} setSheetOpen={setSheetOpen} />}
+                {sheetOpen && <JobSideBar job={job} sheetOpen={sheetOpen} setSheetOpen={setSheetOpen} onApply={onApply}/>}
                 {editingJob && <EditJob job={editingJob} isDialogOpen={isDialogOpen} setIsDialogOpen={handleCloseDialog} />}
             </li>
         </div>
