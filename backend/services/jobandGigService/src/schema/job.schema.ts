@@ -6,6 +6,7 @@ const jobSchema = new Schema<IJob>(
         clientId: {
             type: Types.ObjectId,
             required: true,
+            ref: "User",
         },
         jobTitle: {
             type: String,

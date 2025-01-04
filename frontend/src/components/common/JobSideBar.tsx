@@ -12,6 +12,8 @@ import {useState} from 'react';
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input";
 import { Label } from "../ui/label";
+import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface JobSideBarProps {
     job: IJob;
@@ -29,8 +31,8 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
 
     const applicationData: IApplication = {
         jobId: job._id!,
-        clientId: job.clientId,
-        freelancerId: userInfo._id,
+        clientId: job.clientId._id,
+        freelancerId: userInfo?._id ?? '',
         freelancerNotes:message,
         freelancerPrice: Number(price)
     };
@@ -48,6 +50,15 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
         }
     }
 
+    const navigate = useNavigate();
+
+    const handleNavigateProfile=(userId:string)=>{
+        navigate('/freelancer/'+userId)
+    }
+
+    const fullStars = Math.floor(job.clientId.averageRating || 0);
+
+
     return (
         <div>
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -63,6 +74,20 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
                     </SheetHeader>
                     <ScrollArea className="h-[calc(100vh-10rem)] mt-6 pr-4">
                         <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">Client Details</h3>
+                                <p className="hover:text-blue-600 cursor-pointer " onClick={()=> handleNavigateProfile(job.clientId._id)}>{job.clientId.firstname + " " + job.clientId.lastname}</p>
+                                <p>{job.clientId.email}</p>
+                                {/* Rating */}
+                                <div className="flex items-center gap-1">
+                                    <div className="flex">
+                                        {[...Array(5)].map((_, index) => (
+                                            <Star key={index} className={`w-4 h-4 ${index < fullStars ? "text-yellow-400 fill-yellow-400" : "text-gray-300 fill-gray-300"}`} />
+                                        ))}
+                                    </div>
+                                    <span className="text-sm text-muted-foreground">({userInfo?.reviewCount})</span>
+                                </div>
+                            </div>
                             <div>
                                 <h3 className="font-semibold mb-2">Job Description</h3>
                                 <p>{job.description}</p>

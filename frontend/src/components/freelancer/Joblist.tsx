@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { getPaginationNumbers } from "@/utils/getPageNumbers";        
 
 const JobList = ({ filters }: { filters?: any }) => {
+    
     const [page, setPage] = useState(1);
     const [totalPages,setTotalPages]=useState(1);
     const limit = 3;

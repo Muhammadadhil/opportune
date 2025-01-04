@@ -31,7 +31,7 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
 
     async getFilteredJobs(page: number, limit: number, filters: any, sortOption: any): Promise<IJob[] | null> {
         const skip = (page - 1) * limit;
-        return await JobModel.find(filters).sort(sortOption).skip(skip).limit(limit).exec();
+        return await JobModel.find(filters).sort(sortOption).skip(skip).limit(limit).populate("clientId", "firstname lastname email averageRating reviewCount").exec();
     }
 
     async getJobsCount(filters: any): Promise<number> {
