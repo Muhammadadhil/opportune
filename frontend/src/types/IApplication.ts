@@ -17,5 +17,6 @@ export interface IApplication {
     freelancerDetails?: IFreelancerData;
     jobDetails?: IJob;
     freelancerNotes?: string;
-    freelancerPrice?:number;
+    freelancerPrice?: number;
+    createdAt?: string;
 }

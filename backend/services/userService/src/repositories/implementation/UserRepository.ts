@@ -66,48 +66,20 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
 
         if (!user) return null;
 
-        // Then find the freelancer details
         const freelancerDetails = await FreelancerDetails.findOne({
             userId: user._id,
         }).lean();
-
-        // console.log("user and freelancer details:", user, freelancerDetails);
 
         return {
             ...user,
             freelancerDetails: freelancerDetails || undefined,
         };
-        
-            // const user = await User.aggregate([
-            //     {
-            //         $match: { _id: userId, role: "freelancer" },
-            //     },
-            //     {
-            //         $lookup: {
-            //             from: "freelancerdetails",
-            //             localField: "_id",
-            //             foreignField: "userId",
-            //             as: "freelancerDetails",
-            //         },
-            //     },
-            //     {
-            //         $unwind: {
-            //             path: "$freelancerDetails",
-            //             preserveNullAndEmptyArrays: true,
-            //         },
-            //     },
-            // ]);
-
-            // return user[0];
-        
-
     }
 
     async findUserWithClientDetails(userId: string | ObjectId) {
         
         const user = await User.findOne({
             _id: userId,
-            role: "freelancer",
         }).lean();
 
         if (!user) return null;

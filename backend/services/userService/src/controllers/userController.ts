@@ -182,7 +182,6 @@ export class UserController {
     // block user call from admin
     async toggleBlockStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-
             const id = req.params.userId;
             const userId = new Types.ObjectId(id);
 
@@ -199,7 +198,6 @@ export class UserController {
 
     async editUserProfile(req: Request, res: Response, next: NextFunction) {
         try {
-
             const { userId } = req.params;
             const { userData, roleSpecificData } = req.body;
 
@@ -215,8 +213,7 @@ export class UserController {
                 }
             }
 
-            res.status(200).json({updatedUser, roleSpecificData});
-            
+            res.status(200).json({ updatedUser, roleSpecificData });
         } catch (error) {
             next(error);
         }
@@ -235,7 +232,7 @@ export class UserController {
                 });
             }
 
-            const userData = await this.userService.getUserInfo(userId, userType as "client" | "freelancer");
+            const userData = await this.userService.getUserInfo(userId);
 
             return res.status(200).json({
                 status: "success",
@@ -247,6 +244,30 @@ export class UserController {
                 status: "error",
                 message: error.message || "Internal server error",
             });
+        }
+    };
+
+    getUserInfo2 = async (req: Request, res: Response, next:NextFunction) => {
+        try {
+            console.log("getting user info in user service !!");
+
+            const { userId } = req.params;
+
+            if (!userId) {
+                return res.status(400).json({
+                    status: "error",
+                    message: "User ID and type are required",
+                });
+            }
+
+            const userData = await this.userService.getUserInfo(userId);
+
+            return res.status(200).json({
+                status: "success",
+                data: userData,
+            });
+        } catch (error: any) {
+            next(error);
         }
     };
 
@@ -266,13 +287,12 @@ export class UserController {
         }
     }
 
-
-    async getAllFreelancersDetails(req: Request, res: Response, next: NextFunction) {   
+    async getAllFreelancersDetails(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log("getting all freelancers in user controlllerrrrrrrrrrrrrrr !!");
             const freelancers = await this.userService.getAllFreelancersDetails();
             res.status(200).json(freelancers);
         } catch (error) {
-
             next(error);
         }
     }

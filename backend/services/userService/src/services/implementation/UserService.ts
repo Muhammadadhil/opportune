@@ -5,14 +5,13 @@ import { generateAccessToken, generateRefreshToken } from "../../utils/jwt/gener
 import IClientDetail from "../../interfaces/IClientDetail";
 import IFreelancer from "../../interfaces/IFreelancer";
 import IAccounts from "../../interfaces/IAccounts";
-import { getSignedImageURL } from "../../utils/fileUploader";
 import { FileUploader } from "../../utils/fileUploader";
 import sharp from "sharp";
 import { ObjectId } from "mongoose";
 import { ClientRepository } from "../../repositories/implementation/ClientRepository";
 import { IFreelancerRepository } from "../../repositories/interfaces/IFreelancerRepository";
 import { FreelancerRepository } from "../../repositories/implementation/FreelancerRepository";
-import { LoginUserResponse, RegisterUserResponse } from '../../interfaces/IAuthResponse';
+import { LoginUserResponse, RegisterUserResponse } from "../../interfaces/IAuthResponse";
 import IUserService from "../interfaces/IUserService";
 import { RabbitMQProducer } from "../../events/rabbitmq/producer";
 import { Unauthorised } from "@_opportune/common";
@@ -127,7 +126,7 @@ export class UserService implements IUserService {
             throw new Error("No image in database!");
         }
 
-        const imageUrl = await getSignedImageURL(imageName);
+        const imageUrl = await this.fileUploader.generateDownloadPresignedUrl(imageName);
 
         const result = {
             accounts: freelancerDetails.accounts,
@@ -181,45 +180,45 @@ export class UserService implements IUserService {
         return user;
     }
 
-    async getUserInfo(userId: string | ObjectId, userType: "client" | "freelancer") {
-        if (userType === "freelancer") {
-            const userData = await this.userRepository.findUserWithFreelancerDetails(userId);
+    async getUserInfo(userId: string | ObjectId) {
+        const userData = await this.userRepository.findById(userId as string);
+        console.log('userDAta in service for client :', userData);
 
-            if (!userData) {
-                throw new Error("Freelancer not found");
+        if (userData && userData.role === "freelancer") {
+            const freelancerData = await this.userRepository.findUserWithFreelancerDetails(userId);
+            if (freelancerData && freelancerData.freelancerDetails) {
+                freelancerData.freelancerDetails.imageUrl = await this.fileUploader.generateDownloadPresignedUrl(freelancerData.freelancerDetails.image);
             }
+            return freelancerData;
 
-            const { password, ...safeUserData } = userData;
+        } else if (userData && userData.role === "client") {
 
-            return safeUserData;
-        } else {
-            const userData = await this.userRepository.findUserWithClientDetails(userId);
+            const clientData = await this.userRepository.findUserWithClientDetails(userId);
 
-            if (!userData) {
-                throw new Error("Client not found");
-            }
+            console.log("client DAtatataaaaaa data in service:", clientData);
 
-            // Remove sensitive information
-            const { password, ...safeUserData } = userData;
-            return safeUserData;
+            return clientData;
         }
     }
 
     async getAllFreelancersDetails() {
+        console.log("get All freelancers in service!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
         const freelancers = await this.freelancerRepository.find();
+        console.log("freelancers get All freelancers in service:", freelancers);
+        const freelancerDetails = await Promise.all(
+            freelancers.map(async (freelancer) => {
+                const userInfo = await this.userRepository.findById(freelancer.userId as string);
+                const imageUrl = await this.fileUploader.generateDownloadPresignedUrl(freelancer.image);
 
-        const freelancerDetails = await Promise.all(freelancers.map(async (freelancer) => {
-            const userInfo = await this.userRepository.findById(freelancer.userId as string);
-            const imageUrl = await getSignedImageURL(freelancer.image);
-
-            return {
-                freelancerDetails: { 
-                    ...freelancer.toObject(),
-                    imageUrl: imageUrl
-                },
-                userInfo: userInfo ? userInfo.toObject() : null,
-            };
-        }));
+                return {
+                    freelancerDetails: {
+                        ...freelancer.toObject(),
+                        imageUrl: imageUrl,
+                    },
+                    userInfo: userInfo ? userInfo.toObject() : null,
+                };
+            })
+        );
         return freelancerDetails;
     }
 }

@@ -61,15 +61,16 @@ export class FileUploader {
 
 
 
+
 }
 
 
 
-export const getSignedImageURL = async (image: string): Promise<string> => {
-    const command = new GetObjectCommand({ Bucket: bucketName, Key: image });
-    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-    return signedUrl;
-};
+// export const getSignedImageURL = async (image: string): Promise<string> => {
+//     const command = new GetObjectCommand({ Bucket: bucketName, Key: image });
+//     const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+//     return signedUrl;
+// };
 
 
 

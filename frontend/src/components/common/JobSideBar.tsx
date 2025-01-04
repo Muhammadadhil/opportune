@@ -31,7 +31,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen })
 
     const applicationData: IApplication = {
         jobId: job._id!,
-        clientId: job.clientId._id,
+        clientId: job.clientId?._id,
         freelancerId: userInfo?._id ?? '',
         freelancerNotes:message,
         freelancerPrice: Number(price)

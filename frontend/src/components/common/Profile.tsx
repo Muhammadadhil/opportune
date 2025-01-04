@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit, Users, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -17,12 +17,23 @@ import { IJob } from "@/types/IJob";
 import { useGigs } from "@/hooks/gigs/useGigs";
 import { useFreelancerProfile } from "@/hooks/user/useFreelancerProfile";
 import profileimg from "@/assets/profilePicture.jpg";
+import { getUserById } from "@/api/user";
 
 export default function Profile() {
+
     const { userInfo, clientData } = useSelector((state: RootState) => state.user);
     // const { theme } = useSelector((state: RootState) => state.app);
+    const { userId } = useParams();
+    console.log("userId:", userId);
+
     const [jobs, setJobs] = useState<IJob[]>();
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isOwnProfile, setIsOwnProfile] = useState(false);
+    const [profileUser, setProfileUser] = useState<any>(null);
+    const [userSpecificDetails, setUserSpecificDetails] = useState<any>(null);
+
+    console.log("isOwnProfile:", isOwnProfile);
+    console.log('profileUser:',profileUser)
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -30,6 +41,42 @@ export default function Profile() {
 
     const { data: freelancer, refetch } = useFreelancerProfile(userInfo?.role, userInfo?._id);
     const visibleJobs = jobs?.slice(0, 3);
+
+
+    // fetch other users profile 
+    const fetchUserProfile = async () => {
+
+        console.log("fetching other  user profile !!!");
+        console.log("userId:", userId);
+
+        try {
+            const response = await getUserById(userId);
+            console.log("response.data:", response.data);
+            setProfileUser(response.data);
+
+            if(response.data?.role === "freelancer"){
+                setUserSpecificDetails(response.data.freelancerDetails);
+            }else if(response.data?.role === "client"){
+                setUserSpecificDetails(response.data.clientDetails);
+            }
+
+        } catch (error) {
+            console.log("Error fetching user profile:", error);
+            navigate("/404"); // Redirect if user not found
+        }
+    };
+
+    useEffect(() => {
+        setIsOwnProfile(!userId || userId === userInfo?._id);
+        if (userId && userId !== userInfo?._id) {
+            // Fetch other user profile
+            console.log("fetching other user profile !!!");
+            fetchUserProfile();
+        } else {
+            console.log("setting the same profile user:", userInfo);
+            // setProfileUser(userInfo);
+        }
+    }, [userId]);
 
     const getClientData = async () => {
         try {
@@ -52,17 +99,22 @@ export default function Profile() {
         }
     }, [userInfo]);
 
+    const displayUser = profileUser || userInfo;
+    const displayFreelancer = userSpecificDetails || freelancer;
+    const displayClient = userSpecificDetails || clientData;
+
+
     return (
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-44 py-8">
             <div className="min-h-screen max-w-[1300px]">
                 {/* Header Section with Gradient Background */}
                 <div className="relative bg-gradient-to-r from-gray-800 via-gray-500 to-gray-300 h-48 sm:h-56 md:h-64 rounded-xl">
                     <div className="container mx-auto px-4 h-full">
-                        <div className="absolute -bottom-20 flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-8">
+                        <div className="absolute top-32 flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-8">
                             {/* Profile Image */}
                             <div className="relative">
                                 <img
-                                    src={freelancer?.imageUrl || profileimg}
+                                    src={displayFreelancer?.imageUrl || profileimg}
                                     alt="profile image"
                                     className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-4 border-white object-cover"
                                 />
@@ -71,58 +123,58 @@ export default function Profile() {
                             {/* Profile Info */}
                             <div className="mb-9 text-center sm:text-left">
                                 <h1 className="text-3xl font-bold text-white">
-                                    {userInfo?.firstname} {userInfo?.lastname}
+                                    {displayUser?.firstname} {displayUser?.lastname}
                                 </h1>
                                 <p className="text-white/90 mt-1">
-                                    {userInfo?.role}
-                                    {userInfo?.country && (
+                                    {displayUser?.role}
+                                    {displayUser?.country && (
                                         <span className="ml-2 text-white/80">
                                             <MapPin className="inline w-4 h-4 mr-1" />
-                                            {userInfo.country}
+                                            {displayUser.country}
                                         </span>
                                     )}
                                 </p>
 
                                 {/* Action Buttons */}
-                                <div className="flex gap-3 mt-4">
-                                    {userInfo?.role === "freelancer" && !freelancer ? (
-                                        <Button className="bg-green-600 text-white hover:bg-green-500 " onClick={() => navigate("/fr/complete-profile")} variant="secondary">
-                                            Complete your profile
-                                        </Button>
-                                    ) : (
-                                        <>
+                                {isOwnProfile && (
+                                    <div className="flex gap-3 mt-4">
+                                        {displayUser?.role === "freelancer" && !freelancer ? (
+                                            <Button className="bg-green-600 text-white hover:bg-green-500" onClick={() => navigate("/fr/complete-profile")} variant="secondary">
+                                                Complete your profile
+                                            </Button>
+                                        ) : (
                                             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                                                 <DialogTrigger asChild>
                                                     <Button variant="secondary">
                                                         <Edit className="mr-2 h-4 w-4" /> Edit profile
                                                     </Button>
                                                 </DialogTrigger>
-                                                <EditProfileDialog user={userInfo} onClose={() => setIsEditDialogOpen(false)} onUpdate={refetch} />
+                                                <EditProfileDialog user={displayUser} onClose={() => setIsEditDialogOpen(false)} onUpdate={refetch} />
                                             </Dialog>
-                                        </>
-                                    )}
-                                </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Main Content */}
-                <div className="container mx-auto px-4 mt-24 sm:mt-28 ">
+                <div className="container mx-auto px-4 sm:mt-28 ">
                     <div className="flex justify-between">
                         <div className="max-w-2xl space-y-6">
                             <div className="space-y-4">
                                 <div className="flex items-center gap-2">
                                     <Mail className="w-5 h-5 text-muted-foreground" />
-                                    <span>{userInfo?.email}</span>
+                                    <span>{displayUser?.email}</span>
                                 </div>
-                                {userInfo?.role === "freelancer" && <p className="">{freelancer?.title}</p>}
+                                {displayUser?.role === "freelancer" && <p className="">{displayFreelancer?.title}</p>}
 
-                                {userInfo?.role === "freelancer" && freelancer?.skills && (
+                                {displayUser?.role === "freelancer" && displayFreelancer?.skills && (
                                     <div className="flex items-start gap-2">
                                         <Lightbulb className="w-5 h-5 text-muted-foreground mt-1" />
                                         <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                                            {freelancer?.skills.map((skill: string, index: number) => (
+                                            {displayFreelancer?.skills.map((skill: string, index: number) => (
                                                 <Badge key={index} variant="secondary">
                                                     {skill}
                                                 </Badge>
@@ -131,28 +183,28 @@ export default function Profile() {
                                     </div>
                                 )}
 
-                                {userInfo?.role === "client" && (
+                                {displayUser?.role === "client" && (
                                     <>
-                                        {clientData?.companyName && (
+                                        {displayClient?.companyName && (
                                             <div className="flex items-start gap-2">
                                                 <Building2 className="w-5 h-5 text-muted-foreground mt-1" />
                                                 <div>
-                                                    <h3 className="font-medium">{clientData.companyName}</h3>
-                                                    <p className="text-muted-foreground">{clientData.companyDescription}</p>
+                                                    <h3 className="font-medium">{displayClient.companyName}</h3>
+                                                    <p className="text-muted-foreground">   {displayClient.companyDescription}</p>
                                                 </div>
                                             </div>
                                         )}
 
-                                        {clientData?.website && (
+                                        {displayClient?.website && (
                                             <div className="flex items-center gap-2">
                                                 <Globe className="w-5 h-5 text-muted-foreground" />
                                                 <a
-                                                    href={clientData.website.startsWith("http") ? clientData.website : `https://${clientData.website}`}
+                                                    href={displayClient.website.startsWith("http") ? displayClient.website : `https://${clientData.website}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="text-blue-600 hover:underline"
                                                 >
-                                                    {clientData.website}
+                                                    {displayClient.website}
                                                 </a>
                                             </div>
                                         )}
@@ -160,9 +212,9 @@ export default function Profile() {
                                         <div className="flex items-start gap-2">
                                             <Briefcase className="w-5 h-5 text-muted-foreground mt-1" />
                                             <div>
-                                                <h3 className="font-medium">Project Needs</h3>
+                                                <h3 className="font-medium">Preference</h3>
                                                 <div className="flex flex-wrap gap-2 justify-center sm:justify-start mt-2">
-                                                    {clientData?.projectNeeds?.map((need: string, index: number) => (
+                                                    {displayClient?.projectNeeds?.map((need: string, index: number) => (
                                                         <Badge key={index} variant="secondary">
                                                             {need}
                                                         </Badge>
@@ -181,30 +233,30 @@ export default function Profile() {
                                         <svg
                                             key={index}
                                             xmlns="http://www.w3.org/2000/svg"
-                                            fill={index < Math.floor(userInfo?.averageRating ?? 0) ? "currentColor" : "none"}
+                                            fill={index < Math.floor(displayUser?.averageRating ?? 0) ? "currentColor" : "none"}
                                             stroke="currentColor"
                                             strokeWidth="2"
-                                            className={`w-6 h-6 ${index < Math.floor(userInfo?.averageRating ?? 0) ? "text-yellow-500" : "text-gray-400"}`}
+                                            className={`w-6 h-6 ${index < Math.floor(displayUser?.averageRating ?? 0) ? "text-yellow-500" : "text-gray-400"}`}
                                             viewBox="0 0 24 24"
                                         >
                                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22l1.18-7.86-5-4.87 6.91-1L12 2z" />
                                         </svg>
                                     ))}
                                 </div>
-                                <span className="text-sm text-muted-foreground">{userInfo?.averageRating?.toFixed(1) || "0.0"} / 5.0</span>
-                                <span className="text-sm text-gray-500">({userInfo?.reviewCount} reviews)</span>
+                                <span className="text-sm text-muted-foreground">{displayUser?.averageRating?.toFixed(1) || "0.0"} / 5.0</span>
+                                <span className="text-sm text-gray-500">({displayUser?.reviewCount} reviews)</span>
                             </div>
                         </div>
                     </div>
 
                     <Tabs defaultValue="portfolio" className="w-full mt-5">
                         <TabsList className="border-b w-full justify-start rounded-none h-12 bg-transparent">
-                            {userInfo?.role === "freelancer" && <TabsTrigger value="portfolio">porfolio</TabsTrigger>}
-                            {userInfo?.role === "client" && <TabsTrigger value="jobs">Posted Jobs</TabsTrigger>}
+                            {displayUser?.role === "freelancer" && <TabsTrigger value="portfolio">porfolio</TabsTrigger>}
+                            {displayUser?.role === "client" && <TabsTrigger value="jobs">Posted Jobs</TabsTrigger>}
                         </TabsList>
 
                         <TabsContent value="portfolio" className="mt-6">
-                            {userInfo?.role === "freelancer" ? (
+                            {displayUser?.role === "freelancer" ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                     {gigs?.data?.length ? (
                                         gigs.data.map((gig: any, index: number) => (
@@ -232,7 +284,7 @@ export default function Profile() {
                             )}
                         </TabsContent>
 
-                        {userInfo?.role === "client" && (
+                        {displayUser?.role === "client" && (
                             <TabsContent value="jobs" className="mt-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                     {visibleJobs?.map((job, index) => (
@@ -253,6 +305,9 @@ export default function Profile() {
         </div>
     );
 }
+
+
+
 
 
 
