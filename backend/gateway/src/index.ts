@@ -53,6 +53,7 @@ app.use(
 
 app.use(
     "/manage",
+    verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.manage,
         changeOrigin: true,

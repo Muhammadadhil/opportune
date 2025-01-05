@@ -50,3 +50,8 @@ export const getHires = async (jobId:string) => {
 export const getJobDetails = async (jobId:string) => {
     return await apiClient.get(`/post/job/${jobId}`);
 };
+
+
+export const deactivateJob = async (jobId:string) => {
+    return await apiClient.post(`/post/job/deactivate/${jobId}`);
+}

@@ -12,11 +12,15 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
         // const payload = req.user;
         if (req.headers["x-user-payload"]) {
             const user = JSON.parse(req.headers["x-user-payload"] as string);
-
+            console.log('user:',user)
             if (!allowedRoles.includes(user.role)) {
                 const error = new Forbidden();
                 console.log("!!!! user role is not allowed throwing error !!!! jobService : ", error);
                 next(error);
+            }
+
+            if(user.role == 'admin'){
+                return next();
             }
 
             const isBlocked = await userService.isUserBlocked(user.userId);

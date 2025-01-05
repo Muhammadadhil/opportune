@@ -23,9 +23,10 @@ router.post("/postaGig", upload.array("images", 3), gigController.postAGig);
 router.post("/editGig", upload.array("images", 3),checkSchema(editGigValidator()), DataValidation,gigController.editGig);
 
 // jobs
-router.get("/jobs", authenticate(["client", "freelancer"]), jobController.getJobs);
+router.get("/jobs", authenticate(["client", "freelancer", "admin"]), jobController.getJobs);
 router.get("/jobs/:id",authenticate(['client']), jobController.getJobsByClient);
 router.post("/job", authenticate(['client']),jobController.postJob);
+router.post("/job/deactivate/:id", authenticate(['admin']),jobController.deactivateJob);
 
 router.patch("/job", authenticate(["client"]), jobController.editJob);
 router.patch("/job/:id",authenticate(['client']), jobController.removeJob);

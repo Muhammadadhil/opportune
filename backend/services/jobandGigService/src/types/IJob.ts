@@ -13,4 +13,5 @@ export interface IJob extends Document {
     applicants: ObjectId[];
     applicantsCount?: number;
     isApplied?: boolean;
+    status: 
 }

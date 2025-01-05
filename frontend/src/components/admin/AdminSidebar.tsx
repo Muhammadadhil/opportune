@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setAdminAuthStatus } from "@/store/slices/userSlice";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from "@/components/ui/sidebar";
+import { useNavigate } from "react-router-dom";
 
 interface AdminSidebarProps {
     onPageChange: (page: string) => void;
@@ -34,15 +35,19 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange, activePage })
     const menuItems = [
         // { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
         { id: "users", icon: Users, label: "Users" },
+        { id: "jobs", icon: LayoutDashboard, label: "Jobs" },
         { id: "payments", icon: CreditCard, label: "Payments" },
         { id: "categories", icon: Briefcase, label: "Categories" },
         { id: "notifications", icon: Settings, label: "Notifications" },
     ];
 
+    const navigate = useNavigate();
+    
+
     return (
         <Sidebar className="w-64 border-r border-gray-200 ">
             <SidebarHeader className="p-4">
-                <h2 className="font-Poppins text-2xl font-extrabold text-slate-800">
+                <h2 className="font-Poppins text-2xl font-extrabold text-slate-800 cursor-pointer" onClick={()=> navigate('/admin/dashboard')}>
                     Opportune <span className="text-amber-800">.</span>
                 </h2>
             </SidebarHeader>
@@ -57,7 +62,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange, activePage })
                                         <item.icon className="mr-2 h-4 w-4" />
                                         <span>{item.label}</span>
                                     </SidebarMenuButton>
-                                </SidebarMenuItem>
+                                </SidebarMenuItem>  
                             ))}
                         </SidebarMenu>
                     </SidebarGroupContent>

@@ -1,5 +1,6 @@
 import mongoose, { Schema,Types } from "mongoose";
 import { IJob } from "../types/IJob";
+import { jobStatus } from "../enums/jobStatus";
 
 const jobSchema = new Schema<IJob>(
     {
@@ -40,16 +41,21 @@ const jobSchema = new Schema<IJob>(
             type: [String],
             required: true,
         },
-        applicants:[
+        applicants: [
             {
                 type: Types.ObjectId,
                 ref: "User",
-            }
+            },
         ],
         applicantsCount: {
             type: Number,
             default: 0,
-        }
+        },
+        status: {
+            type: String,
+            enum: jobStatus,
+            default: jobStatus.OPEN,
+        },
     },
     { timestamps: true }
 );

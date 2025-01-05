@@ -15,7 +15,7 @@ const JobList = ({ filters }: { filters?: any }) => {
 
     const [page, setPage] = useState(1);
     const [totalPages,setTotalPages]=useState(1);
-    const limit = 3;
+    const limit = 7;
 
     const { data: jobs, isLoading ,refetch} = useFilterJobs(filters, page, limit);  
 

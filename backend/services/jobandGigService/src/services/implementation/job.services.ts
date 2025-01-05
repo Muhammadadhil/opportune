@@ -11,6 +11,7 @@ import { CustomError } from '@_opportune/common'
 import { ObjectId } from "mongoose";
 import { inject, injectable } from "inversify";
 import  { TYPES } from '../../types/types';
+import { jobStatus } from "../../enums/jobStatus";
 
 @injectable()
 export class JobService implements IJobService {
@@ -158,5 +159,9 @@ export class JobService implements IJobService {
 
         const exchangeName = "offer_created_exchange";
         await this.producer.publishToMultiple(exchangeName, data);
+    }
+
+    async deactivateJob(jobId: ObjectId): Promise<IJob | null> {
+        return await this._jobRepository.update(jobId, { isActive:false,status:jobStatus.CLOSED });
     }
 }

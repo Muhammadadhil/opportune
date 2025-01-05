@@ -1,15 +1,15 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import {IJob} from '@/types/IJob';
-import {applyJob} from '@/api/job'; 
+import { IJob } from "@/types/IJob";
+import { applyJob } from "@/api/job";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import toast from 'react-hot-toast'
-import {IApplication} from '@/types/IApplication';
+import toast from "react-hot-toast";
+import { IApplication } from "@/types/IApplication";
 import { AxiosError } from "axios";
-import {useState} from 'react';
-import { Textarea } from "@/components/ui/textarea"
+import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "../ui/label";
 import { Star } from "lucide-react";
@@ -41,7 +41,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
             await applyJob(applicationData);
             toast.success("Your application has sent successfully");
             setSheetOpen(false);
-            if(onApply) onApply();
+            if (onApply) onApply();
         } catch (error) {
             console.log("Error in apply job:", error);
             const axiosError = error as AxiosError;
@@ -115,7 +115,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                 </div>
                             )}
 
-                            {!isApplyOpen && job.isApplied !== true && (
+                            {!isApplyOpen && job.isApplied !== true && userInfo?._id && (
                                 <Button onClick={() => setIsApplyOpen(true)} className="bg-green-800 hover:bg-green-700 mt-8 justify-end">
                                     Apply Now
                                 </Button>

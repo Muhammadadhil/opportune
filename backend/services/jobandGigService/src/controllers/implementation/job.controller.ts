@@ -10,10 +10,10 @@ import { IJobController } from "../interface/IJobController";
 import { TYPES } from "../../types/types";
 
 @injectable()
-export class JobController implements IJobController{
+export class JobController implements IJobController {
     private _jobService: IJobService;
 
-    constructor(@inject(TYPES.IJobService) jobService: IJobService ) {
+    constructor(@inject(TYPES.IJobService) jobService: IJobService) {
         this._jobService = jobService;
     }
 
@@ -221,7 +221,7 @@ export class JobController implements IJobController{
     getJobDetail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const id = new Types.ObjectId(req.params.id);
-            
+
             const job = await this._jobService.getJobDetail(id as unknown as ObjectId);
             console.log("job:", job);
             res.status(200).json(job);
@@ -243,6 +243,16 @@ export class JobController implements IJobController{
     sendOffer = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this._jobService.sendOfferToFreelancer(req.body);
+            res.status(200).json({ message: "Offer sent successfully" });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    deactivateJob = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const {id}=req.params;
+            await this._jobService.deactivateJob(id as unknown as ObjectId);
             res.status(200).json({ message: "Offer sent successfully" });
         } catch (error) {
             next(error);

@@ -1,20 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { LockIcon } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { setAdminAuthStatus } from "@/store/slices/userSlice"; 
 import { loginAdmin } from "@/api/admin";
 import {setAccessToken} from '@/services/authService'
+import { RootState } from "@/store/store";
 
 export default function AdminLogin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    const { isAdminAuthenticated } = useSelector((state: RootState) => state.user);
 
 
     const dispatch = useDispatch();
@@ -38,6 +41,14 @@ export default function AdminLogin() {
             setIsLoading(false);
         }
     };
+
+    useEffect(()=>{
+        if(isAdminAuthenticated){
+             navigate('/admin/dashboard')
+        }else{
+             navigate("/admin");
+        };
+    },[])
 
     return (
         <div className="flex w-full h-screen bg-gray-100 items-center justify-center">

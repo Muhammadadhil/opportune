@@ -12,7 +12,7 @@ const UserList: React.FC = () => {
     const [page,setPage]=useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const limit = 5;
+    const limit = 10;
 
     const { data:users,isLoading } = useGetUsers(searchKey, page, limit);
     console.log('users:',users);

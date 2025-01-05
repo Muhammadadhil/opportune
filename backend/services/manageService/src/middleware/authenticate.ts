@@ -30,7 +30,7 @@ export const adminAuth = (req: AuthenticatedRequest, res: Response, next: NextFu
         req.user = user;
 
         if (user.role !== "admin") {
-
+            
             const error = new Forbidden();
             next(error);
         }

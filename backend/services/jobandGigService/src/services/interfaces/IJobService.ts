@@ -23,4 +23,5 @@ export interface IJobService {
     getJobDetails(jobIds: string[]): Promise<IJob[] | null>;
     getJobDetail(jobId: ObjectId): Promise<IJob | null>;
     sendOfferToFreelancer(data: IOffer): void;
+    deactivateJob(jobId: ObjectId): Promise<IJob | null>;
 }
