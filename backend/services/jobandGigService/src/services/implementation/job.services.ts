@@ -22,6 +22,7 @@ export class JobService implements IJobService {
     async getJobs(
         page: number,
         limit: number,
+        status:string,
         category: string,
         applications: string,
         budgetRange: string,
@@ -31,6 +32,12 @@ export class JobService implements IJobService {
     ): Promise<{ Alljobs: IJob[] | null; totalPagesCount: number; jobs?: IJob[] | null }> {
         const filters = {} as any;
         let sortOption;
+
+        if (status){
+            filters.status = status;
+        } else {
+            filters.isActive = true
+        }
 
         if (category) filters.category = category;
         if (applications) filters.applications = { $lte: Number(applications) };
@@ -46,6 +53,9 @@ export class JobService implements IJobService {
         } else {
             sortOption = sort == "newest" ? { createdAt: -1 } : { createdAt: 1 };
         }
+
+        console.log("filters::", filters);
+
 
         const totalJobs = await this._jobRepository.getJobsCount(filters);
         let Alljobs = await this._jobRepository.getFilteredJobs(page, limit, filters, sortOption);

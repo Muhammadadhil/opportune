@@ -14,7 +14,7 @@ export interface IApplyJob {
 
 export interface IJobService {
     saveJob(data: IJob): Promise<IJob | null>;
-    getJobs(page: number, limit: number, category?: string, applications?: string, budgetRange?: string, search?: string, sort?: string): Promise<{ Alljobs: IJob[] | null; totalPagesCount: number }>;
+    getJobs(page: number, limit: number,status?:string, category?: string, applications?: string, budgetRange?: string, search?: string, sort?: string): Promise<{ Alljobs: IJob[] | null; totalPagesCount: number }>;
     getJobsByClient(id: string): Promise<IJob[] | null>;
     editJob(data: Partial<IJob>): Promise<IJob | null>;
     removeJob(id: string): Promise<IJob | null>;

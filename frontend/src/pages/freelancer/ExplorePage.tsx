@@ -7,6 +7,7 @@ import { useState } from "react";
 export default function ExplorePage() {
 
     const [filterState, setFilterState] = useState({
+        status: "",
         category: "",
         applications: "",
         budgetRange: "",
@@ -24,7 +25,7 @@ export default function ExplorePage() {
     return (
         <div className="container mx-auto px-4 py-8 max-w-7xl">
             <div className="flex gap-8">
-                <Filters onChange={updateFilterState} />
+                <Filters onChange={updateFilterState} filterState={filterState}/>
                 <div className="flex-1 space-y-6">
                     <div className="flex items-center gap-4">
                         <SearchBar onSearch={(value) => updateFilterState("search", value)} />

@@ -35,10 +35,11 @@ export class JobController implements IJobController {
 
             if (req.query.filters) {
                 console.log("req.query.filters:", req.query.filters);
-                const { category, applications, budgetRange, search, sort } = req.query.filters as IFilters;
+                const { status, category, applications, budgetRange, search, sort } = req.query.filters as IFilters;
                 const { Alljobs, totalPagesCount } = await this._jobService.getJobs(
                     page as number,
                     limit as number,
+                    status as string,
                     category as string,
                     applications as string,
                     budgetRange as string,
