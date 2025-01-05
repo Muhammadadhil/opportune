@@ -114,7 +114,7 @@ const Login: React.FC = () => {
                                     <input id="remember-me" name="remember-me" type="checkbox" className="mr-2 rounded text-indigo-600" />
                                     Remember me
                                 </Label>
-                                <Link to="/" className="text-xs text-orange-900 hover:text-orange-800">
+                                <Link to="/forgot-passsowrd" className="text-xs text-orange-900 hover:text-orange-800">
                                     Forgot your password?
                                 </Link>
                             </div>

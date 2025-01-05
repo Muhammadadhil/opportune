@@ -4,12 +4,20 @@ import axios from "axios";
 import { UserRepository } from "../../repositories/implementation/UserRepository";
 import IUser from "../../interfaces/IUser";
 import IAuthService from "../interfaces/IAuthService";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
+import { OtpService } from "./OtpService";
+import { CustomError } from "@_opportune/common";
+import bcrypt from "bcrypt";
+
 
 export class AuthService implements IAuthService {
     private userRepository: UserRepository;
+    private otpService: OtpService;
 
     constructor() {
         this.userRepository = new UserRepository();
+        this.otpService = new OtpService();
     }
 
     async refreshAccessToken(refreshToken: string): Promise<string | null> {
@@ -66,4 +74,24 @@ export class AuthService implements IAuthService {
         authType = "signup";
         return { user, accessToken, refreshToken, authType };
     }
+
+    async forgotPassword(email: string): Promise<void> {
+        const user = await this.userRepository.findOne({ email });
+        if (!user) {
+            throw new CustomError("No account found with this email address", 404);
+        }
+
+        await this.otpService.sendMail(email);
+    }
+
+    async resetPassword(email:string,password:string){
+
+        const userDetails = await this.userRepository.findOne({email});
+        if(!userDetails){
+            throw new CustomError('no user data found',404);
+        }
+
+        const hashedPassword = await bcrypt.hash(password ?? "", 10);
+        return await this.userRepository.updatePassword(email, hashedPassword);
+    } 
 }

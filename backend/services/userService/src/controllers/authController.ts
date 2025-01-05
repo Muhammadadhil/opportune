@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthService } from "../services/implementation/authService";
 import { OAuth2Client } from "google-auth-library";
+import { NextFunction } from "express-serve-static-core";
 
 export class AuthController {
     private authService: AuthService;
@@ -9,7 +10,9 @@ export class AuthController {
     constructor() {
         this.authService = new AuthService();
         this.loginGoogleUser = this.loginGoogleUser.bind(this);
-        this.refreshAccessToken=this.refreshAccessToken.bind(this); 
+        this.refreshAccessToken = this.refreshAccessToken.bind(this);
+        this.forgotPassword = this.forgotPassword.bind(this);
+        this.resetPassword = this.resetPassword.bind(this);
         this.oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.GOOGLE_REDIRECT_URI);
     }
 
@@ -26,7 +29,6 @@ export class AuthController {
                 return res.status(400).json({ message: "Invalid refresh token" });
             }
             return res.status(200).json({ accessToken: newAccessToken });
-
         } catch (error) {
             console.error("Error refreshing access token:", error);
             return res.status(500).json({ error: "Failed to refresh access token" });
@@ -58,7 +60,7 @@ export class AuthController {
                 secure: false, // true in production
                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
-                path: "/", 
+                path: "/",
             });
 
             return res.status(201).json({
@@ -68,10 +70,36 @@ export class AuthController {
                 accessToken,
                 message: "User logged in successfully",
             });
-
         } catch (error) {
             console.log("Error fetching user info:", error);
             return res.status(400).json({ message: "Error fetching user info" });
+        }
+    }
+
+    async forgotPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email } = req.body;
+            await this.authService.forgotPassword(email);
+            res.status(200).json({
+                success: true,
+                message: "OTP sent successfully",
+            });
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : "Something went wrong";
+            res.status(400).json({
+                success: false,
+                message: errorMessage,
+            });
+        }
+    }
+
+    async resetPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email, newPassword } = req.body;
+            const user = await this.authService.resetPassword(email, newPassword);
+            res.status(200).json(user);
+        } catch (error) {
+            next(error);
         }
     }
 }

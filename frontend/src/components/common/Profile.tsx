@@ -244,7 +244,7 @@ export default function Profile() {
                                     ))}
                                 </div>
                                 <span className="text-sm text-muted-foreground">{displayUser?.averageRating?.toFixed(1) || "0.0"} / 5.0</span>
-                                <span className="text-sm text-gray-500">({displayUser?.reviewCount} reviews)</span>
+                                <span className="text-sm text-gray-500">({displayUser?.reviewCount || 0} reviews)</span>
                             </div>
                         </div>
                     </div>

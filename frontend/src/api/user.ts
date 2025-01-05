@@ -51,5 +51,14 @@ export const getUserById = async (userId?: string) => {
         const response = await apiClient.get(`/user/${userId}`);
         return response.data;
     }
-    
 }
+
+export const forgotPassword =  async (email:string) => {
+    const response = await apiClient.post('/user/forgot-password',{email});
+    return response.data;
+}
+
+export const resetPassword = async (email: string, newPassword: string): Promise<boolean> => {
+    const response = await apiClient.post("/user/change/password", { email, newPassword });
+    return response.data;
+};

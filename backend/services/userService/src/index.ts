@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import { connectMongoDB } from "@_opportune/common";
+import { connectMongoDB, errorHandler } from "@_opportune/common";
 
 const app = express();
 dotenv.config();
@@ -20,6 +20,8 @@ app.use(
 
 app.use(express.json());
 app.use(morgan("dev"));
+
+app.use(errorHandler);
 
 app.use("/", userRouter);
 

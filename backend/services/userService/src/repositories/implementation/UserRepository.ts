@@ -57,8 +57,19 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
         return user;
     }
 
-    async findUserWithFreelancerDetails(userId: string | ObjectId) {
+    // async setPasswordResetToken(email: string, resetToken: string, expirationDate: Date): Promise<IUser | null> {
+    //     return await User.findOneAndUpdate(
+    //         { email },
+    //         { $set: { resetToken, resetTokenExpiration: expirationDate } },
+    //         { new: true }
+    //     );
+    // }
 
+    async updatePassword(email: string, password: string) {
+        return await User.updateOne({ email }, { $set: { password } }, { new: true });
+    }
+
+    async findUserWithFreelancerDetails(userId: string | ObjectId) {
         const user = await User.findOne({
             _id: userId,
             role: "freelancer",
@@ -77,7 +88,6 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     }
 
     async findUserWithClientDetails(userId: string | ObjectId) {
-        
         const user = await User.findOne({
             _id: userId,
         }).lean();

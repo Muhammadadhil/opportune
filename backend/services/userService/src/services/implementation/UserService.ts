@@ -231,7 +231,8 @@ export class UserService implements IUserService {
             
         } else if (userData && userData.role === "client") {
             const clientData = await this.userRepository.findUserWithClientDetails(userId);
-            return clientData ? clientData.toObject() : null;
+            // console.log("clientData:", clientData);
+            return clientData 
         }
 
         throw new Error("User not found");

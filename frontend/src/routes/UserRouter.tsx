@@ -26,6 +26,7 @@ import UserProtected from "@/components/common/UserProtected";
 import VideoCallWrapper from "@/pages/common/VideoCallWrapper";
 import Freelancer from "@/pages/common/Freelancer";
 import NotFound from "@/components/ui/NotFound";
+import { ForgotPasswordPage } from "@/pages/common/ForgotPassword";
 
 function UserRoute() {
     return (
@@ -38,7 +39,7 @@ function UserRoute() {
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/offer-success" element={<SuccessPage />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
-                <Route path="/not-found" element={<NotFound />} />
+                <Route path="/forgot-passsowrd" element={<ForgotPasswordPage />} />
 
                 <Route element={<UsersLayout />}>
                     <Route path="/explore" element={<ExplorePage />} />
@@ -70,6 +71,8 @@ function UserRoute() {
                         <Route path="/fr/manage-gigs" element={<MangeWorkPage />} />
                     </Route>
                 </Route>
+
+                <Route path="/*" element={<NotFound />} />
             </Routes>
         </>
     );
