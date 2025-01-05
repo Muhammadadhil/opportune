@@ -10,6 +10,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import UserList from '@/components/admin/UsersList';
 import { PaymentListing } from "@/components/admin/Payments";
 import AdminJobList from "@/components/admin/AdminJobList";
+import ManageNotifcation from "@/components/admin/ManageNotifcation";
 
 export default function AdminDashboardPage() {
     const [activePage, setActivePage] = useState("dashboard");
@@ -22,11 +23,12 @@ export default function AdminDashboardPage() {
                 return <UserList />;
             case "jobs":
                 return <AdminJobList />;
-            case "categories":
-                return <Categories />;
             case "payments":
                 return <Categories />;
-
+            case "categories":
+                return <Categories />;
+            case "notifications":
+                return <ManageNotifcation />;
             default:
                 return <Dashboard />;
         }

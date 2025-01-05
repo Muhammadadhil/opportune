@@ -19,6 +19,17 @@ export class NotificationController {
         }
     }
 
+    async createAdminNotfication(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { title, content, userType } = req.body;
+            console.log(title,content,userType,"::title conttren ,usertype")
+            const notification = await this._notificationService.createAdminNotification(title, content, userType);
+            res.status(201).json(notification);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getUserNotifications(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;

@@ -7,7 +7,7 @@ const notificationSchema = new mongoose.Schema<INotification>(
     {
         userId: {
             type: String,
-            required: true,
+            // required: true,
         },
         message: {
             type: String,
