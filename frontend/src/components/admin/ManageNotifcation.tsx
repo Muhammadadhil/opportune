@@ -65,8 +65,8 @@ const ManageNotification = () => {
                                 </SelectTrigger>
                                 <SelectContent position="popper">
                                     <SelectItem value="all">All Users</SelectItem>
-                                    <SelectItem value="freelancers">Freelancers</SelectItem>
-                                    <SelectItem value="clients">Clients</SelectItem>
+                                    <SelectItem value="freelancer">Freelancers</SelectItem>
+                                    <SelectItem value="client">Clients</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

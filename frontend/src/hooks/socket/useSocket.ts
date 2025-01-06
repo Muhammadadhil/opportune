@@ -4,16 +4,14 @@ import createSocketConnection from "@/utils/socketConnection";
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
-export const useSocket = (userId?: string) => {
-
+export const useSocket = (userId?: string, userRole?:string) => {
     const [socket, setSocket] = useState<Socket | null>(null);
 
     useEffect(() => {
-
-        console.log('userId for socket connection:',userId);
+        console.log("userId for socket connection:", userId);
 
         if (userId) {
-            const newSocket = createSocketConnection(SOCKET_URL,userId);
+            const newSocket = createSocketConnection(SOCKET_URL, userId, userRole);
             setSocket(newSocket);
 
             return () => {

@@ -3,6 +3,7 @@ import { BaseRepository } from "./baseRepository";
 import { INotification } from "../../interfaces/INotification";
 import { INotificationRepository } from "../interfaces/INotificationRepository";
 import { Model } from "mongoose";
+import { NotificationType } from "../../enums/NotificatoinStatus";
 
 export class NotificationRepository extends BaseRepository<INotification> implements INotificationRepository {
     private notificationModel: Model<INotification>;
@@ -12,6 +13,9 @@ export class NotificationRepository extends BaseRepository<INotification> implem
     }
 
     async getUnReadNotifications(userId: string): Promise<INotification[]> {
-        return await this.notificationModel.find({ userId, isRead: false }).sort({ createdAt: -1 }).exec();
+        const userNotifications =  await this.notificationModel.find({ userId, isRead: false }).sort({ createdAt: -1 }).exec();
+        const adminNofications = await this.notificationModel.find({ type: NotificationType.adminInfo, isRead: false }).sort({ createdAt: -1 }).exec();
+
+        return [...adminNofications, ...userNotifications];
     }
 }

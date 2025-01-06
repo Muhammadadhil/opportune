@@ -23,6 +23,12 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
 
     }
 
+    console.log('notifications:',notifications);
+
+    const sortedNotifications = notifications?.sort((a,b)=>  new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    console.log('sortedNotifcations:',sortedNotifications)
+
     return (
         <div className="relative">
             <button onClick={() => setOpen(true)} className="flex items-center focus:outline-none" aria-label="Notifications">
@@ -43,13 +49,11 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
                     <ScrollArea className="h-[400px] pr-4">
                         {notifications?.length > 0 ? (
                             <div className="space-y-4">
-                                {notifications.map((notification) => (
+                                {sortedNotifications.map((notification) => (
                                     <div key={notification._id} className="flex flex-col gap-2 py-2 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg px-4">
                                         <div className="flex items-start justify-between gap-4">
                                             <div className="flex-1 space-y-1">
-                                                <p className="text-sm text-gray-800 dark:text-gray-200">
-                                                     {notification.message}
-                                                </p>
+                                                <p className="text-sm text-gray-800 dark:text-gray-200">{notification.message}</p>
                                                 <p className="text-xs text-gray-600 dark:text-gray-400">{getRelativeTime(notification.createdAt) || "Just now"}</p>
                                             </div>
                                             {!notification.isRead && <div className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0 mt-1" />}
@@ -71,7 +75,7 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
 
                     <div className="flex items-center justify-end border-t border-gray-200 dark:border-gray-700 pt-4">
                         <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm" >
+                            <Button variant="ghost" size="sm">
                                 Mark all as read
                             </Button>
                         </div>

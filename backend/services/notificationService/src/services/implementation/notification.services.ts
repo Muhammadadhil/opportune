@@ -28,22 +28,23 @@ export class NotificationService implements INotificatoinService {
 
     async createAdminNotification(title: string, content: string, userType: string = "all"): Promise<INotification> {
         const message = `${title} : ${content}`;
-        const type = NotificationType.info;
+        const type = NotificationType.adminInfo;
         const notification = await this._notificationRepository.create({ message, type } as INotification);
 
         const io = getIo();
 
         switch (userType) {
             case UserType.ALL:
+                console.log('sending notification to all usersss!!!!');
                 io.emit("newNotification", notification);
                 break;
 
             case UserType.FREELANCER:
-                io.to("freelancers").emit("newNotification", notification);
+                io.to("freelancer").emit("newNotification", notification);
                 break;
 
             case UserType.CLIENT:
-                io.to("clients").emit("newNotification", notification);
+                io.to("client").emit("newNotification", notification);
                 break;
         }
 

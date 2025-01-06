@@ -46,7 +46,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
     };
 
     const isClient = userInfo?.role == "client";
-    const isAdmin = !userInfo?._id && isAdminAuthenticated;
+    const isAdmin =  isAdminAuthenticated;
 
     const handleDeactivate = async (jobId:string) => {
         try {
@@ -71,6 +71,14 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
                     <div className="flex justify-end">
                         <Button onClick={() => setDeactivate(true)} className="bg-red-700 hover:bg-red-800">
                             Deactivate job
+                        </Button>
+                    </div>
+                )}
+                
+                {isAdmin && !job.isActive && (
+                    <div className="flex justify-end">
+                        <Button onClick={() => setDeactivate(true)} className="bg-green-600 hover:bg-green-700">
+                            activate job
                         </Button>
                     </div>
                 )}

@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-// import { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { ToastContainer } from "react-toastify";
 import UserRoute from "./routes/UserRouter";
 import AdminRoute from "./routes/AdminRouter";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
-import { Toaster } from "@/components/ui/toaster";
+// import { Toaster } from "@/components/ui/toaster";
 
 function App() {
 

@@ -16,9 +16,12 @@ export const initSocketServer = (httpServer:any)=> {
 
         // console.log('New client connected:', socket.id);
 
-        socket.on('register',(userId) => {
+        socket.on('register',(data) => {
+            const {userId,userRole} = data;
             socket.join(userId);
-            // console.log(`User ${userId} registered `);
+            socket.join(userRole);
+
+            console.log(`User ${userId} registered as ${userRole}`);
         })
 
         socket.on('disconnect', () => {

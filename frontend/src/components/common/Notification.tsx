@@ -11,14 +11,18 @@ const Notification: React.FC = () => {
     
     const { userInfo } = useSelector((state: RootState) => state.user);
 
-    const socket = useSocket(userInfo?._id);
+    const socket = useSocket(userInfo?._id,userInfo?.role);
     
     const { data:notifications,refetch } = useNotification(userInfo?._id);
 
     useEffect(() => {
 
         if (socket) {
+
             const handleNotification = (notification: any) => {
+
+                console.log('newNotification arrived !!!!!!!!!!!!!!11')
+
                 toast.custom((t) => <CustomToast message={notification.message} t={t} />, {
                     position: "top-right",
                     duration: 8000,
