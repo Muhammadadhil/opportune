@@ -10,6 +10,7 @@ const adminSchema = new Schema<IAdmin>({
         type: String,
         required: true,
     },
+    
 });
 
 const Admin = mongoose.model<IAdmin>("Admin", adminSchema);

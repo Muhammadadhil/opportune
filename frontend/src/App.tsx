@@ -6,7 +6,6 @@ import AdminRoute from "./routes/AdminRouter";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
-// import { Toaster } from "@/components/ui/toaster";
 
 function App() {
 
@@ -19,12 +18,11 @@ function App() {
     return (
         <>
             <ToastContainer />
-            <Toaster />
-                <Routes>
-                    <Route path="/*" element={<UserRoute />} />
-                    <Route path="/admin/*" element={<AdminRoute />} />
-                </Routes>
-            
+            <Toaster  />
+            <Routes>
+                <Route path="/*" element={<UserRoute />} />
+                <Route path="/admin/*" element={<AdminRoute />} />
+            </Routes>
         </>
     );
 }

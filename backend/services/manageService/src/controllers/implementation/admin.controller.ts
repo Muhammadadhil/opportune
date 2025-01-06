@@ -56,4 +56,12 @@ export class AdminController {
 
         res.status(200).json({ message: "Admin logged Out Successfully" });
     }
+
+    async recordTransaction(req: Request, res: Response,next:NextFunction){
+
+        // this.AdminTransactionService;
+
+
+
+    }
 }

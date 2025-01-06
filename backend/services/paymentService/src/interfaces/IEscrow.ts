@@ -9,4 +9,6 @@ export interface IEscrow extends Document {
     amount: number;
     paymentId: ObjectId;
     status: EscrowStatus;
+    commission?: number;
+    freelancerAmount?: number;
 }

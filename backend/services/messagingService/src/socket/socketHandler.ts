@@ -22,6 +22,7 @@ const socketHandler = (io:Namespace) => {
 
                 const newMessage = await messageService.sendMessage(message.sender, message.receiver, message.content, message.chatRoom);
                 console.log('newMessage saved in db:',newMessage);
+                
                 socket.broadcast.to(message.chatRoom).emit("newMessage", message);
                 console.log("!! msg sent to all users in chatRoom !!");
             });

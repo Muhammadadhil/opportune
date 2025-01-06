@@ -12,5 +12,5 @@ export const generateAccessToken = (userId: string, role: string) => {
 
 export const generateRefreshToken = (userId: string, role: string) => {
     const payload: TokenPayload = { userId, role };
-    return jwt.sign(payload, process.env.JWT_REFRESHTOKEN_SECRET!, { expiresIn: "20m" });
+    return jwt.sign(payload, process.env.JWT_REFRESHTOKEN_SECRET!, { expiresIn: "1d" });
 };

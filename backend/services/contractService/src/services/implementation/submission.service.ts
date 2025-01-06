@@ -45,8 +45,7 @@ export class SubmissionService implements ISubmissionService {
 
             //adCh1 - event publish ?
             // release payment to the freeelancer , publish event to payment service, 
-            const response = await axios.post("http://localhost:3040/release", { escrowId: contract?.milestones.find((milestone) => milestone._id.toString() === submission.milestoneId.toString())?.escrowId });
-            console.log("Payment Release : response from payment service:", response);
+            await axios.post("http://localhost:3040/release", { escrowId: contract?.milestones.find((milestone) => milestone._id.toString() === submission.milestoneId.toString())?.escrowId });
             // await this.contractService.updateMilestoneStatus(submission.contractId, submission.milestoneId, );
         }
 

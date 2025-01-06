@@ -77,6 +77,7 @@ export class PaymentService implements IPaymentService {
             case "checkout.session.async_payment_failed":
                 // await this.handleFailedPayment(event.data.object);
                 break;
+            throw new CustomError("Error in releasing payment", 500);
         }
     }
 
@@ -141,30 +142,49 @@ export class PaymentService implements IPaymentService {
         return escrow;
     }
 
-    async releasePayment(escrowId: string): Promise<IEscrow> {
-        console.log('releasing payment in payment service layerrrrrr:', escrowId);
+    async releasePayment(escrowId: string): Promise<IEscrow | null> {
+        try {
+            console.log("releasing payment in payment service layerrrrrr:", escrowId);
 
-        const escrow = await this._escrowRepository.findOne({_id:escrowId});
-        console.log('escrow :', escrow);
+            const escrow = await this._escrowRepository.findOne({ _id: escrowId });
+            console.log("escrow :", escrow);
 
-        if (!escrow) {
-            console.log('escrow not found: throwing error', escrow);
-            throw new CustomError("Escrow not found", 404);
+            if (!escrow) {
+                console.log("escrow not found: throwing error", escrow);
+                throw new CustomError("Escrow not found", 404);
+            }
+
+            if (escrow.status !== EscrowStatus.HOLDING) {
+                throw new CustomError("Escrow is not in holding status", 400);
+            }
+
+            const commissionRate = 0.1;
+            const commissionAmount = escrow.amount * commissionRate;
+            const freelancerAmount = escrow.amount - commissionAmount;
+
+            console.log('commisions:',commissionRate,commissionAmount,freelancerAmount);
+            // update the commison and frelancer amount in escrow
+
+            const updatedEscrow = await this._escrowRepository.update(escrowId as unknown as ObjectId, {
+                status: EscrowStatus.RELEASED,
+                commission: commissionAmount,
+                freelancerAmount: freelancerAmount,
+            });
+
+            // record the commision of the admin in managee service
+            console.log("!!!! record the commision of the admin in managee service !!!!");
+            await axios.post(`http://localhost:3010/record/commission`, { commissionAmount, updatedEscrow });
+
+            // add freeelacer amount to user wallet
+            //adCh1
+            await axios.post(`http://localhost:3015/wallet/update/${updatedEscrow?.freelancerId}`, {...updatedEscrow,amount: freelancerAmount});
+
+            return escrow;
+            
+        } catch (error) {
+            console.log('payment service layer error:',error);
+            return null;
         }
-
-        if (escrow.status !== EscrowStatus.HOLDING) {
-            throw new CustomError("Escrow is not in holding status", 400);
-        }
-
-        const updatedEscrow = await this._escrowRepository.update(escrowId as unknown as ObjectId, { status: EscrowStatus.RELEASED });
-
-        // add money to user wallet
-
-        //adCh1
-        await axios.post(`http://localhost:3015/wallet/update/${updatedEscrow?.freelancerId}`, updatedEscrow);
-
-        return escrow;
-
     }
 
     async getAllPayments(){

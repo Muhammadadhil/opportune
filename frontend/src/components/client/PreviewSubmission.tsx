@@ -103,9 +103,14 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
                     </CardContent>
                 </Card>
                 {userType === "client" && !submission?.isAccepted && (
-                    <Button className="w-full mt-4 bg-green-700 hover:bg-green-600" onClick={() => handleAcceptSubmission(submission?._id as string)} disabled={isAccepting}>
-                        {isAccepting ? "Accepting..." : "Accept Work"}
-                    </Button>
+                    <div>
+                        <Button className="w-full mt-4 bg-green-700 hover:bg-green-600" onClick={() => handleAcceptSubmission(submission?._id as string)} disabled={isAccepting}>
+                            {isAccepting ? "Accepting..." : "Accept Work"}
+                        </Button>
+                        <p className="text-sm mt-5 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md">
+                            <span className="font-bold">Note:</span> By accepting the work, the amount you paid for the freelancer will be transferred to his/her account.
+                        </p>
+                    </div>
                 )}
                 {showReviewForm && (
                     <div className="mt-6">

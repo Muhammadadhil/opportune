@@ -33,7 +33,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     const userId = userInfo?._id;
 
-    const { data: contracts , refetch } = useContracts(userId, userType);
+    const { data: contracts , refetch } = useContracts(userId!, userType);
     const [expandedContracts, setExpandedContracts] = useState<string[]>([]);
 
     const [isFinalMileStone, setIsFinalMileStone] = useState(false);
@@ -209,12 +209,12 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                     </div>
                                                 </div>
                                             ))}
-                                            {showReviewForm && (
+                                            {/* {showReviewForm && (
                                                 <div className="mt-6">
                                                     <h3 className="text-lg font-semibold mb-2">Leave a Review</h3>
                                                     <ReviewForm contractId={contract._id} onSubmit={handleReviewSubmit} />
                                                 </div>
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 )}

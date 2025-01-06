@@ -3,4 +3,8 @@ export const TYPES = {
     IUserService: Symbol("IUserService"),
     IUserRepository: Symbol("IUserRepository"),
 
+    IAdminTransactionRepository: Symbol("IAdminTransactionRepository"),
+    IAdminTransactionService: Symbol("IAdminTransactionService"),
+    IAdminTransactionController: Symbol("IAdminTransactionController")
+
 };

@@ -33,7 +33,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange, activePage })
     };
 
     const menuItems = [
-        // { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+        { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
         { id: "users", icon: Users, label: "Users" },
         { id: "jobs", icon: LayoutDashboard, label: "Jobs" },
         { id: "payments", icon: CreditCard, label: "Payments" },

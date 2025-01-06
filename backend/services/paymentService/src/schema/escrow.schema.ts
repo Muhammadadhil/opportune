@@ -33,8 +33,10 @@ const EscrowSchema = new mongoose.Schema<IEscrow>(
         status: {
             type: String,
             enum: Object.values(EscrowStatus),
-            default: EscrowStatus.HOLDING, 
+            default: EscrowStatus.HOLDING,
         },
+        commission: { type: Number },
+        freelancerAmount: { type: Number },
     },
     {
         timestamps: true,

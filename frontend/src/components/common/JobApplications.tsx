@@ -104,10 +104,10 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                             )}
                         </CardContent>
                         <CardFooter className="flex justify-between">
-                            <Button size="sm" variant="default">
+                            {/* <Button size="sm" variant="default">
                                 <MessageSquare className="h-4 w-4 mr-1" />
                                 {userType === "client" ? "Message freelancer" : "View Details"}
-                            </Button>
+                            </Button> */}
                             {userType === "client" && app.status === "pending" && (
                                 <Button
                                     size="sm"

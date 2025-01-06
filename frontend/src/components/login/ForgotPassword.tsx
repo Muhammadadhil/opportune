@@ -8,6 +8,8 @@ import { forgotPassword, resetPassword } from "@/api/user";
 import { verifyOtp } from "@/api/auth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../loading/Loading";
+import { Toaster } from "@/components/ui/toaster";
+
 
 export default function ForgotPassword() {
     const [step, setStep] = useState(1);
@@ -20,6 +22,11 @@ export default function ForgotPassword() {
     const { toast } = useToast();
 
     const handleEmailSubmit = async (e: React.FormEvent) => {
+
+        if(!email.trim()){
+            return 
+        }
+
         e.preventDefault();
         setIsLoading(true);
 
@@ -100,6 +107,7 @@ export default function ForgotPassword() {
 
     return (
         <Card className="w-[600px] min-h-[350px] flex flex-col justify-center">
+            <Toaster />
             {isLoading ? (
                 <Loading />
             ) : (

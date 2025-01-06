@@ -6,7 +6,7 @@ import ClientJobs from "@/components/client/ClientJobs";
 const ClientDashboard: React.FC = () => {
     return (
         // <MaxWidth>
-        <div>
+        <div className="min-h-screen">
             <div className="container mx-auto flex flex-row mt-16 ">
                 <Link to="/cl/postjob">
                     <Card className="px-4 max-w-80 md:min-w-80 h-28 hover:shadow-lg hover:bg-gray-100 bg-gray-50 rounded-xl mr-9 shadow-md  border flex flex-col items-center justify-center overflow-hidden">

@@ -24,7 +24,6 @@ export class categoryRepository {
     }
 
     async addSubCategory(subCategory: ISubCategory) {
-        
         return await Category.findOneAndUpdate({ name: subCategory.category }, { $push: { subCategory } }, { new: true, upsert: false });
     }
 }
