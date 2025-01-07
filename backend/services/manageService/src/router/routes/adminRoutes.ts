@@ -19,6 +19,9 @@ router.get("/users", adminAuth,userController.getUsers);
 router.patch(`/users/:userId/block-toggle`,adminAuth, userController.toggleBlockStatus);
 
 router.post("/record/commission", adminTransactionController.recordTransaction);
+router.get("/transactions", adminTransactionController.getTransactions);
+
+router.get("/dashboard/data", adminController.getDashboardData);
 
 
 

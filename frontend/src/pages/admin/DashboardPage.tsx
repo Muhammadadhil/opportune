@@ -8,9 +8,9 @@ import Categories from "@/components/admin/Categories";
 import TopBar from "@/components/admin/AdminNavbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import UserList from '@/components/admin/UsersList';
-import { PaymentListing } from "@/components/admin/Payments";
 import AdminJobList from "@/components/admin/AdminJobList";
 import ManageNotifcation from "@/components/admin/ManageNotifcation";
+import AdminPayments from "@/components/admin/AdminPayments";
 
 export default function AdminDashboardPage() {
     const [activePage, setActivePage] = useState("dashboard");
@@ -24,7 +24,7 @@ export default function AdminDashboardPage() {
             case "jobs":
                 return <AdminJobList />;
             case "payments":
-                return <Categories />;
+                return <AdminPayments />;
             case "categories":
                 return <Categories />;
             case "notifications":

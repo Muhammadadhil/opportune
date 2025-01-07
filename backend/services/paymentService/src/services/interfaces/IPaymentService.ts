@@ -8,6 +8,7 @@ export interface IPaymentService {
     savePayment(session: Stripe.Checkout.Session): Promise<IPayment>;
     releasePayment(escrowId: string): Promise<IEscrow | null>;
     getAllPayments(): Promise<IPayment[] | null>;
+    getEscrowPayments(): Promise<IEscrow[] | null>;
 
     // createPaymentIntent(amount: number, currency: string): void;
     // confirmPayment(paymentIntentId: string):void;

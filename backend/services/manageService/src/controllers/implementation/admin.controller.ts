@@ -8,6 +8,7 @@ export class AdminController {
         this.adminService = new AdminService();
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
+        this.getDashboardData = this.getDashboardData.bind(this);
 
     }
     async login(req: Request, res: Response) {
@@ -57,10 +58,13 @@ export class AdminController {
         res.status(200).json({ message: "Admin logged Out Successfully" });
     }
 
-    async recordTransaction(req: Request, res: Response,next:NextFunction){
-
-        // this.AdminTransactionService;
-
+    async getDashboardData(req: Request, res: Response,next:NextFunction){
+        try {
+            const dashboardData = await this.adminService.getDashboardData();
+            res.status(200).json(dashboardData);
+        } catch (error) {
+            next(error);
+        }
 
 
     }

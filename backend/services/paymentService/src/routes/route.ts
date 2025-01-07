@@ -11,4 +11,6 @@ router.post("/create/checkout-session", paymentController.createCheckoutSession.
 router.post("/release", paymentController.handleReleasePayment);
 router.get("/payments",paymentController.getAllPayments);
 
+router.get('/escrow/paymensts',paymentController.getEscrowPayments);
+
 export default router;

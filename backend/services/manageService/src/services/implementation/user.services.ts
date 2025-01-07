@@ -60,4 +60,8 @@ export class UserService implements IUserService {
                 console.log(`Unhandled event type: ${eventType}`);
         }
     }
+
+    getUsersCount(): Promise<number> {
+       return this.userRepository.getUsersCount();
+    }
 }

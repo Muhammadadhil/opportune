@@ -36,3 +36,12 @@ export const getUsers = async (searchKey: string, page: number, limit: number): 
 export const toggleUserBlockStatus = async (userId: string): Promise<void> =>{
     return await apiClient.patch(`manage/users/${userId}/block-toggle`);
 }
+
+export const getAdminTransactions = async (): Promise<void> => {
+    return await apiClient.get("manage/transactions");
+};
+
+
+export const getDashboardData = async (): Promise<void> => {
+    return await apiClient.get("manage/dashboard/data");
+}

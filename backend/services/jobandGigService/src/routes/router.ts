@@ -23,7 +23,7 @@ router.post("/postaGig", upload.array("images", 3), gigController.postAGig);
 router.post("/editGig", upload.array("images", 3),checkSchema(editGigValidator()), DataValidation,gigController.editGig);
 
 // jobs
-router.get("/jobs", authenticate(["client", "freelancer", "admin"]), jobController.getJobs);
+router.get("/jobs", jobController.getJobs);
 router.get("/jobs/:id",authenticate(['client']), jobController.getJobsByClient);
 router.post("/job", authenticate(['client']),jobController.postJob);
 router.post("/job/deactivate/:id", authenticate(['admin']),jobController.deactivateJob);
@@ -39,5 +39,6 @@ router.get('/job/:id', authenticate(['client','freelancer']),jobController.getJo
 
 //offer 
 router.post("/job/offer", authenticate(["client"]), jobController.sendOffer);
+
 
 export default router;

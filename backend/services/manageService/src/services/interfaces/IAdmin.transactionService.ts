@@ -11,5 +11,5 @@ export interface IAdminTransactionService {
         }
     ): Promise<IAdminTransaction>;
 
-    getTransactions({}:any): Promise<IAdminTransaction[]>;
+    getTransactions(): Promise<IAdminTransaction[]>;
 }

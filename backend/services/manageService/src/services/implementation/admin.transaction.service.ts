@@ -38,7 +38,7 @@ export class AdminTransactionService implements IAdminTransactionService {
         return transaction;
     }
 
-    async getTransactions(query: any = {}):Promise<IAdminTransaction[]> {
-        return this._adminTransactionRepository.find(query);
+    async getTransactions():Promise<IAdminTransaction[]> {
+        return this._adminTransactionRepository.getTransactions();
     }
 }

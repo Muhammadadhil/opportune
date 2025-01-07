@@ -58,4 +58,13 @@ export class UserController implements IUserController {
             next(error);
         }
     }
+
+    // async getUsersCount(req: Request, res: Response, next: NextFunction): Promise<void> {
+    //     try {
+    //         const count = await this.userService.getUsersCount();
+    //         res.status(200).json({ count });
+    //     } catch (error) {
+    //         next(error);
+    //     }
+    // }
 }

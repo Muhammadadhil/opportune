@@ -10,17 +10,13 @@ export class AdminTransactionController implements IAdminTransactionController {
 
     constructor(@inject(TYPES.IAdminTransactionService) IAdminTransactionService: IAdminTransactionService) {
         this._adminTransactionService = IAdminTransactionService;
-        this.recordTransaction= this.recordTransaction.bind(this);
+        this.recordTransaction = this.recordTransaction.bind(this);
+        this.getTransactions = this.getTransactions.bind(this);
     }
 
     async recordTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log('!!!!!!!!!! recording transaction for the admin commission !!!!!!!!');
             const { commissionAmount, updatedEscrow } = req.body;
-
-            console.log("commissionAmount:", commissionAmount);
-            console.log("updatedEscrow:", updatedEscrow);
-
             const response = await this._adminTransactionService.recordCommission(commissionAmount, updatedEscrow);
             res.status(201).json(response);
         } catch (error) {
@@ -28,8 +24,12 @@ export class AdminTransactionController implements IAdminTransactionController {
         }
     }
 
-    async getTransactions(req: Request, res: Response, next: NextFunction){
-        console.log('');
-        
+    async getTransactions(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const transactions = await this._adminTransactionService.getTransactions();
+            res.status(200).json(transactions);
+        } catch (error) {
+            next(error);
+        }
     }
 }

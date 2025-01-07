@@ -191,4 +191,9 @@ export class PaymentService implements IPaymentService {
         return await this._paymentRepository.find();
     }
 
+
+    async getEscrowPayments(){
+        return await this._escrowRepository.getAllHoldingEscrows();
+    }
+
 }

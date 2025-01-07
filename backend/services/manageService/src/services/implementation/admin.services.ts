@@ -2,6 +2,10 @@ import { AdminRepository } from "../../repositories/implementation/admin.reposit
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../../utils/generateToken";
 import { IAdminService } from "../interfaces/IAdminService";
+import axios from "axios";
+import { EscrowStatus } from "../../enums/EscrowStatus";
+import { UserService } from "./user.services";
+import { IUserRepository } from "../../repositories/interface/IUserRepository";
 
 export class AdminService implements IAdminService {
     private adminRepository;
@@ -31,5 +35,40 @@ export class AdminService implements IAdminService {
         const refreshToken = generateRefreshToken(admin._id as string, "admin");
 
         return { admin, accessToken, refreshToken };
+    }
+
+    async getDashboardData() {  
+        
+       try {
+             const response = await axios.get("http://localhost:3020/jobs");
+            //  console.log("response", response.data);
+
+             const activeOpenJobs = response?.data?.jobs?.filter((job:any) => job.isActive === true && job.status === "open").length;
+
+             const escrowResponse = await axios.get("http://localhost:3040/escrow/paymensts");
+            //  console.log("escrowResponse", escrowResponse.data);
+
+             const totalEscrowAmount = escrowResponse?.data?.reduce((total: number, escrow: any) => {
+                 if (escrow.status === EscrowStatus.HOLDING) {
+                     return total + escrow.amount;
+                 }
+                 return total;
+             }, 0);
+
+             return {
+                 totalOpenJobs: response.data?.jobs?.filter((job: any) => job.isActive === true).length,
+                 totalClosedJobs: response.data?.jobs?.filter((job: any) => job.isActive === false).length,
+                 totalOpenEscrow: escrowResponse?.data?.filter((escrow: any) => escrow.status === EscrowStatus.HOLDING).length,
+                 totalClosedEscrow: escrowResponse?.data?.filter((escrow: any) => escrow.status === EscrowStatus.RELEASED).length,
+                 totalEscrowAmount: totalEscrowAmount,
+                 activeOpenJobs: activeOpenJobs,
+             };
+
+        
+
+
+       } catch (error) {
+            console.log('error in getDashboardData:',error)
+       }
     }
 }

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IPaymentService } from "../services/interfaces/IPaymentService";
 import Stripe from "stripe";
+import { IEscrow } from "../interfaces/IEscrow";
 
 export class PaymentController {
     private _paymentService: IPaymentService;
@@ -9,6 +10,7 @@ export class PaymentController {
         this._paymentService = paymentService;
         this.handleReleasePayment = this.handleReleasePayment.bind(this);
         this.getAllPayments = this.getAllPayments.bind(this);
+        this.getEscrowPayments = this.getEscrowPayments.bind(this);
     }
 
     async createCheckoutSession(req: Request, res: Response, next: NextFunction) {
@@ -57,6 +59,15 @@ export class PaymentController {
     async getAllPayments(req: Request, res: Response, next: NextFunction) {
         try {
             const payments = await this._paymentService.getAllPayments();
+            res.json(payments);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getEscrowPayments(req: Request, res: Response, next: NextFunction) {  
+        try {
+            const payments = await this._paymentService.getEscrowPayments();
             res.json(payments);
         } catch (error) {
             next(error);
