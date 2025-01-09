@@ -24,8 +24,8 @@ export function ImageCarousal({ array }: ImageCarousal) {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            {/* <CarouselPrevious /> */}
+            {/* <CarouselNext /> */}
         </Carousel>
     );
 }

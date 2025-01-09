@@ -1,5 +1,5 @@
 body {
-  /* @apply font-Inter; */
+  @apply font-Inter;
   background: #ffffff;
 } 
 

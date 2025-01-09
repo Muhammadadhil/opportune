@@ -56,7 +56,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
         navigate("/freelancer/" + userId);
     };
 
-    const fullStars = Math.floor(job.clientId.averageRating || 0);
+    const fullStars = Math.floor(job?.clientId?.averageRating || 0);
 
     return (
         <div>
@@ -76,9 +76,9 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                             <div>
                                 <h3 className="font-semibold mb-2">Client Details</h3>
                                 <p className="hover:text-blue-600 cursor-pointer " onClick={() => handleNavigateProfile(job.clientId._id)}>
-                                    {job.clientId.firstname + " " + job.clientId.lastname}
+                                    {job?.clientId?.firstname + " " + job?.clientId?.lastname}
                                 </p>
-                                <p>{job.clientId.email}</p>
+                                <p>{job.clientId?.email}</p>
                                 {/* Rating */}
                                 <div className="flex items-center gap-1">
                                     <div className="flex">

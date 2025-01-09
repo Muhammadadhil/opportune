@@ -1,9 +1,5 @@
 import apiClient from "./axiosInstance";
 
-export const saveProjectPost = async (formData) => {
-    return await apiClient.post("/post/postaGig", formData, { headers: { "Content-Type": "multipart/form-data" } });
-};
-
 export const editGigPost = async (gigData) => {
     return await apiClient.post("/post/editGig", gigData);
 };
@@ -19,3 +15,6 @@ export const removeGig = async (gigId:string) => {
     return await apiClient.patch(`/post/gig/${gigId}`);
 };
 
+export const savePortfolio = async (formData) => {
+    return await apiClient.post("/post/postaGig", formData, { headers: { "Content-Type": "multipart/form-data" } });
+};

@@ -4,16 +4,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/types/IProjectPost";
 
 const initialState: RootState = {
-    formData: {
+    portfolioData: {
         title: "",
-        category: "",
-        subCategory: "",
-        searchTags: [],
-        images: [],
-        deliveryTime: "",
         description: "",
-        price: "",
-        requirements: [],
+        skills: [],
+        images: [],
     },
     jobData: {
         jobTitle: "",
@@ -27,24 +22,19 @@ const initialState: RootState = {
 };
 
 export const postSlice = createSlice({
-    name: "freelancer",
+    name: "posts",
     initialState,
     reducers: {
         updatePostFormData: (state, action) => {
             console.log("action.payload:", action.payload);
-            state.formData = action.payload;
+            state.portfolioData = action.payload;
         },
         clearPostFormData: (state) => {
-            state.formData = {
+            state.portfolioData = {
                 title: "",
-                category: "",
-                subCategory: "",
-                searchTags: [],
-                images: [],
-                deliveryTime: "",
                 description: "",
-                price: "",
-                requirements: [],
+                skills: [],
+                images: [],
             };
         },
         updateJobData: (state, action) => {

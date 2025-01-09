@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit, Users, Heart } from "lucide-react";
+import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit, Users, Heart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -20,7 +20,6 @@ import profileimg from "@/assets/profilePicture.jpg";
 import { getUserById } from "@/api/user";
 
 export default function Profile() {
-
     const { userInfo, clientData } = useSelector((state: RootState) => state.user);
     // const { theme } = useSelector((state: RootState) => state.app);
     const { userId } = useParams();
@@ -33,7 +32,7 @@ export default function Profile() {
     const [userSpecificDetails, setUserSpecificDetails] = useState<any>(null);
 
     console.log("isOwnProfile:", isOwnProfile);
-    console.log('profileUser:',profileUser)
+    console.log("profileUser:", profileUser);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -42,10 +41,8 @@ export default function Profile() {
     const { data: freelancer, refetch } = useFreelancerProfile(userInfo?.role, userInfo?._id);
     const visibleJobs = jobs?.slice(0, 3);
 
-
-    // fetch other users profile 
+    // fetch other users profile
     const fetchUserProfile = async () => {
-
         console.log("fetching other  user profile !!!");
         console.log("userId:", userId);
 
@@ -54,12 +51,11 @@ export default function Profile() {
             console.log("response.data:", response.data);
             setProfileUser(response.data);
 
-            if(response.data?.role === "freelancer"){
+            if (response.data?.role === "freelancer") {
                 setUserSpecificDetails(response.data.freelancerDetails);
-            }else if(response.data?.role === "client"){
+            } else if (response.data?.role === "client") {
                 setUserSpecificDetails(response.data.clientDetails);
             }
-
         } catch (error) {
             console.log("Error fetching user profile:", error);
             navigate("/not-found"); // Redirect if user not found
@@ -103,14 +99,13 @@ export default function Profile() {
     const displayFreelancer = userSpecificDetails || freelancer;
     const displayClient = userSpecificDetails || clientData;
 
-
     return (
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-44 py-8">
             <div className="min-h-screen max-w-[1300px]">
                 {/* Header Section with Gradient Background */}
                 <div className="relative bg-gradient-to-r from-gray-800 via-gray-500 to-gray-300 h-48 sm:h-56 md:h-64 rounded-xl">
                     <div className="container mx-auto px-4 h-full">
-                        <div className="absolute top-32 flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-8">
+                        <div className="absolute top-32 flex  sm:flex-row sm:items-end gap-4 sm:gap-8">
                             {/* Profile Image */}
                             <div className="relative">
                                 <img
@@ -121,7 +116,7 @@ export default function Profile() {
                             </div>
 
                             {/* Profile Info */}
-                            <div className="mb-9 text-center sm:text-left">
+                            <div className="mb-9  sm:text-left">
                                 <h1 className="text-3xl font-bold text-white">
                                     {displayUser?.firstname} {displayUser?.lastname}
                                 </h1>
@@ -160,7 +155,7 @@ export default function Profile() {
                 </div>
 
                 {/* Main Content */}
-                <div className="container mx-auto px-4 sm:mt-28 ">
+                <div className="container mx-auto px-4 mt-20 flex flex-col md:flex-row justify-between pb-16 border-b-2 border-gray-100">
                     <div className="flex justify-between">
                         <div className="max-w-2xl space-y-6">
                             <div className="space-y-4">
@@ -168,16 +163,20 @@ export default function Profile() {
                                     <Mail className="w-5 h-5 text-muted-foreground" />
                                     <span>{displayUser?.email}</span>
                                 </div>
-                                {displayUser?.role === "freelancer" && <p className="">{displayFreelancer?.title}</p>}
+                                <div className="flex flex-wrap">
+                                    <User className="w-5 h-5 text-muted-foreground mt-1" />
+
+                                    {displayUser?.role === "freelancer" && <p className="">{displayFreelancer?.title}</p>}
+                                </div>
 
                                 {displayUser?.role === "freelancer" && displayFreelancer?.skills && (
                                     <div className="flex items-start gap-2">
                                         <Lightbulb className="w-5 h-5 text-muted-foreground mt-1" />
-                                        <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                                        <div className="flex flex-wrap gap-2 justify-start">
                                             {displayFreelancer?.skills.map((skill: string, index: number) => (
-                                                <Badge key={index} variant="secondary">
+                                                <div key={index} className="px-3 py-1 text-sm bg-zinc-100 text-gray-800 rounded-full">
                                                     {skill}
-                                                </Badge>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
@@ -190,7 +189,7 @@ export default function Profile() {
                                                 <Building2 className="w-5 h-5 text-muted-foreground mt-1" />
                                                 <div>
                                                     <h3 className="font-medium">{displayClient.companyName}</h3>
-                                                    <p className="text-muted-foreground">   {displayClient.companyDescription}</p>
+                                                    <p className="text-muted-foreground"> {displayClient.companyDescription}</p>
                                                 </div>
                                             </div>
                                         )}
@@ -226,96 +225,57 @@ export default function Profile() {
                                 )}
                             </div>
                         </div>
-                        <div>
-                            <div className="flex flex-col items-center space-y-2">
-                                <div className="flex items-center space-x-1">
-                                    {Array.from({ length: 5 }, (_, index) => (
-                                        <svg
-                                            key={index}
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill={index < Math.floor(displayUser?.averageRating ?? 0) ? "currentColor" : "none"}
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            className={`w-6 h-6 ${index < Math.floor(displayUser?.averageRating ?? 0) ? "text-yellow-500" : "text-gray-400"}`}
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22l1.18-7.86-5-4.87 6.91-1L12 2z" />
-                                        </svg>
-                                    ))}
-                                </div>
-                                <span className="text-sm text-muted-foreground">{displayUser?.averageRating?.toFixed(1) || "0.0"} / 5.0</span>
-                                <span className="text-sm text-gray-500">({displayUser?.reviewCount || 0} reviews)</span>
-                            </div>
-                        </div>
                     </div>
 
-                    <Tabs defaultValue="portfolio" className="w-full mt-5">
-                        <TabsList className="border-b w-full justify-start rounded-none h-12 bg-transparent">
-                            {displayUser?.role === "freelancer" && <TabsTrigger value="portfolio">porfolio</TabsTrigger>}
-                            {displayUser?.role === "client" && <TabsTrigger value="jobs">Posted Jobs</TabsTrigger>}
-                        </TabsList>
+                    <div className="flex flex-col  space-y-2 mt-5">
+                        <div className="flex items-center space-x-1">
+                            {Array.from({ length: 5 }, (_, index) => (
+                                <svg
+                                    key={index}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill={index < Math.floor(displayUser?.averageRating ?? 0) ? "currentColor" : "none"}
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    className={`w-6 h-6 ${index < Math.floor(displayUser?.averageRating ?? 0) ? "text-yellow-500" : "text-gray-400"}`}
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22l1.18-7.86-5-4.87 6.91-1L12 2z" />
+                                </svg>
+                            ))}
+                        </div>
+                        <span className="text-sm text-muted-foreground">{displayUser?.averageRating?.toFixed(1) || "0.0"} / 5.0</span>
+                        <span className="text-sm text-gray-500">({displayUser?.reviewCount || 0} reviews)</span>
+                    </div>
 
-                        <TabsContent value="portfolio" className="mt-6">
-                            {displayUser?.role === "freelancer" ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                                    {gigs?.data?.length ? (
-                                        gigs.data.map((gig: any, index: number) => (
-                                            <div key={index} className="rounded-lg overflow-hidden">
-                                                <img src={gig.imageUrl || "/placeholder.svg?height=200&width=300"} alt={gig.title} className="w-full h-48 object-cover" />
-                                                <div className="p-4 bg-white dark:bg-gray-800">
-                                                    <h3 className="font-semibold">{gig.title}</h3>
-                                                    <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                                        <span className="flex items-center">
-                                                            <Heart className="w-4 h-4 mr-1" /> {gig.likes || 0}
-                                                        </span>
-                                                        <span className="flex items-center">
-                                                            <Users className="w-4 h-4 mr-1" /> {gig.views || 0}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p className="text-muted-foreground">No portfolio items yet.</p>
-                                    )}
-                                </div>
-                            ) : (
-                                <p className="text-muted-foreground">Work showcase is only available for freelancers.</p>
-                            )}
-                        </TabsContent>
+                    <div className="mt-6">{displayUser?.role === "freelancer" && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>}</div>
 
-                        {displayUser?.role === "client" && (
-                            <TabsContent value="jobs" className="mt-6">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                                    {visibleJobs?.map((job, index) => (
-                                        <JobCard key={index} job={job} />
-                                    ))}
-                                    {jobs?.length === 0 && <NoItems />}
-                                    {jobs?.length && jobs?.length > 3 && (
-                                        <Link to="/cl/manage-jobs" className="text-blue-600 hover:text-blue-500">
-                                            See all jobs
-                                        </Link>
-                                    )}
-                                </div>
-                            </TabsContent>
-                        )}
-                    </Tabs>
+                    {displayUser?.role === "client" && (
+                        <div className="mt-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                                {visibleJobs?.map((job, index) => (
+                                    <JobCard key={index} job={job} />
+                                ))}
+                                {jobs?.length === 0 && <NoItems />}
+                                {jobs?.length && jobs?.length > 3 && (
+                                    <Link to="/cl/manage-jobs" className="text-blue-600 hover:text-blue-500">
+                                        See all jobs
+                                    </Link>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+                
+                <div className="border shadow-sm p-4 md:p-6 rounded-md mb-4 md:mb-5 w-[22rem] mt-8">
+                    <Button className="w-full text-white bg-green-700 hover:bg-green-600 transition-all duration-300 ease-in-out hover:translate-y-1" onClick={() => navigate("/fr/portfolio")}>
+                        Add a portfolio project
+                    </Button>
+                    <p className="text-xs mt-3 ">post a your porfolio project and let client see your achievements.</p>
                 </div>
             </div>
         </div>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
 
 // const { userInfo, clientData } = useSelector((state: RootState) => state.user);
 // // const { theme } = useSelector((state: RootState) => state.app);
@@ -349,7 +309,6 @@ export default function Profile() {
 //         fetchJobs();
 //     }
 // }, [userInfo]);
-
 
 // export default function Profile() {
 

@@ -11,9 +11,10 @@ type KeywordInputProps<T extends FieldValues> = {
     setKeywords: ReactSetState<string[]>;
     formFieldName: Path<T>;
     setValue: UseFormSetValue<T>;
+    placeholder?: string;
 };
 
-const KeywordInput = <T extends FieldValues>({ newKeyword, setNewKeyword, keywords, setKeywords, formFieldName, setValue }: KeywordInputProps<T>) => {
+const KeywordInput = <T extends FieldValues>({ newKeyword, setNewKeyword, keywords, setKeywords, formFieldName, setValue,placeholder }: KeywordInputProps<T>) => {
 
     const addKeyword = useCallback(
         (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement>) => {
@@ -32,7 +33,7 @@ const KeywordInput = <T extends FieldValues>({ newKeyword, setNewKeyword, keywor
         <div className="flex space-x-2 mb-2">
             <Input
                 type="text"
-                placeholder="Add a keyword"
+                placeholder={placeholder ? placeholder:"Add a keyword"}
                 value={newKeyword}
                 onChange={(e) => setNewKeyword(e.target.value)}
                 onKeyDown={(e) => {

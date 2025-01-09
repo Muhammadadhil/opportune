@@ -1,20 +1,20 @@
 
-export interface OverviewData {
+export interface portfolioData {
     title: string;
-    category: string;
-    subCategory: string;
-    searchTags: string[];
-}
-
-export interface DescriptionData {
-    images: File[];
-    deliveryTime: string;
     description: string;
-    price: string;
-    requirements?:string[];
+    skills: string[];
+    images: File[];
 }
 
-export type FormData = OverviewData & DescriptionData;
+// export interface DescriptionData {
+//     images: File[];
+//     deliveryTime: string;
+//     description: string;
+//     price: string;
+//     requirements?:string[];
+// }
+
+// export type FormData = portfolioData & DescriptionData;
 
 export interface TitleData {
     jobTitle: string;
@@ -33,6 +33,6 @@ export type JobData = TitleData & BudgetData;
 
 
 export interface RootState {
-    formData: FormData;
+    portfolioData: portfolioData;
     jobData: JobData;
 }

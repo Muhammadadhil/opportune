@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { PostTitle } from "./PostTitle";
+// import { PostTitle } from "./PostTitle";
 import { PostDescription } from "./PostDescription";
-import Publish from "./PostPublish";
+// import Publish from "./PostPublish";
 // import Button from "../ui/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
@@ -16,8 +16,9 @@ import { clearPostFormData } from "@/store/slices/postSlice";
 const steps = ["Title & Category", "Description & Pricing", "Overview"];
 
 export default function PostProject() {
+
     const [step, setStep] = useState(0);
-    const { formData } = useSelector((state: RootState) => state.post);
+    const { portfolioData } = useSelector((state: RootState) => state.post);
     const { userInfo,freelancerData } = useSelector((state: RootState) => state.user);
     const { isLoading } = useSelector((state: RootState) => state.app);
 
@@ -38,7 +39,7 @@ export default function PostProject() {
 
     const handleSubmit = async () => {
         try {
-            const data = { ...formData };
+            const data = { ...portfolioData };
             console.log('data in post gig:',data);
             console.log("freelancerId:", freelancerData.userId);
             setLoading(true);
@@ -61,9 +62,10 @@ export default function PostProject() {
             case 0:
                 return <PostTitle onNext={nextStep} />;
             case 1:
-                return <PostDescription onNext={nextStep} onPrev={prevStep} />;
-            case 2:
                 return <Publish onPrev={prevStep} handleSubmit={handleSubmit} />;
+            case 2:
+                return <PostDescription onNext={nextStep} onPrev={prevStep} />;
+                
             default:
                 return null;
         }
@@ -72,11 +74,11 @@ export default function PostProject() {
     return (
         <>
             {isLoading ? (
-                <div className="flex w-full h-screen items-center justify-center">
+                <div className="flex w-full min-h-screen items-center justify-center">
                     <Loading />
                 </div>
             ) : (
-                <div className="max-w-[70rem] mx-auto mt-12 flex flex-col items-center">
+                <div className="mx-auto mt-12 flex flex-col items-center mb-12">
                     <div className="flex justify-evenly w-full mb-8 ">
                         {steps.map((stepName, index) => (
                             <div key={stepName} className="flex flex-col items-center">
@@ -90,7 +92,9 @@ export default function PostProject() {
                             </div>
                         ))}
                     </div>
-                    {renderStep()}
+                    <div className="min-w-[85rem] ">
+                        {renderStep()}
+                    </div>
                 </div>
             )}
         </>

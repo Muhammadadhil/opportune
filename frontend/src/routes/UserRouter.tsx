@@ -12,7 +12,7 @@ import FreelancerDashboard from "@/pages/freelancer/DashboardPage";
 import FreelancerProtected from "@/components/freelancer/FreelancerProtected";
 import ProfilePage from "@/pages/freelancer/ProfilePage";
 import CompleteProfile from "@/components/freelancer/CompleteProfile"
-import PostProject from "@/pages/freelancer/PostProjectPage";
+
 import PostJobPage from "@/pages/client/PostJobPage";
 import ClientJobsPage from "@/pages/client/ClientJobsPage";
 import MangeWorkPage from "@/pages/freelancer/ManageWorkPage";
@@ -27,6 +27,7 @@ import VideoCallWrapper from "@/pages/common/VideoCallWrapper";
 import Freelancer from "@/pages/common/Freelancer";
 import NotFound from "@/components/ui/NotFound";
 import { ForgotPasswordPage } from "@/pages/common/ForgotPassword";
+import { PostPortFolio } from "@/components/freelancer/PostPortfolio";
 
 function UserRoute() {
     return (
@@ -67,7 +68,7 @@ function UserRoute() {
                         <Route path="fr/dashboard" element={<FreelancerDashboard />} />
                         <Route path="fr/profile" element={<ProfilePage />} />
                         <Route path="fr/complete-profile" element={<CompleteProfile />} />
-                        <Route path="/fr/post-project" element={<PostProject />} />
+                        <Route path="/fr/portfolio" element={<PostPortFolio />} />
                         <Route path="/fr/manage-gigs" element={<MangeWorkPage />} />
                     </Route>
                 </Route>
