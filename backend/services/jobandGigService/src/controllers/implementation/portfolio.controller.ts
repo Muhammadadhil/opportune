@@ -11,7 +11,8 @@ export class PorfolioController implements IPortfolioController {
 
     constructor(@inject(TYPES.IPortfolioService) portfolioService: IPortfolioService) {
         this._portfolioService = portfolioService;
-        this.postPortfolio= this.postPortfolio.bind(this);
+        this.postPortfolio = this.postPortfolio.bind(this);
+        this.getPortfolios = this.getPortfolios.bind(this);
     }
 
     /**
@@ -30,6 +31,16 @@ export class PorfolioController implements IPortfolioController {
         try {
             const result = await this._portfolioService.savePortfolio(req.body);
             res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getPortfolios(req: Request, res: Response, next: NextFunction) {
+        try {
+            const {userId}=req.params;
+            const portfolios = await this._portfolioService.getPortfolios(userId);
+            res.status(200).json(portfolios);
         } catch (error) {
             next(error);
         }

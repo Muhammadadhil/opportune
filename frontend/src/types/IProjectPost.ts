@@ -5,18 +5,9 @@ export interface portfolioData {
     description: string;
     skills: string[];
     images: File[];
+    imageUrls?:string[]
     link: string;
 }
-
-// export interface DescriptionData {
-//     images: File[];
-//     deliveryTime: string;
-//     description: string;
-//     price: string;
-//     requirements?:string[];
-// }
-
-// export type FormData = portfolioData & DescriptionData;
 
 export interface TitleData {
     jobTitle: string;

@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import ConfirmDialog from "./ConfirmDialog";
 import { IGig } from "@/types/IGig";
-import { useRemoveGig } from "@/hooks/gigs/useDeleteGig";
+import { useRemoveGig } from "@/hooks/portfolio/useDeleteGig";
 
 interface GigCardProps {
     gig: IGig;

@@ -10,7 +10,7 @@ import { Textarea } from "../ui/textarea";
 import { ImagePlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { savePortfolio } from "@/api/gigs";
+import { savePortfolio } from "@/api/portfolio";
 import { getUploadSignedUrl } from "@/api/user";
 import axios from "axios";
 import Loading from "../loading/Loading";
@@ -32,9 +32,6 @@ export const PostPortFolio: React.FC = React.memo(() => {
         formState: { errors },
     } = useForm<portfolioData>();
 
-
-    console.log('error hook form:',errors);
-
     const removeKeyword = (index: number) => {
         const updatedKeywords = keywords.filter((_, i) => i !== index);
         setKeywords(updatedKeywords);
@@ -46,8 +43,6 @@ export const PostPortFolio: React.FC = React.memo(() => {
 
     const onSubmit = async (data: portfolioData) => {
 
-        console.log('data for upload :',data);
-
         if (keywords.length === 0 ) {
             setKeywordError("Add atleast one skill ");
             return;
@@ -55,11 +50,9 @@ export const PostPortFolio: React.FC = React.memo(() => {
         try {
             setIsLoading(true);
             const files = data.images;
-            console.log('files:',files)
 
             const uploadPromises = files.map(async (file) => {
                 const presignedData = await getUploadSignedUrl(file.name, file.type);
-                console.log("presignedData:", presignedData);
 
                 await axios.put(presignedData.url, file, {
                     headers: {
@@ -70,17 +63,11 @@ export const PostPortFolio: React.FC = React.memo(() => {
                 return presignedData.fileKey;
             });
 
-            console.log("uploadPromises:", uploadPromises);
             const imageFileKeys = await Promise.all(uploadPromises);
-
-            console.log("promise result imageFileKey:", imageFileKeys);
             const finalData = { ...data, images: imageFileKeys.map((filekey) => filekey), freelancerId };
 
-            console.log("finalData:", finalData);
-
-            const response = await savePortfolio(finalData);
-            console.log("portfolio Response:", response);
-            navigate("/fr/dashboard");
+            await savePortfolio(finalData);
+            navigate(-1);
         } catch (error) {
             console.error("Error submitting form:", error);
             toast.error("Error in saving project");

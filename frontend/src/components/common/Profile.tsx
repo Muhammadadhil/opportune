@@ -14,10 +14,12 @@ import { getJobs } from "@/api/job";
 import { setClientData } from "@/store/slices/userSlice";
 import { RootState } from "@/store/store";
 import { IJob } from "@/types/IJob";
-import { useGigs } from "@/hooks/gigs/useGigs";
+import { usePortfolios } from "@/hooks/portfolio/usePortfolios";
 import { useFreelancerProfile } from "@/hooks/user/useFreelancerProfile";
 import profileimg from "@/assets/profilePicture.jpg";
 import { getUserById } from "@/api/user";
+import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import PortfolioCard from "../freelancer/PortfolioCard";
 
 export default function Profile() {
     const { userInfo, clientData } = useSelector((state: RootState) => state.user);
@@ -36,7 +38,9 @@ export default function Profile() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { data: gigs } = useGigs(userInfo?._id);
+    const { data: portfolios } = usePortfolios(userInfo?._id!);
+
+    console.log("portfolios:", portfolios);
 
     const { data: freelancer, refetch } = useFreelancerProfile(userInfo?.role, userInfo?._id);
     const visibleJobs = jobs?.slice(0, 3);
@@ -103,7 +107,7 @@ export default function Profile() {
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-44 py-8">
             <div className="min-h-screen max-w-[1300px]">
                 {/* Header Section with Gradient Background */}
-                <div className="relative bg-gradient-to-r from-gray-800 via-gray-500 to-gray-300 h-48 sm:h-56 md:h-64 rounded-xl">
+                <div className="relative bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-700 h-48 sm:h-56 md:h-64 rounded-xl">
                     <div className="container mx-auto px-4 h-full">
                         <div className="absolute top-32 flex  sm:flex-row sm:items-end gap-4 sm:gap-8">
                             {/* Profile Image */}
@@ -247,11 +251,9 @@ export default function Profile() {
                         <span className="text-sm text-gray-500">({displayUser?.reviewCount || 0} reviews)</span>
                     </div>
 
-                    <div className="mt-6">{displayUser?.role === "freelancer" && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>}</div>
-
                     {displayUser?.role === "client" && (
                         <div className="mt-6">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6">
                                 {visibleJobs?.map((job, index) => (
                                     <JobCard key={index} job={job} />
                                 ))}
@@ -265,7 +267,21 @@ export default function Profile() {
                         </div>
                     )}
                 </div>
-                
+
+                <div className="mt-6">
+                    {displayUser?.role === "freelancer" && (
+                        <div>
+                            <h2 className="text-xl font-semibold mb-4 text-zinc-600">Portfolio Projects</h2>
+                            <div className="px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3  gap-4 sm:gap-6">
+                                {portfolios?.map((item, index) => (
+                                    <PortfolioCard key={index} imageUrl={item?.imageUrls?.[0] || "/placeholder.svg?height=200&width=300"} title={item.title} />
+                                ))}
+                            </div>
+                            {(!portfolios || portfolios.length === 0) && <p className="text-muted-foreground">No portfolio projects yet.</p>}
+                        </div>
+                    )}
+                </div>
+
                 <div className="border shadow-sm p-4 md:p-6 rounded-md mb-4 md:mb-5 w-[22rem] mt-8">
                     <Button className="w-full text-white bg-green-700 hover:bg-green-600 transition-all duration-300 ease-in-out hover:translate-y-1" onClick={() => navigate("/fr/portfolio")}>
                         Add a portfolio project

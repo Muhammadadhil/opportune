@@ -1,7 +1,7 @@
-import { portfolioData } from "@/types/IProjectPost";
+
 import apiClient from "./axiosInstance";
 
-export const editGigPost = async (gigData) => {
+export const editGigPost = async (gigData:any) => {
     return await apiClient.post("/post/editGig", gigData);
 };
 
@@ -15,7 +15,3 @@ export const fetchGigs = async (fId?: string) => {
 export const removeGig = async (gigId:string) => {
     return await apiClient.patch(`/post/gig/${gigId}`);
 };
-
-export const savePortfolio = async (data: portfolioData) => {
-    return await apiClient.post("/post/porfolio", data);
-};                                                                         

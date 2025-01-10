@@ -1,5 +1,5 @@
 import GigCard from "./GigCard";
-import { useGigs } from "@/hooks/gigs/useGigs";
+import { useGigs } from "@/hooks/portfolio/usePortfolios";
 import { IGig } from "@/types/IGig";
 import { GigCardSkeleton } from "@/components/common/CardSkelton";
 

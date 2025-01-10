@@ -24,8 +24,9 @@ export class PortfolioService implements IPortfolioService {
 
     async getPortfolios(freelancerId: string): Promise<IPortfolio[] | null> {
         try {
+            console.log('freelancerId:',freelancerId)
             const portfolios = await this._portfolioRepository.findByFreelancerId(freelancerId);
-
+            console.log('portfolios:',portfolios)   
             if (!portfolios) return null;
 
             // Get signed URLs for all images in each portfolio
