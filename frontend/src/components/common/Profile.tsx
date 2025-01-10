@@ -38,7 +38,7 @@ export default function Profile() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { data: portfolios } = usePortfolios(userInfo?._id!);
+    const { data: portfolios , refetch:portfolioRefetch } = usePortfolios(userInfo?._id!);
 
     console.log("portfolios:", portfolios);
 
@@ -272,21 +272,21 @@ export default function Profile() {
                     {displayUser?.role === "freelancer" && (
                         <div>
                             <h2 className="text-xl font-semibold mb-4 text-zinc-600">Portfolio Projects</h2>
+                            {(!portfolios || portfolios.length === 0) && <p className="text-muted-foreground mb-7">No portfolio projects yet.</p>}
+
                             <div className="px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3  gap-4 sm:gap-6">
-                                {portfolios?.map((item, index) => (
-                                    <PortfolioCard key={index} imageUrl={item?.imageUrls?.[0] || "/placeholder.svg?height=200&width=300"} title={item.title} />
+                                {portfolios?.map((portfolio, index) => (
+                                    <PortfolioCard key={index} portfolio={portfolio} />
                                 ))}
+                                <div
+                                    className=" h-40 p-2 border border-slate-500 rounded-xl flex justify-center items-center cursor-pointer border-dashed group transition duration-300 ease-in-out hover:bg-zinc-100 "
+                                    onClick={() => navigate("/fr/portfolio")}
+                                >
+                                    <h2 className="group-hover:text-green-900 transition duration-300 ease-in-out text-green-600">Add a portfolio project</h2>
+                                </div>
                             </div>
-                            {(!portfolios || portfolios.length === 0) && <p className="text-muted-foreground">No portfolio projects yet.</p>}
                         </div>
                     )}
-                </div>
-
-                <div className="border shadow-sm p-4 md:p-6 rounded-md mb-4 md:mb-5 w-[22rem] mt-8">
-                    <Button className="w-full text-white bg-green-700 hover:bg-green-600 transition-all duration-300 ease-in-out hover:translate-y-1" onClick={() => navigate("/fr/portfolio")}>
-                        Add a portfolio project
-                    </Button>
-                    <p className="text-xs mt-3 ">post a your porfolio project and let client see your achievements.</p>
                 </div>
             </div>
         </div>

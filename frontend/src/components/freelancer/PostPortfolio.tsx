@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import axios from "axios";
 import Loading from "../loading/Loading";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const PostPortFolio: React.FC = React.memo(() => {
 
@@ -25,12 +26,18 @@ export const PostPortFolio: React.FC = React.memo(() => {
     const [images, setImages] = useState<File[]>([]);
     const [isLoading,setIsLoading] = useState<boolean>(false);
 
+    const queryClient = useQueryClient();
+
     const {
         register,
         handleSubmit,
         setValue,
         formState: { errors },
     } = useForm<portfolioData>();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const removeKeyword = (index: number) => {
         const updatedKeywords = keywords.filter((_, i) => i !== index);
@@ -67,6 +74,7 @@ export const PostPortFolio: React.FC = React.memo(() => {
             const finalData = { ...data, images: imageFileKeys.map((filekey) => filekey), freelancerId };
 
             await savePortfolio(finalData);
+            queryClient.invalidateQueries({ queryKey: ["portfolios"] })
             navigate(-1);
         } catch (error) {
             console.error("Error submitting form:", error);
@@ -90,7 +98,7 @@ export const PostPortFolio: React.FC = React.memo(() => {
     const navigate = useNavigate();
 
     return (
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="px-4 flex justify-center ">
+        <div className="px-4 flex justify-center ">
             {isLoading ? (
                 <Loading text="uploading images" />
             ) : (
@@ -102,7 +110,7 @@ export const PostPortFolio: React.FC = React.memo(() => {
                             <p className="text-sm text-gray-600 mb-4">Showcase Your Services in a Work Gallery</p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {[0, 1, 2].map((index) => (
-                                    <div key={index} className="h-52 border-2 border-dashed rounded-lg flex items-center justify-center relative bg-gray-50 hover:bg-gray-100 transition-colors group">
+                                    <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} key={index} className="h-52 border-2 border-dashed rounded-lg flex items-center justify-center relative bg-gray-50 hover:bg-gray-100 transition-colors group">
                                         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, index)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
                                         {images[index] ? (
                                             <div className="relative w-full h-full">
@@ -117,14 +125,14 @@ export const PostPortFolio: React.FC = React.memo(() => {
                                                 <span className="text-sm text-gray-500">Upload Image</span>
                                             </div>
                                         )}
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
                             {errors.images && <p className="text-red-700 text-sm mt-2">{errors.images.message}</p>}
                         </div>
 
                         {/* Project Title */}
-                        <div>
+                        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                             <h2 className="font-semibold mb-2 text-zinc-700">Project Title</h2>
                             <Input
                                 id="workTitle"
@@ -136,10 +144,10 @@ export const PostPortFolio: React.FC = React.memo(() => {
                                 className="w-full md:w-[40rem]"
                             />
                             {errors.title && <p className="text-red-800 text-sm mt-1">{errors.title.message}</p>}
-                        </div>
+                        </motion.div>
 
                         {/* Project Description */}
-                        <div>
+                        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
                             <h2 className="font-semibold mb-2 text-zinc-700">Project Description</h2>
                             <Textarea
                                 id="workDescription"
@@ -151,10 +159,10 @@ export const PostPortFolio: React.FC = React.memo(() => {
                                 className="min-h-[100px]"
                             />
                             {errors.description && <p className="text-red-800 text-sm mt-1">{errors.description.message}</p>}
-                        </div>
+                        </motion.div>
 
                         {/* Skills & Deliverables */}
-                        <div>
+                        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.0 }}>
                             <h2 className="font-semibold mb-2 text-zinc-700">Skills & Deliverables</h2>
                             <div className="max-w-full md:max-w-[40rem]">
                                 <KeywordInput
@@ -177,9 +185,9 @@ export const PostPortFolio: React.FC = React.memo(() => {
                                 ))}
                             </div>
                             {keywordError && <p className="text-red-800 text-sm mt-1">{keywordError}</p>}
-                        </div>
+                        </motion.div>
 
-                        <div>
+                        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2 }}>
                             <h2 className="font-semibold mb-2 text-zinc-700">Link</h2>
                             <Input
                                 id="link"
@@ -193,7 +201,7 @@ export const PostPortFolio: React.FC = React.memo(() => {
                                 className="w-full md:w-[40rem]"
                             />
                             {errors.link && <p className="text-red-800 text-sm mt-1">{errors.link.message}</p>}
-                        </div>
+                        </motion.div>
 
                         {/* Submit Button */}
                         <div className="flex justify-end">
@@ -204,6 +212,6 @@ export const PostPortFolio: React.FC = React.memo(() => {
                     </form>
                 </div>
             )}
-        </motion.div>
+        </div>
     );
 });

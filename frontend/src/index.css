@@ -17,6 +17,13 @@ body {
     color: white;
 }
 
+@layer utilities {
+  .custom-dotted {
+    border-style: dotted;
+    border-image: radial-gradient(circle, black 1px, transparent 1px) 1;
+  }
+}
+
 @layer base {
   :root {
     --radius: 0.5rem
