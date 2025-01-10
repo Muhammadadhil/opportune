@@ -35,9 +35,11 @@ const ChatWindow: React.FC = () => {
     const messagesContainerRef = useRef<HTMLDivElement>(null);
 
     const chatRoomId = state?.chatRoomId;
+
     const { data: messages = [], isLoading, error } = useMessages(chatRoomId || "");
 
     useEffect(() => {
+
         if (!socket || !chatRoomId) return;
         socket.emit("joinRoom", chatRoomId);
 
@@ -45,7 +47,6 @@ const ChatWindow: React.FC = () => {
             socket.off("joinRoom");
         };
     }, [chatRoomId, socket]);
-
 
 
     useEffect(() => {

@@ -1,9 +1,11 @@
 
 export interface portfolioData {
+    freelancerId?: string;
     title: string;
     description: string;
     skills: string[];
     images: File[];
+    link: string;
 }
 
 // export interface DescriptionData {

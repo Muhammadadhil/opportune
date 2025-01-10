@@ -13,7 +13,7 @@ const socketHandler = (io:Namespace) => {
             
             // join a chat room
             socket.on('joinRoom',(chatRoomId:string)=>{
-                console.log('User joined room: chatRoomId:', chatRoomId);
+                // console.log('User joined room: chatRoomId:', chatRoomId);
                 socket.join(chatRoomId);
             });
 
@@ -23,7 +23,7 @@ const socketHandler = (io:Namespace) => {
                 const newMessage = await messageService.sendMessage(message.sender, message.receiver, message.content, message.chatRoom);
                 console.log('newMessage saved in db:',newMessage);
                 
-                socket.broadcast.to(message.chatRoom).emit("newMessage", message);
+                io.to(message.chatRoom).emit("newMessage", message);
                 console.log("!! msg sent to all users in chatRoom !!");
             });
 

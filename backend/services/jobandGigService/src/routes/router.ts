@@ -10,11 +10,13 @@ import { TYPES } from "../types/types";
 import { IJobController } from "../controllers/interface/IJobController";
 import { IGigController } from "../controllers/interface/IGigController";
 import { authenticate } from "../middleware/authenticate";
+import { IPortfolioController } from "../controllers/interface/IPortfolioController";
 
 const router = Router();
 
 const jobController = container.get<IJobController>(TYPES.IJobController);
 const gigController = container.get<IGigController>(TYPES.IGigController);
+const portfolioController = container.get<IPortfolioController>(TYPES.IPortFolioController);
 
 router.get("/gigs/:id", gigController.getGigs);
 router.get("/gigs", gigController.getAllGigs);
@@ -39,6 +41,10 @@ router.get('/job/:id', authenticate(['client','freelancer']),jobController.getJo
 
 //offer 
 router.post("/job/offer", authenticate(["client"]), jobController.sendOffer);
+
+//portfolio
+router.post("/porfolio", authenticate(["freelancer"]), portfolioController.postPortfolio);
+
 
 
 export default router;

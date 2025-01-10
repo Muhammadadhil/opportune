@@ -12,5 +12,9 @@ export const TYPES = {
 
     IGigRepository: Symbol("IGigRepository"),
     IGigService: Symbol("IGigService"),
-    IGigController: Symbol("IGigController")
+    IGigController: Symbol("IGigController"),
+
+    IPortFolioController: Symbol("IPortFolioController"),
+    IPortfolioRepository: Symbol("IPortfolioRepository"),
+    IPortfolioService: Symbol("IPortfolioService"),
 };

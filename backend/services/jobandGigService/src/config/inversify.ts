@@ -21,7 +21,12 @@ import { GigRepository } from "../repositories/implementation/gig.repository";
 import { RabbitMQProducer } from "../events/rabbitmq/producer/Producer";
 import { IGigController } from "../controllers/interface/IGigController";
 import { IGigService } from "../services/interfaces/IGigService";
-
+import { PorfolioController } from "../controllers/implementation/portfolio.controller";
+import { PortfolioService } from "../services/implementation/portfolio.services";
+import { IPortfolioRepository } from "../repositories/interfaces/IPortFolioRepository";
+import { IPortfolioService } from "../services/interfaces/IPortfolioServices";
+import { IPortfolioController } from "../controllers/interface/IPortfolioController";
+import { PortfolioRepository } from "../repositories/implementation/PortfolioRepository";
 
 const container = new Container();
 
@@ -39,6 +44,10 @@ container.bind<IJobController>(TYPES.IJobController).to(JobController);
 container.bind<IGigController>(TYPES.IGigController).to(GigController);
 container.bind<IGigService>(TYPES.IGigService).to(GigService);
 container.bind(TYPES.IGigRepository).to(GigRepository);
+
+container.bind<IPortfolioController>(TYPES.IPortFolioController).to(PorfolioController);
+container.bind<IPortfolioService>(TYPES.IPortfolioService).to(PortfolioService);
+container.bind<IPortfolioRepository>(TYPES.IPortfolioRepository).to(PortfolioRepository);
 
 
 export default container;

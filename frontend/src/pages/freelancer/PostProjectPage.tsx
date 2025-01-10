@@ -1,12 +1,12 @@
 
-import PostProject from "../../components/freelancer/PostProject";
+import {PostPortFolio} from "../../components/freelancer/PostPortfolio";
 
-const postProjectPage = () => {
+const PostPortfolioPage = () => {
     return (
-        <div className="min-h-screen">
-            <PostProject />
+        <div className="min-h-screen ">
+            <PostPortFolio />
         </div>
     );
 };
 
-export default postProjectPage;
+export default PostPortfolioPage;

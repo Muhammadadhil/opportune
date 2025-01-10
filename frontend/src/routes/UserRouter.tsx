@@ -27,7 +27,7 @@ import VideoCallWrapper from "@/pages/common/VideoCallWrapper";
 import Freelancer from "@/pages/common/Freelancer";
 import NotFound from "@/components/ui/NotFound";
 import { ForgotPasswordPage } from "@/pages/common/ForgotPassword";
-import { PostPortFolio } from "@/components/freelancer/PostPortfolio";
+import PostPortfolioPage from "@/pages/freelancer/PostProjectPage";
 
 function UserRoute() {
     return (
@@ -68,7 +68,7 @@ function UserRoute() {
                         <Route path="fr/dashboard" element={<FreelancerDashboard />} />
                         <Route path="fr/profile" element={<ProfilePage />} />
                         <Route path="fr/complete-profile" element={<CompleteProfile />} />
-                        <Route path="/fr/portfolio" element={<PostPortFolio />} />
+                        <Route path="/fr/portfolio" element={<PostPortfolioPage />} />
                         <Route path="/fr/manage-gigs" element={<MangeWorkPage />} />
                     </Route>
                 </Route>
