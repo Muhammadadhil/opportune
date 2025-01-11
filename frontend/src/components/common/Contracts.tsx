@@ -30,6 +30,7 @@ interface ContractsProps {
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
+    
     const { userInfo } = useSelector((state: RootState) => state.user);
     const userId = userInfo?._id;
 

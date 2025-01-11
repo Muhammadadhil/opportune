@@ -6,6 +6,7 @@ export interface ISubmission {
     milestoneId: string;
     message: string;
     attachment: string;
+    attachmentAccessurl?: string;
     isAccepted?: boolean;
     createdAt?: Date;
 }

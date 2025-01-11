@@ -157,21 +157,21 @@ export default function SendOffer() {
                         <p className="text-sm text-muted-foreground">Add project milestones and pay in installments as each milestone is completed to your satisfaction.</p>
 
                         {milestones.map((milestone, index) => (
-                            <div key={index} className=" grid gap-4 md:grid-cols-12 items-start">
-                                <div className="space-y-2 md:col-span-6">
+                            <div key={index} className="grid gap-4 md:grid-cols-12 items-start">
+                                <div className="space-y-2 md:col-span-6 lg:col-span-4">
                                     <label className="text-sm font-medium">{index + 1}. Milestone description</label>
                                     <Input placeholder="What is the task?" value={milestone.description} onChange={(e) => updateMilestone(index, "description", e.target.value)} />
                                 </div>
 
-                                <div className="space-y-2 md:col-span-3">
+                                <div className="space-y-2 md:col-span-6 lg:col-span-4">
                                     <label className="text-sm font-medium">Due date (optional)</label>
-                                    <div className="relative">
+                                    <div className="relative ">
                                         <Input type="date" min={today} value={milestone.deadline} onChange={(e) => updateMilestone(index, "deadline", e.target.value)} />
                                         {/* <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" /> */}
                                     </div>
                                 </div>
 
-                                <div className="space-y-2 md:col-span-2">
+                                <div className="space-y-2 sm:col-span-4 md:col-span-4">
                                     <label className="text-sm font-medium">Deposit amount</label>
                                     <div className="relative">
                                         <Input
@@ -186,7 +186,7 @@ export default function SendOffer() {
                                         <span className="absolute left-2 top-2.5">$</span>
                                     </div>
                                 </div>
-                                <div className="mt-8  md:col-span-1">
+                                <div className="mt-8 md:col-span-1 lg:col-span-2">
                                     {milestones.length > 1 && (
                                         <Button type="button" variant="ghost" size="icon" onClick={() => removeMilestone(index)}>
                                             <Trash2 className="h-4 w-4" />

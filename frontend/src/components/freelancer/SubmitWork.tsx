@@ -34,7 +34,7 @@ export function SubmitWorkDialog({ isOpen, onClose, onSubmit, amount }: SubmitWo
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:min-w-md">
                 <DialogHeader>
                     <DialogTitle>Submit Work for Payment</DialogTitle>
                     <DialogDescription>Submit your completed work to receive the milestone payment.</DialogDescription>

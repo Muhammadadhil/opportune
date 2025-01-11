@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import useSubmission from "@/hooks/contracts/useSubmission";
-import { acceptSubmission } from "@/api/contracts";
+import { acceptSubmission, fetchDownloadUrl } from "@/api/contracts";
 import { toast } from "react-hot-toast";
 import { ReviewForm } from "../common/ReviewForm";
 
@@ -23,6 +23,8 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [isAccepting, setIsAccepting] = useState(false);
 
+    console.log("submission:", submission);
+
     const handleAcceptSubmission = async (submissionId: string) => {
         setIsAccepting(true);
         try {
@@ -33,9 +35,8 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
             } else {
                 onClose();
             }
-            
-            await refetch();
 
+            await refetch();
         } catch (error) {
             console.error("Error accepting submission", error);
             toast.error("Error accepting submission");
@@ -47,6 +48,32 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
     const handleReviewSubmit = () => {
         setShowReviewForm(false);
         onClose();
+    };
+
+    const handleDownloadAttachment = async () => {
+        try {
+            const downloadUrl = await fetchDownloadUrl(submission?.attachment || "");
+            const fileResponse = await fetch(downloadUrl);
+
+            const blob = await fileResponse.blob();
+
+            const downloadLink = window.URL.createObjectURL(blob);
+            console.log('downloadLink:',downloadLink);
+
+            const a = document.createElement("a");
+            a.href = downloadLink;
+            a.download = 'opportune-submmission-file'; 
+
+            document.body.appendChild(a);
+            a.click(); // This triggers the download
+            a.remove(); 
+
+            // Clean up the temporary URL
+            window.URL.revokeObjectURL(downloadLink);
+        } catch (error) {
+            console.error("Download failed:", error);
+
+        }
     };
 
     if (isLoading) {
@@ -93,8 +120,7 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
                         </div>
                         {submission?.attachment && (
                             <div className="space-y-2">
-                                <Label>Attachment</Label>
-                                <Button variant="outline" className="w-full" onClick={() => window.open(submission.attachment, "_blank")}>
+                                <Button variant="outline" className="w-full" onClick={handleDownloadAttachment}>
                                     <Download className="mr-2 h-4 w-4" />
                                     Download Attachment
                                 </Button>
@@ -102,6 +128,7 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
                         )}
                     </CardContent>
                 </Card>
+
                 {userType === "client" && !submission?.isAccepted && (
                     <div>
                         <Button className="w-full mt-4 bg-green-700 hover:bg-green-600" onClick={() => handleAcceptSubmission(submission?._id as string)} disabled={isAccepting}>

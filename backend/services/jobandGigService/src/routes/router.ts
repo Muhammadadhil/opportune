@@ -44,7 +44,7 @@ router.post("/job/offer", authenticate(["client"]), jobController.sendOffer);
 
 //portfolio
 router.post("/porfolio", authenticate(["freelancer"]), portfolioController.postPortfolio);
-router.get('/portfolios/:userId',authenticate(["freelancer"]), portfolioController.getPortfolios);
+router.get('/portfolios/:userId',authenticate(["freelancer","client"]), portfolioController.getPortfolios);
 
 
 

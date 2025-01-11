@@ -30,9 +30,14 @@ export class SubmissionService implements ISubmissionService {
         return this.fileUploader.generatePresignedUrl(fileName, fileType);
     }
 
+    generateDownloadPresignedUrl(fileKey: string): Promise<string> {
+        console.log("generating presigned url for download");
+        return this.fileUploader.generateDownloadPresignedUrl(fileKey);
+    }
+
     async getSubmissions(contractId: string, milestoneId: string): Promise<ISubmission | null> {
-        console.log("getting submissions for contractId and milestoneId:", contractId, milestoneId);
-        return this.submissionRepository.findOne({ contractId, milestoneId });
+        return await this.submissionRepository.findOne({ contractId, milestoneId });
+        
     }
 
     async acceptSubmission(submissionId: string): Promise<ISubmission | null> {

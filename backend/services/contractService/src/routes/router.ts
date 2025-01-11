@@ -28,7 +28,8 @@ router.patch("/job/offer", authenticate(["freelancer"]), offerController.updateO
 
 //submit work
 router.post("/submit-work", authenticate(['freelancer']), submissionController.submitWork);
-router.post("/generate-presigned-url", authenticate(['freelancer']), submissionController.generatePresignedUrl);
+router.post("/generate-presigned-url", authenticate(["freelancer"]), submissionController.generateUploadPresignedUrl);
+router.get("/download/generate-presigned-url/:fileKey", authenticate(["freelancer","client"]), submissionController.generateDownloadPresignedUrl);
 
 router.get("/submission/:contractId/:milestoneId", authenticate(["client","freelancer"]), submissionController.getSubmission);
 

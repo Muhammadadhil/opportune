@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -48,4 +48,10 @@ export class FileUploader {
             fileKey,
         };
     }
+
+    async generateDownloadPresignedUrl(fileKey: string): Promise<string> {
+        const command = new GetObjectCommand({ Bucket: this.bucketName, Key: fileKey });
+        const url = await getSignedUrl(this.s3Client, command, { expiresIn: 600 });
+        return url;
+    }   
 }

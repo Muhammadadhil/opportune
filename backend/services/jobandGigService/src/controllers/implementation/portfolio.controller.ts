@@ -36,6 +36,17 @@ export class PorfolioController implements IPortfolioController {
         }
     }
 
+    /**
+     * Retrieves a list of all portfolios associated with the given user ID.
+     *
+     * @param req - Express request object containing the user ID in the params.
+     * @param res - Express response object.
+     * @param next - Express next middleware function for error handling.
+     *
+     * This endpoint expects a request parameter with the user ID and attempts
+     * to retrieve all portfolios associated with that user. In case of any
+     * errors, it passes control to the next error-handling middleware.
+     */
     async getPortfolios(req: Request, res: Response, next: NextFunction) {
         try {
             const {userId}=req.params;

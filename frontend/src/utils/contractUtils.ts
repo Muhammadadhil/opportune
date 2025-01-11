@@ -28,13 +28,15 @@ export const handleSubmitWork = async (
             });
         }
 
+        console.log("presignedData:", presignedData);
+
         const submissionData: ISubmission = {
             milestoneId: selectedMilestone.id,
             contractId: selectedMilestone.contractId,
             freelancerId: selectedMilestone.freelancerId,
             clientId: selectedMilestone.clientId,
             message,
-            attachment: presignedData?.fileUrl || null,
+            attachment: presignedData?.fileKey || null,
         };
 
         const response = await submitWork(submissionData);
