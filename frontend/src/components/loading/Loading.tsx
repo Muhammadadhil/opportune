@@ -32,7 +32,7 @@ const Loading: React.FC<LoadingDotsProps> = ({ color = "green-600", size = "larg
     };
 
     return (    
-        <div className="h-screen flex flex-col items-center justify-center space-y-2">
+        <div className=" flex flex-col items-center justify-center space-y-2">
             <div className={`flex items-center ${containerClasses[size]}`}>
                 {[0, 1, 2].map((index) => (
                     <motion.div

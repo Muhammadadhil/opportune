@@ -22,6 +22,7 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
     const { data: submission, isLoading, error, refetch } = useSubmission(contractId, milestoneId);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [isAccepting, setIsAccepting] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     console.log("submission:", submission);
 
@@ -52,27 +53,30 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
 
     const handleDownloadAttachment = async () => {
         try {
+            setIsDownloading(true);
+
             const downloadUrl = await fetchDownloadUrl(submission?.attachment || "");
             const fileResponse = await fetch(downloadUrl);
 
             const blob = await fileResponse.blob();
 
             const downloadLink = window.URL.createObjectURL(blob);
-            console.log('downloadLink:',downloadLink);
+            console.log("downloadLink:", downloadLink);
 
             const a = document.createElement("a");
             a.href = downloadLink;
-            a.download = 'opportune-submmission-file'; 
+            a.download = "opportune-submmission-file";
 
             document.body.appendChild(a);
             a.click(); // This triggers the download
-            a.remove(); 
+            a.remove();
 
             // Clean up the temporary URL
             window.URL.revokeObjectURL(downloadLink);
         } catch (error) {
             console.error("Download failed:", error);
-
+        } finally {
+            setIsDownloading(false);
         }
     };
 
@@ -118,11 +122,12 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
                             <Label>Message</Label>
                             <p className="text-sm text-muted-foreground">{submission?.message}</p>
                         </div>
+
                         {submission?.attachment && (
                             <div className="space-y-2">
                                 <Button variant="outline" className="w-full" onClick={handleDownloadAttachment}>
                                     <Download className="mr-2 h-4 w-4" />
-                                    Download Attachment
+                                    {isDownloading ? "Downloading..." : "Download Attachment"}
                                 </Button>
                             </div>
                         )}
