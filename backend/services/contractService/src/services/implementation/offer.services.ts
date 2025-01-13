@@ -7,6 +7,7 @@ import { IOfferService } from "../interfaces/IOfferService";
 
 
 export class OfferService implements IOfferService {
+    
     private _offerRepository: IOfferRepository;
     private _applicationRepository: IApplicationRepository;
     private _contractService: IContractService;

@@ -7,4 +7,5 @@ export interface IApplication extends Document {
     status?: String;
     freelancerNotes?: string;
     freelancerPrice?: number;
+    cvKey?: string;
 }

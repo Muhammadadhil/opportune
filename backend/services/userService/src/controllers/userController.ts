@@ -27,6 +27,9 @@ export class UserController {
         this.getAllFreelancersDetails = this.getAllFreelancersDetails.bind(this);
         this.getUserInfo = this.getUserInfo.bind(this);
         this.getUserDetails = this.getUserDetails.bind(this);
+        this.generateCVUploadUrl = this.generateCVUploadUrl.bind(this);
+        this.saveCVDetails = this.saveCVDetails.bind(this);
+        this.getCVUrl = this.getCVUrl.bind(this);
     }
 
     async registerUser(req: Request, res: Response) {
@@ -279,5 +282,52 @@ export class UserController {
             next(error);
         }
     }
+
+    async generateCVUploadUrl(req: Request, res: Response ,next: NextFunction) {
+        try {
+            const { fileName, fileType } = req.body;
+
+            if (!fileName || !fileType) {
+                return res.status(400).json({ message: "fileName and fileType are required" });
+            }
+
+            const uploadData = await this.userService.generateCVUploadUrl(fileName, fileType);
+            res.status(200).json(uploadData);
+        } catch (error) {
+            console.log("Error generating CV upload URL:", error);
+            next(error);
+        }
+    }
+
+    async saveCVDetails(req: Request, res: Response , next: NextFunction) {
+        try {
+            const { userId } = req.params;
+            const { cvKey, fileName, fileType } = req.body;
+
+            console.log("saveCVDetails req.params:", req.params);
+            console.log("saveCVDetails req.body:", req.body);   
+            if (!cvKey || !fileName || !fileType) {
+                return res.status(400).json({ message: "cvKey, fileName, and fileType are required" });
+            }
+
+            const savedData = await this.userService.saveCVDetails(userId, cvKey, fileName, fileType);
+            res.status(200).json(savedData);
+        } catch (error) {
+            console.log("Error saving CV details:", error);
+            next(error);
+        }
+    }
+
+    async getCVUrl(req: Request, res: Response ,next: NextFunction) {
+        try {
+            const { userId } = req.params;
+            const cv = await this.userService.getCVUrl(userId);
+            res.status(200).json(cv);
+        } catch (error) {
+            console.log("Error getting CV URL:", error);
+            next(error);
+        }
+    }
 }
+
 

@@ -27,6 +27,9 @@ const applicationSchema = new Schema<IApplication>(
         },
         freelancerPrice: {
             type: Number,
+        },
+        cvKey: {
+            type: String,
         }
     },
     { timestamps: true }

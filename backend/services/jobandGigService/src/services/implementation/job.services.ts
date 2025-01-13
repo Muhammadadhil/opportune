@@ -62,18 +62,6 @@ export class JobService implements IJobService {
 
         const totalPagesCount = Math.ceil(totalJobs / limit);
 
-        // let jobs = null;
-        // if (userId) {
-        //     jobs = Alljobs?.map((job) => {
-        //         if (job.applicants.includes(userId)) {
-        //             return {
-        //                 ...job,
-        //                 isApplied: true,
-        //             };
-        //         }
-        //     });
-        // }
-
         return {
             Alljobs,
             totalPagesCount,

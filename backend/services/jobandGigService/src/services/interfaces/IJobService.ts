@@ -10,6 +10,7 @@ export interface IApplyJob {
     freelancerId: string;
     freelancerNotes?: string;
     freelancerPrice?:number;
+    cvKey?: string;
 }   
 
 export interface IJobService {

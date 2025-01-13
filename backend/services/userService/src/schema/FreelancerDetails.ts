@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import IFreelancer from "../interfaces/IFreelancer";
 
+
 const freelancerDetails: Schema = new Schema<IFreelancer>(
     {
         userId: {
@@ -27,6 +28,14 @@ const freelancerDetails: Schema = new Schema<IFreelancer>(
             type: [String],
             required: true,
         },
+        cvs: [
+                {
+                cvKey: { type: String },
+                uploadedAt: { type: Date },
+                fileType: { type: String },
+                fileName: { type: String }
+            }
+        ],
     },
     { timestamps: true }
 );

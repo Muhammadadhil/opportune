@@ -256,4 +256,54 @@ export class UserService implements IUserService {
         );
         return freelancerDetails;
     }
+
+
+    async generateCVUploadUrl(fileName: string, fileType: string): Promise<{ url: string; fileKey: string }> {
+        // Validate file type
+        if (!fileType.match(/^application\/pdf|image\/(jpeg|png)$/)) {
+            throw new Error('Invalid file type. Only PDF and images are allowed.');
+        }
+                
+        const { url, fileKey: generatedKey } = await this.fileUploader.generateUploadPresignedUrl(fileName, fileType);
+        return { url, fileKey: generatedKey };
+    }
+
+    async saveCVDetails(userId: string, cvKey: string, fileName: string, fileType: string): Promise<IFreelancer | null> {
+        const freelancer = await this.freelancerRepository.findOne({ userId });
+        if (!freelancer) {
+            throw new Error('Freelancer not found');
+        }
+
+        return await this.freelancerRepository.saveNewCV(userId,cvKey , fileName, fileType);
+
+        // return await this.freelancerRepository.updateById(freelancer._id as string, updateData);
+    }
+
+    async getCVUrl(userId: string): Promise<{ cvs: Array<{ url: string, cvDetails: any }> }> {
+        const freelancer = await this.freelancerRepository.findOne({ userId });
+        if (!freelancer?.cvs?.length) {
+            return {
+                cvs: []
+            };
+        }
+
+        const cvs = await Promise.all(
+            freelancer.cvs.map(async (cv) => {
+                const url = await this.fileUploader.generateDownloadPresignedUrl(cv.cvKey);
+                return {
+                    url,
+                    cvDetails: {
+                        cvKey: cv.cvKey,
+                        fileName: cv.fileName,
+                        fileType: cv.fileType,
+                        uploadedAt: cv.uploadedAt
+                    }
+                };
+            })
+        );
+
+        return {
+            cvs
+        };
+    }
 }

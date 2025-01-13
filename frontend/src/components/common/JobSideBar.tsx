@@ -15,6 +15,11 @@ import { Label } from "../ui/label";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Upload ,FileText} from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2, X } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getCV,getUploadSignedUrl,saveCVDetails } from "@/api/cv";
+import axios from "axios";
 
 interface JobSideBarProps {
     job: IJob;
@@ -23,12 +28,38 @@ interface JobSideBarProps {
     onApply?: () => void;
 }
 
+
+interface CV {
+  url: string;
+  cvDetails: {
+    cvKey: string;
+    fileName: string;
+    fileType: string;
+    uploadedAt: string;
+  }
+}
 const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, onApply }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     const [isApplyOpen, setIsApplyOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [price, setPrice] = useState("");
+    const [isUploading, setIsUploading] = useState(false);
+
+
+     const { data: cvData } = useQuery({
+        queryKey: ['cv', userInfo?._id],
+        queryFn: () => getCV(userInfo?._id!),
+        enabled: !!userInfo?._id
+    });
+    
+    const [cvSelectionMode, setCvSelectionMode] = useState<'existing' | 'new'>(
+        cvData?.cvs?.length > 0 ? 'existing' : 'new'
+    );
     const [cvFile, setCvFile] = useState<File | null>(null);
+    const [selectedCV, setSelectedCV] = useState<CV | null>(null);
+
+    console.log('existingCV:',cvData);
+
 
     const applicationData: IApplication = {
         jobId: job._id!,
@@ -60,26 +91,58 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
         }
     };
 
+    console.log('cvFile:',cvFile);
+    console.log('selectedCv:',selectedCV);
+
     const handleJobApply = async () => {
-        if (!message || !price) {
-            toast.error("Please fill in all required fields");
+
+        if ( !cvFile && !selectedCV) {
+            toast.error("Please upload a CV or select an existing one");
             return;
         }
 
         try {
-            const formData = new FormData();
-            formData.append('jobId', applicationData.jobId);
-            formData.append('clientId', applicationData.clientId);
-            formData.append('freelancerId', applicationData.freelancerId);
-            formData.append('freelancerNotes', message);
-            formData.append('freelancerPrice', price);
-            
-            if (cvFile) {
-                formData.append('cvFile', cvFile);
+            setIsUploading(true);
+            let cvKey;
+            let fileName;
+            let fileType;
+
+            if (selectedCV) {
+                // Use selected existing CV
+                cvKey = selectedCV.cvDetails?.cvKey;
+                fileName = selectedCV.cvDetails.fileName;
+                fileType = selectedCV.cvDetails.fileType;
+
+            } else if (cvFile ) {
+                // Upload new CV
+
+                console.log('createing new cv',cvFile);
+
+                const presignedData = await getUploadSignedUrl(cvFile.name, cvFile.type);
+                await axios.put(presignedData.url, cvFile, {
+                    headers: {
+                        "Content-Type": cvFile.type,
+                    },
+                });
+                
+                cvKey = presignedData.fileKey;
+                fileName = cvFile.name;
+                fileType = cvFile.type;
+
+                await saveCVDetails(userInfo?._id, {
+                    cvKey,
+                    fileName,
+                    fileType
+                });
             }
 
-            await applyJob(formData);
-            toast.success("Your application has sent successfully");
+            const data = {
+                ...applicationData,
+                cvKey
+            };
+
+            await applyJob(data);
+            toast.success("Your application has been sent successfully");
             setSheetOpen(false);
             if (onApply) onApply();
 
@@ -87,7 +150,9 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
             console.log("Error in apply job:", error);
             const axiosError = error as AxiosError;
             const data = axiosError.response?.data as { message: string };
-            toast.error(data?.message || "An error occurred");
+            toast.error(data?.message || "An error occurred while applying");
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -146,44 +211,113 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                         <SheetFooter className="mt-6 pt-6 border-t ">
                             {isApplyOpen && (
                                 <div className="w-full space-y-4 flex flex-col p-2">
-                                    <Label>Your Message</Label>
-                                    <Textarea placeholder="Enter your message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
-                                    <Label>Your Price</Label>
-                                    <Input placeholder="Your price $" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
-                                    <div className="relative">
-                                        
-                                        <input
-                                            type="file"
-                                            id="cv-upload"
-                                            className="hidden"
-                                            onChange={handleFileChange}
-                                            accept=".pdf,.jpg,.jpeg,.png"
-                                        />
-                                        
-                                        <div className="mb-3 text-sm text-gray-600 my-4">
-                                            <p>Supported formats: PDF, JPG, JPEG, PNG</p>
-                                            <p>Maximum file size: 5MB</p>
-                                        </div>
 
-                                        {cvFile && (
-                                            <div className="mt-2 p-2 rounded bg-gray-50">
-                                                {cvFile.type.startsWith('image/') ? (
-                                                    <img 
-                                                        src={URL.createObjectURL(cvFile)} 
-                                                        alt="CV Preview" 
-                                                        className="max-w-full h-auto max-h-[200px]"
+                                    <div className="space-y-2">
+                                        
+                                        {cvData?.cvs?.length > 0 && (
+                                            <div className="flex gap-2 mb-4">
+                                                <Button
+                                                    type="button"
+                                                    variant={cvSelectionMode === 'existing' ? 'default' : 'outline'}
+                                                    onClick={() => setCvSelectionMode('existing')}
+                                                >
+                                                    Use Existing CV
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant={cvSelectionMode === 'new' ? 'default' : 'outline'}
+                                                    onClick={() => setCvSelectionMode('new')}
+                                                >
+                                                    Upload New CV
+                                                </Button>
+                                            </div>
+                                        )}
+
+                                        {cvSelectionMode === 'existing' && cvData?.cvs?.length > 0 && (
+                                            <div className="space-y-2">
+                                                <Label>Select CV</Label>
+                                                {cvData.cvs.map((cv: CV, index: number) => (
+                                                    <div 
+                                                        key={index} 
+                                                        onClick={() => setSelectedCV(cv)}
+                                                        className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-gray-200 rounded-xl ${
+                                                            selectedCV === cv ? 'bg-gray-200 border border-green-800' : 'bg-gray-100'
+                                                        }`}
+                                                    >
+                                                        <input
+                                                            type="radio"
+                                                            name="cv-selection"
+                                                            checked={selectedCV === cv}
+                                                            onChange={() => setSelectedCV(cv)}
+                                                            className="h-4 w-4"
+                                                        />
+                                                        <div className="flex items-center gap-2">
+                                                            <FileText className="w-4 h-4" />
+                                                            <span className="text-sm text-gray-600">
+                                                                {cv?.cvDetails?.fileName}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {cvSelectionMode === 'new' && (
+                                            <div className="space-y-2">
+                                                <Label>Upload New CV</Label>
+                                                <div className="flex items-center gap-2">
+                                                    <Input
+                                                        id="cv"
+                                                        type="file"
+                                                        onChange={handleFileChange}
+                                                        accept=".pdf,.jpg,.jpeg,.png"
+                                                        className="hidden"
                                                     />
-                                                ) : (
-                                                    <div className="flex items-center text-sm text-gray-600">
-                                                        <FileText className="w-4 h-4 mr-2" />
-                                                        PDF Document
+                                                    <Button 
+                                                        type="button" 
+                                                        variant="outline" 
+                                                        onClick={() => document.getElementById("cv")?.click()}
+                                                    >
+                                                        <Upload className="mr-2 h-4 w-4" />
+                                                        {cvFile ? cvFile.name : "Choose File"}
+                                                    </Button>
+                                                    
+                                                    {cvFile && (
+                                                        <Button 
+                                                            type="button" 
+                                                            variant="ghost" 
+                                                            size="sm" 
+                                                            onClick={() => setCvFile(null)}
+                                                        >
+                                                            <X className="h-4 w-4" />
+                                                        </Button>
+                                                    )}
+                                                </div>
+
+                                                {cvFile && (
+                                                    <div className="mt-4">
+                                                        <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-md">
+                                                            <FileText className="w-4 h-4 text-gray-600" />
+                                                            <div className="flex flex-col">
+                                                                <span className="text-sm font-medium">{cvFile.name}</span>
+                                                                <span className="text-xs text-gray-500">
+                                                                    {(cvFile.size / (1024 * 1024)).toFixed(2)} MB
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 )}
                                             </div>
                                         )}
                                     </div>
-                                    <Button onClick={handleJobApply} className="self-end bg-green-700 hover:bg-green-600 mt-8 justify-end">
-                                        Submit Application
+
+                                    <Label>Your Message   <span className="text-xs text-gray-500">* optional</span></Label>
+                                    <Textarea placeholder="Enter your message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
+                                    <Label>Your Price  <span className="text-xs text-gray-500">* optional</span></Label>
+                                    <Input placeholder="Your price $" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+                                    
+                                    <Button onClick={handleJobApply} className="self-end bg-green-700 hover:bg-green-600 mt-8 justify-end min-w-">
+                                        { isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Submit Application"}
                                     </Button>
                                 </div>
                             )}

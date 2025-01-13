@@ -38,7 +38,7 @@ export class FileUploader {
 
         const randomFileName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 
-        const fileKey= randomFileName();
+        const fileKey = randomFileName();
 
         const params = {
             Bucket: this.bucketName,

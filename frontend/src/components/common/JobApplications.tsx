@@ -26,6 +26,10 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
     const { data: Allapplications, isLoading } = useApplications(userId!, jobId!, userType);
     const applications = Allapplications?.data.applications;
 
+    const handleDownloadCV = (cvKey: string) => {
+        window.open(`${import.meta.env.VITE_BACKEND_URL}/download/${cvKey}`, '_blank');
+    };
+
     if (isLoading) {
         return (
             <div className="container mx-auto px-4 py-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -102,12 +106,26 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                     <span className="font-medium">freelancer price: {app.freelancerPrice}</span>
                                 </div>
                             )}
+
+                            
+
                         </CardContent>
                         <CardFooter className="flex justify-between">
                             {/* <Button size="sm" variant="default">
                                 <MessageSquare className="h-4 w-4 mr-1" />
                                 {userType === "client" ? "Message freelancer" : "View Details"}
                             </Button> */}
+                            {userType === "client" && app.cvKey && (
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    onClick={() => handleDownloadCV(app.cvKey!)}
+                                    className=" mt-2 border border-gray-700"
+                                >
+                                    Download CV
+                                </Button>
+                            )}
+
                             {userType === "client" && app.status === "pending" && (
                                 <Button
                                     size="sm"

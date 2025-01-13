@@ -17,7 +17,7 @@ router.post("/auth/login", userController.login);
 router.patch("/auth/logout", userController.logout);
 router.get("/auth/refreshToken", authController.refreshAccessToken);
 
-router.post("/forgot-password",authController.forgotPassword);
+router.post("/forgot-password", authController.forgotPassword);
 router.post("/change/password", authController.resetPassword);
 
 // google auth routes
@@ -33,11 +33,11 @@ router.post("/clients/details", userController.saveClientDetails);
 router.post("/clients/profile", protect, userController.getClientData);
 
 //freelancer routes
-router.post('/generate-presigned-url',userController.generatePresignedUrl);
+router.post("/generate-presigned-url", userController.generatePresignedUrl);
 
 router.post("/freelancers/complete-profile", protect, userController.saveFreelancerDetails);
 router.post("/freelancers/profile", protect, userController.getFreelancerData);
-router.get('/freelancers',userController.getFreelancers);
+router.get("/freelancers", userController.getFreelancers);
 
 //block user
 router.patch(`/users/:userId/block-toggle`, userController.toggleBlockStatus);
@@ -46,11 +46,14 @@ router.patch("/profile/:userId", userController.editUserProfile);
 
 router.post("/average-rating/add/:userId", userController.editUserProfile);
 
-router.post("/wallet/update/:userId", userController.updateWallet); 
+router.post("/wallet/update/:userId", userController.updateWallet);
 router.get("/details/:userId", userController.getUserDetails);
 
-router.get('/:userId', userController.getUserInfo);
+router.get("/:userId", userController.getUserInfo);
 router.get("/freelancers/list", userController.getAllFreelancersDetails);
 
+router.post("/cv/upload-url", userController.generateCVUploadUrl);
+router.post("/cv/save-details/:userId", userController.saveCVDetails);
+router.get("/cv/:userId", userController.getCVUrl);
 
 export default router;
