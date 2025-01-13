@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "../ui/label";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Upload ,FileText} from "lucide-react";
 
 interface JobSideBarProps {
     job: IJob;
@@ -27,21 +28,61 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
     const [isApplyOpen, setIsApplyOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [price, setPrice] = useState("");
+    const [cvFile, setCvFile] = useState<File | null>(null);
 
     const applicationData: IApplication = {
         jobId: job._id!,
-        clientId: job.clientId?._id,
+        clientId: job.clientId?._id ?? "",
         freelancerId: userInfo?._id ?? "",
         freelancerNotes: message,
         freelancerPrice: Number(price),
     };
 
+    const validateFile = (file: File) => {
+        const validTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (!validTypes.includes(file.type)) {
+            toast.error('Please upload a PDF or image file (JPEG/PNG)');
+            return false;
+        }
+        if (file.size > maxSize) {
+            toast.error('File size should be less than 5MB');
+            return false;
+        }
+        return true;
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && validateFile(file)) {
+            setCvFile(file);
+        }
+    };
+
     const handleJobApply = async () => {
+        if (!message || !price) {
+            toast.error("Please fill in all required fields");
+            return;
+        }
+
         try {
-            await applyJob(applicationData);
+            const formData = new FormData();
+            formData.append('jobId', applicationData.jobId);
+            formData.append('clientId', applicationData.clientId);
+            formData.append('freelancerId', applicationData.freelancerId);
+            formData.append('freelancerNotes', message);
+            formData.append('freelancerPrice', price);
+            
+            if (cvFile) {
+                formData.append('cvFile', cvFile);
+            }
+
+            await applyJob(formData);
             toast.success("Your application has sent successfully");
             setSheetOpen(false);
             if (onApply) onApply();
+
         } catch (error) {
             console.log("Error in apply job:", error);
             const axiosError = error as AxiosError;
@@ -109,7 +150,39 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                     <Textarea placeholder="Enter your message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
                                     <Label>Your Price</Label>
                                     <Input placeholder="Your price $" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
-                                    <Button onClick={handleJobApply} className="self-end  bg-blue-800 hover:bg-blue-700 mt-8 justify-end">
+                                    <div className="relative">
+                                        
+                                        <input
+                                            type="file"
+                                            id="cv-upload"
+                                            className="hidden"
+                                            onChange={handleFileChange}
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                        />
+                                        
+                                        <div className="mb-3 text-sm text-gray-600 my-4">
+                                            <p>Supported formats: PDF, JPG, JPEG, PNG</p>
+                                            <p>Maximum file size: 5MB</p>
+                                        </div>
+
+                                        {cvFile && (
+                                            <div className="mt-2 p-2 rounded bg-gray-50">
+                                                {cvFile.type.startsWith('image/') ? (
+                                                    <img 
+                                                        src={URL.createObjectURL(cvFile)} 
+                                                        alt="CV Preview" 
+                                                        className="max-w-full h-auto max-h-[200px]"
+                                                    />
+                                                ) : (
+                                                    <div className="flex items-center text-sm text-gray-600">
+                                                        <FileText className="w-4 h-4 mr-2" />
+                                                        PDF Document
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <Button onClick={handleJobApply} className="self-end bg-green-700 hover:bg-green-600 mt-8 justify-end">
                                         Submit Application
                                     </Button>
                                 </div>
