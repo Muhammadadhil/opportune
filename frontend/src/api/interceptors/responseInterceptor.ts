@@ -2,8 +2,9 @@ import { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { refreshToken } from "../auth";
 import { logoutTheUser } from "../../utils/logout";
 import { logout } from "../auth";
-import { setAccessToken } from "../../services/authService";
+import { setAccessToken } from "../../utils/auth";
 import apiClient from '../axiosInstance';
+
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry?: boolean;
 }
@@ -25,7 +26,9 @@ export const handleErrorResponseInterceptor = async (error: AxiosError) => {
             console.log("requesting for refresh token !!!!");
 
             const newAccessToken = await refreshToken();
+
             setAccessToken(newAccessToken);
+
             originalRequest.headers["Authorisation"] = `Bearer ${newAccessToken}`;
             return apiClient(originalRequest);
 

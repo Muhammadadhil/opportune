@@ -17,7 +17,7 @@ import { loginGoogleUser } from "@/api/auth";
 import LoadingSpinner from "../loading/Loading";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import toast from "react-hot-toast";
-import { setAccessToken } from "@/services/authService";
+import { setAccessToken } from "@/utils/auth";
 import { signUpvalidationSchema } from '@/schemas/SignUpSchema'
 import { useQuery } from "@tanstack/react-query";
 

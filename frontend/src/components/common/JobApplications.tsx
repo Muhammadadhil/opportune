@@ -11,24 +11,45 @@ import { useNavigate } from "react-router-dom";
 import { truncateString } from "@/utils/truncateString";
 import { Skeleton } from "@/components/ui/skeleton";
 import {motion} from "framer-motion";
+import { fetchDownloadUrl } from "@/api/common";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import FilePreview from "./FilePreview";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface JobApplicationsProps {
     userType: "client" | "freelancer";
 }
 
 export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) => {
+
     const { userInfo } = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
 
+    const [cvDetails, setCvDetails] = useState({
+    fileUrl: "",
+    cvFileType: "",
+    isPreviewOpen: false 
+});    
+  
     const userId = userInfo?._id;
     const { id: jobId } = useParams();
 
     const { data: Allapplications, isLoading } = useApplications(userId!, jobId!, userType);
     const applications = Allapplications?.data.applications;
 
-    const handleDownloadCV = (cvKey: string) => {
-        window.open(`${import.meta.env.VITE_BACKEND_URL}/download/${cvKey}`, '_blank');
-    };
+    const handlePreviewCV = async (cvKey: string, cvFileType: string) => {
+    try {
+        const downloadUrl = await fetchDownloadUrl(cvKey);
+        setCvDetails({
+            fileUrl: downloadUrl,
+            cvFileType: cvFileType,
+            isPreviewOpen: true
+        });
+    } catch (error) {
+        console.error("Failed to get preview URL:", error);
+    }
+}
 
     if (isLoading) {
         return (
@@ -119,10 +140,10 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                 <Button 
                                     variant="outline" 
                                     size="sm" 
-                                    onClick={() => handleDownloadCV(app.cvKey!)}
-                                    className=" mt-2 border border-gray-700"
+                                    onClick={() => handlePreviewCV(app.cvKey!,app.cvFileType!)}
+                                    className="mt-2 border-2 border-gray-700 min-w-28"
                                 >
-                                    Download CV
+                                    Preview CV
                                 </Button>
                             )}
 
@@ -143,6 +164,21 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                     </Card>
                 ))}
             </motion.div>
+
+            {cvDetails.isPreviewOpen && cvDetails.fileUrl && (
+                <Dialog open={cvDetails.isPreviewOpen} onOpenChange={(open) => !open && setCvDetails({ fileUrl: "", cvFileType: "", isPreviewOpen: false })}>
+                    <DialogContent className=" min-h-[70vh]">
+                        <DialogHeader>
+                            <DialogTitle>CV Preview</DialogTitle>
+                        </DialogHeader>
+
+                        <FilePreview 
+                            fileUrl={cvDetails.fileUrl}
+                            fileType={cvDetails.cvFileType}
+                        />
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     );
 };

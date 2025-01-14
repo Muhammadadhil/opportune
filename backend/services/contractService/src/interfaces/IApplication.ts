@@ -8,4 +8,5 @@ export interface IApplication extends Document {
     freelancerNotes?: string;
     freelancerPrice?: number;
     cvKey?: string;
+    cvFileType?: string;
 }

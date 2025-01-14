@@ -6,5 +6,3 @@ export const getAccessToken = (): string | null => {
 export const setAccessToken = (token:string): void => {
     localStorage.setItem("token", token);
 };
-
- 

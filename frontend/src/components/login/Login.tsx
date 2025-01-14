@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PasswordField from "@/components/ui/passwordField";
 import Loading from "../loading/Loading";
-import { setAccessToken } from "@/services/authService";
+import { setAccessToken } from "@/utils/auth";
 import { RootState } from "@/store/store";
 import { loginGoogleUser } from "@/api/auth";
 

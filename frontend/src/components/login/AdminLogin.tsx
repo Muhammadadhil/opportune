@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { setAdminAuthStatus } from "@/store/slices/userSlice"; 
 import { loginAdmin } from "@/api/admin";
-import {setAccessToken} from '@/services/authService'
+import {setAccessToken} from '@/utils/auth'
 import { RootState } from "@/store/store";
 
 export default function AdminLogin() {

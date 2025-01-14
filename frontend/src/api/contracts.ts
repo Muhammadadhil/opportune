@@ -49,8 +49,3 @@ export const acceptSubmission = async (submissionId:string) => {
 export const submitReview = async (contractId: string, rating: number, comment: string, reviewerId:string) => {
     return await apiClient.post(`/contract/review/submit`, { contractId, rating, comment, reviewerId });
 };
-
-export const fetchDownloadUrl = async (fileName: string) => {
-    const response = await apiClient.get(`/contract/download/generate-presigned-url/${fileName}`);
-    return response.data;
-}

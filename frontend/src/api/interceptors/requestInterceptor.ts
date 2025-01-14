@@ -1,5 +1,5 @@
 import { InternalAxiosRequestConfig } from "axios";
-import { getAccessToken } from "../../services/authService";
+import { getAccessToken } from "../../utils/auth";
 
 const requestInterceptor = (config: InternalAxiosRequestConfig<any>) => {
     try {

@@ -5,9 +5,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import useSubmission from "@/hooks/contracts/useSubmission";
-import { acceptSubmission, fetchDownloadUrl } from "@/api/contracts";
+import { acceptSubmission } from "@/api/contracts";
+import { fetchDownloadUrl } from "@/api/common";
 import { toast } from "react-hot-toast";
 import { ReviewForm } from "../common/ReviewForm";
+import { downloadFile } from "@/utils/downloadFile";
 
 interface PreviewSubmissionProps {
     userType: "client" | "freelancer";
@@ -51,34 +53,18 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
         onClose();
     };
 
-    const handleDownloadAttachment = async () => {
-        try {
-            setIsDownloading(true);
-
-            const downloadUrl = await fetchDownloadUrl(submission?.attachment || "");
-            const fileResponse = await fetch(downloadUrl);
-
-            const blob = await fileResponse.blob();
-
-            const downloadLink = window.URL.createObjectURL(blob);
-            console.log("downloadLink:", downloadLink);
-
-            const a = document.createElement("a");
-            a.href = downloadLink;
-            a.download = "opportune-submmission-file";
-
-            document.body.appendChild(a);
-            a.click(); // This triggers the download
-            a.remove();
-
-            // Clean up the temporary URL
-            window.URL.revokeObjectURL(downloadLink);
-        } catch (error) {
-            console.error("Download failed:", error);
-        } finally {
-            setIsDownloading(false);
-        }
-    };
+    const handleDownloadAttachment = async (fileName: string) => {
+    try {
+        setIsDownloading(true);
+        const downloadUrl = await fetchDownloadUrl(fileName);
+        await downloadFile(downloadUrl, "opportune-submission-file");
+    } catch (error) {
+        console.error("Download failed:", error);
+        // You might want to show a toast message here
+    } finally {
+        setIsDownloading(false);
+    }
+};
 
     if (isLoading) {
         return (
@@ -125,7 +111,7 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
 
                         {submission?.attachment && (
                             <div className="space-y-2">
-                                <Button variant="outline" className="w-full" onClick={handleDownloadAttachment}>
+                                <Button variant="outline" className="w-full" onClick={()=> handleDownloadAttachment(submission?.attachment)}>
                                     <Download className="mr-2 h-4 w-4" />
                                     {isDownloading ? "Downloading..." : "Download Attachment"}
                                 </Button>

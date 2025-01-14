@@ -19,7 +19,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getCV,getUploadSignedUrl,saveCVDetails } from "@/api/cv";
+import { getApplicationDetails } from "@/api/job";
 import axios from "axios";
+import { formatDate } from "@/utils/dateFormatter";
 
 interface JobSideBarProps {
     job: IJob;
@@ -38,6 +40,14 @@ interface CV {
     uploadedAt: string;
   }
 }
+
+interface ApplicationDetails {
+    freelancerNotes?: string;
+    freelancerPrice?: number;
+    status?: string;
+    createdAt?: string;
+}
+
 const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, onApply }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     const [isApplyOpen, setIsApplyOpen] = useState(false);
@@ -48,9 +58,17 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
 
      const { data: cvData } = useQuery({
         queryKey: ['cv', userInfo?._id],
-        queryFn: () => getCV(userInfo?._id!),
+        queryFn: () => getCV(userInfo?._id ?? ''),
         enabled: !!userInfo?._id
     });
+
+    const { data: applicationDetails } = useQuery<ApplicationDetails>({
+        queryKey: ['application', job._id, userInfo?._id],
+        queryFn: () => getApplicationDetails(job._id!, userInfo?._id ?? ''),
+        enabled: !!job.isApplied && !!userInfo?._id
+    });
+
+    console.log("applicationDetails:", applicationDetails);
     
     const [cvSelectionMode, setCvSelectionMode] = useState<'existing' | 'new'>(
         cvData?.cvs?.length > 0 ? 'existing' : 'new'
@@ -58,7 +76,6 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
     const [cvFile, setCvFile] = useState<File | null>(null);
     const [selectedCV, setSelectedCV] = useState<CV | null>(null);
 
-    console.log('existingCV:',cvData);
 
 
     const applicationData: IApplication = {
@@ -91,8 +108,6 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
         }
     };
 
-    console.log('cvFile:',cvFile);
-    console.log('selectedCv:',selectedCV);
 
     const handleJobApply = async () => {
 
@@ -116,8 +131,6 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
             } else if (cvFile ) {
                 // Upload new CV
 
-                console.log('createing new cv',cvFile);
-
                 const presignedData = await getUploadSignedUrl(cvFile.name, cvFile.type);
                 await axios.put(presignedData.url, cvFile, {
                     headers: {
@@ -138,11 +151,12 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
 
             const data = {
                 ...applicationData,
-                cvKey
+                cvKey,
+                cvFileType: fileType
             };
 
             await applyJob(data);
-            toast.success("Your application has been sent successfully");
+            toast.success("Application Submitted");
             setSheetOpen(false);
             if (onApply) onApply();
 
@@ -163,6 +177,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
     };
 
     const fullStars = Math.floor(job?.clientId?.averageRating || 0);
+
 
     return (
         <div>
@@ -208,7 +223,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                 </ul>
                             </div>
                         </div>
-                        <SheetFooter className="mt-6 pt-6 border-t ">
+                        <SheetFooter className="mt-6 pt-6 border-t">
                             {isApplyOpen && (
                                 <div className="w-full space-y-4 flex flex-col p-2">
 
@@ -322,8 +337,44 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                 </div>
                             )}
 
+                            {!isApplyOpen && job.isApplied === true && applicationDetails && (
+                                <div className="w-full space-y-4">
+                                    <div className="bg-gray-50 p-4 rounded-lg">
+                                        <h3 className="font-semibold mb-3 text-green-600">Application Sent</h3>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Status:</span>
+                                                <span className="font-medium capitalize">{applicationDetails.status}</span>
+                                            </div>
+
+                                            {applicationDetails.freelancerPrice !== null && applicationDetails.freelancerPrice !== undefined && applicationDetails.freelancerPrice > 0 && (
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Your Proposed Price:</span>
+                                                    <span className="font-medium">${applicationDetails.freelancerPrice}</span>
+                                                </div>
+                                            )}
+                                            {applicationDetails.freelancerNotes && (
+                                                <div className="mt-3">
+                                                    <span className="text-gray-600">Your Message:</span>
+                                                    <p className="mt-1 text-gray-700">{applicationDetails.freelancerNotes}</p>
+                                                </div>
+                                            )}
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Applied on:</span>
+                                                <span className="font-medium">
+                                                    {formatDate(applicationDetails.createdAt!)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {!isApplyOpen && job.isApplied !== true && userInfo?._id && (
-                                <Button onClick={() => setIsApplyOpen(true)} className="bg-green-800 hover:bg-green-700 mt-8 justify-end">
+                                <Button 
+                                    onClick={() => setIsApplyOpen(true)} 
+                                    className="bg-green-800 hover:bg-green-700 mt-8 justify-end"
+                                >
                                     Apply Now
                                 </Button>
                             )}

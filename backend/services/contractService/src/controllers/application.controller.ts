@@ -48,4 +48,15 @@ export class ApplicationController {
             next(error);
         }
     };
+
+    getApplicationDetails = async (req: Request, res: Response, next: NextFunction) => {    
+        try {
+            const { jobId, freelancerId } = req.params;
+            const application = await this._applicationService.getApplicationDetails(jobId, freelancerId);
+            return res.status(200).json({ application });
+        } catch (error) {
+            console.log("Error in geting application details:", error);
+            next(error);
+        }
+    }
 }

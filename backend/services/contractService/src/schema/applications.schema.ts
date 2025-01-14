@@ -30,6 +30,9 @@ const applicationSchema = new Schema<IApplication>(
         },
         cvKey: {
             type: String,
+        },
+        cvFileType: {
+            type: String,
         }
     },
     { timestamps: true }

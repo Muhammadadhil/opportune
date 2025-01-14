@@ -14,6 +14,7 @@ const upload = multer();
 router.get("/application", applicationController.checkApplication);
 router.get("/client/job/applications", authenticate(['client']), applicationController.getApplications);
 router.get("/freelancer/job/applications", authenticate(['freelancer']), applicationController.getFreelancerApplications);
+router.get("/applications/details/:jobId/:freelancerId", authenticate(['client','freelancer']), applicationController.getApplicationDetails);
 
 //contracts
 router.get("/freelancer/contracts", authenticate(['freelancer']), contractController.getFreelancerContracts);

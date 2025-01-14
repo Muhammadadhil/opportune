@@ -19,6 +19,6 @@ export interface IApplication {
     freelancerNotes?: string;
     freelancerPrice?: number;
     createdAt?: string;
-    cvFile?: File;
     cvKey?: string;
+    cvFileType?: string;
 }

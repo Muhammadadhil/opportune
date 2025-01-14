@@ -65,4 +65,8 @@ export class ApplicationSerivce implements IApplicationService {
 
         return enrichedApplications;
     }
+
+    async getApplicationDetails(jobId: string, freelancerId: string): Promise<IApplication | null> {
+        return this._applicationRepository.findOne({ jobId, freelancerId });
+    }
 }
