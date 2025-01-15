@@ -39,4 +39,4 @@ echo "All services are now running."
 
 
 
-# stripe listen --forward-to localhost:4004/payment/webhook
+# stripe listen --forward-to localhost:4002/payment/webhook

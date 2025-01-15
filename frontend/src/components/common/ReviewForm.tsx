@@ -13,6 +13,7 @@ interface ReviewFormProps {
 }
 
 export const ReviewForm = ({ contractId, onSubmit }: ReviewFormProps) => {
+
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,7 +25,7 @@ export const ReviewForm = ({ contractId, onSubmit }: ReviewFormProps) => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await submitReview(contractId, rating, comment, userInfo._id);
+            await submitReview(contractId, rating, comment, userInfo?._id ?? '');
             toast.success("Review submitted successfully");
             onSubmit();
         } catch (error) {

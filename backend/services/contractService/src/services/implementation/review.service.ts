@@ -20,8 +20,6 @@ export class ReviewService implements IReviewService {
 
     async submitReview(reviewData: ReviewDTO, reviewerId: ObjectId): Promise<IReview> {
 
-        console.log('submitting review in Service layer !!!!!!')
-
         const contract = await this._contractRepository.findById(reviewData.contractId);
 
         if (!contract) {
@@ -42,12 +40,9 @@ export class ReviewService implements IReviewService {
             type: isClientReview ? "CLIENT_TO_FREELANCER" : "FREELANCER_TO_CLIENT",
         };
 
-        console.log("review data:", createReviewData);
-
         const review = await this._reviewRepository.createReview(createReviewData);
+        await this._contractRepository.update(contract._id as ObjectId, { [isClientReview ? 'clientReviewed' : 'freelancerReviewed']: true });
 
-        console.log('review saved:',review)
-        
         await this._userService.updateUserRating(review.revieweeId);
 
         return review;

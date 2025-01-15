@@ -16,4 +16,6 @@ export interface IContract extends Document {
     endDate: Date;
     currentMilestoneIndex: number;
     clientNotes?: string;
+    clientReviewed: boolean;
+    freelancerReviewed: boolean;
 }

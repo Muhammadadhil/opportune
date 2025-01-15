@@ -56,6 +56,14 @@ const contractSchema = new mongoose.Schema<IContract>(
             type: Date,
             // required: true,
         },
+        clientReviewed: {
+            type: Boolean,
+            default: false,
+        },
+        freelancerReviewed: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

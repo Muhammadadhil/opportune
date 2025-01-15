@@ -21,7 +21,7 @@ export default function SendOffer() {
     const {jobId}=useParams();
     const { data: job } = useJobDetails(jobId!);
 
-    console.log('job:',job?.data);
+    // console.log('job:',job?.data);
 
     const [budget,setBudget]=useState(job?.data.budget);
     const [title,setTitle]=useState(job?.data.jobTitle);
@@ -29,7 +29,7 @@ export default function SendOffer() {
     const [milestones, setMilestones] = useState<IMilestone[]>([{ description: "", deadline: "", amount: budget }]);
     const [clientDetails,setClientDetails]=useState<userInfo>();
 
-    console.log("clientDetails:", clientDetails);
+    // console.log("clientDetails:", clientDetails);
 
     useEffect(() => {
         setTitle(job?.data.jobTitle);
@@ -58,7 +58,7 @@ export default function SendOffer() {
     };
 
     const splitBudget = (milestones: IMilestone[]): IMilestone[] => {
-        const amountPerMilestone = budget && milestones.length > 0 ? (parseFloat(budget.toFixed(2)) / milestones.length) : "0.00";
+        const amountPerMilestone = budget && milestones.length > 0 ? (parseFloat(budget?.toFixed(2)) / milestones.length) : "0.00";
         return milestones.map((milestone) => ({
             ...milestone,
             amount: amountPerMilestone,
@@ -119,7 +119,7 @@ export default function SendOffer() {
             );
 
             console.log('response in sending offer:',response);
-            navigate('/offer-success',{state:{message:"Offer Sent Successfully!",redirectPath:"/cl/dashboard",redirectTime:3000}})
+            navigate('/offer-success',{state:{message:"Offer Sent Successfully!",redirectPath:"/cl/dashboard",redirectTime:2000}})
         } catch (error) {
             console.log("Error in sending offer:", error);
             toast.error('Error in sending offer');

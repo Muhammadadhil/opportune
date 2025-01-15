@@ -97,7 +97,19 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
         setShowReviewForm(false);
     };
 
-    console.count("render count contract");
+    // console.count("render count contract");
+
+    const canShowReviewForm = (contract: IContract) => {
+
+        if(contract.status !== "completed") return false; 
+
+        if(userType === "client" ){
+            return !contract.clientReviewed;
+        } else {
+            return !contract.freelancerReviewed;
+        }
+    }
+
 
     return (
         <motion.div initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}} transition={{duration:0.5}} className="space-y-4 mt-6">
@@ -210,12 +222,13 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
                                                     </div>
                                                 </div>
                                             ))}
-                                            {/* {showReviewForm && (
+
+                                            {showReviewForm && canShowReviewForm(contract) && (
                                                 <div className="mt-6">
-                                                    <h3 className="text-lg font-semibold mb-2">Leave a Review</h3>
+                                                    <h3 className="text-lg font-semibold mb-2">Review Client </h3>
                                                     <ReviewForm contractId={contract._id} onSubmit={handleReviewSubmit} />
                                                 </div>
-                                            )} */}
+                                            )}
                                         </div>
                                     </div>
                                 )}

@@ -6,7 +6,6 @@ import { Search, Edit } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IChatRoom } from "@/types/IChatRoom";
 import { IUser } from "@/types/IUser";
-import { getRelativeTime } from "@/utils/relativeDateFormatter";
 import { getChatParticipants } from "@/utils/getChatUser";
 
 
@@ -30,7 +29,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
 
     const fetchChatRooms = async () => {
         try {
-            const chatRooms = await getChatRooms(userInfo?._id);
+            const chatRooms = await getChatRooms(userInfo?._id ?? '');
             setChatRooms(chatRooms);
         } catch (error) {
             console.error("Error fetching chat rooms:", error);
@@ -38,7 +37,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
     };
 
     const filteredChatRooms = chatRooms.filter((chat) => {
-        const { otherUser } = getChatParticipants(chat,userInfo?._id);
+        const { otherUser } = getChatParticipants(chat,userInfo?._id ?? '');
         const searchTerm = searchQuery.toLowerCase();
         return otherUser.firstname?.toLowerCase().includes(searchTerm) || otherUser.lastname?.toLowerCase().includes(searchTerm) || otherUser.email?.toLowerCase().includes(searchTerm);
     });
@@ -48,11 +47,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
             <div className="p-4 border-b">
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-xl font-semibold">Messages</h1>
-                    <div className="flex gap-2">
-                        <button className="p-2 hover:bg-gray-100 rounded-full">
-                            <Edit className="h-5 w-5 text-gray-500" />
-                        </button>
-                    </div>
                 </div>
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />

@@ -130,12 +130,14 @@ export function PreviewSubmission({ userType, isOpen, onClose, contractId, miles
                         </p>
                     </div>
                 )}
+
                 {showReviewForm && (
                     <div className="mt-6">
                         <h3 className="text-lg font-semibold mb-2">Leave a Review</h3>
                         <ReviewForm contractId={contractId} onSubmit={handleReviewSubmit} />
                     </div>
                 )}
+                
                 <DialogFooter>
                     <Button type="button" variant="ghost" onClick={onClose}>
                         Close
