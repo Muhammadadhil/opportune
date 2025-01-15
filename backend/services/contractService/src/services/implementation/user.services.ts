@@ -2,7 +2,7 @@ import { IUserService } from "../interfaces/IUserService";
 import { IUserRepository } from "../../repositories/interfaces/IUserRepository";
 import { IUser } from "../../entities/UserEntity";
 import { Document, ObjectId } from "mongoose";
-import { IReview } from "../../schema/review.schema";
+import { IReview } from "../../interfaces/IReview";
 import { IReviewRepository } from "../../repositories/interfaces/IReviewRepository";
 import axios from "axios";
 

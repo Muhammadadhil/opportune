@@ -17,6 +17,7 @@ import Loading from "../loading/Loading";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useQueryClient } from "@tanstack/react-query";
+import { useScrollToTop } from "@/hooks/common/useScrollToTop";
 
 export const PostPortFolio: React.FC = React.memo(() => {
 
@@ -35,9 +36,7 @@ export const PostPortFolio: React.FC = React.memo(() => {
         formState: { errors },
     } = useForm<portfolioData>();
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+    useScrollToTop();
 
     const removeKeyword = (index: number) => {
         const updatedKeywords = keywords.filter((_, i) => i !== index);

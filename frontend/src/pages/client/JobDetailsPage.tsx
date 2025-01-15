@@ -2,8 +2,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Maxwidth from '@/layouts/MaxWidth'
 import {JobDetail} from '@/components/client/JobDetail';
 import {JobApplications} from '@/components/common/JobApplications';
+import { useScrollToTop } from "@/hooks/common/useScrollToTop";
 
 const JobDetailPage: React.FC = () => {
+
+    useScrollToTop();
 
     return (
         <Maxwidth>

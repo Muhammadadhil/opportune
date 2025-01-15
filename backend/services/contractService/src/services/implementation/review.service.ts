@@ -1,11 +1,12 @@
 
 import { IReviewService } from "../interfaces/IReviewService";
-import { ICreateReview, IReview } from "../../schema/review.schema";
+import { ICreateReview, IGetReviews, IReview } from "../../interfaces/IReview";
 import { IReviewRepository } from "../../repositories/interfaces/IReviewRepository";
 import { ObjectId } from "mongoose";
 import { ReviewDTO } from "../../dto/review.dto";
 import { IUserService } from "../interfaces/IUserService";
 import { IContractRepository } from "../../repositories/interfaces/IContractRepository";
+
 
 export class ReviewService implements IReviewService {
     private _reviewRepository: IReviewRepository;
@@ -44,7 +45,22 @@ export class ReviewService implements IReviewService {
         await this._contractRepository.update(contract._id as ObjectId, { [isClientReview ? 'clientReviewed' : 'freelancerReviewed']: true });
 
         await this._userService.updateUserRating(review.revieweeId);
-
         return review;
+    }
+
+    async getReviews(userId: ObjectId): Promise<IReview[]> {
+        const reviews =  await this._reviewRepository.getReviewsForUser(userId);
+        return reviews;
+    //     const reviewsData : IGetReviews[] = reviews.map((review) => {
+    //         return {
+    //             userId: review.revieweeId,
+    //             type: review.type === "CLIENT_TO_FREELANCER" ? "CLIENT" : "FREELANCER",
+    //             rating: review.rating,
+    //             comment: review.comment,
+    //             createdAt: review.createdAt,
+    //         }
+    //     })
+
+    //     return reviewsData;
     }
 }

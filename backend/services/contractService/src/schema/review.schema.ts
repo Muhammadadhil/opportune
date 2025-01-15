@@ -1,24 +1,5 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
-
-export interface IReview extends Document {
-    contractId: ObjectId;
-    reviewerId: ObjectId; // User giving the review
-    revieweeId: ObjectId; // User being reviewed
-    rating: number;       // 1-5 stars
-    comment: string;
-    type: "CLIENT_TO_FREELANCER" | "FREELANCER_TO_CLIENT";
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-export interface ICreateReview {
-    contractId: Schema.Types.ObjectId;
-    reviewerId: Schema.Types.ObjectId;
-    revieweeId: Schema.Types.ObjectId;
-    rating: number;
-    comment: string;
-    type: "CLIENT_TO_FREELANCER" | "FREELANCER_TO_CLIENT";
-}
+import { IReview } from "../interfaces/IReview";
 
 const ReviewSchema: Schema = new Schema<IReview>(
     {

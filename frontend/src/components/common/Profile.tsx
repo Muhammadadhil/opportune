@@ -19,6 +19,8 @@ import { useFreelancerProfile } from "@/hooks/user/useFreelancerProfile";
 import profileimg from "@/assets/profilePicture.jpg";
 import { getUserById } from "@/api/user";
 import PortfolioCard from "../freelancer/PortfolioCard";
+import {useReviews} from '@/hooks/reviews/useReviews'
+import ReviewCard from "./ReviewCard";
 
 export default function Profile() {
     const { userInfo, clientData } = useSelector((state: RootState) => state.user);
@@ -33,12 +35,16 @@ export default function Profile() {
     const [userSpecificDetails, setUserSpecificDetails] = useState<any>(null);
 
     console.log("isOwnProfile:", isOwnProfile);
-    console.log("profileUser:", profileUser);
+    console.log("profileUser:", profileUser);   
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { data: portfolios , refetch:portfolioRefetch } = usePortfolios(userInfo?._id!);
+    const { data: portfolios , refetch:portfolioRefetch } = usePortfolios(userInfo?._id ?? '');
 
+    const { data: reviews  } = useReviews(userInfo?._id ?? '');
+
+    console.log("reviews:", reviews);
+    
     console.log("portfolios:", portfolios);
 
     const { data: freelancer, refetch } = useFreelancerProfile(userInfo?.role, userInfo?._id);
@@ -275,10 +281,11 @@ export default function Profile() {
                     )}
                 </div>
 
+
                 <div className="mt-6">
                     {displayUser?.role === "client" && (
                         <div className="mt-6">
-                            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3">
                                 {visibleJobs?.map((job, index) => (
                                     <JobCard key={index} job={job} />
                                 ))}
@@ -289,6 +296,22 @@ export default function Profile() {
                                     </Link>
                                 )}
                             </div>
+                        </div>
+                    )}
+                </div>
+
+                <div className="mt-6">
+                    {displayUser?.role === "freelancer" && (
+                        <div>
+                            <h2 className="text-xl font-semibold mb-4 text-zinc-600">Reviews</h2>
+                            {(!portfolios || portfolios.length === 0) && <p className="text-muted-foreground mb-7">No Reviews to list.</p>}
+
+                            {reviews?.map((review, index) => (
+                                <div className="mb-3 w-[800px]">
+                                    <ReviewCard key={index} review={review} />
+                                </div>
+                            ))}
+                            
                         </div>
                     )}
                 </div>

@@ -1,6 +1,5 @@
 import { ObjectId } from "mongoose";
 import { IUser } from "../../entities/UserEntity";
-import { IReview } from "../../schema/review.schema";
 
 export interface IUserService {
     isUserBlocked(userId: ObjectId): Promise<boolean | undefined>;

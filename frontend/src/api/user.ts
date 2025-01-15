@@ -8,8 +8,8 @@ export const saveClientDetails = async (clientData: IClientData) => {
         clientData,
     });
 };
-// freelancer
 
+// freelancer
 export const getUploadSignedUrl= async (fileName:string,fileType:string)=>{
      const response = await apiClient.post("/user/generate-presigned-url", { fileName, fileType });
      return response.data;

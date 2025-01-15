@@ -38,5 +38,6 @@ router.patch("/submission/accept", authenticate(["client"]), submissionControlle
 
 //submit review
 router.post("/review/submit", authenticate(['client', 'freelancer']), reviewController.submitReview);
+router.get("/reviews/:userId", authenticate(['client', 'freelancer']), reviewController.getReviews);
 
 export default router;

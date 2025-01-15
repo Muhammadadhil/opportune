@@ -1,5 +1,5 @@
 import { IReviewRepository } from "../interfaces/IReviewRepository";
-import { ICreateReview, IReview } from "../../schema/review.schema";
+import { ICreateReview, IReview } from "../../interfaces/IReview";
 import { BaseRepository } from "./baseRepository";
 import { Review } from "../../schema/review.schema";
 import { ObjectId } from "mongoose";
@@ -17,6 +17,6 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
     }
 
     async getReviewsForUser(userId: ObjectId): Promise<IReview[]> {
-        return this.Review.find({ revieweeId: userId });
+        return this.Review.find({ revieweeId: userId }).populate('reviewerId','firstname lastname email country role');
     }   
 }
