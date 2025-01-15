@@ -14,8 +14,6 @@ export const initSocketServer = (httpServer:any)=> {
 
     io.on('connection', (socket) => {
 
-        // console.log('New client connected:', socket.id);
-
         socket.on('register',(data) => {
             const {userId,userRole} = data;
             socket.join(userId);

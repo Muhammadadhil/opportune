@@ -1,7 +1,8 @@
 import io from "socket.io-client";
 
 const createSocketConnection = (socketUrl: string, userId?: string, userRole?: string) => {
-    console.log("socektUrl connection url:", socketUrl);
+    
+    // console.log("socektUrl connection url:", socketUrl);
 
     const socket = io(socketUrl, {
         transports: ["websocket", "polling"],

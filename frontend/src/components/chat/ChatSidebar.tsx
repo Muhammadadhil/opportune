@@ -30,7 +30,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
 
     const fetchChatRooms = async () => {
         try {
-            const chatRooms = await getChatRooms(userInfo._id);
+            const chatRooms = await getChatRooms(userInfo?._id);
             setChatRooms(chatRooms);
         } catch (error) {
             console.error("Error fetching chat rooms:", error);
@@ -38,7 +38,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
     };
 
     const filteredChatRooms = chatRooms.filter((chat) => {
-        const { otherUser } = getChatParticipants(chat,userInfo._id);
+        const { otherUser } = getChatParticipants(chat,userInfo?._id);
         const searchTerm = searchQuery.toLowerCase();
         return otherUser.firstname?.toLowerCase().includes(searchTerm) || otherUser.lastname?.toLowerCase().includes(searchTerm) || otherUser.email?.toLowerCase().includes(searchTerm);
     });
@@ -67,7 +67,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
             
             <div className="flex-1 overflow-y-auto">
                 {filteredChatRooms.map((chat) => {
-                    const {otherUser} = getChatParticipants(chat,userInfo._id);
+                    const {otherUser} = getChatParticipants(chat,userInfo?._id);
                     return (
                         <div
                             key={chat._id}
@@ -81,7 +81,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
                             <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-start">
                                     <h3 className="font-semibold truncate">{otherUser.firstname && otherUser.lastname ? `${otherUser.firstname} ${otherUser.lastname}` : "New Message"}</h3>
-                                    {chat.lastMessageAt && <span className="text-xs text-gray-500 whitespace-nowrap ml-2">{getRelativeTime(chat.lastMessageAt)}</span>}
+                                    {/* {chat.lastMessageAt && <span className="text-xs text-gray-500 whitespace-nowrap ml-2">{getRelativeTime(chat.lastMessageAt)}</span>} */}
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {/* {chat?.unreadCount > 0 && <Circle className="h-2 w-2 fill-blue-600 text-blue-600" />} */}

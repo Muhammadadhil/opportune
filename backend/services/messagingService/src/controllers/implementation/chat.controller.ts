@@ -16,15 +16,13 @@ export class ChatController implements IChatController {
         this.getAllChatRooms = this.getAllChatRooms.bind(this);
     }
 
-
-    async chatRoomHandler(req:Request,res:Response,next:NextFunction){
+    async chatRoomHandler(req:Request,res:Response,next:NextFunction){  
         try {
             const { clientId, freelancerId } = req.body;
 
             const chatRoom = await this._chatService.chatRoom(clientId, freelancerId);
             res.status(200).json(chatRoom);
 
-            
         } catch(error){
             next(error);
         }

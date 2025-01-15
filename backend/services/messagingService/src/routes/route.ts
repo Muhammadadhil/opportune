@@ -7,7 +7,6 @@ import { IMessageController } from "../controllers/interface/IMessageController"
 const chatController = container.get<IChatController>(TYPES.IChatController);
 const messageController = container.get<IMessageController>(TYPES.IMessageController);
 
-
 const router = Router();
 
 router.post('/chat-room',chatController.chatRoomHandler);

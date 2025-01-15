@@ -6,7 +6,7 @@ export const getChatParticipants = (chat: IChatRoom,currentUserId: string): {
         otherUser: IUser;
     } => {
 
-        console.log('chatRoom to get users:',chat)
+        // console.log('chatRoom to get users:',chat)
 
         if (!chat?.participants?.length || chat.participants.length !== 2) {
             throw new Error("Invalid chat room participants");
@@ -15,10 +15,12 @@ export const getChatParticipants = (chat: IChatRoom,currentUserId: string): {
         const [participant1, participant2] = chat.participants;
 
         if (participant1._id === currentUserId) {
+            
             return {
                 currentUser: participant1,
                 otherUser: participant2,
             };
+
         } else {
             return {
                 currentUser: participant2,

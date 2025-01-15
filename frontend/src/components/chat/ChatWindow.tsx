@@ -13,7 +13,8 @@ import { newMessage } from "@/types/IMessage";
 import VideoCallOverlay from "./VideoCallOverlay";
 
 const ChatWindow: React.FC = () => {
-    const socket = useChatSocket();
+    
+    const {socket,onlineUsers} = useChatSocket();
     const location = useLocation();
     const queryClient = useQueryClient();
     const state = location.state as ChatState;
@@ -41,16 +42,20 @@ const ChatWindow: React.FC = () => {
     useEffect(() => {
 
         if (!socket || !chatRoomId) return;
+
         socket.emit("joinRoom", chatRoomId);
 
         return () => {
             socket.off("joinRoom");
         };
+        
     }, [chatRoomId, socket]);
 
 
     useEffect(() => {
+
         if (!socket) return;
+
         socket.on("newMessage", (message) => {
             if (!chatRoomId) return;
             queryClient.setQueryData(["messages", chatRoomId], (oldData: IMessage[] = []) => {
@@ -148,6 +153,9 @@ const ChatWindow: React.FC = () => {
 
     const messageGroups = groupMessagesByDate(messages);
 
+    console.log('online users:',onlineUsers);
+    const isUserOnline = onlineUsers.includes(receiver._id);
+
     return (
         <div className="flex-1 flex flex-col h-[calc(100vh-8rem)] bg-white">
             {/* Chat header */}
@@ -156,11 +164,11 @@ const ChatWindow: React.FC = () => {
                     <div className="flex items-center gap-3">
                         <div className="relative">
                             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">{receiver.firstname?.[0] || receiver._id.charAt(0)}</div>
-                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                            <div className={`absolute bottom-0 right-0 w-3 h-3 ${isUserOnline ? 'bg-green-500' : 'bg-gray-500'} rounded-full border-2 border-white`}></div>
                         </div>
                         <div>
                             <h2 className="font-semibold">{receiver.firstname ? `${receiver.firstname} ${receiver.lastname || ""}` : receiver._id}</h2>
-                            <span className="text-sm text-gray-500">Freelancer</span>
+                            <span className="text-sm text-gray-500">{`${isUserOnline ? 'online' : 'offline'}`}</span>
                         </div>
                     </div>
 
