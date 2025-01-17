@@ -11,6 +11,7 @@ import { Video } from "lucide-react";
 import { ChatState } from "@/types/IChat";
 import { newMessage } from "@/types/IMessage";
 import VideoCallOverlay from "./VideoCallOverlay";
+import { ScrollArea } from "../ui/scroll-area";
 
 const ChatWindow: React.FC = () => {
     
@@ -189,7 +190,7 @@ const ChatWindow: React.FC = () => {
             </div>
 
             {/* Messages area with containerRef */}
-            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-4 py-6">
+            <ScrollArea ref={messagesContainerRef} className="flex-1 px-4 py-6">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -207,7 +208,7 @@ const ChatWindow: React.FC = () => {
                     ))
                 )}
                 <div ref={messagesEndRef} />
-            </div>
+            </ScrollArea>
 
             {/* Chat input */}
             <div className="flex-none">

@@ -6,6 +6,7 @@ import AdminRoute from "./routes/AdminRouter";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
+import { VideoCallProvider } from "@/contexts/videoCallContext";
 
 function App() {
 
@@ -16,14 +17,14 @@ function App() {
     }, [theme]);
 
     return (
-        <>
+        <VideoCallProvider>
             <ToastContainer />
             <Toaster  />
             <Routes>
                 <Route path="/*" element={<UserRoute />} />
                 <Route path="/admin/*" element={<AdminRoute />} />
             </Routes>
-        </>
+        </VideoCallProvider>
     );
 }
 

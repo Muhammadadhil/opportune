@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
+import { useVideoCallSocket } from "@/hooks/socket/useVideoCallSocket";
 
 interface VideoCallProps {
     roomId: string;
@@ -12,7 +13,10 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
 
     const zegoRef = useRef<any>(null);
 
+    // const { socket } = useVideoCallSocket();
+
     useEffect(() => {
+
         const initCall = async () => {
             try {
 
@@ -52,6 +56,15 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
                         onCallEnd?.();
                     },
                 });
+
+                // socket logic to send call to the other user
+
+                // socket.emit('call', {
+                //     roomId,
+                //     userId,
+                //     userName,
+                // });
+
             } catch (error) {
                 console.error("Failed to initialize video call:", error);
                 onCallEnd?.();

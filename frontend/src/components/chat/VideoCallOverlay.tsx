@@ -11,11 +11,8 @@ interface VideoCallProps {
     onCallEnd?: () => void;
 }
 
-// interface VideoCallOverlayProps extends VideoCallProps {
-//     // onClose?: () => void;
-// }
-
 const VideoCallOverlay: React.FC<VideoCallProps> = ({ ...props }) => {
+    
     useEffect(() => {
         document.body.style.overflow = "hidden";
         return () => {

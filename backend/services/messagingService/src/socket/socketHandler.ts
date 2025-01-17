@@ -29,9 +29,7 @@ const socketHandler = (io:Namespace) => {
 
             console.log('socket rooms:',socket.rooms);
 
-            // join a chat room
             socket.on('joinRoom',(chatRoomId:string)=>{
-                // console.log('User joined room: chatRoomId:', chatRoomId);
                 socket.join(chatRoomId);
             });
 
