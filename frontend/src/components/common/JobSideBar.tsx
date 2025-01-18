@@ -182,10 +182,10 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
     return (
         <div>
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                <SheetContent className="w-full max-w-[90vw] sm:max-w-[800px] " side="right" forceMount>
-                    <SheetHeader className="p-6 border-b">
-                        <SheetTitle>{job.jobTitle}</SheetTitle>
-                        <div className="flex justify-between items-center mt-2 text-sm text-muted-foreground">
+                <SheetContent className="w-full max-w-[90vw] sm:max-w-[800px] bg-white dark:bg-black border-l border-gray-200 dark:border-gray-800" side="right" forceMount>
+                    <SheetHeader className="p-6 border-b border-gray-200 dark:border-gray-800">
+                        <SheetTitle className="text-gray-900 dark:text-white">{job.jobTitle}</SheetTitle>
+                        <div className="flex justify-between items-center mt-2 text-sm text-gray-600 dark:text-gray-400">
                             <span>
                                 {job.category} / {job.subCategory}
                             </span>
@@ -195,35 +195,35 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                     <ScrollArea className="h-[calc(100vh-10rem)] mt-6 pr-4">
                         <div className="space-y-6">
                             <div>
-                                <h3 className="font-semibold mb-2">Client Details</h3>
-                                <p className="hover:text-blue-600 cursor-pointer " onClick={() => handleNavigateProfile(job.clientId._id)}>
+                                <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Client Details</h3>
+                                <p className="hover:text-blue-600 cursor-pointer text-gray-700 dark:text-gray-300" onClick={() => handleNavigateProfile(job.clientId._id)}>
                                     {job?.clientId?.firstname + " " + job?.clientId?.lastname}
                                 </p>
-                                <p>{job.clientId?.email}</p>
+                                <p className="text-gray-600 dark:text-gray-400">{job.clientId?.email}</p>
                                 {/* Rating */}
                                 <div className="flex items-center gap-1">
                                     <div className="flex">
                                         {[...Array(5)].map((_, index) => (
-                                            <Star key={index} className={`w-4 h-4 ${index < fullStars ? "text-yellow-400 fill-yellow-400" : "text-gray-300 fill-gray-300"}`} />
+                                            <Star key={index} className={`w-4 h-4 ${index < fullStars ? "text-yellow-400 fill-yellow-400" : "text-gray-300 dark:text-gray-700 fill-gray-300 dark:fill-gray-700"}`} />
                                         ))}
                                     </div>
-                                    <span className="text-sm text-muted-foreground">({userInfo?.reviewCount})</span>
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">({userInfo?.reviewCount})</span>
                                 </div>
                             </div>
                             <div>
-                                <h3 className="font-semibold mb-2">Job Description</h3>
-                                <p>{job.description}</p>
+                                <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Job Description</h3>
+                                <p className="text-gray-700 dark:text-gray-300">{job.description}</p>
                             </div>
                             <div>
-                                <h3 className="font-semibold mb-2">Requirements</h3>
+                                <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Requirements</h3>
                                 <ul className="list-disc pl-5 space-y-1">
                                     {job.skillsRequired.map((skill, index) => (
-                                        <li key={index}>{skill}</li>
+                                        <li key={index} className="text-gray-700 dark:text-gray-300">{skill}</li>
                                     ))}
                                 </ul>
                             </div>
                         </div>
-                        <SheetFooter className="mt-6 pt-6 border-t">
+                        <SheetFooter className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
                             {isApplyOpen && (
                                 <div className="w-full space-y-4 flex flex-col p-2">
 
@@ -240,7 +240,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                                 </Button>
                                                 <Button
                                                     type="button"
-                                                    variant={cvSelectionMode === 'new' ? 'default' : 'outline'}
+                                                    variiant={cvSelectionMode === 'new' ? 'default' : 'outline'}
                                                     onClick={() => setCvSelectionMode('new')}
                                                 >
                                                     Upload New CV
@@ -339,28 +339,28 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
 
                             {!isApplyOpen && job.isApplied === true && applicationDetails && (
                                 <div className="w-full space-y-4">
-                                    <div className="bg-gray-50 p-4 rounded-lg">
-                                        <h3 className="font-semibold mb-3 text-green-600">Application Sent</h3>
+                                    <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+                                        <h3 className="font-semibold mb-3 text-green-600 dark:text-green-500">Application Sent</h3>
                                         <div className="space-y-2 text-sm">
                                             <div className="flex justify-between">
-                                                <span className="text-gray-600">Status:</span>
-                                                <span className="font-medium capitalize">{applicationDetails.status}</span>
+                                                <span className="text-gray-600 dark:text-gray-400">Status:</span>
+                                                <span className="font-medium capitalize text-gray-900 dark:text-white">{applicationDetails.status}</span>
                                             </div>
 
                                             {applicationDetails.freelancerPrice !== null && applicationDetails.freelancerPrice !== undefined && applicationDetails.freelancerPrice > 0 && (
                                                 <div className="flex justify-between">
-                                                    <span className="text-gray-600">Your Proposed Price:</span>
+                                                    <span className="text-gray-600 dark:text-gray-400">Your Proposed Price:</span>
                                                     <span className="font-medium">${applicationDetails.freelancerPrice}</span>
                                                 </div>
                                             )}
                                             {applicationDetails.freelancerNotes && (
                                                 <div className="mt-3">
-                                                    <span className="text-gray-600">Your Message:</span>
-                                                    <p className="mt-1 text-gray-700">{applicationDetails.freelancerNotes}</p>
+                                                    <span className="text-gray-600 dark:text-gray-400">Your Message:</span>
+                                                    <p className="mt-1 text-gray-700 dark:text-gray-300">{applicationDetails.freelancerNotes}</p>
                                                 </div>
                                             )}
                                             <div className="flex justify-between">
-                                                <span className="text-gray-600">Applied on:</span>
+                                                <span className="text-gray-600 dark:text-gray-400">Applied on:</span>
                                                 <span className="font-medium">
                                                     {formatDate(applicationDetails.createdAt!)}
                                                 </span>
@@ -373,7 +373,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                             {!isApplyOpen && job.isApplied !== true && userInfo?._id && (
                                 <Button 
                                     onClick={() => setIsApplyOpen(true)} 
-                                    className="bg-green-800 hover:bg-green-700 mt-8 justify-end"
+                                    className="bg-green-800 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white mt-8 justify-end"
                                 >
                                     Apply Now
                                 </Button>

@@ -12,6 +12,11 @@ import { ChatState } from "@/types/IChat";
 import { newMessage } from "@/types/IMessage";
 import VideoCallOverlay from "./VideoCallOverlay";
 import { ScrollArea } from "../ui/scroll-area";
+import { useVideoCall } from '@/contexts/videoCallContext';
+import { useVideoCallSocket } from '@/hooks/socket/useVideoCallSocket';
+import { useToast } from "@/hooks/use-toast";
+import CallingOverlay from "@/components/chat/CallingOverLay";
+import { useNavigate } from "react-router-dom";
 
 const ChatWindow: React.FC = () => {
     
@@ -20,17 +25,44 @@ const ChatWindow: React.FC = () => {
     const queryClient = useQueryClient();
     const state = location.state as ChatState;
 
+    const { initiateCall , socket: videoCallSocket } = useVideoCall();
+    // const { socket: videoCallSocket } = useVideoCallSocket();
+    const { toast } = useToast();
+
     const [isInCall, setIsInCall] = useState(false);
+    const [isCalling, setIsCalling] = useState(false);
+
+    const navigate = useNavigate();
+
+    // const randomVideoCallId = Date.now();
+    const videoCallIdRef = useRef(`${Math.random().toString(36).substr(2, 9)}-${Date.now()}`);
+
+    console.log('videoCallIdRef', videoCallIdRef.current);
+
+    const handleVideoCall = () => {
+        setIsCalling(true);
+        initiateCall(
+            chatRoomId + videoCallIdRef.current,
+            sender._id,
+            `${sender.firstname} ${sender.lastname}`,
+            receiver._id,
+            `${receiver.firstname} ${receiver.lastname}`
+        );
+    };
 
     const handleCallEnd = useCallback(() => {
 
+        console.log('!!!!!!!!!!!!!! handleCallEnd !!!!!!!!!!!!!!!!!');
+
         setIsInCall(false);
-        setTimeout(() => {
-            const container = document.querySelector("#video-container");
-            if (container) {
-                container.innerHTML = "";
-            }
-        }, 100);
+        const container = document.querySelector("#video-container");
+        if (container) {
+            container.innerHTML = "";
+        }
+        navigate(-1);
+        // setTimeout(() => {
+            
+        // }, 100);
     }, []);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -41,7 +73,6 @@ const ChatWindow: React.FC = () => {
     const { data: messages = [], isLoading, error } = useMessages(chatRoomId || "");
 
     useEffect(() => {
-
         if (!socket || !chatRoomId) return;
 
         socket.emit("joinRoom", chatRoomId);
@@ -49,12 +80,9 @@ const ChatWindow: React.FC = () => {
         return () => {
             socket.off("joinRoom");
         };
-        
     }, [chatRoomId, socket]);
 
-
     useEffect(() => {
-
         if (!socket) return;
 
         socket.on("newMessage", (message) => {
@@ -79,6 +107,29 @@ const ChatWindow: React.FC = () => {
 
         scrollToBottom();
     }, [messages]);
+
+    useEffect(() => {
+        if (!videoCallSocket) return;
+
+        videoCallSocket.on('call-accepted', (roomId: string) => {
+            setIsCalling(false);
+            setIsInCall(true);
+        });
+
+        videoCallSocket.on('video-call-failed', (data: { reason: string }) => {
+            setIsCalling(false);
+            toast({
+                title: "Call Failed",
+                description: data.reason,
+                variant: "destructive"
+            });
+        });
+
+        return () => {
+            videoCallSocket.off('call-accepted');
+            videoCallSocket.off('video-call-failed');
+        };
+    }, [videoCallSocket]);
 
     if (!state) {
         return (
@@ -175,7 +226,8 @@ const ChatWindow: React.FC = () => {
 
                     <div className="flex items-center gap-2">
                         <div className="chat-interface">
-                            <button onClick={() => setIsInCall(true)} className="p-2 hover:bg-gray-100 rounded-full transition-colors ">
+
+                            <button onClick={handleVideoCall} className="p-2 hover:bg-gray-100 rounded-full transition-colors ">
                                 <Video className="w-5 h-5 text-gray-600 " />
                             </button>
                         </div>
@@ -215,9 +267,35 @@ const ChatWindow: React.FC = () => {
                 <ChatInput onSend={sendMessage} />
             </div>
 
-            {/* video call  */}
+            {/* Show calling overlay for the caller */}
+            {isCalling && (
+                <CallingOverlay 
+                    calleeName={`${receiver.firstname} ${receiver.lastname}`}
+                    onCancel={() => {
+                        setIsCalling(false);
+                        videoCallSocket?.emit('cancel-call', {
+                            roomId: chatRoomId,
+                            receiverId: receiver._id
+                        });
+                    }}
+                    onJoin={() => {
+                        setIsCalling(false);
+                        setIsInCall(true);
+                    }}
+                />
+            )}
+
+            {/* Show video call when call is active */}
             {isInCall && (
-                <VideoCallOverlay roomId={`${chatRoomId}${Date.now()}`} userId={sender._id} userName={`${sender.firstname} ${sender.lastname}`} onCallEnd={handleCallEnd} />
+                <VideoCallOverlay 
+                    roomId={`${chatRoomId}${videoCallIdRef.current}`}
+                    userId={sender._id}
+                    userName={`${sender.firstname} ${sender.lastname}`}
+                    onCallEnd={() => {
+                        setIsInCall(false);
+                        handleCallEnd();
+                    }}
+                />
             )}
         </div>
     );

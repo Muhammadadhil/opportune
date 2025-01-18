@@ -27,7 +27,7 @@ export default function Dashboard() {
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-green-600">${totalCommission}</div>
+                        <div className="text-[40px] font-bold text-green-600">${totalCommission.toFixed(2)}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -36,7 +36,7 @@ export default function Dashboard() {
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-green-600">${averageCommission}</div>
+                        <div className="text-[40px] font-bold text-green-600">${averageCommission.toFixed(2)}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -45,7 +45,7 @@ export default function Dashboard() {
                         <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-green-600">${Math.max(...(transactionData.map((t) => t.amount) || [0]))}</div>
+                        <div className="text-[40px] font-bold text-green-600">${Math.max(...(transactionData.map((t) => t.amount.toFixed(2)) || [0]))}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -54,7 +54,7 @@ export default function Dashboard() {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-blue-500">{Math.min(...(transactionData.map((t) => t.amount) || [0]))}</div>
+                        <div className="text-[40px] font-bold text-blue-500">{Math.min(...(transactionData.map((t) => t.amount.toFixed(2)) || [0]))}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -63,7 +63,7 @@ export default function Dashboard() {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-green-600">{dashboardData?.data?.totalEscrowAmount}</div>
+                        <div className="text-[40px] font-bold text-green-600">{dashboardData?.data?.totalEscrowAmount.toFixed(2)}</div>
                     </CardContent>
                 </Card>
                 <Card>

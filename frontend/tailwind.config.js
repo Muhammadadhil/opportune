@@ -2,7 +2,7 @@
 
 
 export default {
-    darkMode: ["class"],
+    darkMode: 'class',
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 
     theme: {
@@ -23,6 +23,10 @@ export default {
                     border: "hsl(var(--sidebar-border))",
                     ring: "hsl(var(--sidebar-ring))",
                 },
+                colors: {
+                    background: 'hsl(var(--background))',
+                    foreground: 'hsl(var(--foreground))'
+                }
             },
             keyframes: {
                 "accordion-down": {

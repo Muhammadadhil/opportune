@@ -27,7 +27,7 @@ const videoCallHandler = (io: Namespace) => {
             socket.on("register-video", (data: { userId: string; userName: string }) => {
 
                 userCallStatus.set(data.userId, { inCall: false, socketId: socket.id });
-                console.log(`User ${data.userId} registered for video calls`);
+                console.log(`User ${data.userId} registered for video calls !!!!!`);
 
             });
 
@@ -37,6 +37,8 @@ const videoCallHandler = (io: Namespace) => {
                 receiver: { userId: string; userName: string };
             }
             ) => {
+
+                console.log('!!! initiating video call !!!');
 
                 const receiverStatus = userCallStatus.get(data.receiver.userId);
 
@@ -58,6 +60,7 @@ const videoCallHandler = (io: Namespace) => {
                 activeCalls.set(data.roomId, callData);
 
                 const recieverSocketId = receiverStatus?.socketId;
+                console.log("reciver socket id:", recieverSocketId);
 
                 // notify the reciever   
                 socket.to(recieverSocketId!).emit('incoming-call', callData);
@@ -72,6 +75,8 @@ const videoCallHandler = (io: Namespace) => {
             })
 
             socket.on('accept-call', (roomId: string) => {
+
+                console.log('!!! acceptingg call !!!') ;
 
                 const callData = activeCalls.get(roomId);
                 if (!callData) return;

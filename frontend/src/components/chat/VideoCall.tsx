@@ -39,13 +39,13 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
 
                 zegoRef.current.joinRoom({
                     container: document.querySelector("#video-container")!,
-                    sharedLinks: [
-                        {
-                            name: "Copy Link",
-                            // url: window.location.origin+"?roomId="+roomId,
-                            url: `${window.location.origin}/video-chat?roomId=${roomId}`
-                        },
-                    ],
+                    // sharedLinks: [
+                    //     {
+                    //         name: "Copy Link",
+                    //         // url: window.location.origin+"?roomId="+roomId,
+                    //         url: `${window.location.origin}/video-chat?roomId=${roomId}`
+                    //     },
+                    // ],
                     scenario: {
                         mode: ZegoUIKitPrebuilt.OneONoneCall,
                     },
@@ -74,17 +74,28 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
         initCall();
 
         return () => {
-
-            console.log('cleaning uppppppppppppppppp !!');
-
+            console.log('Cleaning up video call...');
+            
             if (zegoRef.current) {
                 try {
+                    // Destroy the instance (this internally handles leaving the room)
                     zegoRef.current.destroy();
-
+                    
+                    // Clear the container
                     const container = document.querySelector("#video-container");
-
                     if (container) {
-                        container.innerHTML = "";
+                        while (container.firstChild) {
+                            container.removeChild(container.firstChild);
+                        }
+                    }
+                    
+                    // Release camera and microphone
+                    if (navigator.mediaDevices) {
+                        navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+                            .then(stream => {
+                                stream.getTracks().forEach(track => track.stop());
+                            })
+                            .catch(err => console.error("Error releasing media devices:", err));
                     }
 
                     zegoRef.current = null;

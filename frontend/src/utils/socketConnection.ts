@@ -4,6 +4,8 @@ const createSocketConnection = (socketUrl: string, userId?: string, userRole?: s
     
     // console.log("socektUrl connection url:", socketUrl);
 
+    
+
     const socket = io(socketUrl, {
         transports: ["websocket", "polling"],
         reconnection: true,
@@ -18,6 +20,8 @@ const createSocketConnection = (socketUrl: string, userId?: string, userRole?: s
     socket.on("connect_error", (error) => {
         console.error("Connection Error:", error);
     });
+
+    // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!! creating socket connection 22',socket)
 
     return socket;
 };

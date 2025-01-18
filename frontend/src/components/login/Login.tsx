@@ -16,7 +16,6 @@ import { setAccessToken } from "@/utils/auth";
 import { RootState } from "@/store/store";
 import { loginGoogleUser } from "@/api/auth";
 
-
 const Login: React.FC = () => {
     const [formData, setFormData] = useState({
         email: "",
@@ -26,7 +25,6 @@ const Login: React.FC = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
     const { userInfo } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
@@ -39,7 +37,7 @@ const Login: React.FC = () => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value, // dynamic key (ES6 syntax)
+            [name]: value,
         });
     };
 
@@ -48,7 +46,7 @@ const Login: React.FC = () => {
         if (!formData.email) {
             toast.error("Please enter your email");
             return;
-        }   
+        }
         if (!formData.password) {
             toast.error("Please enter your password");
             return;
@@ -60,15 +58,14 @@ const Login: React.FC = () => {
             dispatch(setCredentials(response.data.data));
             setIsLoading(false);
             setAccessToken(response.data.accessToken);
-            if(response.data.data.role =='freelancer'){
+            if (response.data.data.role == 'freelancer') {
                 navigate("/fr/dashboard");
-            }else{
+            } else {
                 navigate("/cl/dashboard");
-
             }
         } catch (error) {
             setIsLoading(false);
-            console.log('login error:',error);
+            console.log('login error:', error);
             toast.error(error?.response?.data?.message);
         }
     };
@@ -76,12 +73,12 @@ const Login: React.FC = () => {
     const handleGoogleSignIn = useGoogleLogin({
         onSuccess: async (codeResponse) => {
             const response = await loginGoogleUser(codeResponse.access_token);
-            console.log("google signin esponse:", response);
+            console.log("google signin response:", response);
             dispatch(setCredentials(response.data.data));
             setAccessToken(response.data.accessToken);
             if (response.data.authType === "signup" && response.data.data.role === "client") {
                 navigate("/cl/details");
-            }else{
+            } else {
                 navigate("/");
             }
         },
@@ -91,48 +88,73 @@ const Login: React.FC = () => {
     });
 
     return (
-        <div className="flex w-full h-screen min-h-screen bg-gradient-to-b from-green-50 to-white items-center justify-center">
+        <div className="flex w-full h-screen min-h-screen bg-gradient-to-b from-green-50 dark:from-green-950 to-white dark:to-black items-center justify-center transition-colors duration-300">
             {isLoading ? (
                 <Loading />
             ) : (
-                <div className="w-[32rem] h-[38rem] lg:w-12/12 bg-white flex items-center justify-center rounded-2xl shadow-md">
-                    <div className="max-w-md w-full space-y-8">
-                        <h2 className="mt-6 text-center text-2xl font-semibold text-gray-700">Sign in to your account</h2>
+                <div className="w-[32rem] h-[38rem] lg:w-12/12 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 flex items-center justify-center rounded-2xl shadow-md">
+                    <div className="max-w-md w-full space-y-8 p-8">
+                        <h2 className="mt-6 text-center text-2xl font-semibold text-gray-900 dark:text-white">
+                            Sign in to your account
+                        </h2>
 
                         <form className="mt-8 space-y-6" onSubmit={handleLoginSubmit}>
                             <div className="rounded-md shadow-sm space-y-2">
-                                <Label htmlFor="email-address" className="text-gray-700">
+                                <Label htmlFor="email-address" className="text-gray-700 dark:text-gray-300">
                                     Email address
                                 </Label>
-                                <Input id="email-address" name="email" type="email" value={formData.email} onChange={handleInputChange} className="w-full" placeholder="Enter your email" />
+                                <Input 
+                                    id="email-address" 
+                                    name="email" 
+                                    type="email" 
+                                    value={formData.email} 
+                                    onChange={handleInputChange} 
+                                    className="w-full bg-white dark:bg-black border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white" 
+                                    placeholder="Enter your email" 
+                                />
                             </div>
 
                             <PasswordField value={formData.password} onChange={handleInputChange} />
 
                             <div className="flex items-center justify-between">
-                                <Label htmlFor="remember-me" className="text-sm text-gray-700">
-                                    <input id="remember-me" name="remember-me" type="checkbox" className="mr-2 rounded text-indigo-600" />
+                                <Label htmlFor="remember-me" className="flex items-center text-sm text-gray-700 dark:text-gray-300">
+                                    <input 
+                                        id="remember-me" 
+                                        name="remember-me" 
+                                        type="checkbox" 
+                                        className="mr-2 rounded border-gray-300 dark:border-gray-700 text-green-600 focus:ring-green-500" 
+                                    />
                                     Remember me
                                 </Label>
-                                <Link to="/forgot-passsowrd" className="text-xs text-orange-900 hover:text-orange-800">
+                                <Link 
+                                    to="/forgot-password" 
+                                    className="text-xs text-orange-900 dark:text-orange-500 hover:text-orange-800 dark:hover:text-orange-400"
+                                >
                                     Forgot your password?
                                 </Link>
                             </div>
 
-                            <Button type="submit" className="w-full bg-green-800 hover:bg-green-900">
+                            <Button 
+                                type="submit" 
+                                className="w-full bg-green-800 hover:bg-green-900 dark:bg-green-700 dark:hover:bg-green-800 text-white"
+                            >
                                 Sign in
                             </Button>
 
-                            <Button type="button" className="w-full bg-gray-300 hover:bg-slate-300 flex items-center justify-center" onClick={handleGoogleSignIn}>
+                            <Button 
+                                type="button" 
+                                className="w-full bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-900 dark:text-white flex items-center justify-center border border-gray-300 dark:border-gray-700" 
+                                onClick={() => handleGoogleSignIn()}
+                            >
                                 <FcGoogle className="text-xl mr-3" />
                                 Sign in with Google
                             </Button>
                         </form>
 
                         <div className="text-center">
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
                                 Don't have an account?{" "}
-                                <Link to="/type" className="text-gray-800">
+                                <Link to="/type" className="text-green-800 dark:text-green-500 hover:text-green-700 dark:hover:text-green-400">
                                     Signup
                                 </Link>
                             </span>

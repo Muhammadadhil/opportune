@@ -2,10 +2,11 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
-
-
+import { Toaster } from "@/components/ui/toaster";
 import { RootState } from "@/store/store";
 import { useVideoCallSocket } from '@/hooks/socket/useVideoCallSocket'
+import { Socket } from "socket.io-client";
+import { useNavigate } from "react-router-dom";
  
 
 interface VideoCallContextType {
@@ -13,13 +14,11 @@ interface VideoCallContextType {
     incomingCallData: any;
     acceptCall: (roomId:string,calledId:string) => void;
     rejectCall: (roomId:string,calledId:string) => void;
-
     initiateCall: (roomId: string, userId: string, userName: string, receiverId: string, receiverName: string) => void;
+    socket: Socket | null;
 }
 
-
 const VideoCallContext = createContext<VideoCallContextType | null>(null);
-
 
 export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
 
@@ -32,13 +31,14 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
 
     const { socket, acceptCall, rejectCall, initiateCall } = useVideoCallSocket();
 
-
-
     useEffect(()=>{
 
         if(!socket) return;
 
         socket.on('incoming-call', (callData: any)=> {
+
+            // console.log("incoming-call incoming-callincoming-callincoming-callincoming-callincoming-callincoming-call", callData);
+
             setIsIncomingCall(true);
             setIncomingCallData(callData);
 
@@ -46,7 +46,7 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
                 title: 'Incoming Video Call',
                 description: `${callData.caller.userName} is calling you`,
                 variant: 'default',
-                duration: 30000,
+                duration: 20000,
                 action: (
                     <div className="flex gap-2">
                         <Button
@@ -74,8 +74,10 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
     },[socket]);
 
 
-
+    const navigate = useNavigate();
+    
     const handleAcceptCall = (roomId: string) => {
+        navigate(`/video-chat?roomId=${roomId}`);
         acceptCall(roomId);
         setIsIncomingCall(false);
         setIncomingCallData(null);
@@ -87,25 +89,29 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
         setIncomingCallData(null);
     }
 
-
     const value = {
         isIncomingCall,
         incomingCallData,
         acceptCall: handleAcceptCall,
         rejectCall: handleRejectCall,
         initiateCall,
+        socket
     }
 
     return (
-
-        <VideoCallContext.Provider value={value}>
-            {children}
-        </VideoCallContext.Provider>
+        <>
+            <Toaster />
+            <VideoCallContext.Provider value={value}>
+                {children}
+            </VideoCallContext.Provider>
+        </>
+        
     )
 
 }
 
 export function useVideoCall(){
+
     const context = useContext(VideoCallContext);
 
     if(!context) throw new Error('useVideoCall must be used within a VideoCallProvider');

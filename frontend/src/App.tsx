@@ -13,17 +13,24 @@ function App() {
     const { theme } = useSelector((state: RootState) => state.app);
 
     useEffect(() => {
-        document.body.className = theme === "dark" ? "dark-theme" : "light-theme";
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(theme);
+
+        // Set data-theme attribute for additional styling if needed
+        document.documentElement.setAttribute('data-theme', theme);
     }, [theme]);
+
 
     return (
         <VideoCallProvider>
-            <ToastContainer />
-            <Toaster  />
-            <Routes>
-                <Route path="/*" element={<UserRoute />} />
-                <Route path="/admin/*" element={<AdminRoute />} />
-            </Routes>
+            <div className="min-h-screen ">
+                <ToastContainer />
+                <Toaster />
+                <Routes>
+                    <Route path="/*" element={<UserRoute />} />
+                    <Route path="/admin/*" element={<AdminRoute />} />
+                </Routes>
+            </div>
         </VideoCallProvider>
     );
 }

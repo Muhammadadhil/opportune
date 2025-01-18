@@ -1,28 +1,28 @@
-body {
-  @apply font-Inter;
-  background: #ffffff;
-} 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.light-theme {
-    background-color: white;
-    color: black;
-}
+body {
+  @apply font-Inter transition-colors duration-300 bg-white dark:bg-black text-gray-900 dark:text-gray-100;
+} 
 
-.dark-theme {
-    background-color: black;
-    color: white;
-}
 
-@layer utilities {
-  .custom-dotted {
-    border-style: dotted;
-    border-image: radial-gradient(circle, black 1px, transparent 1px) 1;
+@layer base { 
+  :root {
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --foreground: 0 0% 85%;
   }
 }
+
+
+.custom-dotted {
+  border-style: dotted;
+  border-image: radial-gradient(circle, black 1px, transparent 1px) 1;
+}
+
 
 @layer base {
   :root {

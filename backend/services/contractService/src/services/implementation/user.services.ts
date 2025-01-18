@@ -41,7 +41,7 @@ export class UserService implements IUserService {
         // Update user profile
         const updatedUser = await this._userRepository.update(userId as unknown as ObjectId, { averageRating, reviewCount });
         console.log('updated user:',updatedUser);
-
+        
         //adCh1
         await axios.post(`http://localhost:3015/average-rating/add/${updatedUser?._id}`, { userData:updatedUser });
 

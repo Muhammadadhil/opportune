@@ -65,11 +65,11 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
 
     return (
         <div onClick={() => setSheetOpen(true)}>
-            <li key={job._id} className="bg-white p-4 rounded-lg border shadow-sm hover:bg-gray-50 transition-all duration-300 ease-in-out cursor-pointer">
-                <h3 className="font-bold text-lg mb-2 text-gray-700">{job.jobTitle}</h3>
+            <li key={job._id} className="bg-white dark:bg-black text-gray-900 dark:text-gray-100 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-300 ease-in-out cursor-pointer">
+                <h3 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">{job.jobTitle}</h3>
                 {isAdmin && job.isActive && (
                     <div className="flex justify-end">
-                        <Button onClick={() => setDeactivate(true)} className="bg-red-700 hover:bg-red-800">
+                        <Button onClick={() => setDeactivate(true)} className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800">
                             Deactivate job
                         </Button>
                     </div>
@@ -107,21 +107,21 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
                         />
                     </div>
                 )}
-                <p className="text-gray-900 mb-2 text-sm">{job.subCategory}</p>
-                <p className="text-gray-600 mb-2 text-sm">{job.description}</p>
+                <p className="text-gray-700 dark:text-gray-300 mb-2 text-sm">{job.subCategory}</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-2 text-sm">{job.description}</p>
                 <div className="flex flex-wrap gap-2 mb-2">
                     {job.skillsRequired.map((skill, index) => (
-                        <span key={index} className="bg-zinc-100 text-gray-700 rounded-full px-3 py-1 text-sm">
+                        <span key={index} className="bg-gray-100 dark:bg-black text-gray-700 dark:text-gray-300 rounded-full px-3 py-1 text-sm border dark:border-gray-800">
                             {skill}
                         </span>
                     ))}
                 </div>
-                <div className="text-sm text-gray-500 flex flex-col sm:flex-row sm:justify-between">
+                <div className="text-sm text-gray-500 dark:text-gray-400 flex flex-col sm:flex-row sm:justify-between">
                     <span>Budget: ${job.budget}</span>
                     <span>applicants: {job.applicantsCount}</span>
                 </div>
-                <div className="text-sm text-gray-800 mt-2 text-end">
-                    <span className="text-gray-500">posted {getRelativeTime(job.createdAt!)}</span>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-2 text-end">
+                    <span>posted {getRelativeTime(job.createdAt!)}</span>
                 </div>
                 {sheetOpen && <JobSideBar job={job} sheetOpen={sheetOpen} setSheetOpen={setSheetOpen} onApply={onApply} />}
                 {editingJob && <EditJob job={editingJob} isDialogOpen={isDialogOpen} setIsDialogOpen={handleCloseDialog} />}

@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SkeletonCard() {
     return (
-        <div className="bg-white p-4 rounded-lg border shadow-sm space-y-4">
+        <div className="bg-white dark:bg-black p-4 rounded-lg border shadow-sm space-y-4">
             {/* Job Title and Dropdown Skeleton */}
             <div className="flex justify-between items-center">
                 <Skeleton className="h-6 w-32 rounded" /> {/* Job Title */}

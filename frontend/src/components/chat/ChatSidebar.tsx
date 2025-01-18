@@ -7,6 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IChatRoom } from "@/types/IChatRoom";
 import { IUser } from "@/types/IUser";
 import { getChatParticipants } from "@/utils/getChatUser";
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 
 interface ChatSidebarProps {
@@ -18,6 +20,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
     const [chatRooms, setChatRooms] = useState<IChatRoom[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
     console.log("chatRomms:", chatRooms);
 
@@ -43,44 +46,51 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
     });
 
     return (
-        <div className="w-80 h-screen border-r flex flex-col">
-            <div className="p-4 border-b">
-                <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-xl font-semibold">Messages</h1>
-                </div>
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <input
-                        className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full text-sm outline-none"
-                        placeholder="Search messages"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                </div>
+        <div className="w-full md:w-80 h-screen border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-800">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Messages</h2>
             </div>
             
-            <div className="flex-1 overflow-y-auto">
+            <div className="p-4">
+                <Input 
+                    placeholder="Search conversations..." 
+                    className="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                />
+            </div>
+
+            <div className="overflow-y-auto h-[calc(100vh-8rem)]">
                 {filteredChatRooms.map((chat) => {
                     const {otherUser} = getChatParticipants(chat,userInfo?._id);
                     return (
                         <div
                             key={chat._id}
-                            className="p-4 hover:bg-gray-50 cursor-pointer flex items-start gap-3 border-b transition-colors"
-                            onClick={() => onChangeChat(chat._id, userInfo, otherUser)}
+                            className={cn(
+                                "p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors duration-200",
+                                selectedChatId === chat._id && "bg-gray-100 dark:bg-gray-900"
+                            )}
+                            onClick={() => {
+                                setSelectedChatId(chat._id);
+                                onChangeChat(chat._id, userInfo, otherUser);
+                            }}
                         >
-                            <Avatar className="h-12 w-12">
-                                <AvatarImage alt={`${otherUser.firstname} ${otherUser.lastname}`} />
-                                <AvatarFallback>{otherUser.firstname?.[0] || "U"}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-start">
-                                    <h3 className="font-semibold truncate">{otherUser.firstname && otherUser.lastname ? `${otherUser.firstname} ${otherUser.lastname}` : "New Message"}</h3>
-                                    {/* {chat.lastMessageAt && <span className="text-xs text-gray-500 whitespace-nowrap ml-2">{getRelativeTime(chat.lastMessageAt)}</span>} */}
+                            <div className="flex items-center space-x-3">
+                                <Avatar className="h-10 w-10">
+                                    <AvatarImage src={chat.avatar} />
+                                    <AvatarFallback className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                                        {chat?.name?.charAt(0)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                        {chat?.name}
+                                    </p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                        {chat.lastMessage}
+                                    </p>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    {/* {chat?.unreadCount > 0 && <Circle className="h-2 w-2 fill-blue-600 text-blue-600" />} */}
-                                </div>
-                                <p className="text-xs text-gray-500 truncate">{otherUser.email}</p>
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                    {chat.timestamp}
+                                </span>
                             </div>
                         </div>
                     );

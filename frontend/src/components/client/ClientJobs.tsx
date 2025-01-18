@@ -3,7 +3,7 @@ import { RootState } from "@/store/store";
 import { useJobs } from "@/hooks/jobs/useJobs";
 import { useState } from "react";
 import { IJob } from "@/types/IJob";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import SkeletonCard from "../common/LoadingSkelton";
 import EditJob from "./EditJob";
@@ -55,7 +55,7 @@ export default function ClientJobs() {
     return (
         <div className="container mx-auto py-8 max-w-7xl">
             <div className="p-4 max-w-5xl">
-                <h2 className="text-xl font-semibold mb-4">Your Jobs</h2>
+                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Your Jobs</h2>
                 <ul className="space-y-4">
                     {isLoading ? (
                         Array.from({ length: 3 }).map((_, index) => <SkeletonCard key={index} />)
@@ -63,9 +63,12 @@ export default function ClientJobs() {
                         <Nojobs />
                     ) : (
                         jobs?.data?.map((job: IJob) => (
-                            <li key={job._id} className="bg-white p-4 rounded-lg border shadow-sm hover:bg-gray-100 transition-all duration-300 ease-in-out cursor-pointer">
+                            <li key={job._id} className="bg-white dark:bg-black p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm hover:bg-gray-100 dark:hover:bg-zinc-900 transition-all duration-300 ease-in-out cursor-pointer">
                                 <div className="flex justify-between">
-                                    <h3 className="font-bold text-lg mb-2 hover:underline" onClick={() => handleJobClick(job)}>
+                                    <h3 
+                                        className="font-bold text-lg mb-2 hover:underline text-gray-900 dark:text-white" 
+                                        onClick={() => handleJobClick(job)}
+                                    >
                                         {job.jobTitle}
                                     </h3>
                                     <div>
@@ -74,38 +77,43 @@ export default function ClientJobs() {
                                                 e.stopPropagation();
                                                 handleEditClick(job);
                                             }}
-                                            className="h-8 w-8 p-0"
+                                            className="h-8 w-8 p-0 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                                         >
                                             <Pencil size={16} />
                                         </button>
 
                                         <Dialog open={open} onOpenChange={setOpen}>
-                                            <DialogTrigger className="rounded-xl hover:bg-neutral-700">
+                                            <DialogTrigger>
                                                 <Button
                                                     variant="secondary"
-                                                    className=""
+                                                    className=" bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 gap-4"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         setOpen(true);
                                                     }}
                                                 >
-                                                    remove job
+                                                    <Trash2 size={16} />
+                                                    Remove job
                                                 </Button>
                                             </DialogTrigger>
-                                            <DialogContent>
+                                            <DialogContent className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800">
                                                 <DialogHeader>
-                                                    <DialogTitle>Remove the job ?</DialogTitle>
-                                                    <DialogDescription>
+                                                    <DialogTitle className="text-gray-900 dark:text-white">Remove the job?</DialogTitle>
+                                                    <DialogDescription className="text-gray-600 dark:text-gray-400">
                                                         Are you sure you want to remove this job?
-                                                        <span className="block"> You can access the removed jobs in manage jobs</span>
+                                                        <span className="block">You can access the removed jobs in manage jobs</span>
                                                     </DialogDescription>
                                                 </DialogHeader>
                                                 <DialogFooter>
-                                                    <Button variant="outline" onClick={() => setOpen(false)}>
+                                                    <Button 
+                                                        variant="outline" 
+                                                        onClick={() => setOpen(false)}
+                                                        className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800"
+                                                    >
                                                         Cancel
                                                     </Button>
                                                     <Button
-                                                        className="bg-red-700 hover:bg-red-800"
+                                                        className="bg-red-700 hover:bg-red-800 dark:bg-red-800 dark:hover:bg-red-900 text-white"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             if (job?._id) HandleRemove(job._id);
@@ -119,18 +127,18 @@ export default function ClientJobs() {
                                     </div>
                                 </div>
 
-                                <p className="text-gray-600 mb-2 mt-2">{job.description}</p>
+                                <p className="text-gray-600 dark:text-gray-400 mb-2 mt-2">{job.description}</p>
                                 <div className="flex flex-wrap gap-2 mb-2">
                                     {job.searchTags?.map((tag, idx) => (
-                                        <span key={idx} className="bg-zinc-100 text-gray-700 rounded-full px-3 py-1 text-sm">
+                                        <span key={idx} className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-full px-3 py-1 text-sm">
                                             {tag}
                                         </span>
                                     ))}
                                 </div>
-                                <div className="text-sm text-gray-500 ">
-                                    <span className="text-gray-500">posted {getRelativeTime(job.createdAt!)}</span>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    <span>posted {getRelativeTime(job.createdAt!)}</span>
                                 </div>
-                                <div className="text-sm text-gray-800 mt-2 text-end">
+                                <div className="text-sm text-gray-800 dark:text-gray-200 mt-2 text-end">
                                     <span className="font-bold">applicants: {job.applicantsCount}</span>
                                 </div>
                             </li>

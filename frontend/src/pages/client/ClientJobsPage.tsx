@@ -10,7 +10,7 @@ const ClientJobsPage = () => {
             <div className="mx-auto py-8 max-w-7xl">
                 <div className="p-4 md:p-6 max-w-5xl min-h-[800px]">
                     <Tabs defaultValue="all-jobs">
-                        <TabsList>
+                        <TabsList className="bg-white dark:bg-zinc-900">
                             <TabsTrigger value="all-jobs">All Jobs</TabsTrigger>
                             <TabsTrigger value="all-contracts">All Contracts</TabsTrigger>
                         </TabsList>

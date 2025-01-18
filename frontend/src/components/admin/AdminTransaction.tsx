@@ -53,7 +53,7 @@ const AdminTransactions = () => {
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-green-600">${averageCommission}</div>
+                        <div className="text-2xl font-bold text-green-600">${averageCommission.toFixed(2)}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -62,7 +62,7 @@ const AdminTransactions = () => {
                         <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-green-600">${Math.max(...(transactions?.data?.map((t) => t.amount) || [0]))}</div>
+                        <div className="text-2xl font-bold text-green-600">${Math.max(...(transactions?.data?.map((t) => t.amount.toFixed(2)) || [0]))}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -71,7 +71,7 @@ const AdminTransactions = () => {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-green-600">{Math.min(...(transactions?.data?.map((t) => t.amount) || [0]))}</div>
+                        <div className="text-2xl font-bold text-green-600">{Math.min(...(transactions?.data?.map((t) => t.amount.toFixed(2)) || [0]))}</div>
                     </CardContent>
                 </Card>
             </div>

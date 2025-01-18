@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
                             {/* Logo on the left */}
                             <div className="flex-shrink-0">
                                 <Link to="/" className="flex items-center">
-                                    <h2 className="text-2xl font-bold text-slate-800">
+                                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white">
                                         Opportune<span className="text-green-600">.</span>
                                     </h2>
                                 </Link>
@@ -159,9 +159,9 @@ const Navbar: React.FC = () => {
                                 ) : (
                                     <DropdownMenu>
                                         <DropdownMenuTrigger>
-                                            <CgProfile className={`text-2xl ${theme === "dark" ? "text-white" : "text-gray-800"}`} />
+                                            <CgProfile className="text-2xl text-gray-800 dark:text-white" />
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent className={`pt-5 pb-4 text-center ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800"}`}>
+                                        <DropdownMenuContent className="pt-5 pb-4 text-center">
                                             <DropdownMenuLabel>{userInfo.firstname + " " + userInfo.lastname}</DropdownMenuLabel>
                                             <p className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{userInfo.role}</p>
                                             <DropdownMenuSeparator className="px-16" />

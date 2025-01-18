@@ -10,8 +10,8 @@ const VideoCallWrapper: React.FC = () => {
     const roomId=searchParams.get("roomId");
 
     const { userInfo } = useSelector((state: RootState) => state.user);        
-    const userId = userInfo._id; 
-    const username = userInfo.firstname+" "+userInfo.lastname; 
+    const userId = userInfo?._id; 
+    const username = userInfo?.firstname+" "+userInfo?.lastname; 
 
     const handleCallEnd = useCallback(() => {
     
@@ -24,7 +24,7 @@ const VideoCallWrapper: React.FC = () => {
         }, []);
 
 
-    return <VideoCallOverlay roomId={roomId!} userId={userId} userName={username} onCallEnd={handleCallEnd} />;
+    return <VideoCallOverlay roomId={roomId!} userId={userId!} userName={username} onCallEnd={handleCallEnd} />;
 };
 
 export default VideoCallWrapper;
