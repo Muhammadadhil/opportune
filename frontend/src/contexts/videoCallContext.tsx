@@ -1,9 +1,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
-import { RootState } from "@/store/store";
 import { useVideoCallSocket } from '@/hooks/socket/useVideoCallSocket'
 import { Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
@@ -26,8 +24,6 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
     const [incomingCallData, setIncomingCallData] = useState<any>(null);
 
     const { toast } = useToast();
-
-    const { userInfo } = useSelector((state: RootState) => state.user);
 
     const { socket, acceptCall, rejectCall, initiateCall } = useVideoCallSocket();
 
@@ -81,6 +77,9 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
         acceptCall(roomId);
         setIsIncomingCall(false);
         setIncomingCallData(null);
+        toast({
+            duration: 0,
+        });
     }
 
     const handleRejectCall = (roomId: string) => {
@@ -113,7 +112,6 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
 export function useVideoCall(){
 
     const context = useContext(VideoCallContext);
-
     if(!context) throw new Error('useVideoCall must be used within a VideoCallProvider');
 
     return context;

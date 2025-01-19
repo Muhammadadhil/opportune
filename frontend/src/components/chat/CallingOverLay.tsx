@@ -11,8 +11,8 @@ interface CallingOverlayProps {
 
 const CallingOverlay: React.FC<CallingOverlayProps> = ({ calleeName, onCancel, isCaller = true, onJoin }) => {
     return (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-lg shadow-lg text-center min-w-[400px]">
+        <div className="fixed inset-0 z-50 dark:bg-black/80 bg-white  flex items-center justify-center">
+            <div className=" p-8 rounded-lg shadow-lg text-center min-w-[400px] dark:border-2  dark:border-zinc-700">
                 <div className="w-20 h-20 rounded-full bg-gray-200 mx-auto mb-4 flex items-center justify-center">
                     {calleeName[0].toUpperCase()}
                 </div>

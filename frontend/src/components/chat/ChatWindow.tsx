@@ -42,7 +42,7 @@ const ChatWindow: React.FC = () => {
     const handleVideoCall = () => {
         setIsCalling(true);
         initiateCall(
-            chatRoomId + videoCallIdRef.current,
+            `${chatRoomId}${videoCallIdRef.current}`,
             sender._id,
             `${sender.firstname} ${sender.lastname}`,
             receiver._id,
@@ -97,6 +97,7 @@ const ChatWindow: React.FC = () => {
         };
     }, [socket, chatRoomId, queryClient]);
 
+
     useEffect(() => {
         const scrollToBottom = () => {
             if (messagesContainerRef.current) {
@@ -116,8 +117,14 @@ const ChatWindow: React.FC = () => {
         if (!videoCallSocket) return;
 
         videoCallSocket.on('call-accepted', (roomId: string) => {
+            toast({
+                title: "User Accepted Call , Joining the meeting",
+                description: "Call accepted",
+                duration: 5000,
+            });
             setIsCalling(false);
             setIsInCall(true);
+            
         });
 
         videoCallSocket.on('video-call-failed', (data: { reason: string }) => {

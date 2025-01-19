@@ -15,7 +15,6 @@ export const useVideoCallSocket = () => {
         if (!userInfo?._id) return;
 
         const newSocket = createSocketConnection(SOCKET_URL);
-        // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!! creating socket connection 11',newSocket)
         setSocket(newSocket);
 
 
@@ -25,27 +24,13 @@ export const useVideoCallSocket = () => {
             userName: `${userInfo.firstname} ${userInfo.lastname}`
         });
 
-        // const handleIncomingCall = (callData: {
-        //     roomId: string;
-        //     callerId: string;
-        //     callerName: string;
-        // }) => {
+        // const handleCallAccepted = (data: { roomId: string }) => {
+        //     // Handle when call is accepted
+        //     console.log('!!!!!!! call-accepted in useVideoCallSocket !!!!!!');
+        //     console.log('Call accepted for room:', data.roomId);
 
-        //     console.log('incoming-call comingggg ')
-
-
-        //     // socket?.emit('callReceived', {
-        //     //     roomId: callData.roomId,
-        //     //     receiverId: userInfo._id
-        //     // });
+        //     // join in zego room
         // };
-
-        const handleCallAccepted = (data: { roomId: string }) => {
-            // Handle when call is accepted
-            console.log('Call accepted for room:', data.roomId);
-
-            // join in zego room
-        };
 
         const handleCallRejected = (data: { roomId: string }) => {
             // Handle when call is rejected
@@ -58,13 +43,13 @@ export const useVideoCallSocket = () => {
         };
 
         // newSocket.on("incoming-call", handleIncomingCall);
-        newSocket.on('call-accepted', handleCallAccepted);
+        // newSocket.on('call-accepted', handleCallAccepted);
         newSocket.on('callRejected', handleCallRejected);
         newSocket.on('callEnded', handleCallEnded);
 
         return () => {
             // newSocket.off('incomingCall', handleIncomingCall);
-            newSocket.off('callAccepted', handleCallAccepted);
+            // newSocket.off('call-accepted', handleCallAccepted);
             newSocket.off('callRejected', handleCallRejected);
             newSocket.off('callEnded', handleCallEnded);
             newSocket.disconnect();
@@ -74,8 +59,8 @@ export const useVideoCallSocket = () => {
     const initiateCall = (roomId: string, userId: string, userName: string, receiverId: string, receiverName: string) => {
         if (!socket || !userInfo) return;
         
-
         console.log('initiating call 11!! ', roomId, userId, userName, receiverId, receiverName);
+        
         socket.emit("initiateCall", {
             roomId,
             caller: { userId, userName },
@@ -84,12 +69,10 @@ export const useVideoCallSocket = () => {
     };
 
     const acceptCall = (roomId: string) => {
-        console.log('accepting call 11!!');
-
         if (!socket || !userInfo) return;
 
-        console.log('accepting call 22!!');
-
+        console.log('!!!acceptCall socekt roomid', roomId);
+        
         socket.emit('accept-call', {
             roomId
         });
