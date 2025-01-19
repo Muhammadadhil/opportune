@@ -18,12 +18,12 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, timestamp, isSen
     return (
         <div className={`flex ${isSender ? "justify-end" : "justify-start"} mb-4`}>
             <div className={`max-w-[70%] ${isSender ? "order-2" : "order-1"}`}>
-                <div className={`px-4 py-2 rounded-full text-sm ${isSender ? "bg-green-600 text-white" : "bg-gray-100 text-gray-900"}`}>
+                <div className={`px-4 py-2 rounded-full text-sm ${isSender ? "bg-green-600 text-white" : "bg-gray-100 text-gray-900 dark:bg-zinc-800 dark:text-white"}`}>
                     {message}
                     <span className="text-[13px] text-white-400 w-full ml-2">{formatTime(timestamp)}</span>
                 </div>
             </div>
-            {!isSender && <div className="w-8 h-8 rounded-full bg-yellow-300 flex-shrink-0 flex items-center justify-center order-0 mr-2">H</div>}
+            {!isSender && <div className="w-8 h-8 rounded-full bg-yellow-300  dark:text-black flex-shrink-0 flex items-center justify-center order-0 mr-2">H</div>}
         </div>
     );
 };

@@ -100,13 +100,17 @@ const ChatWindow: React.FC = () => {
     useEffect(() => {
         const scrollToBottom = () => {
             if (messagesContainerRef.current) {
-                const { scrollHeight, clientHeight } = messagesContainerRef.current;
-                messagesContainerRef.current.scrollTop = scrollHeight - clientHeight;
+                // Find the actual scrollable viewport within the ScrollArea component
+                const scrollViewport = messagesContainerRef.current.querySelector('[data-radix-scroll-area-viewport]');
+                if (scrollViewport) {
+                    scrollViewport.scrollTop = scrollViewport.scrollHeight;
+                }
             }
         };
-
-        scrollToBottom();
+        setTimeout(scrollToBottom, 0);
     }, [messages]);
+
+    
 
     useEffect(() => {
         if (!videoCallSocket) return;
@@ -208,14 +212,16 @@ const ChatWindow: React.FC = () => {
     console.log('online users:',onlineUsers);
     const isUserOnline = onlineUsers.includes(receiver._id);
 
+    
+
     return (
-        <div className="flex-1 flex flex-col h-[calc(100vh-8rem)] bg-white">
+        <div className="flex-1 flex flex-col h-[calc(100vh-8rem)] bg-white dark:bg-zinc-900 rounded-xl">
             {/* Chat header */}
-            <div className="flex-none items-center justify-between px-4 py-3 border-b border-gray-200">
+            <div className="flex-none items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="relative">
-                            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">{receiver.firstname?.[0] || receiver._id.charAt(0)}</div>
+                            <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-zinc-800 flex items-center justify-center">{receiver.firstname?.[0] || receiver._id.charAt(0)}</div>
                             <div className={`absolute bottom-0 right-0 w-3 h-3 ${isUserOnline ? 'bg-green-500' : 'bg-gray-500'} rounded-full border-2 border-white`}></div>
                         </div>
                         <div>
@@ -227,8 +233,8 @@ const ChatWindow: React.FC = () => {
                     <div className="flex items-center gap-2">
                         <div className="chat-interface">
 
-                            <button onClick={handleVideoCall} className="p-2 hover:bg-gray-100 rounded-full transition-colors ">
-                                <Video className="w-5 h-5 text-gray-600 " />
+                            <button onClick={handleVideoCall} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-500 rounded-full transition-colors ">
+                                <Video className="w-5 h-5 text-gray-600 dark:text-white" />
                             </button>
                         </div>
                     </div>
@@ -245,13 +251,13 @@ const ChatWindow: React.FC = () => {
             <ScrollArea ref={messagesContainerRef} className="flex-1 px-4 py-6">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
                     </div>
                 ) : (
                     Object.entries(messageGroups).map(([date, groupMessages]) => (
                         <div key={date} className="space-y-3">
                             <div className="flex justify-center">
-                                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-500">{date}</span>
+                                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-500 dark:bg-zinc-800 dark:text-white">{date}</span>
                             </div>
                             {groupMessages.map((msg, idx) => (
                                 <MessageBubble key={idx} sender={msg.sender} message={msg.content} timestamp={msg.createdAt} isSender={msg.sender === senderId} />

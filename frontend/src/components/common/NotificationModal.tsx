@@ -39,7 +39,7 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
             </button>
 
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="max-w-md bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+                <DialogContent className="max-w-md bg-white/90 dark:bg-zinc-900/40 backdrop-blur-sm border-gray-200 dark:border-zinc-900">
                     <DialogHeader className="border-b border-gray-200 dark:border-gray-700 pb-4">
                         <div className="flex items-center justify-between">
                             <DialogTitle className="text-gray-900 dark:text-gray-100">Notifications</DialogTitle>

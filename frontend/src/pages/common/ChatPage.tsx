@@ -21,10 +21,10 @@ const ChatPage: React.FC = () => {
     };
 
     return (
-        <div className="h-screen overflow-hidden">
+        <div className="h-screen overflow-hidden mt-7">
             <MaxWidth>
                 <div className="h-screen pt-6 pb-6">
-                    <div className="flex h-[calc(100vh-3rem)] w-full max-w-[1400px] mx-auto bg-white rounded-lg shadow-lg">
+                    <div className="flex h-[calc(100vh-3rem)] w-full max-w-[1400px] mx-auto bg-white rounded-lg shadow-lg dark:bg-zinc-900">
                         <ChatSidebar onChangeChat={handleChangeChatWindow} />
                         <ChatWindow />
                     </div>

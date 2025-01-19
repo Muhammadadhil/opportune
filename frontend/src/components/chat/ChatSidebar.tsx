@@ -46,7 +46,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
     });
 
     return (
-        <div className="w-full md:w-80 h-screen border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
+        <div className="w-full md:w-80  border-r border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900  rounded-xl">
             <div className="p-4 border-b border-gray-200 dark:border-gray-800">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Messages</h2>
             </div>
@@ -54,7 +54,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
             <div className="p-4">
                 <Input 
                     placeholder="Search conversations..." 
-                    className="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                    className="w-full bg-gray-50 dark:bg-zinc-900 rounded-full border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 />
             </div>
 
@@ -65,8 +65,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
                         <div
                             key={chat._id}
                             className={cn(
-                                "p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors duration-200",
-                                selectedChatId === chat._id && "bg-gray-100 dark:bg-gray-900"
+                                "p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors duration-200",
+                                selectedChatId === chat._id && "bg-gray-100 dark:bg-zinc-700"
                             )}
                             onClick={() => {
                                 setSelectedChatId(chat._id);
@@ -76,20 +76,20 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
                             <div className="flex items-center space-x-3">
                                 <Avatar className="h-10 w-10">
                                     <AvatarImage src={chat.avatar} />
-                                    <AvatarFallback className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-                                        {chat?.name?.charAt(0)}
+                                    <AvatarFallback className="bg-gray-200 dark:bg-zinc-800 text-gray-700 dark:text-gray-300">
+                                        {otherUser.firstname?.charAt(0)}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                        {chat?.name}
+                                        {otherUser.firstname && otherUser.lastname ? `${otherUser.firstname} ${otherUser.lastname}` : "New Message"}
                                     </p>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                        {chat.lastMessage}
+                                    <p className="text-xs text-gray-500 truncate">
+                                        {otherUser.email}
                                     </p>
                                 </div>
                                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                                    {chat.timestamp}
+                                    {/* {chat.timestamp} */}
                                 </span>
                             </div>
                         </div>
