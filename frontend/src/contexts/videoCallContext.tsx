@@ -23,7 +23,7 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
     const [isIncomingCall, setIsIncomingCall] = useState(false);
     const [incomingCallData, setIncomingCallData] = useState<any>(null);
 
-    const { toast } = useToast();
+    const { toast,dismiss } = useToast();
 
     const { socket, acceptCall, rejectCall, initiateCall } = useVideoCallSocket();
 
@@ -37,6 +37,10 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
 
             setIsIncomingCall(true);
             setIncomingCallData(callData);
+
+            console.log('!!!!!!! incoming-call in videoCallContext.tsx !!!!!!!');
+            console.log('incoming call data:', callData);
+
 
             toast({
                 title: 'Incoming Video Call',
@@ -52,7 +56,7 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
                             Accept
                         </Button>
                         <button
-                            onClick={() => handleRejectCall(callData.roomId)}
+                            onClick={() => handleRejectCall(callData.roomId, callData.caller.userId)}
                             className="bg-red-500 text-white px-3 py-1 rounded"
                         >
                             Reject
@@ -63,8 +67,22 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
 
         })
 
+        socket.on('call-cancelled', (roomId: string) => {
+            setIsIncomingCall(false);
+            setIncomingCallData(null);
+            dismiss();
+
+        });
+
+        socket.on('call-rejected', (roomId: string) => {
+            setIsIncomingCall(false);
+            setIncomingCallData(null);
+        });
+
         return () => {
             socket.off('incoming-call');
+            socket.off('call-cancelled');
+            socket.off('call-rejected');
         }
         
     },[socket]);
@@ -77,15 +95,17 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
         acceptCall(roomId);
         setIsIncomingCall(false);
         setIncomingCallData(null);
-        toast({
-            duration: 0,
-        });
+        dismiss();
+
     }
 
-    const handleRejectCall = (roomId: string) => {
-        rejectCall(roomId, incomingCallData.caller.userId);
+    const handleRejectCall = (roomId: string, callerId: string) => {
+
+        rejectCall(roomId, callerId);
         setIsIncomingCall(false);
         setIncomingCallData(null);
+        dismiss();
+
     }
 
     const value = {

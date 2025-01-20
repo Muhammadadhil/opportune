@@ -20,7 +20,7 @@ export function FreelancerCard({ userInfo, freelancerInfo }: FreelancerCardProps
     }
 
     return (
-        <Card className="p-6 hover:shadow-lg transition-shadow w-[1100px]">
+        <Card className="p-6 hover:shadow-lg transition-shadow max-w-[1100px] cursor-pointer" >
             <div className="flex flex-col sm:flex-row gap-4" onClick={() => {handleRedirect(freelancerInfo.userId)}}>
                 {/* Profile Image and Basic Info */}
                 <div className="flex items-start gap-4">

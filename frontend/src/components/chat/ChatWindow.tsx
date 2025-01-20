@@ -127,6 +127,16 @@ const ChatWindow: React.FC = () => {
             
         });
 
+        videoCallSocket.on('call-rejected', (roomId: string) => {
+            setIsCalling(false);
+            toast({
+                title: "Call Rejected",
+                description: "The caller has rejected the call",
+                variant: "destructive",
+                duration: 4000,
+            });
+        });
+
         videoCallSocket.on('video-call-failed', (data: { reason: string }) => {
             setIsCalling(false);
             toast({
@@ -139,6 +149,7 @@ const ChatWindow: React.FC = () => {
         return () => {
             videoCallSocket.off('call-accepted');
             videoCallSocket.off('video-call-failed');
+            videoCallSocket.off('call-rejected');
         };
     }, [videoCallSocket]);
 
@@ -287,7 +298,7 @@ const ChatWindow: React.FC = () => {
                     onCancel={() => {
                         setIsCalling(false);
                         videoCallSocket?.emit('cancel-call', {
-                            roomId: chatRoomId,
+                            roomId: `${chatRoomId}${videoCallIdRef.current}`,
                             receiverId: receiver._id
                         });
                     }}

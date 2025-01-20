@@ -21,6 +21,7 @@ import { getUserById } from "@/api/user";
 import PortfolioCard from "../freelancer/PortfolioCard";
 import { useReviews } from '@/hooks/reviews/useReviews'
 import ReviewCard from "./ReviewCard";
+import { useScrollToTop } from "@/hooks/common/useScrollToTop";
 
 export default function Profile() {
     const { userInfo, clientData } = useSelector((state: RootState) => state.user);
@@ -39,14 +40,14 @@ export default function Profile() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { data: portfolios, refetch: portfolioRefetch } = usePortfolios(userInfo?._id ?? '');
 
     const { data: reviews } = useReviews(userInfo?._id ?? '');
 
-    console.log("reviews:", reviews);
+    // console.log("reviews:", reviews);
 
-    console.log("portfolios:", portfolios);
+    useScrollToTop();
 
+    
     const { data: freelancer, refetch } = useFreelancerProfile(userInfo?.role, userInfo?._id);
     const visibleJobs = jobs?.slice(0, 3);
 
@@ -70,7 +71,7 @@ export default function Profile() {
             navigate("/not-found"); // Redirect if user not found
         }
     };
-
+    
     useEffect(() => {
         setIsOwnProfile(!userId || userId === userInfo?._id);
         if (userId && userId !== userInfo?._id) {
@@ -91,12 +92,12 @@ export default function Profile() {
             console.log("error fetching profile data:", error);
         }
     };
-
+    
     const fetchJobs = async () => {
         const response = await getJobs(userInfo?._id as string);
         setJobs(response.data);
     };
-
+    
     useEffect(() => {
         if (userInfo?.role === "client") {
             getClientData();
@@ -107,6 +108,10 @@ export default function Profile() {
     const displayUser = profileUser || userInfo;
     const displayFreelancer = userSpecificDetails || freelancer;
     const displayClient = userSpecificDetails || clientData;
+
+    const { data: portfolios, refetch: portfolioRefetch } = usePortfolios(displayUser?._id ?? '');
+    console.log("portfolios:", portfolios);
+
 
     return (
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-44 py-8">
@@ -270,12 +275,12 @@ export default function Profile() {
                                 {portfolios?.map((portfolio, index) => (
                                     <PortfolioCard key={index} portfolio={portfolio} />
                                 ))}
-                                <div
+                                {userInfo?.role === "freelancer" && <div
                                     className=" h-40 p-2 border border-slate-500 rounded-xl flex justify-center items-center cursor-pointer border-dashed group transition duration-300 ease-in-out hover:bg-zinc-100 "
                                     onClick={() => navigate("/fr/portfolio")}
                                 >
                                     <h2 className="group-hover:text-green-900 transition duration-300 ease-in-out text-green-600">Add a portfolio project</h2>
-                                </div>
+                                </div>}
                             </div>
                         </div>
                     )}

@@ -96,6 +96,26 @@ const videoCallHandler = (io: Namespace) => {
             })
 
 
+            socket.on('cancel-call', (data: any) => {
+                const { roomId, receiverId } = data;
+                const callData = activeCalls.get(roomId);
+                if (!callData) return;
+
+                const receiverSocketId = userCallStatus.get(receiverId)?.socketId;
+
+                socket.to(receiverSocketId!).emit('call-cancelled', roomId);
+            })
+
+            socket.on('reject-call', (data: any) => {
+
+                const { roomId, callerId } = data;
+                const callData = activeCalls.get(roomId);
+                if (!callData) return;
+
+                const callerSocketId = userCallStatus.get(callerId)?.socketId;
+                socket.to(callerSocketId!).emit('call-rejected', roomId);
+            })
+
             const cleanUpCall = (roomId: string) => {
 
                 const callData = activeCalls.get(roomId);
