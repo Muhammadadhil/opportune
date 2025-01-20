@@ -11,5 +11,5 @@ export interface IJobController {
     getJobDetails: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     getJobDetail: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     sendOffer: (req: Request, res: Response, next: NextFunction) => Promise<void>;
-    deactivateJob: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    changeJobStatus: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

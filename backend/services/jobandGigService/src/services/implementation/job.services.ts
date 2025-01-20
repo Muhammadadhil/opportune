@@ -22,7 +22,7 @@ export class JobService implements IJobService {
     async getJobs(
         page: number,
         limit: number,
-        status:string,
+        status: string,
         category: string,
         applications: string,
         budgetRange: string,
@@ -33,10 +33,10 @@ export class JobService implements IJobService {
         const filters = {} as any;
         let sortOption;
 
-        if (status){
+        if (status) {
             filters.status = status;
         } else {
-            filters.isActive = true
+            filters.isActive = true;
         }
 
         if (category) filters.category = category;
@@ -55,7 +55,6 @@ export class JobService implements IJobService {
         }
 
         console.log("filters::", filters);
-
 
         const totalJobs = await this._jobRepository.getJobsCount(filters);
         let Alljobs = await this._jobRepository.getFilteredJobs(page, limit, filters, sortOption);
@@ -159,7 +158,8 @@ export class JobService implements IJobService {
         await this.producer.publishToMultiple(exchangeName, data);
     }
 
-    async deactivateJob(jobId: ObjectId): Promise<IJob | null> {
-        return await this._jobRepository.update(jobId, { isActive:false,status:jobStatus.CLOSED });
+    async changeJobStatus(jobId: ObjectId, status: string): Promise<IJob | null> {
+        const isActive = status !== jobStatus.CLOSED  // if status is closed, set isActive to false
+        return await this._jobRepository.update(jobId, { isActive, status });
     }
 }

@@ -1,3 +1,10 @@
+export enum jobStatus {
+    OPEN = "open",
+    CLOSED = 'closed',
+    FLAGGED = 'flagged',
+    ARCHIVED = 'archived' 
+}
+
 interface clientDetails {
     _id: string;
     firstname: string;
@@ -17,6 +24,7 @@ export interface IJob {
     budget: number;
     skillsRequired: string[];
     isActive: boolean;
+    status: jobStatus;
     searchTags: string[];
     applicants?: string[];
     applicantsCount?: number;

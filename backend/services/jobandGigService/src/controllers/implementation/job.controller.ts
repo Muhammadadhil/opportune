@@ -250,14 +250,17 @@ export class JobController implements IJobController {
         }
     };
 
-    deactivateJob = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    changeJobStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const {id}=req.params;
-            await this._jobService.deactivateJob(id as unknown as ObjectId);
-            res.status(200).json({ message: "Offer sent successfully" });
+            const {id,status}=req.params;
+            await this._jobService.changeJobStatus(id as unknown as ObjectId, status);
+            res.status(200).json({ message: `Job status changed to ${status}` });
         } catch (error) {
             next(error);
         }
     };
-}
 
+    
+
+
+}

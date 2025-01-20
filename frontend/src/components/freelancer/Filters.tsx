@@ -28,14 +28,27 @@ export const Filters:React.FC<FiltersProps> = ({onChange,filterState}) => {
                     <AccordionItem value="budget">
                         <AccordionTrigger>Job Status</AccordionTrigger>
                         <AccordionContent>
-                            <div className="space-y-2 gap-3">
-                                <Checkbox
-                                    id="1313"
-                                    onCheckedChange={(checked) => {
-                                        onChange("status", checked ? "closed" : "");
-                                    }}
-                                />
-                                <Label className="px-2">deactivated by admin</Label>
+                            <div className="space-y-2 gap-3 flex flex-col">
+                                <div className="flex items-center">
+                                    <Checkbox
+                                        id="1313"
+                                        onCheckedChange={(checked) => {
+                                            onChange("status", checked ? "closed" : "");
+                                        }}
+                                        checked={filterState.status === "closed"}
+                                    />
+                                    <Label className="px-2">deactivated by admin</Label>
+                                </div>
+                                <div className="flex items-center ">
+                                    <Checkbox
+                                        id="1414"
+                                        onCheckedChange={(checked) => {
+                                            onChange("status", checked ? "flagged" : "");
+                                        }}
+                                        checked={filterState.status === "flagged"}
+                                    />
+                                    <Label className="px-2">Flagged for Review</Label>
+                                </div>
                             </div>
                         </AccordionContent>
                     </AccordionItem>

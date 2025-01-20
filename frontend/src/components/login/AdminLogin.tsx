@@ -51,7 +51,7 @@ export default function AdminLogin() {
     },[])
 
     return (
-        <div className="flex w-full h-screen bg-gray-100 items-center justify-center">
+        <div className="flex w-full h-screen bg-gray-100 dark:bg-black items-center justify-center">
             <Card className="w-full max-w-md">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl font-bold text-center">Welcome Admin</CardTitle>

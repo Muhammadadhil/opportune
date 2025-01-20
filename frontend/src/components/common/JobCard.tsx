@@ -10,7 +10,8 @@ import { IJob } from "@/types/IJob";
 import JobSideBar from "./JobSideBar";
 import { getRelativeTime } from "@/utils/relativeDateFormatter";
 import ConfirmDialog from "./ConfirmDialog";
-import { deactivateJob } from "@/api/job";
+import { changeJobStatus } from "@/api/job";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface JobCardProps {
     job: IJob;
@@ -23,6 +24,9 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
     const [open, setOpen] = useState(false);
     const [sheetOpen, setSheetOpen] = useState(false);
     const [deactivate, setDeactivate] = useState(false);
+    const [activate,setActivate] = useState(false);
+    const [flag,setFlag] = useState(false);
+    const [unflag,setUnFlag] = useState(false);
 
     const { userInfo, isAdminAuthenticated } = useSelector((state: RootState) => state.user);
 
@@ -48,12 +52,15 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
     const isClient = userInfo?.role == "client";
     const isAdmin =  isAdminAuthenticated;
 
-    const handleDeactivate = async (jobId:string) => {
+
+    const queryClient = useQueryClient();
+    // admin change job status
+    const handleChangeStatus = async (jobId:string,status:string) => {
         try {
-            const response = await deactivateJob(jobId);
-            console.log('response:',response);
+             await changeJobStatus(jobId,status);
             setDeactivate(false)
-            onApply();
+            queryClient.invalidateQueries({queryKey:["jobs"]});
+
             
         } catch (error) {
             console.log(error);
@@ -65,19 +72,57 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
 
     return (
         <div onClick={() => setSheetOpen(true)}>
-            <li key={job._id} className="bg-white dark:bg-black text-gray-900 dark:text-gray-100 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-300 ease-in-out cursor-pointer">
+            <li
+                key={job._id}
+                className={`bg-white dark:bg-black text-gray-900 dark:text-gray-100 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-300 ease-in-out cursor-pointer ${
+                    job.status == "flagged" && "border-red-800"
+                }`}
+            >
                 <h3 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">{job.jobTitle}</h3>
-                {isAdmin && job.isActive && (
-                    <div className="flex justify-end">
-                        <Button onClick={() => setDeactivate(true)} className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800">
-                            Deactivate job
-                        </Button>
-                    </div>
-                )}
-                
+                <div className="flex gap-4 justify-end">
+                    {isAdmin && job.isActive && job.status !== "flagged" && (
+                        <div className="flex justify-end">
+                            <Button
+                                variant="outline"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setFlag(true);
+                                }}
+                            >
+                                Flag for Review
+                            </Button>
+                        </div>
+                    )}
+
+                    {isAdmin && job.isActive && job.status == "flagged" && (
+                        <div className="flex justify-end">
+                            <Button
+                                variant="outline"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setUnFlag(true);
+                                }}
+                            >
+                                Unflag
+                            </Button>
+                        </div>
+                    )}
+
+                    {isAdmin && job.isActive && (
+                        <div className="flex ">
+                            <Button onClick={(e) =>{
+                                e.stopPropagation();
+                                setDeactivate(true)
+                            }} className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800">
+                                Deactivate job
+                            </Button>
+                        </div>
+                    )}
+                </div>
+
                 {isAdmin && !job.isActive && (
                     <div className="flex justify-end">
-                        <Button onClick={() => setDeactivate(true)} className="bg-green-600 hover:bg-green-700">
+                        <Button onClick={() => setActivate(true)} className="bg-green-600 hover:bg-green-700">
                             activate job
                         </Button>
                     </div>
@@ -88,9 +133,43 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
                     description1="This is remove the job listed anywhere"
                     open={deactivate}
                     setOpen={setDeactivate}
-                    onConfirm={handleDeactivate}
+                    onConfirm={() => handleChangeStatus(job._id!, "closed")}
                     id={job._id!}
                 />
+                <ConfirmDialog
+                    action="Activate"
+                    title="Are you sure want to activate the job"
+                    description1="This will make the job visible"
+                    open={activate}
+                    setOpen={setActivate}
+                    onConfirm={() => handleChangeStatus(job._id!, "open")}
+                    id={job._id!}
+                />
+                <ConfirmDialog
+                    action="Flag to Review"
+                    title="Are you sure want to flag the job"
+                    description1="This job will be displayed to the users , but it will be under review"
+                    open={flag}
+                    setOpen={setFlag}
+                    onConfirm={() => {
+                        handleChangeStatus(job._id!, "flagged");
+                        setFlag(false);
+                    }}
+                    id={job._id!}
+                />
+                <ConfirmDialog
+                    action="Unflag"
+                    title="Are you sure want to Unflag the job"
+                    description1="This job will be displayed to the users "
+                    open={unflag}
+                    setOpen={setUnFlag}
+                    onConfirm={() => {
+                        handleChangeStatus(job._id!, "open");
+                        setUnFlag(false);
+                    }}
+                    id={job._id!}
+                />
+
                 {isClient && (
                     <div>
                         <button onClick={() => handleEditClick(job)} className="h-8 w-8 p-0">

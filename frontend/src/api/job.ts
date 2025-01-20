@@ -52,8 +52,8 @@ export const getJobDetails = async (jobId:string) => {
 };
 
 
-export const deactivateJob = async (jobId:string) => {
-    return await apiClient.post(`/post/job/deactivate/${jobId}`);
+export const changeJobStatus = async (jobId:string,status:string) => {
+    return await apiClient.post(`/post/job/status/change/${jobId}/${status}`,);
 }
 
 export const getApplicationDetails = async (jobId: string, freelancerId: string) => {

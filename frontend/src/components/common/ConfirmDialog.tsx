@@ -15,9 +15,6 @@ interface ConfirmDialogProps {
 
 const ConfirmDialog = ({ action, title, description1, description2, open, setOpen, onConfirm, id }: ConfirmDialogProps) => (
     <Dialog open={open} onOpenChange={setOpen}>
-        {/* <DialogTrigger className=" rounded-xl transition duration-300 ease-in-out">
-            <Button>remove gig</Button>
-        </DialogTrigger> */}
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>{title}</DialogTitle>

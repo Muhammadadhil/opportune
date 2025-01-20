@@ -28,7 +28,7 @@ router.post("/editGig", upload.array("images", 3),checkSchema(editGigValidator()
 router.get("/jobs", jobController.getJobs);
 router.get("/jobs/:id",authenticate(['client']), jobController.getJobsByClient);
 router.post("/job", authenticate(['client']),jobController.postJob);
-router.post("/job/deactivate/:id", authenticate(['admin']),jobController.deactivateJob);
+router.post("/job/status/change/:id/:status", authenticate(['admin']),jobController.changeJobStatus);
 
 router.patch("/job", authenticate(["client"]), jobController.editJob);
 router.patch("/job/:id",authenticate(['client']), jobController.removeJob);

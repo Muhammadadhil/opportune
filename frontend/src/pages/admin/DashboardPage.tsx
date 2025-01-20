@@ -36,7 +36,7 @@ export default function AdminDashboardPage() {
 
     return (
         <SidebarProvider>
-            <div className="flex h-screen w-full bg-gray-50">
+            <div className="flex h-screen w-full bg-gray-50 dark:bg-black ">
                 <AdminSidebar onPageChange={setActivePage} activePage={activePage} />
                 <div className="flex-1 flex flex-col overflow-hidden">
                     <TopBar />
