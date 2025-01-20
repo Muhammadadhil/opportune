@@ -26,7 +26,6 @@ const ChatWindow: React.FC = () => {
     const state = location.state as ChatState;
 
     const { initiateCall , socket: videoCallSocket } = useVideoCall();
-    // const { socket: videoCallSocket } = useVideoCallSocket();
     const { toast } = useToast();
 
     const [isInCall, setIsInCall] = useState(false);
@@ -34,7 +33,6 @@ const ChatWindow: React.FC = () => {
 
     const navigate = useNavigate();
 
-    // const randomVideoCallId = Date.now();
     const videoCallIdRef = useRef(`${Math.random().toString(36).substr(2, 9)}-${Date.now()}`);
 
     console.log('videoCallIdRef', videoCallIdRef.current);
@@ -50,7 +48,7 @@ const ChatWindow: React.FC = () => {
         );
     };
 
-    const handleCallEnd = useCallback(() => {
+    const handleCallEnd = () => {
 
         console.log('!!!!!!!!!!!!!! handleCallEnd !!!!!!!!!!!!!!!!!');
 
@@ -60,10 +58,7 @@ const ChatWindow: React.FC = () => {
             container.innerHTML = "";
         }
         navigate(-1);
-        // setTimeout(() => {
-            
-        // }, 100);
-    }, []);
+    };
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -84,9 +79,11 @@ const ChatWindow: React.FC = () => {
 
     useEffect(() => {
         if (!socket) return;
-
+        
         socket.on("newMessage", (message) => {
+            console.log('#################### Received newMessage event ###################', message);
             if (!chatRoomId) return;
+            
             queryClient.setQueryData(["messages", chatRoomId], (oldData: IMessage[] = []) => {
                 return [...oldData, message];
             });
@@ -278,7 +275,7 @@ const ChatWindow: React.FC = () => {
                                 <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-500 dark:bg-zinc-800 dark:text-white">{date}</span>
                             </div>
                             {groupMessages.map((msg, idx) => (
-                                <MessageBubble key={idx} sender={msg.sender} message={msg.content} timestamp={msg.createdAt} isSender={msg.sender === senderId} />
+                                <MessageBubble key={idx} sender={msg.sender} message={msg.content} timestamp={msg.createdAt} isSender={msg.sender === senderId} type={msg.type} />
                             ))}
                         </div>
                     ))
@@ -316,7 +313,6 @@ const ChatWindow: React.FC = () => {
                     userId={sender._id}
                     userName={`${sender.firstname} ${sender.lastname}`}
                     onCallEnd={() => {
-                        setIsInCall(false);
                         handleCallEnd();
                     }}
                 />

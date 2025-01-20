@@ -31,16 +31,16 @@ const VideoCallOverlay: React.FC<VideoCallProps> = ({ ...props }) => {
         <div className="fixed inset-0 z-50 bg-black">
             <button 
                 onClick={() => {
-                    // First stop the media tracks
-                    if (navigator.mediaDevices) {
-                        navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-                            .then(stream => {
-                                stream.getTracks().forEach(track => track.stop());
-                            })
-                            .catch(err => console.error("Error releasing media devices:", err));
-                    }
-                    // Then call the onCallEnd handler
+
                     props.onCallEnd?.();
+                    // // First stop the media tracks
+                    // if (navigator.mediaDevices) {
+                    //     navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+                    //         .then(stream => {
+                    //             stream.getTracks().forEach(track => track.stop());
+                    //         })
+                    //         .catch(err => console.error("Error releasing media devices:", err));
+                    // }
                 }} 
                 className="absolute top-4 right-4 z-50 p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700"
             >

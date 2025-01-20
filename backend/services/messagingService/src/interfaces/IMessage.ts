@@ -9,4 +9,5 @@ export interface IMessage extends Document {
     type?: messageType;
     status: messageStatus;
     attachmentUrl?: string | null;
+    duration?: number;
 }

@@ -12,8 +12,19 @@ interface VideoCallProps {
 const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallEnd }) => {
 
     const zegoRef = useRef<any>(null);
+    const startTime = useRef(Date.now());
+    const { socket } = useVideoCallSocket();
 
-    // const { socket } = useVideoCallSocket();
+    const handleCallEnd = () => {
+        const duration = Math.floor((Date.now() - startTime.current) / 1000);
+        socket?.emit('end-call', { 
+            roomId,
+            duration
+        });
+        onCallEnd?.();
+        console.log('onCallEnd function:', onCallEnd);
+        console.log('#################### Call ended ###################', duration);         
+    };
 
     useEffect(() => {
 
@@ -29,11 +40,9 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
 
                 const tokenExpiryTime = 3600;
                 const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomId.toString(), userId.toString(), userName, tokenExpiryTime);
-                // console.log("kitToken:", kitToken);
 
                 // create zego instance
                 zegoRef.current = ZegoUIKitPrebuilt.create(kitToken);
-                // const zc = ZegoUIKitPrebuilt.create(kitToken);
 
                 console.log("zego instance:", zegoRef.current);
 
@@ -50,24 +59,16 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, userId, userName, onCallE
                         mode: ZegoUIKitPrebuilt.OneONoneCall,
                     },
                     showScreenSharingButton: true,
-                    onLeaveRoom: onCallEnd,
+                    onLeaveRoom: handleCallEnd,
                     onerror: (error: any) => {
                         console.error("ZEGO Error:", error);
-                        onCallEnd?.();
+                        handleCallEnd();
                     },
                 });
 
-                // socket logic to send call to the other user
-
-                // socket.emit('call', {
-                //     roomId,
-                //     userId,
-                //     userName,
-                // });
-
             } catch (error) {
                 console.error("Failed to initialize video call:", error);
-                onCallEnd?.();
+                handleCallEnd();
             }
         };
 

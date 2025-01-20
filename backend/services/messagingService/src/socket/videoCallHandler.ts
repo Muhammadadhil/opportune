@@ -1,4 +1,9 @@
 import { Namespace, Socket } from "socket.io";
+import container from "../config/inversify";
+import { IMessageService } from "../services/interfaces/IMessageService";
+import { TYPES } from "../interfaces/types";
+import { ObjectId } from "mongoose";
+import { messageType } from "../enums/MessageStatus";
 
 
 interface callData {
@@ -13,6 +18,9 @@ interface userCallStatus {
     socketId?: string;
     roomId?: string;
 }
+
+const messageService = container.get<IMessageService>(TYPES.IMessageService);
+
 
 const videoCallHandler = (io: Namespace) => {
 
@@ -72,8 +80,8 @@ const videoCallHandler = (io: Namespace) => {
 
             })
 
-            socket.on('accept-call', (data: any) => {
-                const { roomId } =  data 
+            socket.on('accept-call', async(data: any) => {
+                const { roomId } = data;
                 const callData = activeCalls.get(roomId);
                 if (!callData) return;
 
@@ -93,8 +101,36 @@ const videoCallHandler = (io: Namespace) => {
 
                 socket.to(callerSocketId!).emit('call-accepted', roomId);
 
-            })
 
+                // Emit a message for call start
+
+                console.log('roomId:', roomId);
+
+                const chatRoomId = roomId.substring(0,24);
+                console.log('Attempting to emit newMessage to chatRoomId:', chatRoomId);
+                
+
+                // saving new message in db
+                const newMessage = await messageService.sendMessage(
+                    callData.caller.userId as unknown as ObjectId,
+                    callData.receiver.userId as unknown as ObjectId, 
+                    `${callData.caller.userName} started a video call`,
+                    chatRoomId,
+                    messageType.videoCallStarted
+                );  
+
+                const messageData = {
+                    sender: callData.caller.userId,
+                    receiver: callData.receiver.userId,
+                    content: `${callData.caller.userName} started a video call`,
+                    chatRoom: chatRoomId,
+                    messageType: messageType.videoCallStarted,
+                    createdAt: new Date()
+                };
+
+                io.server.of('/chat').to(chatRoomId).emit('newMessage', messageData);
+
+            })
 
             socket.on('cancel-call', (data: any) => {
                 const { roomId, receiverId } = data;
@@ -147,6 +183,44 @@ const videoCallHandler = (io: Namespace) => {
 
                 cleanUpCall(roomId);
             }
+
+            // Add call end handler
+            socket.on('end-call',async (data: {roomId: string, duration: number}) => {
+
+                console.log('#################### Call ended ###################', data);
+
+                const { roomId, duration } = data;
+                const callData = activeCalls.get(roomId);
+                if (!callData) return;
+
+                const chatRoomId = roomId.substring(0,24);
+                
+                const formattedDuration = `Call ended • ${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`;
+
+                // saving new message in db
+                const newMessage = await messageService.sendMessage(
+                    callData.caller.userId as unknown as ObjectId,
+                    callData.receiver.userId as unknown as ObjectId, 
+                    formattedDuration,
+                    chatRoomId,
+                    messageType.videoCallEnded,
+                    duration
+                );
+
+                const messageData = {
+                    sender: callData.caller.userId,
+                    receiver: callData.receiver.userId,
+                    content: formattedDuration,
+                    chatRoom: chatRoomId,
+                    type: messageType.videoCallEnded,
+                    duration,
+                    createdAt: new Date()
+                };
+
+                io.server.of('/chat').to(chatRoomId).emit('newMessage', messageData);
+
+                cleanUpCall(roomId);
+            });
 
         });
 

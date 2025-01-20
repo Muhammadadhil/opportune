@@ -36,6 +36,7 @@ const socketHandler = (io:Namespace) => {
             // send a message
             socket.on('sendMessage',async (message:any)=>{
                 const newMessage = await messageService.sendMessage(message.sender, message.receiver, message.content, message.chatRoom);                
+                console.log('new message to chatRoom:', message.chatRoom);
                 socket.broadcast.to(message.chatRoom).emit("newMessage", message);
             });
 

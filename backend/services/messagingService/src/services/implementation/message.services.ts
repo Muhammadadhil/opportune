@@ -13,12 +13,12 @@ export class MessageService implements IMessageService {
         this._messageRepository = messageRepository;
     }
 
-    async sendMessage(senderId: ObjectId, receiverId: ObjectId, content: string, chatRoomId: string): Promise<IMessage> {
-        console.log('!! creating new msg in db !!');
-        return this._messageRepository.create({ sender: senderId, receiver: receiverId, content, chatRoom: chatRoomId } as IMessage);
+    async sendMessage(senderId: ObjectId, receiverId: ObjectId, content: string, chatRoomId: string, type?: string,duration?:number): Promise<IMessage> {
+        console.log("!! creating new msg in db !!");
+        return this._messageRepository.create({ sender: senderId, receiver: receiverId, content, chatRoom: chatRoomId , type,duration} as IMessage);
     }
 
     async getMessages(chatRoomId: string): Promise<IMessage[]> {
-        return this._messageRepository.find({chatRoom:chatRoomId});
+        return this._messageRepository.find({ chatRoom: chatRoomId });
     }
 }

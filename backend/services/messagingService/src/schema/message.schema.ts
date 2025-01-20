@@ -38,6 +38,9 @@ const messageSchema = new mongoose.Schema<IMessage>(
             type: String,
             default: null,
         },
+        duration: {
+            type: Number,
+        },
     },
     {
         timestamps: true,

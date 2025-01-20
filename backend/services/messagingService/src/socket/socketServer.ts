@@ -1,5 +1,5 @@
 import { Server  } from "socket.io";
-import socketHandler from "./socketHandler";
+import socketHandler from "./chatSocketHandler";
 import videoCallHandler from "./videoCallHandler";
 let io: Server;
 
@@ -17,7 +17,6 @@ export const initSocketServer = (httpServer: any) => {
 
     const chatNameSpace =  io.of('/chat'); 
     const videoNameSpace = io.of("/videoCall");
-
 
     socketHandler(chatNameSpace);
     videoCallHandler(videoNameSpace);

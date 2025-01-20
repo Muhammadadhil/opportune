@@ -7,5 +7,9 @@ export enum messageStatus {
 export enum messageType{
     text = "text",
     image = "image",
-    file = "file"
+    file = "file",
+    videoCallStarted = "videoCallStarted",
+    videoCallEnded = "videoCallEnded",
+    videoCallMissed = "videoCallMissed",
+    videoCallRejected = "videoCallRejected",
 }

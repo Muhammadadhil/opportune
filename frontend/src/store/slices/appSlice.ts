@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isLoading: false,
-    theme: "light",
+    theme: localStorage.getItem("theme") || "light",
 };
 
 export const appSlice = createSlice({
@@ -14,6 +14,7 @@ export const appSlice = createSlice({
         },
         toggleTheme: (state) => {
             state.theme = state.theme === "light" ? "dark" : "light";
+            localStorage.setItem("theme", state.theme);
         },
     },
 });

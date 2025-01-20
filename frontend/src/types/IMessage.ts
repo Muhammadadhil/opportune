@@ -8,6 +8,10 @@ export enum messageType {
     text = "text",
     image = "image",
     file = "file",
+    videoCallStarted = "videoCallStarted",
+    videoCallEnded = "videoCallEnded",
+    videoCallMissed = "videoCallMissed",
+    videoCallRejected = "videoCallRejected"
 }
 
 export interface IMessage {
@@ -16,10 +20,11 @@ export interface IMessage {
     receiver: string;
     content: string;
     chatRoom: string;
-    type?: messageType;
+    type: messageType;
     status?: messageStatus;
     attachmentUrl?: string | null;
     createdAt: Date;
+    duration?: number;
 }
 
 
