@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 const ChatWindow: React.FC = () => {
     
-    const {socket,onlineUsers} = useChatSocket();
+    const { socket, onlineUsers } = useChatSocket();
     const location = useLocation();
     const queryClient = useQueryClient();
     const state = location.state as ChatState;
@@ -81,9 +81,14 @@ const ChatWindow: React.FC = () => {
         if (!socket) return;
         
         socket.on("newMessage", (message) => {
-            console.log('#################### Received newMessage event ###################', message);
-            if (!chatRoomId) return;
+
+            console.log('#################### Received newMessage event 00000', message);
+
             
+            if (!chatRoomId) return;
+            message.type = message.messageType || 'saambarrrr';
+            
+            console.log('#################### Received newMessage event 1111111111111', message);
             queryClient.setQueryData(["messages", chatRoomId], (oldData: IMessage[] = []) => {
                 return [...oldData, message];
             });
@@ -209,6 +214,9 @@ const ChatWindow: React.FC = () => {
     };
 
     const groupMessagesByDate = (messages: IMessage[]) => {
+
+        console.log('new message comess grouping itt !!')
+        
         const groups: { [key: string]: IMessage[] } = {};
 
         messages.forEach((message) => {
@@ -274,9 +282,11 @@ const ChatWindow: React.FC = () => {
                             <div className="flex justify-center">
                                 <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-500 dark:bg-zinc-800 dark:text-white">{date}</span>
                             </div>
+
                             {groupMessages.map((msg, idx) => (
                                 <MessageBubble key={idx} sender={msg.sender} message={msg.content} timestamp={msg.createdAt} isSender={msg.sender === senderId} type={msg.type} />
                             ))}
+
                         </div>
                     ))
                 )}

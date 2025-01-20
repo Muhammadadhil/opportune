@@ -128,6 +128,8 @@ const videoCallHandler = (io: Namespace) => {
                     createdAt: new Date()
                 };
 
+                console.log('messageData:', messageData);
+
                 io.server.of('/chat').to(chatRoomId).emit('newMessage', messageData);
 
             })
