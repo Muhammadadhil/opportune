@@ -5,17 +5,23 @@ import { IAdminService } from "../interfaces/IAdminService";
 import axios from "axios";
 import { EscrowStatus } from "../../enums/EscrowStatus";
 import { UserService } from "./user.services";
+import { UserRepository } from "../../repositories/implementation/user.repository";
 import { IUserRepository } from "../../repositories/interface/IUserRepository";
+import { User } from "../../schema/user.schema";
+
+
 
 export class AdminService implements IAdminService {
     private adminRepository;
+    private userService: UserService;
 
     constructor() {
         this.adminRepository = new AdminRepository();
+        this.userService = new UserService(new UserRepository(User));
     }
 
     async login(email: string, password: string) {
-        // gmail
+        // email muhammadadhil934@gmail.com
         // const password1 = "aadhi1234";
         // const hash = bcrypt.hashSync(password1, 10);
         // console.log("Use this hash in MongoDB:", hash);
@@ -40,6 +46,8 @@ export class AdminService implements IAdminService {
     async getDashboardData() {  
         
        try {
+
+            //adCh1
              const response = await axios.get("http://localhost:3020/jobs");
             //  console.log("response", response.data);
 
@@ -55,6 +63,8 @@ export class AdminService implements IAdminService {
                  return total;
              }, 0);
 
+             const { freelacerCount, clientsCount } = await this.userService.getUserCountByRole();
+
              return {
                  totalOpenJobs: response.data?.jobs?.filter((job: any) => job.isActive === true).length,
                  totalClosedJobs: response.data?.jobs?.filter((job: any) => job.isActive === false).length,
@@ -62,6 +72,8 @@ export class AdminService implements IAdminService {
                  totalClosedEscrow: escrowResponse?.data?.filter((escrow: any) => escrow.status === EscrowStatus.RELEASED).length,
                  totalEscrowAmount: totalEscrowAmount,
                  activeOpenJobs: activeOpenJobs,
+                 freelacerCount,
+                 clientsCount
              };
 
         

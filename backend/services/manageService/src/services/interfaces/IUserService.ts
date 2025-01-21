@@ -8,4 +8,5 @@ export interface IUserService {
     updateUser(data: IUser & Document): Promise<void>;
     handleEvent(eventType: string, data: any): Promise<void>;
     getUsersCount(): Promise<number>;
+    getUserCountByRole(): Promise<any>;
 }

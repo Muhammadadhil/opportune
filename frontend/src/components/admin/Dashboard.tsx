@@ -64,6 +64,9 @@ export default function Dashboard() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-[40px] font-bold text-green-600">{dashboardData?.data?.totalEscrowAmount.toFixed(2)}</div>
+                        <span className="text-sm text-muted-foreground ">
+                            total escrows : <span className="font-bold text-green-600 text-[20px]">{dashboardData?.data?.totalOpenEscrow}</span>
+                        </span>
                     </CardContent>
                 </Card>
                 <Card>
@@ -72,7 +75,7 @@ export default function Dashboard() {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-green-600">50</div>
+                        <div className="text-[40px] font-bold text-green-600">{dashboardData?.data?.freelacerCount}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -82,7 +85,7 @@ export default function Dashboard() {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-orange-600">50</div>
+                        <div className="text-[40px] font-bold text-orange-600">{dashboardData?.data?.clientsCount}</div>
                     </CardContent>
                 </Card>
                 <Card>

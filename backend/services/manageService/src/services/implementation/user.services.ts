@@ -13,7 +13,9 @@ export class UserService implements IUserService {
     constructor(@inject(TYPES.IUserRepository) userRepository: IUserRepository) {
         this.userRepository = userRepository;
     }
-
+    async getUsersCount(): Promise<number> {
+        return await this.userRepository.getUsersCount();
+    }
     async getUsers(page: number, limit: number, searchkey: string): Promise<{ AllUsers: IUser[] | null; totalPagesCount: number }> {
         const totalJobs = await this.userRepository.getUsersCount();
         const AllUsers = await this.userRepository.getUsers(page, limit, searchkey);
@@ -36,8 +38,6 @@ export class UserService implements IUserService {
         return user.isBlocked ? "Blocked" : "Unblocked";
 
         // publish a message with the event type and the user data;
-
-        
     }
 
     async createUser(data: IUser): Promise<void> {
@@ -61,7 +61,9 @@ export class UserService implements IUserService {
         }
     }
 
-    getUsersCount(): Promise<number> {
-       return this.userRepository.getUsersCount();
+    async getUserCountByRole(): Promise<any> {
+        const freelacerCount = await this.userRepository.getUserCountByRole("freelancer");
+        const clientsCount = await this.userRepository.getUserCountByRole("client");
+        return { freelacerCount, clientsCount };
     }
 }

@@ -32,13 +32,8 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     }
 
     async toggleBlockStatus(userId: ObjectId): Promise<IUser | null> {
-
         const user = await this.userModel.findOne({ _id: userId });
-        const updatedUser = await this.userModel.findOneAndUpdate(
-            { _id: userId },
-            { $set: { isBlocked: !user?.isBlocked } },
-            { new: true } 
-        );
+        const updatedUser = await this.userModel.findOneAndUpdate({ _id: userId }, { $set: { isBlocked: !user?.isBlocked } }, { new: true });
 
         if (!updatedUser) {
             throw new Error("User not found");
@@ -47,6 +42,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
         return updatedUser;
     }
 
-
-
+    async getUserCountByRole( role : string): Promise<number> {
+        return await this.userModel.find({ role }).countDocuments().exec();
+    }
 }

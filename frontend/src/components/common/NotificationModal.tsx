@@ -25,7 +25,7 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
 
     console.log('notifications:',notifications);
 
-    const sortedNotifications = notifications?.sort((a,b)=>  new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    const sortedNotifications = notifications?.length ? [...notifications].sort((a,b)=>  new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) : [];
 
     console.log('sortedNotifcations:',sortedNotifications)
 

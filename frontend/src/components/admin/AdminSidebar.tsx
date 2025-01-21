@@ -44,7 +44,6 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange, activePage })
 
     const navigate = useNavigate();
     
-
     return (
         <div className="flex h-screen">
             <Sidebar className="border-r border-gray-200 dark:border-gray-800">
@@ -60,7 +59,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange, activePage })
                             key={item.id}
                             className={`flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 ${
                                 activePage === item.id ? "bg-gray-100 dark:bg-black border dark:border-gray-800" : ""
-                            }`}
+                            } cursor-pointer`}
                             onClick={() => onPageChange(item.id)}
                         >
                             <item.icon className="w-5 h-5 mr-2" />
@@ -68,7 +67,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange, activePage })
                         </SidebarMenuItem>
                     ))}
                 </SidebarContent>
-                <div className="mt-auto p-4">
+                <div className="mt-auto p-4 dark:bg-black">
                     
                     <Dialog open={open} onOpenChange={setOpen}>
                         <DialogTrigger asChild>
