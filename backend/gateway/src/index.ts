@@ -36,7 +36,7 @@ app.use(morgan("combined",{stream:logStream}));
 const targets = {
     user: process.env.USER_API_BASE_URL,
     manage: process.env.MANAGE_API_BASE_URL,
-    jobandGig: process.env.JOBANDGIG_BASE_URL,
+    posts: process.env.POSTS_BASE_URL,
     contract: process.env.CONTRACT_BASE_URL,
     payment: process.env.PAYMENT_BASE_URL,
     notification: process.env.NOTIFICATION_BASE_URL,
@@ -53,7 +53,6 @@ app.use(
 
 app.use(
     "/manage",
-    // verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.manage,
         changeOrigin: true,
@@ -64,7 +63,7 @@ app.use(
     "/post",
     verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
-        target: targets.jobandGig,
+        target: targets.posts,
         changeOrigin: true,
     })
 );
@@ -80,7 +79,6 @@ app.use(
 
 app.use(
     "/payment",
-    // verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.payment,
         changeOrigin: true,
@@ -89,7 +87,6 @@ app.use(
 
 app.use(
     "/notification",
-    // verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.notification,
         changeOrigin: true,

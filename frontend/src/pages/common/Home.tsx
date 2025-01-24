@@ -13,6 +13,7 @@ import Stats, { StatCard } from "@/components/common/Stats";
 import MaxWidth from "@/layouts/MaxWidth";
 
 const Home: React.FC = () => {
+    
     const { theme } = useSelector((state: RootState) => state.app);
 
     return (
@@ -27,7 +28,7 @@ const Home: React.FC = () => {
                                 <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="col-span-3">
                                     <img
                                         src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=800&q=80"
-                                        alt="Industrial Manufacturing"
+                                        alt="Freelancing image"
                                         className="w-full h-96 object-cover rounded-2xl"
                                     />
                                 </motion.div>

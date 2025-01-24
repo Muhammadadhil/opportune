@@ -25,14 +25,14 @@ app.use("/", router);
 
 app.use(errorHandler);
 
-connectMongoDB(process.env.MONGODB_URL!, "jobandGigService");
+connectMongoDB(process.env.MONGODB_URL!, "posts");
 
 const PORT = process.env.PORT || 3020;
 
 const startServer = async () => {
     try {
         app.listen(PORT, () => {
-            console.log(`jobandGig server is running on the port ${PORT}`);
+            console.log(`posts server is running on the port ${PORT}`);
         });
         InitialiseConsumers();
     } catch (error) {

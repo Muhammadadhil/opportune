@@ -3,7 +3,7 @@
 API_GATEWAY_PATH="./gateway"
 USER_SERVICE_PATH="./services/userService"
 MANAGE_SERVICE_PATH="./services/manageService"
-JOBANGGIG_SERIVE_PATH="./services/jobandGigService"
+POSTS_SERIVE_PATH="./services/postService"
 CONTRACT_SERVICE_PATH='./services/contractService'
 PAYMENT_SERVICE_PATH='./services/paymentService'
 NOTIFICATION_SERVICE_PATH='./services/notificationService'
@@ -19,8 +19,8 @@ echo "Starting userService..."
 echo "Starting manageService..."
 (cd "$MANAGE_SERVICE_PATH" && npm run dev) &
 
-echo "Starting jobAndGigService..."
-(cd "$JOBANGGIG_SERIVE_PATH" && npm run dev) &
+echo "Starting postService..."
+(cd "$POSTS_SERIVE_PATH" && npm run dev) &
 
 echo "Starting contractService..."
 (cd "$CONTRACT_SERVICE_PATH" && npm run dev) &

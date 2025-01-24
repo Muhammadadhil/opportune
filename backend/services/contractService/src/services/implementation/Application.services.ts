@@ -4,8 +4,6 @@ import { IApplicationService } from "../interfaces/IApplicationService";
 import { IApplication } from "../../interfaces/IApplication";
 import { IFreelancerData } from '../../interfaces/IFreelancerData';
 
-
-
 export class ApplicationSerivce implements IApplicationService {
     private _applicationRepository: IApplicationRepository;
     private jobServiceURL :string;

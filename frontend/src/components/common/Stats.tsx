@@ -8,6 +8,7 @@ export const StatCard = ({ number, title, bgColor = "bg-green-700", height = 72,
     </div>
 );
 
+
 const Stats = () => {
     return (
         <div className="flex gap-4 mt-8">

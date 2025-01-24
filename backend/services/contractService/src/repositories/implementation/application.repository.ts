@@ -5,7 +5,6 @@ import { IApplicationRepository } from "../interfaces/IApplicationRepository";
 import { BaseRepository } from "./baseRepository";
 
 
-
 export class ApplicationRepository extends BaseRepository<IApplication> implements IApplicationRepository {
     constructor(ApplicationModel: Model<IApplication>) {
         super(ApplicationModel);

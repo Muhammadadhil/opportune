@@ -12,7 +12,6 @@ export class OfferRepository extends BaseRepository<IOffer> implements IOfferRep
 
     constructor(offerModel: Model<IOffer>) {
         super(offerModel);
-
         this.offerModel = offerModel
     }
     

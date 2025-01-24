@@ -23,7 +23,7 @@ const VideoCallWrapper: React.FC = () => {
                 }
             }, 100);
             navigate(-1);
-        }, []);
+    }, []);
 
 
     return <VideoCallOverlay roomId={roomId!} userId={userId!} userName={username} onCallEnd={handleCallEnd} />;
