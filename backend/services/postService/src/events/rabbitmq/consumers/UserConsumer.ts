@@ -1,5 +1,5 @@
 import { Channel } from "amqplib";
-import { rabbitMQConnection } from "@_opportune/common";
+import { rabbitMQInstance } from "../../../config/rabbitmq.connection";
 import { IUserService } from "../../../services/interfaces/IUserService";
 import { inject, injectable } from "inversify";
 import IConsumer from "@_opportune/common/dist/interfaces/IConsumer";
@@ -17,7 +17,7 @@ export class UserConsumer implements IConsumer{
 
     async initialise() {
         try {
-            this.channel = await rabbitMQConnection.createChannel();
+            this.channel = await rabbitMQInstance.createChannel();
             await this.channel.assertExchange(this.exchangeName, "fanout", { durable: true });
 
             const q = await this.channel.assertQueue("");

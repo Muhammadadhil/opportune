@@ -1,6 +1,7 @@
 import { Channel } from "amqplib";
 import { IApplicationService } from "../../../services/interfaces/IApplicationService";
-import { rabbitMQConnection } from "@_opportune/common";
+// import { rabbitMQConnection } from "@_opportune/common";
+import { rabbitMQInstance } from "../../../config/rabbitmq.connection";
 
 
 export class CreateApplicationConsumer {
@@ -14,7 +15,7 @@ export class CreateApplicationConsumer {
 
     async initialise(){
         try {
-            this.channel = await rabbitMQConnection.createChannel();
+            this.channel = await rabbitMQInstance.createChannel();
 
             await this.channel.assertQueue(this.queue, {durable: true});
             console.log(`Waiting for messages in queue ${this.queue}`); 

@@ -1,7 +1,8 @@
 
 import { Channel } from "amqplib";
 import { IContractService } from "../../../services/interfaces/IContractService";
-import { rabbitMQConnection } from "@_opportune/common";
+import { rabbitMQInstance } from "../../../config/rabbitmq.connection";
+
 
 
 export class JobApprovalConsumer {
@@ -15,8 +16,7 @@ export class JobApprovalConsumer {
 
     async initialise(){
         try {
-            
-            this.channel = await rabbitMQConnection.createChannel();
+            this.channel = await rabbitMQInstance.createChannel();
             await this.channel.assertExchange(this.exchangeName, "fanout", { durable: true });
             const q = await this.channel.assertQueue("");
 

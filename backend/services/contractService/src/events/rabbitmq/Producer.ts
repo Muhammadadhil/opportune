@@ -1,12 +1,12 @@
 import amqplib from "amqplib";
-import { rabbitMQConnection } from "@_opportune/common";
+import { rabbitMQInstance } from "../../config/rabbitmq.connection";
 
 export class RabbitMQProducer {
     private channel: amqplib.Channel | null = null;
 
     async connect() {
         if (!this.channel) {
-            this.channel = await rabbitMQConnection.createChannel();
+            this.channel = await rabbitMQInstance.createChannel();
         }
     }
 

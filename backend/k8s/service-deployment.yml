@@ -1,0 +1,277 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: muhammadadhil/opportune-userservice:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3015
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+  - protocol: TCP
+    port: 3015
+    targetPort: 3015  
+  type: ClusterIP
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-service
+  labels:
+    app: post-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: post-service
+  template:
+    metadata:
+      labels:
+        app: post-service
+    spec:
+      containers:
+      - name: post-service
+        image: muhammadadhil/opportune-postservice:v1
+        ports:
+        - containerPort: 3020
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-service
+spec:
+  selector:
+    app: post-service
+  ports:
+  - protocol: TCP
+    port: 3020
+    targetPort: 3020  
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contract-service
+  labels:
+    app: contract-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: contract-service
+  template:
+    metadata:
+      labels:
+        app: contract-service
+    spec:
+      containers:
+      - name: contract-service
+        image: muhammadadhil/opportune-contractservice:v1
+        ports:
+        - containerPort: 3030
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: contract-service
+spec:
+  selector:
+    app: contract-service
+  ports:
+  - protocol: TCP
+    port: 3030
+    targetPort: 3030
+  type: ClusterIP
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  labels:
+    app: notification-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+      - name: notification-service
+        image: muhammadadhil/opportune-notificationservice:v1
+        ports:
+        - containerPort: 3050
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+spec:
+  selector:
+    app: notification-service
+  ports:
+  - protocol: TCP
+    port: 3050
+    targetPort: 3050
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messaging-service
+  labels:
+    app: messaging-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: messaging-service
+  template:
+    metadata:
+      labels:
+        app: messaging-service
+    spec:
+      containers:
+      - name: messaging-service
+        image: muhammadadhil/opportune-chatservice:v1
+        ports:
+        - containerPort: 3060
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-service
+spec:
+  selector:
+    app: messaging-service
+  ports:
+  - protocol: TCP
+    port: 3060
+    targetPort: 3060
+  type: ClusterIP
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  labels:
+    app: payment-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+      - name: payment-service
+        image: muhammadadhil/opportune-paymentservice:v1
+        ports:
+        - containerPort: 3040
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+spec:
+  selector:
+    app: payment-service
+  ports:
+  - protocol: TCP
+    port: 3040
+    targetPort: 3040
+  type: ClusterIP
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manage-service
+  labels:
+    app: manage-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: manage-service
+  template:
+    metadata:
+      labels:
+        app: manage-service
+    spec:
+      containers:
+      - name: manage-service
+        image: muhammadadhil/opportune-manageservice:v1
+        ports:
+        - containerPort: 3010
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: manage-service
+spec:
+  selector:
+    app: manage-service
+  ports:
+  - protocol: TCP
+    port: 3010
+    targetPort: 3010
+  type: ClusterIP

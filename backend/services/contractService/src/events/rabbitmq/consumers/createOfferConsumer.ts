@@ -1,7 +1,6 @@
 import { Channel } from "amqplib";
 import { IOfferService } from "../../../services/interfaces/IOfferService";
-import { rabbitMQConnection } from "@_opportune/common";
-
+import { rabbitMQInstance } from "../../../config/rabbitmq.connection";
 
 
 export class CreateOfferConsumer {
@@ -14,7 +13,7 @@ export class CreateOfferConsumer {
 
     async initialise(){
         try {
-            this.channel = await rabbitMQConnection.createChannel();
+            this.channel = await rabbitMQInstance.createChannel();
             await this.channel.assertExchange(this.exchangeName, "fanout", { durable: true });
 
             const q = await this.channel.assertQueue("");

@@ -1,19 +1,15 @@
 import { Channel } from "amqplib";
-import { IOfferService } from "../../../services/interfaces/INotificationService";
-import { rabbitMQConnection } from "../RabbitMQConnection";
+import { INotificatoinService } from "../../../services/interfaces/INotificationService";
+import { rabbitMQInstance } from "../../../config/rabbitmq.connection";
 
 
 export class CreateOfferConsumer {
+    private channel: Channel | null = null;
+    constructor(private readonly notificationService: INotificatoinService, private readonly exchangeName: string) {}
 
-    private channel : Channel | null = null
-    constructor(
-        private readonly offerService:IOfferService,
-        private readonly exchangeName:string
-    ){}
-
-    async initialise(){
+    async initialise() {
         try {
-            this.channel = await rabbitMQConnection.createChannel();
+            this.channel = await rabbitMQInstance.createChannel();
             await this.channel.assertExchange(this.exchangeName, "fanout", { durable: true });
 
             const q = await this.channel.assertQueue("");
@@ -28,7 +24,8 @@ export class CreateOfferConsumer {
                     if (msg) {
                         try {
                             const messageContent = JSON.parse(msg.content.toString());
-                            await this.offerService.createOffer(messageContent);
+                            // await this.notificationService.createNotification(messageContent);
+                            
                             this.channel?.ack(msg);
                         } catch (error) {
                             console.error(`Error processing message from exchange ${this.exchangeName}:`, error);
@@ -37,10 +34,8 @@ export class CreateOfferConsumer {
                 },
                 { noAck: false }
             );
-
         } catch (error) {
             console.error("Error initializing offer consumer:", error);
         }
-
     }
 }

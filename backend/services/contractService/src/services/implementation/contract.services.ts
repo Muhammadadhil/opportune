@@ -83,8 +83,8 @@ export class ContractService implements IContractService {
 
         console.log("payment success:", data);
 
-        this.updateMilestoneStatus(data.contractId as ObjectId, data.milestoneId, MilestoneStatus.ACTIVE, data.escrowId,data.escrowStatus);
-        const contract = await this.contractRepository.findById(data.contractId);
+        this.updateMilestoneStatus(data.contractId as unknown as ObjectId, data.milestoneId as unknown as ObjectId, MilestoneStatus.ACTIVE, data.escrowId,data.escrowStatus);
+        const contract = await this.contractRepository.findById(data.contractId as unknown as ObjectId);
 
         if (contract && contract.status == ContractStatus.PENDING) {
             await this.contractRepository.update(contract._id as ObjectId,{status:ContractStatus.IN_PROGRESS});
