@@ -52,11 +52,15 @@ services:
   #   ports:
   #     - "3010:3010" 
 
-  # notification-service:
-  #   image: muhammadadhil/opportune-notificationservice:v1
-  #   container_name: notification-service
-  #   ports:
-  #     - "3050:3050"
+  notification-service:
+    image: muhammadadhil/opportune-notificationservice:latest
+    container_name: notification-service
+    ports:
+      - "3050:3050"
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./notificationService/.env
 
   # payment-service:
   #   image: muhammadadhil/opportune-paymentservice:v1

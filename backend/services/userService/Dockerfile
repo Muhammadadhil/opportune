@@ -1,19 +1,33 @@
+# Stage 1: Build
+FROM node:20.9.0-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+
+# Install all dependencies for building
+RUN npm ci                     
+
+COPY . .
+
+RUN npm run build   
+
+
+# Stage 2: Production
+
 FROM node:20.9.0-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
-
 ENV NODE_ENV=production
 
-COPY . .
+# Only install production dependencies
+RUN npm ci --only=production   
 
-RUN npm run build
+COPY --from=builder /app/dist ./dist
 
-CMD ["npm","start"]
+CMD ["node", "dist/index.js"]
 
-EXPOSE 3015
-
-
+EXPOSE 3050

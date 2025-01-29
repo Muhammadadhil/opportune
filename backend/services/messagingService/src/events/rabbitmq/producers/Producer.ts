@@ -1,5 +1,5 @@
 import amqplib from "amqplib";
-import { rabbitMQConnection } from "@_opportune/common";
+import { rabbitMQInstance } from "../../../config/rabbitmq.connection";
 import { IRabbitMQProducer } from "./IRabbitMqProducer";
 
 export class RabbitMQProducer implements IRabbitMQProducer {
@@ -8,7 +8,7 @@ export class RabbitMQProducer implements IRabbitMQProducer {
     async connect() {
         if (!this.channel) {
             console.log("Creating channel for Job and Gig Service...");
-            this.channel = await rabbitMQConnection.createChannel();
+            this.channel = await rabbitMQInstance.createChannel();
         }
     }
 
