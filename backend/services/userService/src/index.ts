@@ -27,6 +27,12 @@ app.use("/", userRouter);
 
 connectMongoDB(process.env.MONGODB_URL!, "user");
 
+console.log('process.env.MONGODB_URL: ', process.env.MONGODB_URL);
+console.log('process.env.RABBITMQ_URL: ', process.env.RABBITMQ_URL);
+console.log('process.env.PORT: ', process.env.PORT);
+console.log("process.env.JWT_ACCESSTOKEN_SECRET: ", process.env.JWT_ACCESSTOKEN_SECRET);
+console.log("process.env.NODEMAILER_USER: ", process.env.NODEMAILER_USER);
+
 const PORT = process.env.PORT || 3015;
 
 app.listen(PORT, () => {
