@@ -10,7 +10,7 @@ export class ApplicationSerivce implements IApplicationService {
 
     constructor(private readonly applicationRepository: IApplicationRepository) {
         this._applicationRepository = applicationRepository;
-        this.jobServiceURL = process.env.JOB_SERVICE_URL || '';
+        this.jobServiceURL = process.env.POST_SERVICE_URL || "";
     }
 
     async createApplication(data: IApplication): Promise<IApplication | null> {
@@ -50,9 +50,9 @@ export class ApplicationSerivce implements IApplicationService {
         const applications = await this._applicationRepository.find({ freelancerId });
         const jobIds = applications.map((app) => app.jobId);
  
-        console.log(`url :::::: ${this.jobServiceURL}/batch/jobs`);
+        // console.log(`url :::::: ${this.jobServiceURL}/batch/jobs`);
 
-        const response = await axios.get(`http://localhost:3020/batch/jobs`, { params: { jobIds } });
+        const response = await axios.get(`http://${this.jobServiceURL}:3020/batch/jobs`, { params: { jobIds } });
 
         const enrichedApplications = applications.map((application) => ({
             ...application.toObject(),

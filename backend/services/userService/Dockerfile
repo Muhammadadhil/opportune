@@ -30,4 +30,4 @@ COPY --from=builder /app/dist ./dist
 
 CMD ["node", "dist/index.js"]
 
-EXPOSE 3050
+EXPOSE 3015
