@@ -33,7 +33,7 @@ export class UserService implements IUserService {
         if (!user) throw new Error("User not found");
 
         //adCh1
-        await axios.patch(`http://localhost:3015/users/${userId}/block-toggle`);
+        await axios.patch(`${process.env.USER_SERVICE_URL}/users/${userId}/block-toggle`);
 
         return user.isBlocked ? "Blocked" : "Unblocked";
 

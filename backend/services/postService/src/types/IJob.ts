@@ -1,4 +1,5 @@
 import { Document, ObjectId } from "mongoose";
+import { jobStatus } from "../enums/jobStatus";
 
 export interface IJob extends Document {
     clientId: ObjectId;
@@ -13,5 +14,5 @@ export interface IJob extends Document {
     applicants: ObjectId[];
     applicantsCount?: number;
     isApplied?: boolean;
-    status: 
+    status: jobStatus;
 }

@@ -58,6 +58,7 @@ spec:
       containers:
       - name: post-service
         image: muhammadadhil/opportune-postservice:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 3020
 
@@ -98,6 +99,7 @@ spec:
       containers:
       - name: contract-service
         image: muhammadadhil/opportune-contractservice:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 3030
 
@@ -138,6 +140,7 @@ spec:
       containers:
       - name: notification-service
         image: muhammadadhil/opportune-notificationservice:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 3050
 
@@ -176,7 +179,8 @@ spec:
     spec:
       containers:
       - name: messaging-service
-        image: muhammadadhil/opportune-chatservice:v1
+        image: muhammadadhil/opportune-messagingservice:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 3060
 
@@ -218,6 +222,7 @@ spec:
       containers:
       - name: payment-service
         image: muhammadadhil/opportune-paymentservice:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 3040
 
@@ -258,6 +263,7 @@ spec:
       containers:
       - name: manage-service
         image: muhammadadhil/opportune-manageservice:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 3010
 

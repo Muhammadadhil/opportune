@@ -12,6 +12,8 @@ const Notification: React.FC = () => {
     const { userInfo } = useSelector((state: RootState) => state.user);
 
     const socket = useSocket(userInfo?._id,userInfo?.role);
+
+    console.log('userInfo in productiononnnnnnnnn::::::::::',userInfo)
     
     const { data:notifications,refetch } = useNotification(userInfo?._id);
 

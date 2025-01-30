@@ -19,12 +19,16 @@ export class PaymentService implements IPaymentService {
     private _escrowRepository: IEscrowRepository;
     private _publisher: any;
     private stripe: Stripe;
+    private manageServiceUrl: string;
+    private userServiceUrl: string;
 
     constructor(private readonly paymentRepository: IPaymentRepository, private readonly escrowRepository: IEscrowRepository, private readonly publisher: any) {
         this._paymentRepository = paymentRepository;
         this._escrowRepository = escrowRepository;
         this._publisher = publisher;
         this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+        this.manageServiceUrl = process.env.MANAGE_SERVICE_URL!;
+        this.userServiceUrl = process.env.USER_SERVICE_URL!;
     }
 
     async createSession(milestoneId: string, milestoneAmount: number, contractId: string, freelancerId: string, clientId: string): Promise<string | null> {
@@ -173,11 +177,11 @@ export class PaymentService implements IPaymentService {
 
             // record the commision of the admin in managee service
             console.log("!!!! record the commision of the admin in managee service !!!!");
-            await axios.post(`http://localhost:3010/record/commission`, { commissionAmount, updatedEscrow });
+            await axios.post(`${this.manageServiceUrl}/record/commission`, { commissionAmount, updatedEscrow });
 
             // add freeelacer amount to user wallet
             //adCh1
-            await axios.post(`http://localhost:3015/wallet/update/${updatedEscrow?.freelancerId}`, {...updatedEscrow,amount: freelancerAmount});
+            await axios.post(`${this.userServiceUrl}/wallet/update/${updatedEscrow?.freelancerId}`, { ...updatedEscrow, amount: freelancerAmount });
 
             return escrow;
             

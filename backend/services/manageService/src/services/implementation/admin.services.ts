@@ -47,13 +47,15 @@ export class AdminService implements IAdminService {
         
        try {
 
-            //adCh1
-             const response = await axios.get("http://localhost:3020/jobs");
+            //adCh1 
+            console.log("process.env.POST_SERVICE_URL",process.env.POST_SERVICE_URL);
+             const response = await axios.get(`${process.env.POST_SERVICE_URL}/jobs`);
             //  console.log("response", response.data);
 
              const activeOpenJobs = response?.data?.jobs?.filter((job:any) => job.isActive === true && job.status === "open").length;
 
-             const escrowResponse = await axios.get("http://localhost:3040/escrow/paymensts");
+             console.log('process.env.PAYMENT_SERVICE_URL',process.env.PAYMENT_SERVICE_URL);
+             const escrowResponse = await axios.get(`${process.env.PAYMENT_SERVICE_URL}/escrow/paymensts`);
             //  console.log("escrowResponse", escrowResponse.data);
 
              const totalEscrowAmount = escrowResponse?.data?.reduce((total: number, escrow: any) => {

@@ -158,7 +158,7 @@ export class JobService implements IJobService {
         await this.producer.publishToMultiple(exchangeName, data);
     }
 
-    async changeJobStatus(jobId: ObjectId, status: string): Promise<IJob | null> {
+    async changeJobStatus(jobId: ObjectId, status: jobStatus): Promise<IJob | null> {
         const isActive = status !== jobStatus.CLOSED  // if status is closed, set isActive to false
         return await this._jobRepository.update(jobId, { isActive, status });
     }

@@ -9,11 +9,7 @@ import { TYPES } from "../../types/types";
 
 @injectable()
 export class GigController implements IGigController {
-    private gigService: IGigService;
-
-    constructor(@inject(TYPES.IGigService) gigService: IGigService) {
-        this.gigService = gigService;
-    }
+    constructor(@inject(TYPES.IGigService) private gigService: IGigService) {}
 
     postAGig = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {

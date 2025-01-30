@@ -8,8 +8,10 @@
         "strict": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "strictPropertyInitialization": false
+        "strictPropertyInitialization": false,
+        "rootDir": "./src",
+        "outDir": "./dist",
     },
-    "include": ["src/**/*", "../manageService/src/controllers/interface/IUserController.ts"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules"]
 }
