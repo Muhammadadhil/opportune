@@ -43,7 +43,7 @@ export class UserService implements IUserService {
         console.log('updated user:',updatedUser);
         
         //adCh1
-        await axios.post(`http://localhost:3015/average-rating/add/${updatedUser?._id}`, { userData:updatedUser });
+        await axios.post(`${process.env.USER_SERVICE_URL}/average-rating/add/${updatedUser?._id}`, { userData: updatedUser });
 
     }
 

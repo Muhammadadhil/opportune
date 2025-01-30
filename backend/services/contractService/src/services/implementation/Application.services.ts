@@ -10,7 +10,7 @@ export class ApplicationSerivce implements IApplicationService {
 
     constructor(private readonly applicationRepository: IApplicationRepository) {
         this._applicationRepository = applicationRepository;
-        this.jobServiceURL = process.env.POST_SERVICE_URL || "";
+        this.jobServiceURL = process.env.POST_SERVICE_URL!;
     }
 
     async createApplication(data: IApplication): Promise<IApplication | null> {
@@ -31,9 +31,10 @@ export class ApplicationSerivce implements IApplicationService {
         const freelancerIds = applications.map((app) => app.freelancerId);
 
         // adCh1: take the user info from user service
+        console.log("process.env.USER_SERVICE_URL::::::: ",`${process.env.USER_SERVICE_URL}`);
 
         if (freelancerIds.length > 0) {
-            const response = await axios.get(`http://localhost:4002/user/freelancers`, { params: { ids: freelancerIds } });
+            const response = await axios.get(`${process.env.USER_SERVICE_URL}/freelancers`, { params: { ids: freelancerIds } });
 
             const enrichedApplications = applications.map((app) => ({
                 ...app.toObject(),
@@ -50,9 +51,9 @@ export class ApplicationSerivce implements IApplicationService {
         const applications = await this._applicationRepository.find({ freelancerId });
         const jobIds = applications.map((app) => app.jobId);
  
-        // console.log(`url :::::: ${this.jobServiceURL}/batch/jobs`);
+        console.log(`url :::::: ${this.jobServiceURL}/batch/jobs`);
 
-        const response = await axios.get(`http://${this.jobServiceURL}:3020/batch/jobs`, { params: { jobIds } });
+        const response = await axios.get(`${this.jobServiceURL}/batch/jobs`, { params: { jobIds } });
 
         const enrichedApplications = applications.map((application) => ({
             ...application.toObject(),
