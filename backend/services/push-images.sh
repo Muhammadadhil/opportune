@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# did not tested this script yet
-
 services=(
   "gateway-service:muhammadadhil/gateway"
   "user-service:muhammadadhil/opportune-userservice"

@@ -10,9 +10,17 @@ import { errorHandler } from '@_opportune/common'
 const app = express();
 dotenv.config();
 
+const allowedOrigins = [process.env.LOCAL_ORIGIN, process.env.VERCEL_ORIGIN, process.env.PRODUCTION_ORIGIN];
+
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
     })
 );

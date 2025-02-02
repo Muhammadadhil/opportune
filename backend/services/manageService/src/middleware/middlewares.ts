@@ -3,9 +3,17 @@ import morgan from "morgan";
 import express, { Application } from "express";
 
 export const setupMiddlewares = (app: Application): void => {
+    const allowedOrigins = [process.env.LOCAL_ORIGIN, process.env.VERCEL_ORIGIN, process.env.PRODUCTION_ORIGIN];
+
     app.use(
         cors({
-            origin: process.env.CORS_ORIGIN,
+            origin: (origin, callback) => {
+                if (!origin || allowedOrigins.includes(origin)) {
+                    callback(null, true);
+                } else {
+                    callback(new Error("Not allowed by CORS"));
+                }
+            },
             credentials: true,
         })
     );

@@ -11,10 +11,7 @@ dotenv.config();
 
 app.use(cookieParser());
 
-const allowedOrigins = [
-    "http://localhost:5173", // For local development
-    "https://opportune-three.vercel.app/", // Replace with your actual Vercel domain
-];
+const allowedOrigins = [process.env.LOCAL_ORIGIN, process.env.VERCEL_ORIGIN, process.env.PRODUCTION_ORIGIN];
 
 app.use(
     cors({
