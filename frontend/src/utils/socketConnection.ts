@@ -1,10 +1,10 @@
 import io from "socket.io-client";
 
-const createSocketConnection = (socketUrl: string, userId?: string, userRole?: string) => {
-    
-    // console.log("socektUrl connection url:", socketUrl);
-    
+const createSocketConnection = (socketUrl: string,socketPath?: string, userId?: string, userRole?: string) => {
+    console.log("socektUrl socketPath pathh:", socketPath);
+
     const socket = io(socketUrl, {
+        path: socketPath,
         transports: ["websocket", "polling"],
         reconnection: true,
         reconnectionAttempts: 5,
@@ -12,7 +12,7 @@ const createSocketConnection = (socketUrl: string, userId?: string, userRole?: s
     });
 
     if (userId && userRole) {
-        socket.emit("register", {userId, userRole});
+        socket.emit("register", { userId, userRole });
     }
 
     socket.on("connect_error", (error) => {

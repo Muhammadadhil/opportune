@@ -5,12 +5,13 @@ let io: Server;
 
 export const initSocketServer = (httpServer:any)=> {
 
-    io = new Server(httpServer,{
-        cors:{
-            origin:"*",
-            methods:["GET","POST"]
-        }
-    })
+    io = new Server(httpServer, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"],
+        },
+        path: "/notification-socket",
+    });
 
     io.on('connection', (socket) => {
 

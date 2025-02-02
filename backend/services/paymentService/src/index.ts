@@ -11,7 +11,7 @@ import { errorHandler } from '@_opportune/common'
 const app = express();
 dotenv.config();
 
-const allowedOrigins = [process.env.LOCAL_ORIGIN, process.env.VERCEL_ORIGIN, process.env.PRODUCTION_ORIGIN];
+const allowedOrigins = [process.env.LOCAL_ORIGIN?.replace(/\/$/, ""), process.env.VERCEL_ORIGIN?.replace(/\/$/, ""), process.env.PRODUCTION_ORIGIN?.replace(/\/$/, "")];
 
 app.use(
     cors({

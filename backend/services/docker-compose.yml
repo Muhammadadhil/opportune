@@ -13,7 +13,7 @@ services:
       - opportune-network
 
   gateway-service:
-    image: muhammadadhil/gateway:latest
+    image: muhammadadhil/gateway:v1
     build:
       context: ../gateway
       dockerfile: Dockerfile
@@ -27,7 +27,7 @@ services:
 
 
   user-service:
-    image: muhammadadhil/opportune-userservice:latest
+    image: muhammadadhil/opportune-userservice:v1
     build:
       context: ./userService
       dockerfile: Dockerfile
@@ -42,7 +42,7 @@ services:
       - opportune-network
 
   post-service:
-    image: muhammadadhil/opportune-postservice:latest
+    image: muhammadadhil/opportune-postservice:v1
     build:
       context: ./postService
       dockerfile: Dockerfile
@@ -57,7 +57,7 @@ services:
       - opportune-network  
 
   contract-service:
-    image: muhammadadhil/opportune-contractservice:latest
+    image: muhammadadhil/opportune-contractservice:v1
     build:
       context: ./contractService
       dockerfile: Dockerfile
@@ -72,7 +72,7 @@ services:
       - opportune-network
 
   messaging-service:
-    image: muhammadadhil/opportune-messagingservice:latest
+    image: muhammadadhil/opportune-messagingservice:v1
     build:
       context: ./messagingService
       dockerfile: Dockerfile
@@ -87,7 +87,7 @@ services:
       - opportune-network    
 
   payment-service:
-    image: muhammadadhil/opportune-paymentservice:latest
+    image: muhammadadhil/opportune-paymentservice:v1
     build:
       context: ./paymentService
       dockerfile: Dockerfile
@@ -102,7 +102,7 @@ services:
       - opportune-network        
 
   manage-service:
-    image: muhammadadhil/opportune-manageservice:latest
+    image: muhammadadhil/opportune-manageservice:v1
     build:  
       context: ./manageService
       dockerfile: Dockerfile
@@ -117,7 +117,7 @@ services:
       - opportune-network  
 
   notification-service:
-    image: muhammadadhil/opportune-notificationservice:latest
+    image: muhammadadhil/opportune-notificationservice:v1
     build:
       context: ./notificationService
       dockerfile: Dockerfile

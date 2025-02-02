@@ -15,7 +15,7 @@ dotenv.config();
 const app = express();
 app.use(cookieParser());
 
-const allowedOrigins = [process.env.LOCAL_ORIGIN, process.env.VERCEL_ORIGIN, process.env.PRODUCTION_ORIGIN];
+const allowedOrigins = [process.env.LOCAL_ORIGIN?.replace(/\/$/, ""), process.env.VERCEL_ORIGIN?.replace(/\/$/, ""), process.env.PRODUCTION_ORIGIN?.replace(/\/$/, "")];
 
 app.use(
   cors({
@@ -51,8 +51,30 @@ const targets = {
     messaging: process.env.MESSAGING_BASE_URL,
 };
 
+// const websocketServiceConfig = {
+//     ws: true, 
+//     changeOrigin: true,
+//     secure: false,
+// };
+
+// app.use(
+//     "/ws/messaging",
+//     createProxyMiddleware({
+//         ...websocketServiceConfig,
+//         target: targets.messaging,
+//     })
+// );
+
+// app.use(
+//     "/ws/notification",
+//     createProxyMiddleware({
+//         ...websocketServiceConfig,
+//         target: targets.notification,
+//     })
+// );
+
 app.use(
-    "/user",
+    "/api/user",
     createProxyMiddleware({
         target: targets.user,
         changeOrigin: true,
@@ -60,7 +82,7 @@ app.use(
 );
  
 app.use(
-    "/manage",
+    "/api/manage",
     createProxyMiddleware({
         target: targets.manage,
         changeOrigin: true,
@@ -68,7 +90,7 @@ app.use(
 );
 
 app.use(
-    "/post",
+    "/api/post",
     verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.posts,
@@ -77,7 +99,7 @@ app.use(
 );
 
 app.use(
-    "/contract",
+    "/api/contract",
     verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.contract,
@@ -86,7 +108,7 @@ app.use(
 );
 
 app.use(
-    "/payment",
+    "/api/payment",
     createProxyMiddleware({
         target: targets.payment,
         changeOrigin: true,
@@ -94,7 +116,7 @@ app.use(
 );
 
 app.use(
-    "/notification",
+    "/api/notification",
     createProxyMiddleware({
         target: targets.notification,
         changeOrigin: true,
@@ -102,7 +124,7 @@ app.use(
 );
 
 app.use(
-    "/messaging",
+    "/api/messaging",
     verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.messaging,

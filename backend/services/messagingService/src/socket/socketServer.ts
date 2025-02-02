@@ -13,6 +13,7 @@ export const initSocketServer = (httpServer: any) => {
             origin: "*",
             methods: ["GET", "POST"],
         },
+        path: "/messaging-socket",
     });
 
     const chatNameSpace =  io.of('/chat'); 

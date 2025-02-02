@@ -11,7 +11,7 @@ dotenv.config();
 
 app.use(cookieParser());
 
-const allowedOrigins = [process.env.LOCAL_ORIGIN, process.env.VERCEL_ORIGIN, process.env.PRODUCTION_ORIGIN];
+const allowedOrigins = [process.env.LOCAL_ORIGIN?.replace(/\/$/, ""), process.env.VERCEL_ORIGIN?.replace(/\/$/, ""), process.env.PRODUCTION_ORIGIN?.replace(/\/$/, "")];
 
 app.use(
     cors({
@@ -35,11 +35,9 @@ app.use("/", userRouter);
 
 connectMongoDB(process.env.MONGODB_URL!, "user");
 
-console.log('process.env.MONGODB_URL: ', process.env.MONGODB_URL);
-console.log('process.env.RABBITMQ_URL: ', process.env.RABBITMQ_URL);
-console.log('process.env.PORT: ', process.env.PORT);
-console.log("process.env.JWT_ACCESSTOKEN_SECRET: ", process.env.JWT_ACCESSTOKEN_SECRET);
-console.log("process.env.NODEMAILER_USER: ", process.env.NODEMAILER_USER);
+console.log("process.env.LOCAL_ORIGIN", process.env.LOCAL_ORIGIN);
+console.log("process.env.VERCEL_ORIGIN", process.env.VERCEL_ORIGIN);
+console.log("process.env.PRODUCTION_ORIGIN", process.env.PRODUCTION_ORIGIN);
 
 const PORT = process.env.PORT || 3015;
 

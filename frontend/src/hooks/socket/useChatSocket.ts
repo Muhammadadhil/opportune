@@ -4,7 +4,9 @@ import createSocketConnection from "@/utils/socketConnection";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
-const SOCKET_URL = import.meta.env.VITE_CHAT_SOCKET_URL;
+const SOCKET_URL = import.meta.env.NODE_ENV === "production" ? `wss://${import.meta.env.VITE_NOTIFICATION_SOCKET_URL}` : `ws://${import.meta.env.VITE_NOTIFICATION_SOCKET_URL}`;
+
+console.log("SOCKET_URL chat:",SOCKET_URL)
 
 export const useChatSocket = () => {
 
@@ -18,7 +20,7 @@ export const useChatSocket = () => {
 
         if(!userInfo?._id) return ;
 
-         const newSocket = createSocketConnection(SOCKET_URL,userInfo?._id,userInfo?.role);
+         const newSocket = createSocketConnection(SOCKET_URL, "/messaging-socket", userInfo?._id, userInfo?.role);
          setSocket(newSocket);
 
         const handleOnlineUsers = (users: string[]) => {

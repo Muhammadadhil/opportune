@@ -3,7 +3,7 @@ import morgan from "morgan";
 import express, { Application } from "express";
 
 export const setupMiddlewares = (app: Application): void => {
-    const allowedOrigins = [process.env.LOCAL_ORIGIN, process.env.VERCEL_ORIGIN, process.env.PRODUCTION_ORIGIN];
+    const allowedOrigins = [process.env.LOCAL_ORIGIN?.replace(/\/$/, ""), process.env.VERCEL_ORIGIN?.replace(/\/$/, ""), process.env.PRODUCTION_ORIGIN?.replace(/\/$/, "")];
 
     app.use(
         cors({
