@@ -12,9 +12,20 @@ import { errorHandler } from '@_opportune/common'
 const app = express();
 dotenv.config();
 
+const allowedOrigins = [
+    "http://localhost:5173", // For local development
+    "https://opportune-three.vercel.app/", // Replace with your actual Vercel domain
+];
+
 app.use(
     cors({
-        origin: 'http://localhost:5173',
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
     })
 );
