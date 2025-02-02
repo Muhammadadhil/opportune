@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import Dashboard from "@/components/admin/Dashboard";
 import Categories from "@/components/admin/Categories";
-// import Users from "@/components/admin/Users";
-// import Payments from "@/components/admin/Payments";
-// import Notifications from "@/components/admin/Notifications";
 import TopBar from "@/components/admin/AdminNavbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import UserList from '@/components/admin/UsersList';

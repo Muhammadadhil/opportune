@@ -1,4 +1,4 @@
-import { BellIcon, MenuIcon, Moon, Sun } from "lucide-react";
+import { MenuIcon, Moon, Sun } from "lucide-react";
 import Button from "../ui/Button";
 import { useDispatch , useSelector } from "react-redux";
 import  { toggleTheme} from '@/store/slices/appSlice'

@@ -40,7 +40,7 @@ function UserRoute() {
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/offer-success" element={<SuccessPage />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
-                <Route path="/forgot-passsowrd" element={<ForgotPasswordPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
                 <Route element={<UsersLayout />}>
                     <Route path="/explore" element={<ExplorePage />} />

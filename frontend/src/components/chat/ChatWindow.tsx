@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import { useLocation } from "react-router-dom";
 import { useChatSocket } from "@/hooks/socket/useChatSocket";
-import { IMessage } from "@/types/IMessage";
+import { IMessage, messageType } from "@/types/IMessage";
 import useMessages from "@/hooks/chat/useMessage";
 import { useQueryClient } from "@tanstack/react-query";
 import { Video } from "lucide-react";
@@ -13,7 +13,6 @@ import { newMessage } from "@/types/IMessage";
 import VideoCallOverlay from "./VideoCallOverlay";
 import { ScrollArea } from "../ui/scroll-area";
 import { useVideoCall } from '@/contexts/videoCallContext';
-import { useVideoCallSocket } from '@/hooks/socket/useVideoCallSocket';
 import { useToast } from "@/hooks/use-toast";
 import CallingOverlay from "@/components/chat/CallingOverLay";
 import { useNavigate } from "react-router-dom";
@@ -118,7 +117,7 @@ const ChatWindow: React.FC = () => {
     useEffect(() => {
         if (!videoCallSocket) return;
 
-        videoCallSocket.on('call-accepted', (roomId: string) => {
+        videoCallSocket.on('call-accepted', () => {
             toast({
                 title: "User Accepted Call , Joining the meeting",
                 description: "Call accepted",
@@ -129,7 +128,7 @@ const ChatWindow: React.FC = () => {
             
         });
 
-        videoCallSocket.on('call-rejected', (roomId: string) => {
+        videoCallSocket.on('call-rejected', () => {
             setIsCalling(false);
             toast({
                 title: "Call Rejected",
@@ -176,6 +175,7 @@ const ChatWindow: React.FC = () => {
             content,
             chatRoom: chatRoomId,
             createdAt: new Date(),
+            type: messageType.text
         };
 
         queryClient.setQueryData(["messages", chatRoomId], (oldData: IMessage[] = []) => {

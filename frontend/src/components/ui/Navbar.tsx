@@ -8,7 +8,6 @@ import { CgProfile } from "react-icons/cg";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { logoutUser } from "@/store/slices/userSlice";
 import { clearPostFormData } from "@/store/slices/postSlice";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { RootState } from "@/store/store";
 import { logout } from "@/api/auth";
 import { toggleTheme } from "@/store/slices/appSlice";
@@ -22,7 +21,6 @@ interface NavItem {
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useDispatch();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const menuItems: NavItem[] = [
         { path: "/find-jobs", label: "Find Jobs" },
@@ -322,29 +320,6 @@ const Navbar: React.FC = () => {
                 </nav>
             )}
 
-            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <AlertDialogContent className={theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800"}>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription className={theme === "dark" ? "text-gray-300" : "text-gray-600"}>
-                            This action cannot be undone. This will log you out of your account.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel
-                            onClick={() => {
-                                setIsDialogOpen(false);
-                            }}
-                            className={theme === "dark" ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}
-                        >
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={handleLogout} className={theme === "dark" ? "bg-red-600 text-white hover:bg-red-700" : "bg-red-600 text-white hover:bg-red-700"}>
-                            Continue
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
         </>
     );
 };

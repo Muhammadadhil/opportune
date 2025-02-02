@@ -1,14 +1,12 @@
 import React from "react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { saveClientDetails } from "@/api/user";
-// import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import IClientData from "@/types/IClientData";
 import MultiSelect from "../ui/MultiSelect";
 import { RootState } from "@/store/store";
 import { useCategories } from "@/hooks/useCategories";
@@ -19,7 +17,7 @@ const DetailsClient: React.FC = () => {
     const [companyName, setCompanyName] = useState<string>("");
     const [companyDescription, setCompanyDescription] = useState<string>("");
     const [website, setWebsite] = useState<string>("");
-    const [selectedProjectNeeds, setSelectedProjectNeeds] = useState<Option[]>([]);
+    const [selectedProjectNeeds, setSelectedProjectNeeds] = useState<string[]>([]);
     const [error, setError] = useState<string>("");
 
     const { userInfo } = useSelector((state:RootState) => state.user);
@@ -38,7 +36,7 @@ const DetailsClient: React.FC = () => {
             console.log('project needs:',projectNeeds)
             const clientData = { userId, companyName, companyDescription, projectNeeds, website };
             console.log("clientData:", clientData);
-            await saveClientDetails(clientData as IClientData);
+            await saveClientDetails(clientData);
             navigate("/cl/dashboard");
         } catch (error) {
             console.log("Error in saving client details:", error);
@@ -50,7 +48,7 @@ const DetailsClient: React.FC = () => {
     const categoryOptions = categories?.data?.map((category: ICategory) => category.name);
 
 
-    const handleSelectionChange = (newSelectedOptions: Option[]) => {
+    const handleSelectionChange = (newSelectedOptions) => {
         setSelectedProjectNeeds(newSelectedOptions);
     };
 

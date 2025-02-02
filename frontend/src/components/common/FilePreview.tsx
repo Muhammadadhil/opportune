@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { FileText, Image, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const FilePreview = ({ fileUrl, fileType }: { fileUrl: string, fileType: string }) => {

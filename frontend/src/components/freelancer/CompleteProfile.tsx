@@ -1,11 +1,10 @@
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import profilePicture from "@/assets/profilePicture.jpg";
 import { IoIosClose } from "react-icons/io";
-// import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { completeProfle, getUploadSignedUrl } from "@/api/user";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -36,13 +35,11 @@ const CompleteProfile = () => {
     const [skills, setSkills] = useState<string[]>([]);
     const [newSkill, setNewSkill] = useState("");
 
-    const [prefferedJobs, setPrefferedJobs] = useState<Option[]>([]);
+    const [prefferedJobs, setPrefferedJobs] = useState([]);
     const [error, setError] = useState<string>("");
 
     const { userInfo } = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
-
-    // const [showPortfolioInputs, setShowPortfolioInputs] = useState(false);
 
     const {data: categories} = useCategories();
     const categoryOptions = categories?.data?.map((category: ICategory) => category.name);
@@ -64,11 +61,7 @@ const CompleteProfile = () => {
     };
 
     const onSubmit = async (data: any) => {
-
-        console.log('aldf;jasdlfja;dfjalfdjaslfjasjoikpjawklejfalksdjfaslkfdjpoaskj')
-
         try {
-
             const file = data.image;
             const presignedData = await getUploadSignedUrl(data.image.name, data.image.type);
 
@@ -92,6 +85,7 @@ const CompleteProfile = () => {
             navigate(-1);
         } catch (error) {
             const axiosError = error as AxiosError;
+            setError("error in complete-profile");
             console.log("error in complete-profile:", axiosError);
 
             if (axiosError.response) {
@@ -110,7 +104,7 @@ const CompleteProfile = () => {
         }
     };
 
-    const handleSelectionChange = (newSelectedOptions: Option[]) => {
+    const handleSelectionChange = (newSelectedOptions) => {
         setPrefferedJobs(newSelectedOptions);
     };
     

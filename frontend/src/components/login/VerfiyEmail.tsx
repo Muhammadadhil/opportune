@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from "../ui/button";
+import  Button  from "../ui/Button";
 import { Input } from "../ui/input";
 import { resendOtp, verifyOtp } from "../../api/auth";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import LoadingSpinner from "../loading/Loading";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/store/slices/userSlice";
+import { RootState } from "@/store/store";
 
 export default function OTPVerification() {
     const [otp, setOtp] = useState("");
@@ -20,7 +21,7 @@ export default function OTPVerification() {
     const location = useLocation();
     const dispatch = useDispatch();
 
-    const { userInfo } = useSelector((state) => state.user);
+    const { userInfo } = useSelector((state:RootState) => state.user);
     const { newUserInfo } = location.state || {};
 
     useEffect(()=>{
@@ -113,7 +114,7 @@ export default function OTPVerification() {
                         <div className="flex justify-center">{error ? <p className="text-red-600 text-sm">{error}</p> : ""}</div>
                         <div className="text-center text-sm text-gray-600">
                             {canResend ? (
-                                <Button onClick={handleResendOtp} variant="link" className="text-blue-600">
+                                <Button onClick={handleResendOtp} variant="default" className="text-blue-600">
                                     Resend OTP
                                 </Button>
                             ) : (

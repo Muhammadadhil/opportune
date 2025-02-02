@@ -6,6 +6,7 @@ export const completeProfileSchema = z.object({
     accounts: z.object({
         linkedin: z.string().url({ message: "Must be a valid URL" }).optional(),
         github: z.string().url({ message: "Must be a valid URL" }).optional(),
+        other: z.string().url({ message: "Must be a valid URL" }).optional(),
     }),
     image: z
         .instanceof(File)

@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 
 export const StatCard = ({ number, title, bgColor = "bg-green-700", height = 72, width = 56 }: { number: string; title: string; bgColor?: string; height?: number; width?: number }) => (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,9 +9,11 @@ import { verifyOtp } from "@/api/auth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../loading/Loading";
 import { Toaster } from "@/components/ui/toaster";
+import { AxiosError } from "axios";
 
 
 export default function ForgotPassword() {
+
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
@@ -45,7 +47,7 @@ export default function ForgotPassword() {
             toast({
                 variant: "destructive",
                 title: "Error",
-                description: error instanceof Error ? error.response.data.message : "Failed to send OTP. Please try again.",
+                description: error instanceof AxiosError && error.response ? error.response.data.message : "Failed to send OTP. Please try again.",
             });
         } finally {
             setIsLoading(false);

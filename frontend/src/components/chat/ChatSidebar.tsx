@@ -2,8 +2,7 @@ import { RootState } from "@/store/store";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getChatRooms } from "@/api/chat";
-import { Search, Edit } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { IChatRoom } from "@/types/IChatRoom";
 import { IUser } from "@/types/IUser";
 import { getChatParticipants } from "@/utils/getChatUser";
@@ -55,6 +54,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
                 <Input 
                     placeholder="Search conversations..." 
                     className="w-full bg-gray-50 dark:bg-zinc-900 rounded-full border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </div>
 
@@ -75,7 +76,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onChangeChat }) => {
                         >
                             <div className="flex items-center space-x-3">
                                 <Avatar className="h-10 w-10">
-                                    <AvatarImage src={chat.avatar} />
                                     <AvatarFallback className="bg-gray-200 dark:bg-zinc-800 text-gray-700 dark:text-gray-300">
                                         {otherUser.firstname?.charAt(0)}
                                     </AvatarFallback>

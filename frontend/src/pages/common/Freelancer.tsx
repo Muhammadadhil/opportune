@@ -1,8 +1,6 @@
 import React from "react";
 import { FreelancerCard } from "@/components/freelancer/freelancerCard";
-import MaxWidth from "@/layouts/MaxWidth";
 import { useFreelancersList } from "@/hooks/user/useFreelancersList";
-
 
 const Freelancer: React.FC = () => {
 

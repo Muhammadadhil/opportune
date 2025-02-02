@@ -1,6 +1,6 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { IJob } from "@/types/IJob";
 import { applyJob } from "@/api/job";
 import { useSelector } from "react-redux";
@@ -15,7 +15,6 @@ import { Label } from "../ui/label";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Upload ,FileText} from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getCV,getUploadSignedUrl,saveCVDetails } from "@/api/cv";
@@ -240,7 +239,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                                 </Button>
                                                 <Button
                                                     type="button"
-                                                    variiant={cvSelectionMode === 'new' ? 'default' : 'outline'}
+                                                    variant={cvSelectionMode === 'new' ? 'default' : 'outline'}
                                                     onClick={() => setCvSelectionMode('new')}
                                                 >
                                                     Upload New CV

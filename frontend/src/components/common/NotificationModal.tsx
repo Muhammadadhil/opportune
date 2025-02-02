@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Bell } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import Button from "../ui/Button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {INotification} from '@/types/INotification';
 // import {markNotificationAsRead} from '@/api/notification';
@@ -34,7 +34,7 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
             <button onClick={() => setOpen(true)} className="flex items-center focus:outline-none" aria-label="Notifications">
                 <Bell className="h-6 w-6" />
                 {notifications?.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{notifications.length}</span>
+                    <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{notifications.length}</span>
                 )}
             </button>
 
@@ -59,9 +59,9 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
                                             {!notification.isRead && <div className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0 mt-1" />}
                                         </div>
                                         <div className="flex justify-start">
-                                            <Button onClick={() => handleRead(notification._id)} variant="outline" size="sm" className="text-xs">
+                                            <button onClick={() => handleRead(notification._id)} className="text-xs text-blue-500 hover:underline">
                                                 Mark as read
-                                            </Button>
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
@@ -75,7 +75,7 @@ export const NotificationModal: React.FC<NotificationProps> = ({ notifications }
 
                     <div className="flex items-center justify-end border-t border-gray-200 dark:border-gray-700 pt-4">
                         <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" >
                                 Mark all as read
                             </Button>
                         </div>

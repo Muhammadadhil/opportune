@@ -8,7 +8,7 @@ import { UserService } from "./user.services";
 import { UserRepository } from "../../repositories/implementation/user.repository";
 import { IUserRepository } from "../../repositories/interface/IUserRepository";
 import { User } from "../../schema/user.schema";
-
+import { IDashboardData } from '../../interfaces/IDashboardData'
 
 
 export class AdminService implements IAdminService {
@@ -43,10 +43,8 @@ export class AdminService implements IAdminService {
         return { admin, accessToken, refreshToken };
     }
 
-    async getDashboardData() {  
-        
-       try {
-
+    async getDashboardData(): Promise<IDashboardData | void> {  
+        try {
             //adCh1 
             console.log("process.env.POST_SERVICE_URL",process.env.POST_SERVICE_URL);
              const response = await axios.get(`${process.env.POST_SERVICE_URL}/jobs`);
@@ -78,11 +76,9 @@ export class AdminService implements IAdminService {
                  clientsCount
              };
 
-        
-
-
-       } catch (error) {
+    
+        } catch (error) {
             console.log('error in getDashboardData:',error)
-       }
+        }
     }
 }

@@ -7,7 +7,7 @@ import { signIn } from "@/api/auth";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "@/store/slices/userSlice";
-import { Button } from "@/components/ui/button";
+import {Button} from "../ui/button1";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PasswordField from "@/components/ui/passwordField";
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
                 navigate("/");
             }
         },
-        onError: (errorResponse) => {
+        onError: () => {
             toast.error("Error signing in with Google");
         },
     });

@@ -1,11 +1,7 @@
 import React from "react";
 import Navbar from "../../components/ui/Navbar";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import MouseTracker from "../../components/common/MouseTracker";
 import { motion } from "framer-motion";
 import Footer from "@/components/common/Footer";
 import Hero from "@/components/common/Hero";

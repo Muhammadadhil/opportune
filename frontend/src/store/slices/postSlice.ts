@@ -9,6 +9,7 @@ const initialState: RootState = {
         description: "",
         skills: [],
         images: [],
+        link:"",
     },
     jobData: {
         jobTitle: "",
@@ -16,7 +17,7 @@ const initialState: RootState = {
         subCategory: "",
         skillsRequired: [],
         description: "",
-        budget: "",
+        budget: 0,
         searchTags: [],
     },
 };
@@ -35,6 +36,7 @@ export const postSlice = createSlice({
                 description: "",
                 skills: [],
                 images: [],
+                link:"",
             };
         },
         updateJobData: (state, action) => {
@@ -47,7 +49,7 @@ export const postSlice = createSlice({
                 subCategory: "",
                 skillsRequired: [],
                 description: "",
-                budget: "",
+                budget: 0,
                 searchTags: [],
             };
         },

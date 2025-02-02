@@ -1,3 +1,4 @@
+import { IDashboardData } from "@/types/IDashboardData";
 import apiClient from "./axiosInstance";
 import { IUser } from '@/types/IUser'
 
@@ -30,18 +31,21 @@ export const getCategories = async () => {
 };
 
 export const getUsers = async (searchKey: string, page: number, limit: number): Promise<{ users: IUser[] | null; totalPages: number }> => {
-    return await apiClient.get("manage/users", { params: { searchKey, page, limit } });
+    const response = await apiClient.get("manage/users", { params: { searchKey, page, limit } });
+    return response.data;
 };
 
 export const toggleUserBlockStatus = async (userId: string): Promise<void> =>{
     return await apiClient.patch(`manage/users/${userId}/block-toggle`);
 }
 
-export const getAdminTransactions = async (): Promise<void> => {
-    return await apiClient.get("manage/transactions");
+export const getAdminTransactions = async (): Promise<any> => {
+    const response = await apiClient.get("manage/transactions");
+    return response.data;
 };
 
+export const getDashboardData = async (): Promise<IDashboardData | null> => {
+    const response = await apiClient.get("manage/dashboard/data");
+    return response.data;
 
-export const getDashboardData = async (): Promise<void> => {
-    return await apiClient.get("manage/dashboard/data");
-}
+};

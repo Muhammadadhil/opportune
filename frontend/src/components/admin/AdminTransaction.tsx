@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,8 +32,8 @@ const AdminTransactions = () => {
     console.log("transactions:", transactions);
 
 
-    const totalCommission = transactions?.data?.reduce((sum: number, transaction) => sum + transaction.amount, 0) || 0;
-    const averageCommission = transactions?.data?.length ? totalCommission / transactions.data.length : 0;
+    const totalCommission = transactions?.reduce((sum: number, transaction) => sum + transaction.amount, 0) || 0;
+    const averageCommission = transactions?.length ? totalCommission / transactions?.length : 0;
 
     return (
         <div className="space-y-6">
@@ -62,7 +62,7 @@ const AdminTransactions = () => {
                         <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-green-600">${Math.max(...(transactions?.data?.map((t) => t.amount.toFixed(2)) || [0]))}</div>
+                        <div className="text-2xl font-bold text-green-600">${Math.max(...(transactions?.map((t) => t.amount.toFixed(2)) || [0]))}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -71,7 +71,7 @@ const AdminTransactions = () => {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-green-600">{Math.min(...(transactions?.data?.map((t) => t.amount.toFixed(2)) || [0]))}</div>
+                        <div className="text-2xl font-bold text-green-600">{Math.min(...(transactions?.map((t) => t.amount.toFixed(2)) || [0]))}</div>
                     </CardContent>
                 </Card>
             </div>
@@ -123,7 +123,7 @@ const AdminTransactions = () => {
                                               </TableCell>
                                           </TableRow>
                                       ))
-                                    : transactions?.data?.map((transaction) => (
+                                    : transactions?.map((transaction) => (
                                           <TableRow key={transaction._id}>
                                               <TableCell>{formatDate(transaction.createdAt)}</TableCell>
                                               <TableCell>{transaction.freelancerId.firstname + " " + transaction.freelancerId.lastname}</TableCell>

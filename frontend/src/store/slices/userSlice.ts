@@ -9,7 +9,7 @@ const initialState: userState = {
         country: "",
         email: "",
         role: "",
-        averageRating: "",
+        averageRating: 0,
         reviewCount: "",
         walletAmount: 0,
         walletHistory: [],

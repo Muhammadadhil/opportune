@@ -20,6 +20,7 @@ export const useRemoveJob = () => {
         },
         onError: (err, jobId, context) => {
             // Rollback to the previous jobs list on error
+            console.log(err,jobId);
             queryClient.setQueryData(["jobs"], context?.previousJobs);
         },
         onSettled: () => {

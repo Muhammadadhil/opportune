@@ -1,7 +1,11 @@
 import React from "react";
 import FallbackUI from "./FallbackUi";
 
-class ErrorBoundary extends React.Component {
+interface ErrorBoundaryProps {
+    children: React.ReactNode;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
     state = { hasError: false };
 
     static getDerivedStateFromError() {
