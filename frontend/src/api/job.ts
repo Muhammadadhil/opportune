@@ -16,7 +16,8 @@ export const getJobs = async (clientId?: string,filters?:any) => {
 };
 
 export const getFilteredJobs = async (filters: any,page:number,limit:number):Promise<{ jobs: IJob[] | null; totalPages: number }> => {
-    return await apiClient.get(`/post/jobs`, { params: {filters, page ,limit} });
+    const response = await apiClient.get(`/post/jobs`, { params: {filters, page ,limit} });
+    return response.data;
 }
 
 export const editJob = async (data: IJob): Promise<IJob> => {

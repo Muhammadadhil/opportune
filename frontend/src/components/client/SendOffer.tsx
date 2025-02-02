@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 // import { Calendar } from "lucide-react";
@@ -20,8 +20,6 @@ export default function SendOffer() {
 
     const {jobId}=useParams();
     const { data: job } = useJobDetails(jobId!);
-
-    // console.log('job:',job?.data);
 
     const [budget,setBudget]=useState(job?.data.budget);
     const [title,setTitle]=useState(job?.data.jobTitle);
@@ -48,7 +46,7 @@ export default function SendOffer() {
             return;
         }
 
-        const newMilestones = [...milestones, { description: "", deadline: "", amount: "" }];
+        const newMilestones = [...milestones, { description: "", deadline: "", amount: 0 }];
         setMilestones(splitBudget(newMilestones));
     };
 
@@ -58,7 +56,7 @@ export default function SendOffer() {
     };
 
     const splitBudget = (milestones: IMilestone[]): IMilestone[] => {
-        const amountPerMilestone = budget && milestones.length > 0 ? (parseFloat(budget?.toFixed(2)) / milestones.length) : "0.00";
+        const amountPerMilestone = budget && milestones.length > 0 ? (parseFloat(budget?.toFixed(2)) / milestones.length) : 0;
         return milestones.map((milestone) => ({
             ...milestone,
             amount: amountPerMilestone,

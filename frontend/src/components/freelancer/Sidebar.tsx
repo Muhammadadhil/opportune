@@ -1,17 +1,13 @@
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { useNavigate } from "react-router-dom";
 import profilePicture from "@/assets/profilePicture.jpg";
-import { getProfileData } from "@/api/user";
-import { useSelector, useDispatch } from "react-redux";
-import { setFreelancerData } from "@/store/slices/userSlice";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useFreelancerProfile } from "@/hooks/user/useFreelancerProfile";
 
 const Sidebar = () => {
 
     const { userInfo } = useSelector((state: RootState) => state.user);
-    const dispatch = useDispatch();
 
     const { data: freelancerData } = useFreelancerProfile(userInfo?.role, userInfo?._id);
     

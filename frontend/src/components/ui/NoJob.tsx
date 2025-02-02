@@ -1,5 +1,5 @@
 import { type LucideIcon, FolderSearch2 } from "lucide-react";
-import { Button } from "./button";
+import { Button } from "./button1";
 import { Link } from "react-router-dom";
 
 interface NoItemsProps {

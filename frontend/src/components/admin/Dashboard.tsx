@@ -12,7 +12,7 @@ export default function Dashboard() {
     console.log('dashboardData:',dashboardData);
 
     
-    const transactionData = Array.isArray(transactions?.data) ? transactions.data : [];
+    const transactionData = Array.isArray(transactions) ? transactions : [];
     const totalCommission = transactionData.reduce((sum: number, transaction) => sum + transaction.amount, 0);
     const averageCommission = transactionData.length ? totalCommission / transactionData.length : 0;
 
@@ -63,9 +63,9 @@ export default function Dashboard() {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-green-600">{dashboardData?.data?.totalEscrowAmount.toFixed(2)}</div>
+                        <div className="text-[40px] font-bold text-green-600">{dashboardData?.totalEscrowAmount.toFixed(2)}</div>
                         <span className="text-sm text-muted-foreground ">
-                            total escrows : <span className="font-bold text-green-600 text-[20px]">{dashboardData?.data?.totalOpenEscrow}</span>
+                            total escrows : <span className="font-bold text-green-600 text-[20px]">{dashboardData?.totalOpenEscrow}</span>
                         </span>
                     </CardContent>
                 </Card>
@@ -75,7 +75,7 @@ export default function Dashboard() {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-green-600">{dashboardData?.data?.freelacerCount}</div>
+                        <div className="text-[40px] font-bold text-green-600">{dashboardData?.freelacerCount}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -85,7 +85,7 @@ export default function Dashboard() {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-orange-600">{dashboardData?.data?.clientsCount}</div>
+                        <div className="text-[40px] font-bold text-orange-600">{dashboardData?.clientsCount}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -94,7 +94,7 @@ export default function Dashboard() {
                         <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-[40px] font-bold text-blue-600"> {dashboardData?.data?.totalOpenJobs}</div>
+                        <div className="text-[40px] font-bold text-blue-600"> {dashboardData?.totalOpenJobs}</div>
                     </CardContent>
                 </Card>
             </div>

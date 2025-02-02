@@ -21,6 +21,7 @@ export const useEditJob = (): UseMutationResult<IJob, unknown, IJob, { previousJ
         },
         // If the mutation fails, use the context returned from onMutate to roll back
         onError: (err, updatedJob, context) => {
+            console.log(err, updatedJob);
             queryClient.setQueryData(["jobs"], context?.previousJobs);
         },
         // Always refetch after error or success

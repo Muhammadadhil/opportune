@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { useNavigate } from "react-router-dom";
 
 export default function NotFound() {

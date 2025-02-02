@@ -1,0 +1,133 @@
+
+networks:
+    opportune-network:
+      driver: bridge
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672" 
+    networks:
+      - opportune-network
+
+  gateway-service:
+    image: muhammadadhil/gateway:latest
+    build:
+      context: ../gateway
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    ports:
+      - "4002:4002"
+    env_file: 
+      - ../gateway/.env  
+    networks:
+      - opportune-network    
+
+
+  user-service:
+    image: muhammadadhil/opportune-userservice:latest
+    build:
+      context: ./userService
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "3015:3015"
+    depends_on: 
+      - rabbitmq  
+    env_file:
+      - ./userService/.env
+    networks:
+      - opportune-network
+
+  post-service:
+    image: muhammadadhil/opportune-postservice:latest
+    build:
+      context: ./postService
+      dockerfile: Dockerfile
+    container_name: post-service
+    ports:
+      - "3020:3020"
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./postService/.env
+    networks:
+      - opportune-network  
+
+  contract-service:
+    image: muhammadadhil/opportune-contractservice:latest
+    build:
+      context: ./contractService
+      dockerfile: Dockerfile
+    container_name: contract-service
+    ports:
+      - "3030:3030"
+    depends_on:
+      - rabbitmq
+    env_file: 
+      - ./contractService/.env  
+    networks:
+      - opportune-network
+
+  messaging-service:
+    image: muhammadadhil/opportune-messagingservice:latest
+    build:
+      context: ./messagingService
+      dockerfile: Dockerfile
+    container_name: messaging-service
+    ports:
+      - "3060:3060"
+    depends_on:
+      - rabbitmq
+    env_file: 
+      - ./messagingService/.env  
+    networks:
+      - opportune-network    
+
+  payment-service:
+    image: muhammadadhil/opportune-paymentservice:latest
+    build:
+      context: ./paymentService
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "3040:3040"
+    depends_on:
+      - rabbitmq
+    env_file: 
+      - ./paymentService/.env  
+    networks:
+      - opportune-network        
+
+  manage-service:
+    image: muhammadadhil/opportune-manageservice:latest
+    build:  
+      context: ./manageService
+      dockerfile: Dockerfile
+    container_name: manage-service
+    ports:
+      - "3010:3010" 
+    depends_on:
+      - rabbitmq
+    env_file: 
+      - ./manageService/.env  
+    networks:
+      - opportune-network  
+
+  notification-service:
+    image: muhammadadhil/opportune-notificationservice:latest
+    build:
+      context: ./notificationService
+      dockerfile: Dockerfile
+    container_name: notification-service 
+    ports:
+      - "3050:3050"
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./notificationService/.env
+    networks:
+      - opportune-network  
+          

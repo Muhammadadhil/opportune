@@ -1,6 +1,6 @@
 import { RabbitMQConnection } from "@_opportune/common";
 
-const rabbitMQUrl = "amqp://rabbitmq:5672";
+const rabbitMQUrl = process.env.RABBITMQ_CONNECTION_URL || '';
 
 
 export const rabbitMQInstance = RabbitMQConnection.getInstance(rabbitMQUrl);

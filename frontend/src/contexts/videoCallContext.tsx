@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Toaster } from "@/components/ui/toaster";
 import { useVideoCallSocket } from '@/hooks/socket/useVideoCallSocket'
 import { Socket } from "socket.io-client";
@@ -67,14 +67,14 @@ export const VideoCallProvider = ({children}: {children: React.ReactNode})=> {
 
         })
 
-        socket.on('call-cancelled', (roomId: string) => {
+        socket.on('call-cancelled', () => {
             setIsIncomingCall(false);
             setIncomingCallData(null);
             dismiss();
 
         });
 
-        socket.on('call-rejected', (roomId: string) => {
+        socket.on('call-rejected', () => {
             setIsIncomingCall(false);
             setIncomingCallData(null);
         });

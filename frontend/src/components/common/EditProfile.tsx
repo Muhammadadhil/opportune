@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Textarea } from "@/components/ui/textarea";
 import { updateProfile } from "@/api/user";
 import { useDispatch, useSelector } from "react-redux";

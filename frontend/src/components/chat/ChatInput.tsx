@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, Send } from "lucide-react";
+import { Send } from "lucide-react";
 
 export enum messageType {
     text = "text",

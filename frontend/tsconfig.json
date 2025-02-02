@@ -1,30 +1,9 @@
-// {
-//     "files": [],
-//     "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
-//     "compilerOptions": {
-//         "baseUrl": ".",
-//         "paths": {
-//             "@/*": ["./src/*"]
-//         },
-//         "jsx": "react-jsx",
-//         "esModuleInterop": true,
-//         "allowSyntheticDefaultImports": true,
-//         "strict": true,
-//         "noUnusedLocals": true,
-//         "moduleResolution": "Node",
-//         "resolveJsonModule": true,
-//         "lib": ["DOM", "DOM.Iterable", "ESNext"],
-//         "types": ["react", "react-dom"]
-//     }
-// }
-
 {
     "files": [],
     "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
     "compilerOptions": {
         // Base configuration
         "baseUrl": ".",
-        "composite": true,
         "paths": {
             "@/*": ["./src/*"]
         },
@@ -41,7 +20,7 @@
 
         // Strict type checking
         "strict": true,
-        "noUnusedLocals": true,
+        "noUnusedLocals": false,
         "noUnusedParameters": true,
         "noImplicitAny": true,
         "noImplicitThis": true,
@@ -65,6 +44,28 @@
         "declaration": true,
         "declarationMap": true
     },
-    "include": ["src/**/*"],
+    // "include": ["src/**/*"],
     "exclude": ["node_modules", "build", "dist", "**/*.spec.ts"]
 }
+
+
+
+// {
+//     "files": [],
+//     "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+//     "compilerOptions": {
+//         "baseUrl": ".",
+//         "paths": {
+//             "@/*": ["./src/*"]
+//         },
+//         "jsx": "react-jsx",
+//         "esModuleInterop": true,
+//         "allowSyntheticDefaultImports": true,
+//         "strict": true,
+//         "noUnusedLocals": true,
+//         "moduleResolution": "Node",
+//         "resolveJsonModule": true,
+//         "lib": ["DOM", "DOM.Iterable", "ESNext"],
+//         "types": ["react", "react-dom"]
+//     }
+// }

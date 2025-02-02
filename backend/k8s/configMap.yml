@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  APIGATEWAY_PORT: "4002"
+  USER_API_BASE_URL: "http://user-service:3015/"
+  MANAGE_API_BASE_URL: "http://manage-service:3010/"
+  POSTS_BASE_URL: "http://post-service:3020/"
+  CONTRACT_BASE_URL: "http://contract-service:3030/"
+  PAYMENT_BASE_URL: "http://payment-service:3040/"
+  NOTIFICATION_BASE_URL: "http://notification-service:3050/"
+  MESSAGING_BASE_URL: "http://messaging-service:3060/"
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+data:
+  PORT: "3015"
+  NODE_ENV: "production"
+  GOOGLE_CLIENT_ID: "496957763140-v8666km1b2drc97tjpsq7438uguvan55.apps.googleusercontent.com"
+  GOOGLE_REDIRECT_URI: "http://localhost:3000/api/user/auth/google"
+  BUCKET_NAME: "opportune-new-bucket"
+  BUCKET_REGION: "eu-north-1"
+  RABBITMQ_URL: "amqp://rabbitmq:5672"
+
+---
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: post-service-config
+data:
+  PORT: "3020"
+  NODE_ENV: "production"
+  BUCKET_NAME: "opportune-new-bucket"
+  BUCKET_REGION: "eu-north-1"
+  CONTRACT_SERVICE_URL: 'http://contract-service:3030'
+  
+
+---
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-service-config
+data:
+  PORT: "3040"
+  FRONTEND_URL: "http://localhost:5173"
+  NODE_ENV: "production"
+  MANAGE_SERVICE_URL: "http://manage-service:3050"
+  USER_SERVICE_URL: "http://user-service:3015"
+  RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-service-config
+data:
+  PORT: "3050"
+  NODE_ENV: "production"
+  RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
+  FRONTEND_URL: "http://localhost:5173"
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: messaging-service-config
+data:
+  PORT: "3060"
+  NODE_ENV: "production"
+  RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
+  FRONTEND_URL: "http://localhost:5173"
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: manage-service-config
+data:
+  PORT: "3010"
+  NODE_ENV: "production"
+  CORS_ORIGIN: "http://localhost:5173"
+  USER_SERVICE_URL: "http://user-service:3015"
+  POST_SERVICE_URL: "http://post-service:3020"
+  PAYMENT_SERVICE_URL: "http://payment-service:3040"
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: contract-service-config
+data:
+  PORT: "3030"
+  NODE_ENV: "production"
+  RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
+  BUCKET_NAME: "opportune-new-bucket"
+  BUCKET_REGION: "eu-north-1"
+  POST_SERVICE_URL: "http://post-service:3020"
+  USER_SERVICE_URL: "http://user-service:3015"
+  PAYMENT_SERVICE_URL: "http://payment-service:3040"

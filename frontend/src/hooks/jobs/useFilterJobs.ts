@@ -1,4 +1,5 @@
 import { getFilteredJobs } from "@/api/job";
+import { IJob } from "@/types/IJob";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 export function useFilterJobs(filters: any,page:number,limit:number) {
@@ -7,5 +8,5 @@ export function useFilterJobs(filters: any,page:number,limit:number) {
         queryFn: () => getFilteredJobs(filters, page, limit),
         staleTime: 600000, //10 minutes
         keepPreviousData: true,
-    } as UseQueryOptions);
+    } as UseQueryOptions<{ jobs: IJob[] | null; totalPages: number }>);
 }

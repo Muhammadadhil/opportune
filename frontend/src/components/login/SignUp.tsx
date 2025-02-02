@@ -10,7 +10,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import  Button  from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginGoogleUser } from "@/api/auth";
@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import { setAccessToken } from "@/utils/auth";
 import { signUpvalidationSchema } from '@/schemas/SignUpSchema'
 import { useQuery } from "@tanstack/react-query";
+import { RootState } from "@/store/store";
 
 type ValidationSchema = z.infer<typeof signUpvalidationSchema>;
 
@@ -42,7 +43,7 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userInfo } = useSelector((state) => state.user);
+    const { userInfo } = useSelector((state:RootState) => state.user);
 
     useEffect(() => {
         if (userInfo) {
@@ -63,7 +64,14 @@ const SignUp: React.FC<SignUpProps> = ({ role }) => {
     const onSubmit: SubmitHandler<ValidationSchema> = async (data) => {
         try {
             setIsLoading(true);
-            const response = await signUp({ ...data, role: role ?? "" });
+            const response = await signUp({ 
+                firstname: data.firstname, 
+                lastname: data.lastname, 
+                email: data.email, 
+                password: data.password, 
+                country: data.country, 
+                role: role 
+            });
             navigate("/verify-email", { state: { newUserInfo: response.data } });
         } catch (error) {
             console.log("error:", error);

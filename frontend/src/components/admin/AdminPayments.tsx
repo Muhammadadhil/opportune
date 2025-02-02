@@ -1,4 +1,3 @@
-import React from 'react'
 import AdminTransactions from './AdminTransaction'
 
 const AdminPayments = () => {

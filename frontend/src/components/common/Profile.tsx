@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit, Users, Heart, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Lightbulb, MapPin, Mail, Briefcase, Globe, Building2, Edit, User } from "lucide-react";
+import { Button } from "@/components/ui/button1";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { EditProfileDialog } from "./EditProfile";
 import JobCard from "../client/JobCard";
@@ -109,7 +108,7 @@ export default function Profile() {
     const displayFreelancer = userSpecificDetails || freelancer;
     const displayClient = userSpecificDetails || clientData;
 
-    const { data: portfolios, refetch: portfolioRefetch } = usePortfolios(displayUser?._id ?? '');
+    const { data: portfolios } = usePortfolios(displayUser?._id ?? '');
     console.log("portfolios:", portfolios);
 
 

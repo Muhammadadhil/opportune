@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Input } from "@/components/ui/input";
 import { IoIosClose } from "react-icons/io";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,25 +10,15 @@ import { updateJobData } from "@/store/slices/postSlice";
 import { useSelector, useDispatch } from "react-redux";
 import KeywordInput from "../common/KeywordInput";
 import { getCategories } from "@/api/admin";
+import { ICategory, ISubCategory } from "@/types/ICategory";
 
 interface OverviewProps {
     onNext: () => void;
 }
 
-interface Category{
-    _id:string,
-    name:string,
-    subCategory:string[]
-}
-
-interface SubCategory{
-    _id:string,
-    name:string
-}
-
 export const PostStep1: React.FC<OverviewProps> = React.memo(({ onNext }) => {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [subCategories, setSubCategories] = useState<ISubCategory[]>([]);
     
     const [newKeyword, setNewKeyword] = useState("");
     const [keywords, setKeywords] = useState<string[]>([]);

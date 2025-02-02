@@ -4,7 +4,7 @@ import { useJobs } from "@/hooks/jobs/useJobs";
 import { useState } from "react";
 import { IJob } from "@/types/IJob";
 import { Pencil, Trash2 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../ui/button1";
 import SkeletonCard from "../common/LoadingSkelton";
 import EditJob from "./EditJob";
 import { useRemoveJob } from "@/hooks/jobs/useDeleteJob";

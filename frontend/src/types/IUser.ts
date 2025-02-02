@@ -17,5 +17,6 @@ export interface IUser {
     lastname: string;
     country?: string;
     email: string;
-    role:string;
+    role: string;
+    isBlocked?: boolean
 }

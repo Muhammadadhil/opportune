@@ -1,7 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare } from "lucide-react";
 import useApplications from "@/hooks/jobs/useApplications";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -13,7 +12,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {motion} from "framer-motion";
 import { fetchDownloadUrl } from "@/api/common";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import FilePreview from "./FilePreview";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 

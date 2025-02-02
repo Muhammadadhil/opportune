@@ -1,15 +1,13 @@
 import React from "react";
 import { Briefcase, CreditCard, Settings, Users, LogOut, ChevronRight, LayoutDashboard } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { logoutAdmin } from "@/api/admin";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setAdminAuthStatus } from "@/store/slices/userSlice";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from "@/components/ui/sidebar";
-import { useNavigate } from "react-router-dom";
-import ConfirmDialog from "../common/ConfirmDialog";
+import { Sidebar, SidebarContent, SidebarHeader, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
 
 interface AdminSidebarProps {
     onPageChange: (page: string) => void;
@@ -42,7 +40,6 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onPageChange, activePage })
         { id: "notifications", icon: Settings, label: "Notifications" },
     ];
 
-    const navigate = useNavigate();
     
     return (
         <div className="flex h-screen">

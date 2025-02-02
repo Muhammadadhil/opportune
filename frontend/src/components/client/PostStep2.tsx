@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button1";
 import { IoIosClose } from "react-icons/io";
 import { BudgetData } from "@/types/IProjectPost";
 import { RootState } from "@/store/store";

@@ -13,8 +13,6 @@ const Notification: React.FC = () => {
 
     const socket = useSocket(userInfo?._id,userInfo?.role);
 
-    console.log('userInfo in productiononnnnnnnnn::::::::::',userInfo)
-    
     const { data:notifications,refetch } = useNotification(userInfo?._id);
 
     useEffect(() => {
@@ -22,8 +20,6 @@ const Notification: React.FC = () => {
         if (socket) {
 
             const handleNotification = (notification: any) => {
-
-                console.log('newNotification arrived !!!!!!!!!!!!!!11')
 
                 toast.custom((t) => <CustomToast message={notification.message} t={t} />, {
                     position: "top-right",
