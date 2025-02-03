@@ -4,7 +4,7 @@ import createSocketConnection from "@/utils/socketConnection";
 
 const SOCKET_URL = import.meta.env.NODE_ENV === "production" ? `wss://${import.meta.env.VITE_NOTIFICATION_SOCKET_URL}` : `ws://${import.meta.env.VITE_NOTIFICATION_SOCKET_URL}`;
 console.log("socket url for notification:", SOCKET_URL);
-
+    
 export const useSocket = (userId?: string, userRole?: string) => {
     const [socket, setSocket] = useState<Socket | null>(null);
 
