@@ -11,12 +11,15 @@ import { IJobController } from "../controllers/interface/IJobController";
 import { IGigController } from "../controllers/interface/IGigController";
 import { authenticate } from "../middleware/authenticate";
 import { IPortfolioController } from "../controllers/interface/IPortfolioController";
+import { ISkillController } from "../controllers/interface/ISkillController";
+import { ISkillRepository } from "../repositories/interfaces/ISkillRepository";
 
 const router = Router();
 
 const jobController = container.get<IJobController>(TYPES.IJobController);
 const gigController = container.get<IGigController>(TYPES.IGigController);
 const portfolioController = container.get<IPortfolioController>(TYPES.IPortFolioController);
+const skillController = container.get<ISkillController>(TYPES.ISkillController);
 
 router.get("/gigs/:id", gigController.getGigs);
 router.get("/gigs", gigController.getAllGigs);
@@ -46,6 +49,7 @@ router.post("/job/offer", authenticate(["client"]), jobController.sendOffer);
 router.post("/porfolio", authenticate(["freelancer"]), portfolioController.postPortfolio);
 router.get('/portfolios/:userId',authenticate(["freelancer","client"]), portfolioController.getPortfolios);
 
-
+router.get('/skills', skillController.getSkills);
+router.get('/createsample/:skill',skillController.createSkill)
 
 export default router;

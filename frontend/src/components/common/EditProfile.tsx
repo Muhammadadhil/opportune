@@ -224,7 +224,7 @@ export function EditProfileDialog({ user, onClose,onUpdate }: EditProfileDialogP
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {freelancerFormData.skills.map((skill, index) => (
-                                    <span key={index} className="flex items-center bg-gray-200 text-gray-800 px-4 py-1 rounded">
+                                    <span key={index} className="flex items-center bg-zinc-100 text-zinc-800 px-4 py-1 rounded-xl">
                                         {skill}
                                         <span
                                             className="flex justify-end text-2xl cursor-pointer ml-1"
@@ -235,7 +235,7 @@ export function EditProfileDialog({ user, onClose,onUpdate }: EditProfileDialogP
                                                 }));
                                             }}
                                         >
-                                            <IoIosClose />
+                                            <IoIosClose size={18}/>
                                         </span>
                                     </span>
                                 ))}

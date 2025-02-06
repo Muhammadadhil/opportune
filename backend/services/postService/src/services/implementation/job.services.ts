@@ -162,4 +162,5 @@ export class JobService implements IJobService {
         const isActive = status !== jobStatus.CLOSED  // if status is closed, set isActive to false
         return await this._jobRepository.update(jobId, { isActive, status });
     }
+
 }

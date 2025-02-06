@@ -260,7 +260,5 @@ export class JobController implements IJobController {
         }
     };
 
-    
-
 
 }

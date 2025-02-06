@@ -27,6 +27,12 @@ import { IPortfolioRepository } from "../repositories/interfaces/IPortFolioRepos
 import { IPortfolioService } from "../services/interfaces/IPortfolioServices";
 import { IPortfolioController } from "../controllers/interface/IPortfolioController";
 import { PortfolioRepository } from "../repositories/implementation/PortfolioRepository";
+import { ISkillController } from "../controllers/interface/ISkillController";
+import { ISkillService } from "../services/interfaces/ISkillService";
+import { ISkillRepository } from "../repositories/interfaces/ISkillRepository";
+import { SkillService } from "../services/implementation/skill.services";
+import { SkillRepository } from "../repositories/implementation/skillsRepository";
+import { SkillController } from "../controllers/implementation/skill.controller";
 
 const container = new Container();
 
@@ -48,6 +54,10 @@ container.bind(TYPES.IGigRepository).to(GigRepository);
 container.bind<IPortfolioController>(TYPES.IPortFolioController).to(PorfolioController);
 container.bind<IPortfolioService>(TYPES.IPortfolioService).to(PortfolioService);
 container.bind<IPortfolioRepository>(TYPES.IPortfolioRepository).to(PortfolioRepository);
+
+container.bind<ISkillController>(TYPES.ISkillController).to(SkillController);
+container.bind<ISkillService>(TYPES.ISkillService).to(SkillService);
+container.bind<ISkillRepository>(TYPES.ISkillRepository).to(SkillRepository);
 
 
 export default container;

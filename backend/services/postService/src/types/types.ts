@@ -17,4 +17,8 @@ export const TYPES = {
     IPortFolioController: Symbol("IPortFolioController"),
     IPortfolioRepository: Symbol("IPortfolioRepository"),
     IPortfolioService: Symbol("IPortfolioService"),
+
+    ISkillRepository: Symbol("ISkillRepository"),
+    ISkillService: Symbol("ISkillService"),
+    ISkillController: Symbol("ISkillController"),
 };
