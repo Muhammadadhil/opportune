@@ -47,6 +47,7 @@ data:
   CONTRACT_SERVICE_URL: 'http://contract-service:3030'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
   PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
   
 
 ---
@@ -58,7 +59,6 @@ metadata:
   name: payment-service-config
 data:
   PORT: "3040"
-  FRONTEND_URL: "http://localhost:5173"
   NODE_ENV: "production"
   MANAGE_SERVICE_URL: "http://manage-service:3050"
   USER_SERVICE_URL: "http://user-service:3015"
@@ -76,7 +76,6 @@ data:
   PORT: "3050"
   NODE_ENV: "production"
   RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
-  FRONTEND_URL: "http://localhost:5173"
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
   PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
 
@@ -91,7 +90,6 @@ data:
   PORT: "3060"
   NODE_ENV: "production"
   RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
-  FRONTEND_URL: "http://localhost:5173"
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
   PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
 
@@ -111,6 +109,7 @@ data:
   PAYMENT_SERVICE_URL: "http://payment-service:3040"
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
   PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  RABBITMQ_CONNECTION_URL: '"amqp://rabbitmq:5672"'
 
 
 ---
@@ -122,7 +121,7 @@ metadata:
 data:
   PORT: "3030"
   NODE_ENV: "production"
-  RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
+  RABBITMQ_URL: "amqp://rabbitmq:5672"
   BUCKET_NAME: "opportune-new-bucket"
   BUCKET_REGION: "eu-north-1"
   POST_SERVICE_URL: "http://post-service:3020"

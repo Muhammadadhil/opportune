@@ -13,6 +13,25 @@ import { errorHandler } from '@_opportune/common'
 dotenv.config();
 
 const app = express();
+
+const targets = {
+    user: process.env.USER_API_BASE_URL,
+    manage: process.env.MANAGE_API_BASE_URL,
+    posts: process.env.POSTS_BASE_URL,
+    contract: process.env.CONTRACT_BASE_URL,
+    payment: process.env.PAYMENT_BASE_URL,
+    notification: process.env.NOTIFICATION_BASE_URL,
+    messaging: process.env.MESSAGING_BASE_URL,
+};
+
+app.use(
+    "/api/payment",
+    createProxyMiddleware({
+        target: targets.payment,
+        changeOrigin: true,
+    })
+);
+
 app.use(cookieParser());
 
 const allowedOrigins = [process.env.LOCAL_ORIGIN?.replace(/\/$/, ""), process.env.VERCEL_ORIGIN?.replace(/\/$/, ""), process.env.PRODUCTION_ORIGIN?.replace(/\/$/, "")];
@@ -38,40 +57,8 @@ const logStream= createStream("access.log", {
     maxSize: "10M"
 });
 
-
 app.use(morgan("combined",{stream:logStream}));
 
-const targets = {
-    user: process.env.USER_API_BASE_URL,
-    manage: process.env.MANAGE_API_BASE_URL,
-    posts: process.env.POSTS_BASE_URL,
-    contract: process.env.CONTRACT_BASE_URL,
-    payment: process.env.PAYMENT_BASE_URL,
-    notification: process.env.NOTIFICATION_BASE_URL,
-    messaging: process.env.MESSAGING_BASE_URL,
-};
-
-// const websocketServiceConfig = {
-//     ws: true, 
-//     changeOrigin: true,
-//     secure: false,
-// };
-
-// app.use(
-//     "/ws/messaging",
-//     createProxyMiddleware({
-//         ...websocketServiceConfig,
-//         target: targets.messaging,
-//     })
-// );
-
-// app.use(
-//     "/ws/notification",
-//     createProxyMiddleware({
-//         ...websocketServiceConfig,
-//         target: targets.notification,
-//     })
-// );
 
 app.use(
     "/api/user",
@@ -103,14 +90,6 @@ app.use(
     verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.contract,
-        changeOrigin: true,
-    })
-);
-
-app.use(
-    "/api/payment",
-    createProxyMiddleware({
-        target: targets.payment,
         changeOrigin: true,
     })
 );

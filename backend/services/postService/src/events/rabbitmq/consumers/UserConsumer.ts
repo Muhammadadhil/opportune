@@ -23,7 +23,7 @@ export class UserConsumer implements IConsumer{
             const q = await this.channel.assertQueue("");
             await this.channel.bindQueue(q.queue, this.exchangeName, "");
 
-            console.log(`Waiting for messages in queue ${q.queue} from exchange : ${this.exchangeName}`);
+            console.log(`post service :: Waiting for messages in queue ${q.queue} from exchange : ${this.exchangeName}`);
 
             this.channel.consume(
                 q.queue,
@@ -31,7 +31,7 @@ export class UserConsumer implements IConsumer{
                     if (msg) {
                         try {
                             const messageContent = JSON.parse(msg.content.toString());
-                            console.log('consuming from the exchange:',this.exchangeName);
+                            console.log('post service :consuming from the exchange:',this.exchangeName);
                             console.log("consuming message:",messageContent);
 
                             this.userService.handleEvent(messageContent.eventType, messageContent);

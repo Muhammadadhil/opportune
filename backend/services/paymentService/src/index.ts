@@ -24,9 +24,9 @@ app.use(
         },
         credentials: true,
     })
-);
+);  
 
-app.use("/webhook",express.raw({ type: 'application/json' }), webhookRouter);
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }), webhookRouter);
 
 app.use(express.json());
 app.use(morgan("dev"));

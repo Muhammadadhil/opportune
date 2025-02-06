@@ -43,6 +43,11 @@ spec:
             name: notification-service
             port:
               number: 3050        
-
-
+      - path: /api/payment/webhook/
+        pathType: Prefix
+        backend:
+          service:
+            name: payment-service
+            port:
+              number: 3040
 

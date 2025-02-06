@@ -10,7 +10,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import  Button  from "@/components/ui/Button";
+import  {Button}  from "@/components/ui/button1";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginGoogleUser } from "@/api/auth";

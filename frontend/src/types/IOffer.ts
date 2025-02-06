@@ -1,10 +1,4 @@
-
-export interface IMilestone {
-    description: string;
-    amount:  number;
-    deadline: string | number;
-    // status?: string;
-}
+import { IMilestone } from "./IMilestone";
 
 interface User{
     _id: string;

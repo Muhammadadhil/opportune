@@ -4,6 +4,7 @@ import { TYPES } from "../../types/types";
 
 export const InitialiseConsumers = () => {
     const userConsumer = container.get<IConsumer>(TYPES.IUserConsumer);
+    console.log('userConsumer::::',userConsumer);
     
     userConsumer.initialise();
 };

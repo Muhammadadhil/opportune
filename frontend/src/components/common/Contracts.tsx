@@ -126,7 +126,7 @@ export const Contracts: React.FC<ContractsProps> = ({ userType }) => {
 
                                     {userType === "client" ? (
                                         <div
-                                            className="px-4 py-2 rounded-xl bg-white text-green-700 font-bold hover:text-green-600 hover:bg-gray-100 cursor-pointer"
+                                            className="px-4 py-2 rounded-xl dark:bg-zinc-800 bg-white text-green-700 font-semibold hover:text-green-600 hover:bg-gray-100 cursor-pointer"
                                             onClick={() => handleInitChat(contract.clientId, contract.freelancerId, userInfo, navigate)}
                                         >
                                             Chat with Freelancer

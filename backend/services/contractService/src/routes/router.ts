@@ -1,5 +1,4 @@
 import { Router } from "express";
-import multer from "multer";
 
 import { offerController } from "../config/container";
 import { contractController } from "../config/container";
@@ -8,7 +7,6 @@ import { authenticate } from "../middleware/authenticate";
 import { submissionController, reviewController } from "../config/container";
 
 const router = Router();
-const upload = multer();
 
 //applications
 router.get("/application", applicationController.checkApplication);

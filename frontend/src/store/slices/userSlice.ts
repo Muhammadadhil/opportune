@@ -2,18 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { userState } from "../../types/IUserState";
 
 const initialState: userState = {
-    userInfo: {
-        _id: "",
-        firstname: "",
-        lastname: "",
-        country: "",
-        email: "",
-        role: "",
-        averageRating: 0,
-        reviewCount: "",
-        walletAmount: 0,
-        walletHistory: [],
-    },
+    userInfo: null,
     freelancerData: {
         userId: "",
         title: "",

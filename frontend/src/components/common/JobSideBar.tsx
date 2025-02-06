@@ -172,7 +172,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
     const navigate = useNavigate();
 
     const handleNavigateProfile = (userId: string) => {
-        navigate("/freelancer/" + userId);
+        navigate("/user/" + userId);
     };
 
     const fullStars = Math.floor(job?.clientId?.averageRating || 0);
@@ -195,7 +195,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                         <div className="space-y-6">
                             <div>
                                 <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Client Details</h3>
-                                <p className="hover:text-blue-600 cursor-pointer text-gray-700 dark:text-gray-300" onClick={() => handleNavigateProfile(job.clientId._id)}>
+                                <p className="hover:text-green-600 cursor-pointer text-gray-700 dark:text-gray-300" onClick={() => handleNavigateProfile(job.clientId._id)}>
                                     {job?.clientId?.firstname + " " + job?.clientId?.lastname}
                                 </p>
                                 <p className="text-gray-600 dark:text-gray-400">{job.clientId?.email}</p>
@@ -203,7 +203,10 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                 <div className="flex items-center gap-1">
                                     <div className="flex">
                                         {[...Array(5)].map((_, index) => (
-                                            <Star key={index} className={`w-4 h-4 ${index < fullStars ? "text-yellow-400 fill-yellow-400" : "text-gray-300 dark:text-gray-700 fill-gray-300 dark:fill-gray-700"}`} />
+                                            <Star
+                                                key={index}
+                                                className={`w-4 h-4 ${index < fullStars ? "text-yellow-400 fill-yellow-400" : "text-gray-300 dark:text-gray-700 fill-gray-300 dark:fill-gray-700"}`}
+                                            />
                                         ))}
                                     </div>
                                     <span className="text-sm text-gray-600 dark:text-gray-400">({userInfo?.reviewCount})</span>
@@ -217,7 +220,9 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                 <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Requirements</h3>
                                 <ul className="list-disc pl-5 space-y-1">
                                     {job.skillsRequired.map((skill, index) => (
-                                        <li key={index} className="text-gray-700 dark:text-gray-300">{skill}</li>
+                                        <li key={index} className="text-gray-700 dark:text-gray-300">
+                                            {skill}
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
@@ -225,84 +230,51 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                         <SheetFooter className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
                             {isApplyOpen && (
                                 <div className="w-full space-y-4 flex flex-col p-2">
-
                                     <div className="space-y-2">
-                                        
                                         {cvData?.cvs?.length > 0 && (
                                             <div className="flex gap-2 mb-4">
-                                                <Button
-                                                    type="button"
-                                                    variant={cvSelectionMode === 'existing' ? 'default' : 'outline'}
-                                                    onClick={() => setCvSelectionMode('existing')}
-                                                >
+                                                <Button type="button" variant={cvSelectionMode === "existing" ? "default" : "outline"} onClick={() => setCvSelectionMode("existing")}>
                                                     Use Existing CV
                                                 </Button>
-                                                <Button
-                                                    type="button"
-                                                    variant={cvSelectionMode === 'new' ? 'default' : 'outline'}
-                                                    onClick={() => setCvSelectionMode('new')}
-                                                >
+                                                <Button type="button" variant={cvSelectionMode === "new" ? "default" : "outline"} onClick={() => setCvSelectionMode("new")}>
                                                     Upload New CV
                                                 </Button>
                                             </div>
                                         )}
 
-                                        {cvSelectionMode === 'existing' && cvData?.cvs?.length > 0 && (
+                                        {cvSelectionMode === "existing" && cvData?.cvs?.length > 0 && (
                                             <div className="space-y-2">
                                                 <Label>Select CV</Label>
                                                 {cvData.cvs.map((cv: CV, index: number) => (
-                                                    <div 
-                                                        key={index} 
+                                                    <div
+                                                        key={index}
                                                         onClick={() => setSelectedCV(cv)}
                                                         className={`flex items-center space-x-2 p-2 cursor-pointer hover:bg-gray-200 rounded-xl ${
-                                                            selectedCV === cv ? 'bg-gray-200 border border-green-800' : 'bg-gray-100'
+                                                            selectedCV === cv ? "bg-gray-200 border border-green-800" : "bg-gray-100"
                                                         }`}
                                                     >
-                                                        <input
-                                                            type="radio"
-                                                            name="cv-selection"
-                                                            checked={selectedCV === cv}
-                                                            onChange={() => setSelectedCV(cv)}
-                                                            className="h-4 w-4"
-                                                        />
+                                                        <input type="radio" name="cv-selection" checked={selectedCV === cv} onChange={() => setSelectedCV(cv)} className="h-4 w-4" />
                                                         <div className="flex items-center gap-2">
                                                             <FileText className="w-4 h-4" />
-                                                            <span className="text-sm text-gray-600">
-                                                                {cv?.cvDetails?.fileName}
-                                                            </span>
+                                                            <span className="text-sm text-gray-600">{cv?.cvDetails?.fileName}</span>
                                                         </div>
                                                     </div>
                                                 ))}
                                             </div>
                                         )}
 
-                                        {cvSelectionMode === 'new' && (
+                                        {cvSelectionMode === "new" && (
                                             <div className="space-y-2">
                                                 <Label>Upload New CV</Label>
                                                 <div className="flex items-center gap-2">
-                                                    <Input
-                                                        id="cv"
-                                                        type="file"
-                                                        onChange={handleFileChange}
-                                                        accept=".pdf,.jpg,.jpeg,.png"
-                                                        className="hidden"
-                                                    />
-                                                    <Button 
-                                                        type="button" 
-                                                        variant="outline" 
-                                                        onClick={() => document.getElementById("cv")?.click()}
-                                                    >
+                                                    <Input id="cv" type="file" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" className="hidden" />
+                                                    <Button type="button" variant="outline" onClick={() => document.getElementById("cv")?.click()}>
                                                         <Upload className="mr-2 h-4 w-4" />
                                                         {cvFile ? cvFile.name : "Choose File"}
                                                     </Button>
-                                                    
+
                                                     {cvFile && (
-                                                        <Button 
-                                                            type="button" 
-                                                            variant="ghost" 
-                                                            size="sm" 
-                                                            onClick={() => setCvFile(null)}
-                                                        >
+                                                        <Button type="button" variant="ghost" size="sm" onClick={() => setCvFile(null)}>
                                                             <X className="h-4 w-4" />
                                                         </Button>
                                                     )}
@@ -314,9 +286,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                                             <FileText className="w-4 h-4 text-gray-600" />
                                                             <div className="flex flex-col">
                                                                 <span className="text-sm font-medium">{cvFile.name}</span>
-                                                                <span className="text-xs text-gray-500">
-                                                                    {(cvFile.size / (1024 * 1024)).toFixed(2)} MB
-                                                                </span>
+                                                                <span className="text-xs text-gray-500">{(cvFile.size / (1024 * 1024)).toFixed(2)} MB</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -325,13 +295,17 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                         )}
                                     </div>
 
-                                    <Label>Your Message   <span className="text-xs text-gray-500">* optional</span></Label>
+                                    <Label>
+                                        Your Message <span className="text-xs text-gray-500">* optional</span>
+                                    </Label>
                                     <Textarea placeholder="Enter your message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
-                                    <Label>Your Price  <span className="text-xs text-gray-500">* optional</span></Label>
+                                    <Label>
+                                        Your Price <span className="text-xs text-gray-500">* optional</span>
+                                    </Label>
                                     <Input placeholder="Your price $" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
-                                    
+
                                     <Button onClick={handleJobApply} className="self-end bg-green-700 hover:bg-green-600 mt-8 justify-end min-w-">
-                                        { isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Submit Application"}
+                                        {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Submit Application"}
                                     </Button>
                                 </div>
                             )}
@@ -360,9 +334,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                             )}
                                             <div className="flex justify-between">
                                                 <span className="text-gray-600 dark:text-gray-400">Applied on:</span>
-                                                <span className="font-medium">
-                                                    {formatDate(applicationDetails.createdAt!)}
-                                                </span>
+                                                <span className="font-medium">{formatDate(applicationDetails.createdAt!)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -370,11 +342,14 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                             )}
 
                             {!isApplyOpen && job.isApplied !== true && userInfo?._id && (
-                                <Button 
-                                    onClick={() => setIsApplyOpen(true)} 
-                                    className="bg-green-800 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white mt-8 justify-end"
-                                >
+                                <Button onClick={() => setIsApplyOpen(true)} className="bg-green-800 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white mt-8 justify-end">
                                     Apply Now
+                                </Button>
+                            )}
+
+                            {!userInfo?._id && (
+                                <Button onClick={() => navigate("/login")} className="bg-green-800 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white mt-8 justify-end">
+                                    Login to Apply
                                 </Button>
                             )}
                         </SheetFooter>

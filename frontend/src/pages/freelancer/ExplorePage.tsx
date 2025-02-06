@@ -20,8 +20,7 @@ export default function ExplorePage() {
     const updateFilterState = (key: string, value: string | number | null) => {
         setFilterState((prev) => ({ ...prev, [key]: value }));
     };
-
-
+    
     return (
         <div className="container mx-auto px-4 py-8 max-w-7xl">
             <div className="flex gap-8">

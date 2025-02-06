@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import  Button  from "../ui/Button";
+import  {Button}  from "../ui/button1";
 import { Input } from "../ui/input";
 import { resendOtp, verifyOtp } from "../../api/auth";
 import { useSelector } from "react-redux";
@@ -121,7 +121,7 @@ export default function OTPVerification() {
                                 <p>Resend OTP in: {formatTime(timer)}</p>
                             )}
                         </div>
-                        <Button onClick={handleVerify} disabled={otp.length !== 4} className="w-full">
+                        <Button onClick={handleVerify} variant="" disabled={otp.length !== 4} className="w-full">
                             Verify
                         </Button>
                     </div>

@@ -64,6 +64,9 @@ const paymentSuccessConsumer = new PaymentSuccessConsumer(contractService, "paym
 const userConsumer = new UserConsumer(userService);
 
 export async function intialiseConsumers() {
+
+    console.log('userconosumer in contract service::',userConsumer)
+
     jobApproveConsumer.initialise();
     offerConsumer.initialise();
     applicationConsumer.initialise();

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button1";
 import { useNavigate } from "react-router-dom";
-import profilePicture from "@/assets/profilePicture.jpg";
+import profilePicture from "@/assets/profilpic.png";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useFreelancerProfile } from "@/hooks/user/useFreelancerProfile";

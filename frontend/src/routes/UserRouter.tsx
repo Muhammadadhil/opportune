@@ -48,7 +48,7 @@ function UserRoute() {
                         <Route path="/chat" element={<ChatPage />} />
                         <Route path="/video-chat" element={<VideoCallWrapper />} />
                         <Route path="/talents" element={<Freelancer />} />
-                        <Route path="/freelancer/:userId" element={<ProfilePage />} />
+                        <Route path="/user/:userId" element={<ProfilePage />} />
                     </Route>
                 </Route>
 

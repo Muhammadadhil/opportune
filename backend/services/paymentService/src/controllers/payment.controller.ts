@@ -31,12 +31,18 @@ export class PaymentController {
     async handleWebhook(req: Request, res: Response, next: NextFunction) {
         try {
             const signature = req.headers["stripe-signature"];
-            console.log("signature handle webhook contrller:", signature);
+            console.log("signature :", signature);
+            console.log("body handle webhook contrller:", req.body);
+            console.log("webhook signing secret:", process.env.STRIPE_WEBHOOK_SECRET!.trim());
+
+            if (!req.body) {
+                throw new Error("No request body found");
+            }
 
             if (!signature) {
                 throw new Error("No Stripe Signature found");
             }
-            const event = Stripe.webhooks.constructEvent(req.body, signature!, process.env.STRIPE_WEBHOOK_SECRET!);
+            const event = Stripe.webhooks.constructEvent(req.body, signature!, process.env.STRIPE_WEBHOOK_SECRET!.trim());
             this._paymentService.handleStripeWebhook(event);
             res.status(200).end();
         } catch (error) {

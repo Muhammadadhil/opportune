@@ -54,8 +54,8 @@ export class PaymentService implements IPaymentService {
                 },
             ],
             mode: "payment",
-            success_url: `${process.env.FRONTEND_URL}/payment-success`,
-            cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
+            success_url: `${process.env.PRODUCTION_ORIGIN}/payment-success`,
+            cancel_url: `${process.env.PRODUCTION_ORIGIN}/payment-cancel`,
             metadata: {
                 milestoneId,
                 milestoneAmount: amount,
@@ -66,7 +66,7 @@ export class PaymentService implements IPaymentService {
         });
 
         return session.id;
-    }
+    } 
 
     async handleStripeWebhook(event: Stripe.Event) {
         switch (event.type) {
@@ -79,6 +79,7 @@ export class PaymentService implements IPaymentService {
                 break;
 
             case "checkout.session.async_payment_failed":
+                console.log("!!!!! checkout.session.async_payment_failed , payment failed !!!!!");
                 // await this.handleFailedPayment(event.data.object);
                 break;
             throw new CustomError("Error in releasing payment", 500);

@@ -35,19 +35,6 @@ export default function Hero() {
                     </form>
                 </div>
             </div>
-
-            <div className="flex items-center justify-center gap-2 mt-8">
-                {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                ))}
-                <span className="text-gray-700 ml-2">4.9</span>
-                <span className="text-gray-500 ml-1">from 10,000+ reviews</span>
-            </div>
-
-            <div className="flex items-center justify-center mt-6 text-gray-600">
-                <Briefcase className="h-5 w-5 mr-2" />
-                <span>Over 1 million successful projects completed</span>
-            </div>
         </div>
     );
 }

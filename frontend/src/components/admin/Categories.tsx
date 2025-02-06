@@ -18,7 +18,8 @@ const Categories: React.FC = () => {
     const [newSubcategory, setNewSubcategory] = useState({ category: "", name: "" });
 
     const handleAddCategory = async () => {
-        if (newCategory) {
+        const re = /^[a-zA-Z]+$/;
+        if (newCategory && re.test(newCategory)) {
             try {
                 await addCategory(newCategory);
                 setNewCategory("");
@@ -28,6 +29,8 @@ const Categories: React.FC = () => {
                 console.log("Error in add category:", error);
                 toast.error(error.response.data.message);
             }
+        } else {
+            toast.error("Category name should contain only letters and no spaces");
         }
     };
 

@@ -23,8 +23,7 @@ const Navbar: React.FC = () => {
     const dispatch = useDispatch();
 
     const menuItems: NavItem[] = [
-        { path: "/find-jobs", label: "Find Jobs" },
-        { path: "/hire-talents", label: "Find Talents" },
+        
     ];
 
     const freelancerMenu: NavItem[] = [
@@ -249,7 +248,7 @@ const Navbar: React.FC = () => {
                                                     </div>
                                                 </nav>
                                                 <div className="mt-auto">
-                                                    {!userInfo ? (
+                                                    {!userInfo ?(
                                                         <div className="flex flex-col space-y-2">
                                                             <Link
                                                                 to="/login"

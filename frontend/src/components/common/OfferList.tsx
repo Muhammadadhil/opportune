@@ -19,15 +19,31 @@ import { truncateString } from "@/utils/truncateString";
 import { createNotification } from "@/api/notification";
 import { useNavigate } from "react-router-dom";
 import { handleInitChat } from "@/utils/chatUtils";
+import  MilestoneStepper from '@/components/ui/MIlestone-stepper'
 
 interface OffersListProps {
     userType: "client" | "freelancer";
 }
 
+interface ExpandedCard {
+    status: boolean;
+    id: string;
+}
+
+
+const steps = [
+    { id: 1, title: "Head", status: "complete" as const },
+    { id: 2, title: "Shoulders", status: "current" as const },
+    { id: 3, title: "Knees", status: "upcoming" as const },
+    { id: 4, title: "Toes", status: "upcoming" as const },
+];
 export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
 
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [isExpanded, setIsExpanded] = useState<ExpandedCard>({
+        status: false,
+        id: "",
+    });
     const userId = userInfo?._id;
 
     const { data: freelancerOffers, isLoading: freelancerLoading } = useFreelancerOffers(userInfo.role === "freelancer" ? userId : null);
@@ -49,16 +65,18 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
         }
     };
 
-    const toggleExpand = () => {
-        setIsExpanded(!isExpanded);
+    const toggleExpand = (id: string) => {
+        setIsExpanded((prev) => ({ status: !prev.status, id }));
     };
 
     const navigate = useNavigate();
 
-    
+    const handleNavigateProfile = (userId: string) => {
+        navigate("/user/" + userId);
+    };
 
     return (
-        <motion.div initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}} transition={{duration:0.5}} className="space-y-6 ">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="space-y-6 ">
             {!offers?.length && (
                 <div className="text-center py-10 ">
                     <h2 className="text-xl font-semibold text-gray-700">No offers found</h2>
@@ -75,25 +93,28 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                     <AvatarFallback>{userType === "client" ? offer.freelancerId.charAt(0).toUpperCase() : offer.clientId?.firstname?.charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <h3 className="font-semibold text-lg">
-                                        {offer.workTitle}
-                                        <Badge variant={offer.status === "accepted" ? "default" : "secondary"} className="ml-2">
-                                            {offer.status}
-                                        </Badge>
-                                    </h3>
-                                    <p className="text-sm text-muted-foreground mt-1 font-bold">
+                                    <h3 className="font-semibold text-lg">{offer.workTitle}</h3>
+                                    <p
+                                        className="text-sm text-muted-foreground mt-1 font-semibold text-green-600 hover:underline hover:text-green-800 cursor-pointer"
+                                        onClick={() => handleNavigateProfile(userType === "client" ? offer.freelancerId : offer.clientId._id)}
+                                    >
                                         {userType === "client" ? `Freelancer: ${offer.freelancerId}` : `${offer.clientId?.firstname + " " + offer.clientId?.lastname}`}
                                     </p>
                                 </div>
                             </div>
 
-                            <Button className="mt-4 " onClick={() => handleInitChat(offer.freelancerId, offer.clientId._id,userInfo, navigate)}>
-                                Chat with Client
-                            </Button>
+                            <div className="flex flex-col">
+                                <Badge variant={offer.status === "accepted" ? "outline" : "secondary"} className="self-center">
+                                    {offer.status}
+                                </Badge>
+                                <Button className="mt-4 border-green-600" variant="outline" onClick={() => handleInitChat(offer.freelancerId, offer.clientId._id, userInfo, navigate)}>
+                                    Chat with Client
+                                </Button>
+                            </div>
                         </div>
 
                         <div className="mt-4">
-                            <p className="text-sm text-muted-foreground">{truncateString(offer.workDescription)}</p>
+                            <p className="text-sm text-muted-foreground">{truncateString(offer.workDescription, 100)}</p>
                         </div>
 
                         <div className="mt-4 flex justify-between items-center">
@@ -106,37 +127,36 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                                 <p className="text-lg font-semibold">{offer.milestones.length}</p>
                             </div>
                         </div>
-                        <Button variant="outline" size="sm" className="mt-4 w-full" onClick={() => toggleExpand()}>
-                            {isExpanded ? (
-                                <>
-                                    Hide Milestone Details
-                                    <ChevronUp className="ml-2 h-4 w-4" />
-                                </>
-                            ) : (
-                                <>
-                                    Show Milestone Details
-                                    <ChevronDown className="ml-2 h-4 w-4" />
-                                </>
-                            )}
-                        </Button>
-                        {offer.milestones.length > 0 && isExpanded && (
-                            <div className="mt-4 border-t pt-4">
+                        <div className="w-full flex justify-center">
+                            <Button variant="outline" size="sm" className="mt-4 text-center " onClick={() => toggleExpand(offer._id)}>
+                                {isExpanded ? (
+                                    <>
+                                        Hide Milestone Details
+                                        <ChevronUp className="ml-2 h-4 w-4" />
+                                    </>
+                                ) : (
+                                    <>
+                                        Show Milestone Details
+                                        <ChevronDown className="ml-2 h-4 w-4" />
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+
+                        {offer.milestones.length > 0 && isExpanded.status && isExpanded.id === offer._id && (
+                            <motion.div
+                                initial={{ height: 0 }}
+                                animate={{ height: isExpanded.status && isExpanded.id === offer._id ? "auto" : 0, opacity: 1 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="overflow-hidden mt-4 border-t pt-4"
+                            >
                                 <div className="flex justify-between items-center mb-2">
                                     <p className="text-sm font-medium">Milestone Preview</p>
-                                    <Button variant="ghost" size="sm" className="text-xs">
-                                        {/* View All <ChevronRight className="ml-1 h-3 w-3" /> */}
-                                    </Button>
                                 </div>
-                                <div className="space-y-1">
-                                    {offer.milestones.map((milestone: IMilestone, index: number) => (
-                                        <div key={index} className="flex justify-between text-sm">
-                                            <span className="truncate flex-1 mr-2">{milestone.description}</span>
-                                            <span className="font-medium">${milestone.amount.toFixed(2)}</span>
-                                        </div>
-                                    ))}
-                                    {/* {offer.milestones.length > 2 && <p className="text-xs text-muted-foreground italic">+ {offer.milestones.length - 2} more</p>} */}
-                                </div>
-                            </div>
+
+                                <MilestoneStepper milestones={offer.milestones} />
+                                
+                            </motion.div>
                         )}
                     </CardContent>
 
