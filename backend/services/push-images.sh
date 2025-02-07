@@ -73,9 +73,9 @@ for service in "${services[@]}"; do
   image_name=$(echo "$service" | cut -d':' -f2)
 
   echo "Building and pushing $service_name..."
-  docker compose build "$service_name"
+  # docker compose build "$service_name"
   # docker tag "$image_name:latest" "$image_name:latest"
-  docker push "$image_name:latest"
+  docker push "$image_name:v4"
 
   if [ $? -eq 0 ]; then
     echo "Successfully pushed $image_name!"

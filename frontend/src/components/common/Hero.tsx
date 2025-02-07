@@ -1,4 +1,4 @@
-import { Star, Briefcase, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
 import { Input } from "../ui/input";

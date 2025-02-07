@@ -6,6 +6,7 @@ export class RabbitMQProducer implements IRabbitMQProducer {
     private channel: amqplib.Channel | null = null;
 
     async connect() {
+        
         if (!this.channel) {
             console.log("Creating channel for Job and Gig Service...");
             this.channel = await rabbitMQInstance.createChannel();

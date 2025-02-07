@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
 import {useJobDetails} from "@/hooks/jobs/useJobDetails";
 import {useParams,useLocation} from 'react-router-dom'
-import { IOffer, IMilestone } from "@/types/IOffer";
+import { IOffer } from "@/types/IOffer";
+import { IMilestone } from "@/types/IMilestone";
 import {sendOffer} from "@/api/offers";
 import toast from "react-hot-toast";
 import {useNavigate} from 'react-router-dom';
@@ -24,7 +25,7 @@ export default function SendOffer() {
     const [budget,setBudget]=useState(job?.data.budget);
     const [title,setTitle]=useState(job?.data.jobTitle);
     const [description,setDescription]=useState(job?.data.description);
-    const [milestones, setMilestones] = useState<IMilestone[]>([{ description: "", deadline: "", amount: budget }]);
+    const [milestones, setMilestones] = useState<IMilestone[]>([{ description: "", deadline: "", amount: budget}]);
     const [clientDetails,setClientDetails]=useState<userInfo>();
 
     // console.log("clientDetails:", clientDetails);

@@ -7,11 +7,20 @@ export enum MilestoneStatus {
 }
 
 export interface IMilestone {
-    _id: string;
+    _id?: string;
     description: string;
     amount: number;
-    deadline: Date;
-    status: string;
+    deadline: string | number;
+    status?: string;
     escrowId?: string;
     escrowStatus?: string;
 }
+
+
+
+// export interface IMilestone {
+//     description: string;
+//     amount:  number;
+//     deadline: string | number;
+//     // status?: string;
+// }

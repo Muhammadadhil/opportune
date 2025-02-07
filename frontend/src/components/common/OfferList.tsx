@@ -11,7 +11,6 @@ import { IOffer } from "@/types/IOffer";
 // import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { IMilestone } from "@/types/IOffer";
 import SkeletonCard from "../common/LoadingSkelton";
 import { useAcceptOffer } from "@/hooks/offers/useAcceptOffer";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -31,12 +30,6 @@ interface ExpandedCard {
 }
 
 
-const steps = [
-    { id: 1, title: "Head", status: "complete" as const },
-    { id: 2, title: "Shoulders", status: "current" as const },
-    { id: 3, title: "Knees", status: "upcoming" as const },
-    { id: 4, title: "Toes", status: "upcoming" as const },
-];
 export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
     const { userInfo } = useSelector((state: RootState) => state.user);
 

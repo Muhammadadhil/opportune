@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button1";
 import { X, Loader2, Plus } from "lucide-react";
 import { fetchSkills } from "@/api/common";
-import { ScrollArea } from "../ui/scroll-area";
 
 // Types
 interface Skill {

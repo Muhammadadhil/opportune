@@ -11,9 +11,14 @@ services:
       - "15672:15672" 
     networks:
       - opportune-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
 
   gateway-service:
-    image: muhammadadhil/gateway:latest
+    image: muhammadadhil/gateway:v4
     build:
       context: ../gateway
       dockerfile: Dockerfile
@@ -21,28 +26,29 @@ services:
     ports:
       - "4002:4002"
     env_file: 
-      - ../gateway/.env  
+      - ../gateway/.env.production  
     networks:
       - opportune-network    
 
 
   user-service:
-    image: muhammadadhil/opportune-userservice:latest
+    image: muhammadadhil/opportune-userservice:v4
     build:
       context: ./userService
       dockerfile: Dockerfile
     container_name: user-service
     ports:
       - "3015:3015"
-    depends_on: 
-      - rabbitmq  
+    depends_on:
+      rabbitmq:
+        condition: service_healthy  
     env_file:
-      - ./userService/.env
+      - ./userService/.env.production
     networks:
       - opportune-network
 
   post-service:
-    image: muhammadadhil/opportune-postservice:latest
+    image: muhammadadhil/opportune-postservice:v4
     build:
       context: ./postService
       dockerfile: Dockerfile
@@ -50,14 +56,15 @@ services:
     ports:
       - "3020:3020"
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     env_file:
-      - ./postService/.env
+      - ./postService/.env.production
     networks:
       - opportune-network  
 
   contract-service:
-    image: muhammadadhil/opportune-contractservice:latest
+    image: muhammadadhil/opportune-contractservice:v4
     build:
       context: ./contractService
       dockerfile: Dockerfile
@@ -65,14 +72,15 @@ services:
     ports:
       - "3030:3030"
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     env_file: 
-      - ./contractService/.env  
+      - ./contractService/.env.production  
     networks:
       - opportune-network
 
   messaging-service:
-    image: muhammadadhil/opportune-messagingservice:latest
+    image: muhammadadhil/opportune-messagingservice:v4
     build:
       context: ./messagingService
       dockerfile: Dockerfile
@@ -80,14 +88,15 @@ services:
     ports:
       - "3060:3060"
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     env_file: 
-      - ./messagingService/.env  
+      - ./messagingService/.env.production  
     networks:
       - opportune-network    
 
   payment-service:
-    image: muhammadadhil/opportune-paymentservice:v3
+    image: muhammadadhil/opportune-paymentservice:v4
     build:
       context: ./paymentService
       dockerfile: Dockerfile
@@ -95,14 +104,15 @@ services:
     ports:
       - "3040:3040"
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     env_file: 
-      - ./paymentService/.env  
+      - ./paymentService/.env.production  
     networks:
       - opportune-network        
 
   manage-service:
-    image: muhammadadhil/opportune-manageservice:latest
+    image: muhammadadhil/opportune-manageservice:v4
     build:  
       context: ./manageService
       dockerfile: Dockerfile
@@ -110,14 +120,15 @@ services:
     ports:
       - "3010:3010" 
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     env_file: 
-      - ./manageService/.env  
+      - ./manageService/.env.production 
     networks:
       - opportune-network  
 
   notification-service:
-    image: muhammadadhil/opportune-notificationservice:latest
+    image: muhammadadhil/opportune-notificationservice:v4
     build:
       context: ./notificationService
       dockerfile: Dockerfile
@@ -125,9 +136,10 @@ services:
     ports:
       - "3050:3050"
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     env_file:
-      - ./notificationService/.env
+      - ./notificationService/.env.production
     networks:
       - opportune-network  
           

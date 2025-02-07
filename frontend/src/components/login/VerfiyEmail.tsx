@@ -121,7 +121,7 @@ export default function OTPVerification() {
                                 <p>Resend OTP in: {formatTime(timer)}</p>
                             )}
                         </div>
-                        <Button onClick={handleVerify} variant="" disabled={otp.length !== 4} className="w-full">
+                        <Button onClick={handleVerify} disabled={otp.length !== 4} className="w-full">
                             Verify
                         </Button>
                     </div>
