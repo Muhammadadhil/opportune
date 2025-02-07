@@ -1,7 +1,9 @@
 import io from "socket.io-client";
 
 const createSocketConnection = (socketUrl: string,socketPath?: string, userId?: string, userRole?: string) => {
-    console.log("socektUrl socketPath pathh:", socketPath);
+
+    console.log('socket connection url:::::',socketUrl);
+    console.log("socekt path :::::::::", socketPath);
 
     const socket = io(socketUrl, {
         path: socketPath,
