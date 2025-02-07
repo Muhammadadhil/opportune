@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import createSocketConnection from "@/utils/socketConnection";
 
-console.log("import.meta.env.NODE_ENV::", import.meta.env.NODE_ENV);
+console.log("import.meta.env.VITE_NODE_ENV::", import.meta.env.VITE_NODE_ENV);
 
 const SOCKET_URL = import.meta.env.NODE_ENV != "production" ? `ws://${import.meta.env.VITE_NOTIFICATION_SOCKET_URL}` : `wss://${import.meta.env.VITE_NOTIFICATION_SOCKET_URL}`;
 console.log("socket url for notification:", SOCKET_URL);
