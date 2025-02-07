@@ -2,3 +2,4 @@ node_modules
 .env
 frontend/.env
 .env.production
+echo ".env.production" >> .gitignore
