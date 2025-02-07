@@ -161,11 +161,11 @@ export const OffersList: React.FC<OffersListProps> = ({ userType }) => {
                     </CardContent>
 
                     <CardFooter className="bg-muted/50 p-6">
-                        <div className="w-full flex justify-end">
+                        <div className="w-full ">
                             {userType === "freelancer" && offer.status === "pending" ? (
                                 <div className="flex justify-between w-full">
                                     <div className="space-x-2">
-                                        <Button className="bg-blue-800 hover:bg-blue-700" onClick={() => acceptOrReject(offer._id!, "rejected", offer.clientId._id)}>
+                                        <Button variant="outline" onClick={() => acceptOrReject(offer._id!, "rejected", offer.clientId._id)}>
                                             Reject Offer
                                         </Button>
                                         <Button className="bg-green-800 hover:bg-green-700" onClick={() => acceptOrReject(offer._id!, "accepted", offer.clientId._id)}>
