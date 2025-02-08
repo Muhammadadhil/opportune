@@ -15,7 +15,12 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     }
 
     async find(query: object = {}): Promise<T[]> {
-        return await this.model.find(query).sort().exec();
+        try {
+            return await this.model.find(query).sort().exec();
+        } catch (error) {
+            console.error("Error in find method:", error);
+            throw error;
+        }
     }
 
     async findById(id: ObjectId): Promise<T | null> {
