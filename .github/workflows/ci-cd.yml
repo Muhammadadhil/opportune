@@ -70,7 +70,7 @@ jobs:
 
       - name: Deploy ${{ matrix.service }}
         run: |
-          SERVICE_NAME=${{ z.service }}
+          SERVICE_NAME=${{ matrix.service }}
           kubectl set image deployment/${SERVICE_NAME} ${SERVICE_NAME}=muhammadadhil/opportune-$SERVICE_NAME:latest
           kubectl rollout restart deployment/${SERVICE_NAME}
           kubectl rollout status deployment/${SERVICE_NAME}
