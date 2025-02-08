@@ -42,13 +42,13 @@ jobs:
     strategy:
       matrix:
         service:
-          - userService
-          - postService
-          - paymentService
-          - notificationService
-          - messagingService
-          - manageService
-          - contractService
+          - user-service
+          - post-service
+          - payment-service
+          - notification-service
+          - messaging-service
+          - manage-service
+          - contract-service
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -70,7 +70,7 @@ jobs:
 
       - name: Deploy ${{ matrix.service }}
         run: |
-          SERVICE_NAME=${{ matrix.service }}
+          SERVICE_NAME=${{ z.service }}
           kubectl set image deployment/${SERVICE_NAME} ${SERVICE_NAME}=muhammadadhil/opportune-$SERVICE_NAME:latest
           kubectl rollout restart deployment/${SERVICE_NAME}
           kubectl rollout status deployment/${SERVICE_NAME}
