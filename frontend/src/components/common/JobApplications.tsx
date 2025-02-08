@@ -89,7 +89,7 @@ export const JobApplications: React.FC<JobApplicationsProps> = ({ userType }) =>
                                 <div className="space-y-1">
                                     <CardTitle className="line-clamp-1 ">
                                         {userType === "client" ? (
-                                            <span onClick={() => navigate(`/freelancer/${app.freelancerDetails?._id}`)} className="hover:text-blue-600 cursor-pointer">
+                                            <span onClick={() => navigate(`/user/${app.freelancerDetails?._id}`)} className="hover:text-blue-600 cursor-pointer">
                                                 {app?.freelancerDetails?.firstname} {app?.freelancerDetails?.lastname}
                                             </span>
                                         ) : (

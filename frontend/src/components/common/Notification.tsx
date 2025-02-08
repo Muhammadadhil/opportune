@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useSocket } from "@/hooks/socket/useSocket";
+import { useSocket } from "@/hooks/socket/useNotificationSocket";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import toast from "react-hot-toast";

@@ -4,7 +4,7 @@ import createSocketConnection from "@/utils/socketConnection";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
-const SOCKET_URL = import.meta.env.VITE_NODE_ENV === "production" ? `wss://${import.meta.env.VITE_VIDEOCALL_SOCKET_URL}` : `ws://${import.meta.env.VITE_VIDEOCALL_SOCKET_URL}`;
+const SOCKET_URL = import.meta.env.VITE_NODE_ENV == "production" ? `wss://${import.meta.env.VITE_VIDEOCALL_SOCKET_URL}` : `ws://${import.meta.env.VITE_VIDEOCALL_SOCKET_URL}`;
 
 export const useVideoCallSocket = () => {
 

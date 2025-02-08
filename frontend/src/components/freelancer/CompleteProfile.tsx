@@ -147,7 +147,7 @@ const CompleteProfile = () => {
                         <div className="space-y-2">
                             <Label className="text-base font-semibold">Preferred Job Fields</Label>
                             <MultiSelect options={categoryOptions} maxSelections={5} onSelectionChange={handleSelectionChange} error={error} />
-                            {error && <p className="text-destructive text-sm">Please select your preferred jobs</p>}
+                            {error && <p className="text-destructive text-sm text-red-700">Please select your preferred jobs</p>}
                         </div>
 
                         {/* Social Links Section */}
@@ -167,7 +167,7 @@ const CompleteProfile = () => {
                                     <Input {...register("accounts.other")} placeholder="Portfolio or Other Professional URL" className="pl-11" />
                                 </div>
                             </div>
-                            {(errors.accounts?.linkedin || errors.accounts?.github) && <p className="text-destructive text-sm">Please provide valid URLs</p>}
+                            {(errors.accounts?.linkedin || errors.accounts?.github) && <p className="text-destructive text-sm text-red-700">Please provide valid URLs</p>}
                         </div>
 
                         {/* Submit Button */}

@@ -20,9 +20,7 @@ const createSocketConnection = (socketUrl: string,socketPath?: string, userId?: 
     socket.on("connect_error", (error) => {
         console.error("Connection Error:", error);
     });
-
-    // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!! creating socket connection 22',socket)
-
+    
     return socket;
 };
 

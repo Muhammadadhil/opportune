@@ -74,10 +74,10 @@ export class UserController {
 
             res.cookie("jwtRefresh", refreshToken, {
                 httpOnly: true,
-                secure: false, // true in production
+                secure: process.env.NODE_ENV === "production" ? true : false,
                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
-                path: "/", // Ensure cookie is available on all paths
+                path: "/", 
             });
 
             // delete user.password;

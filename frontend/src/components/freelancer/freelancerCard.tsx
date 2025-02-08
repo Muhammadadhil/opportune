@@ -16,7 +16,7 @@ export function FreelancerCard({ userInfo, freelancerInfo }: FreelancerCardProps
     const navigate = useNavigate();
 
     const handleRedirect = (userId: string) => {
-        navigate('/freelancer/'+userId)
+        navigate('/user/'+userId)
     }
 
     return (

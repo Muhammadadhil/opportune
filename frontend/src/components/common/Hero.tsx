@@ -5,10 +5,6 @@ import { Input } from "../ui/input";
 export default function Hero() {
     return (
         <div className="text-center max-w-3xl mx-auto mt-36">
-            {/* <h1 className="text-5xl font-bold text-gray-800 leading-tight  font">
-                Unlock Your Potential With Freelance
-                <span className="pl-3 text-green-800">Opportunities</span>
-            </h1> */}
             <div>
                 <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
                     <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-gray-900 dark:text-white">

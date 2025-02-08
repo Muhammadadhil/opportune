@@ -31,5 +31,7 @@ frontend/.env
 *.sln
 *.sw?
 
+.env.production
+
 
 README.MD

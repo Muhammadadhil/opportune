@@ -64,7 +64,7 @@ export class OtpService implements IOtpService {
             await this.otpRepository.create(otpData);
 
             //send the mail
-            // await transpoter.sendMail(mailOptions);
+            await transpoter.sendMail(mailOptions);
         } catch (error) {
             console.log("error while sending email : ", error);
         }
