@@ -5,7 +5,7 @@ export interface ISubCategory {
     name: string;
 }
 
-export interface ICategory extends Document {
+export interface ICategory extends Document {   
     name: string;
     subCategory?: ISubCategory[];
 }
