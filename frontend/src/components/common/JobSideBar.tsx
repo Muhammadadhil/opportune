@@ -113,60 +113,60 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
         if ( !cvFile && !selectedCV) {
             toast.error("Please upload a CV or select an existing one");
             return;
+        }else if( price && Number(price) <= 0) {
+            toast.error("Please enter a valid price");
+            return;
         }
+            try {
+                setIsUploading(true);
+                let cvKey;
+                let fileName;
+                let fileType;
 
-        try {
-            setIsUploading(true);
-            let cvKey;
-            let fileName;
-            let fileType;
+                if (selectedCV) {
+                    // Use selected existing CV
+                    cvKey = selectedCV.cvDetails?.cvKey;
+                    fileName = selectedCV.cvDetails.fileName;
+                    fileType = selectedCV.cvDetails.fileType;
+                } else if (cvFile) {
+                    // Upload new CV
 
-            if (selectedCV) {
-                // Use selected existing CV
-                cvKey = selectedCV.cvDetails?.cvKey;
-                fileName = selectedCV.cvDetails.fileName;
-                fileType = selectedCV.cvDetails.fileType;
+                    const presignedData = await getUploadSignedUrl(cvFile.name, cvFile.type);
+                    await axios.put(presignedData.url, cvFile, {
+                        headers: {
+                            "Content-Type": cvFile.type,
+                        },
+                    });
 
-            } else if (cvFile ) {
-                // Upload new CV
+                    cvKey = presignedData.fileKey;
+                    fileName = cvFile.name;
+                    fileType = cvFile.type;
 
-                const presignedData = await getUploadSignedUrl(cvFile.name, cvFile.type);
-                await axios.put(presignedData.url, cvFile, {
-                    headers: {
-                        "Content-Type": cvFile.type,
-                    },
-                });
-                
-                cvKey = presignedData.fileKey;
-                fileName = cvFile.name;
-                fileType = cvFile.type;
+                    await saveCVDetails(userInfo?._id, {
+                        cvKey,
+                        fileName,
+                        fileType,
+                    });
+                }
 
-                await saveCVDetails(userInfo?._id, {
+                const data = {
+                    ...applicationData,
                     cvKey,
-                    fileName,
-                    fileType
-                });
+                    cvFileType: fileType,
+                };
+
+                await applyJob(data);
+                toast.success("Application Submitted");
+                setSheetOpen(false);
+                if (onApply) onApply();
+            } catch (error) {
+                console.log("Error in apply job:", error);
+                const axiosError = error as AxiosError;
+                const data = axiosError.response?.data as { message: string };
+                toast.error(data?.message || "An error occurred while applying");
+            } finally {
+                setIsUploading(false);
             }
-
-            const data = {
-                ...applicationData,
-                cvKey,
-                cvFileType: fileType
-            };
-
-            await applyJob(data);
-            toast.success("Application Submitted");
-            setSheetOpen(false);
-            if (onApply) onApply();
-
-        } catch (error) {
-            console.log("Error in apply job:", error);
-            const axiosError = error as AxiosError;
-            const data = axiosError.response?.data as { message: string };
-            toast.error(data?.message || "An error occurred while applying");
-        } finally {
-            setIsUploading(false);
-        }
     };
 
     const navigate = useNavigate();
