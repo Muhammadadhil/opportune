@@ -4,10 +4,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Footer from "@/components/common/Footer";
 import Hero from "@/components/common/Hero";
-import ProjectsSection from "@/components/common/ProjectsSection";
-import FeaturesSection from "@/components/common/FeatureSection";
-import TopFreelancers from "@/components/common/TopFreelancers";
+
 import MaxWidth from "@/layouts/MaxWidth";
+import CategoryGrid from "@/components/common/CategoryGrid";
 
 const Home: React.FC = () => {
     const { theme } = useSelector((state: RootState) => state.app);
@@ -19,9 +18,7 @@ const Home: React.FC = () => {
                     <Navbar />
                     <main className="px-4 md:px-8 pb-16">
                         <Hero />
-                        <FeaturesSection />
-                        <ProjectsSection />
-                        <TopFreelancers />
+                        <CategoryGrid/>
                     </main>
                 </MaxWidth>
                 <Footer />

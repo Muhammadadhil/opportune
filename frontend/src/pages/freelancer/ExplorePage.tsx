@@ -3,12 +3,19 @@ import { SortDropdown } from "@/components/common/Sort-dropdown";
 import { Filters } from "@/components/freelancer/Filters";
 import JobList from "@/components/freelancer/Joblist";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useScrollToTop } from "@/hooks/common/useScrollToTop";
 
 export default function ExplorePage() {
 
+    const location = useLocation();
+    const selectedCategory = location.state?.selectedCategory || "";
+
+    useScrollToTop();
+
     const [filterState, setFilterState] = useState({
         status: "",
-        category: "",
+        category: selectedCategory,
         applications: "",
         budgetRange: "",
         search: "",
