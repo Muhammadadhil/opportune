@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
       - name: user-service
-        image: muhammadadhil/opportune-userservice:v4
+        image: muhammadadhil/opportune-userservice:v5
         imagePullPolicy: Always
         ports:
         - containerPort: 3015

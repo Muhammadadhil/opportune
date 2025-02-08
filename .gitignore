@@ -1,5 +1,6 @@
 node_modules
 .env
 frontend/.env
+backend/k8s/secret.yml
 .env.production
 echo ".env.production" >> .gitignore
