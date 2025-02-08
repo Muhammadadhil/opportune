@@ -23,13 +23,13 @@ export const authenticate = (allowedRoles: Array<"client" | "freelancer" | "admi
                 return next();
             }
 
-            const isBlocked = await userService.isUserBlocked(user.userId);
+            // const isBlocked = await userService.isUserBlocked(user.userId);
 
-            if (isBlocked) {
-                console.log("!!!! user is blocked throwing error !!!!");
-                const error = new Forbidden();
-                next(error);
-            }
+            // if (isBlocked) {
+            //     console.log("!!!! user is blocked throwing error !!!!");
+            //     const error = new Forbidden();
+            //     next(error);
+            // }
         } else {
             
             console.log("NO user payload on headers !! throwoing forbidden");
