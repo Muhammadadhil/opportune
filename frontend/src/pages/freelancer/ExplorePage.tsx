@@ -10,6 +10,7 @@ export default function ExplorePage() {
 
     const location = useLocation();
     const selectedCategory = location.state?.selectedCategory || "";
+    const searchValue = location.state?.search || "";
 
     useScrollToTop();
 
@@ -18,7 +19,7 @@ export default function ExplorePage() {
         category: selectedCategory,
         applications: "",
         budgetRange: "",
-        search: "",
+        search: searchValue,
         sort: "newest",
     });
 

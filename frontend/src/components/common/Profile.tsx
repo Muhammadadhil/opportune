@@ -21,6 +21,7 @@ import PortfolioCard from "../freelancer/PortfolioCard";
 import { useReviews } from '@/hooks/reviews/useReviews'
 import ReviewCard from "./ReviewCard";
 import { useScrollToTop } from "@/hooks/common/useScrollToTop";
+import Loading from "../loading/Loading";
 
 export default function Profile() {
     const { userInfo, clientData } = useSelector((state: RootState) => state.user);
@@ -47,7 +48,7 @@ export default function Profile() {
     useScrollToTop();
 
     
-    const { data: freelancer, refetch } = useFreelancerProfile(userInfo?.role, userInfo?._id);
+    const { data: freelancer, refetch , isLoading } = useFreelancerProfile(userInfo?.role, userInfo?._id);
     const visibleJobs = jobs?.slice(0, 3);
 
     // fetch other users profile
@@ -110,6 +111,10 @@ export default function Profile() {
 
     const { data: portfolios } = usePortfolios(displayUser?._id ?? '');
     console.log("portfolios:", portfolios);
+
+    if(isLoading){
+        return <Loading/>
+    }
 
 
     return (

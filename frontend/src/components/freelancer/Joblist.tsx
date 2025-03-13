@@ -11,8 +11,7 @@ import { RootState } from "@/store/store";
 
 const JobList = ({ filters }: { filters?: any }) => {
     
-    const {userInfo} = useSelector((state: RootState) => state.user);
-
+    const { userInfo } = useSelector((state: RootState) => state.user);
     const [page, setPage] = useState(1);
     const [totalPages,setTotalPages]=useState(1);
     const limit = 7;
@@ -23,7 +22,6 @@ const JobList = ({ filters }: { filters?: any }) => {
     
     useEffect(() => {
         const jobss = jobs?.jobs?.map((job: IJob) => {
-            console.log(job);
             if (job.applicants?.includes(userInfo?._id || '')) {
                 return {
                     ...job,
@@ -39,9 +37,6 @@ const JobList = ({ filters }: { filters?: any }) => {
 
         setJobss(jobss);
     }, [jobs]);
-
-
-    console.log('check applied jobss::',jobss);
 
 
     useEffect(() => {

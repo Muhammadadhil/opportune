@@ -15,11 +15,8 @@ interface FiltersProps {
 
 export const Filters:React.FC<FiltersProps> = ({onChange,filterState}) => {
     const { isAdminAuthenticated } = useSelector((state: RootState) => state.user);
-
     const {data: categories} = useCategories();
-
     const isAdmin =  isAdminAuthenticated;
-
 
     return (
         <div className="w-64 space-y-6 mt-16">

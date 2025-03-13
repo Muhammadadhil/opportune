@@ -28,6 +28,7 @@ const container = {
     },
 };
 
+
 const CategoryGrid: React.FC = () => {
     const { data: categories } = useCategories();
 
@@ -39,7 +40,7 @@ const CategoryGrid: React.FC = () => {
         <section className="py-12">
             <motion.div className="grid grid-cols-1 sm:grid-cols-4 xl:grid-cols-6 gap-6" variants={container} initial="hidden" animate="show">
                 {categories?.data?.map((category, index) => (
-                    <CategoryCard key={category._id} category={category} image={getCategoryImage(category.name)} index={index} />
+                     <CategoryCard key={category._id} category={category} image={getCategoryImage(category.name)} index={index} />
                 ))}
             </motion.div>
         </section>

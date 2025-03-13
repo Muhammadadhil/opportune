@@ -11,6 +11,7 @@ interface SearchBarProps {
 export const SearchBar: React.FC<SearchBarProps> = ({ onSearch,debounceDelay = 500 }) => {
 
     const [searchTerm,setSearchTerm] = useState('');
+
     const debouncedSearch = useCallback(
         (value: string) => {
 
@@ -31,19 +32,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch,debounceDelay = 5
         const cleanup = debouncedSearch(searchTerm);
         return cleanup;
 
-    }, [searchTerm,debouncedSearch]);
+    }, [searchTerm]);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
 
-     const handleClear = () => {
+    const handleClear = () => {
         setSearchTerm("");
         onSearch("");
-     };
-
-    
+    };
 
     return (
         <div className="relative">

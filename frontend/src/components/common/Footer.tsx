@@ -30,8 +30,8 @@ const Footer = () => {
                     </nav> */}
 
                     {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center lg:justify-end">
-                        <button className="bg-lime-300 text-black px-6 py-2 rounded-full hover:bg-lime-400 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">Try Opportune</button>
+                    <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-end">
+                        <button className="bg-green-800 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">Try Opportune</button>
                     </div>
                 </div>
 

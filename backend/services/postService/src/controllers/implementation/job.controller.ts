@@ -145,7 +145,7 @@ export class JobController implements IJobController {
 
     /**
      * Applies for a job.
-     *
+     * 
      * @param {Request} req - The request object, containing the application data in the body.
      * @param {Response} res - The response object, used to send back the HTTP response.
      * @param {NextFunction} next - The next middleware function in the Express stack.

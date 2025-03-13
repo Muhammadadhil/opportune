@@ -2,7 +2,16 @@ import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
 import { Input } from "../ui/input";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 export default function Hero() {
+
+    const navigate = useNavigate();
+    const [searchValue, setSearchValue] = useState<string>();
+    const handleSearch=()=>{
+        navigate("/explore",{state:{search:searchValue}});
+    }
+
     return (
         <div className="text-center max-w-3xl mx-auto mt-36">
             <div>
@@ -23,8 +32,10 @@ export default function Hero() {
                             placeholder="Search for opportunities..."
                             type="search"
                             aria-label="Search for opportunities"
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
                         />
-                        <Button type="submit" aria-label="Search" variant="default">
+                        <Button type="submit" aria-label="Search" variant="default" onClick={() => {handleSearch()}}>
                             <Search className="h-4 w-4" />
                             <span className="sr-only">Search</span>
                         </Button>

@@ -27,6 +27,7 @@ export class AuthService implements IAuthService {
                 console.log("invalid token");
                 return null;
             }
+            
             const { userId, role } = decoded;
             console.log("userId: role: from decoded obj:", userId, role);
 
