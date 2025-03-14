@@ -7,6 +7,7 @@ import Hero from "@/components/common/Hero";
 
 import MaxWidth from "@/layouts/MaxWidth";
 import CategoryGrid from "@/components/common/CategoryGrid";
+import FeatureSection from "./Features";
 
 const Home: React.FC = () => {
     const { theme } = useSelector((state: RootState) => state.app);
@@ -20,6 +21,8 @@ const Home: React.FC = () => {
                         <Hero />
                         <CategoryGrid/>
                     </main>
+                    <FeatureSection/>
+                    
                 </MaxWidth>
                 <Footer />
             </div>
