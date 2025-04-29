@@ -1,7 +1,7 @@
 import type React from "react";
 import { Check, Box, Shield } from "lucide-react";
 import productMgt from  '../../assets/product-screenshot-board-gantt-views.avif'
-import freelancerTools from "../../assets/freelancerTools.jpg";
+// import freelancerTools from "../../assets/freelancerTools.jpg";
 
 
 const FeatureSection: React.FC = () => {
