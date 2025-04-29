@@ -34,11 +34,6 @@ app.use(errorHandler);
 app.use("/", userRouter);
 
 connectMongoDB(process.env.MONGODB_URL!, "user");
-
-console.log("process.env.LOCAL_ORIGIN", process.env.LOCAL_ORIGIN);
-console.log("process.env.VERCEL_ORIGIN", process.env.VERCEL_ORIGIN);
-console.log("process.env.PRODUCTION_ORIGIN", process.env.PRODUCTION_ORIGIN);
-
 const PORT = process.env.PORT || 3015;
 
 app.listen(PORT, () => {

@@ -16,7 +16,7 @@ export const initSocketServer = (httpServer: any) => {
         path: "/messaging-socket",
     });
 
-    console.log('chat socket io:',io);
+    // console.log('chat socket io:',io);
 
     const chatNameSpace =  io.of('/chat'); 
     const videoNameSpace = io.of("/videoCall");

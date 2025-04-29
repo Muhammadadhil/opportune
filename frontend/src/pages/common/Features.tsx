@@ -1,6 +1,8 @@
 import type React from "react";
 import { Check, Box, Shield } from "lucide-react";
 import productMgt from  '../../assets/product-screenshot-board-gantt-views.avif'
+import freelancerTools from "../../assets/freelancerTools.jpg";
+
 
 const FeatureSection: React.FC = () => {
     return (
@@ -60,7 +62,7 @@ const FeatureSection: React.FC = () => {
                     <div className="relative w-full max-w-md">
                         <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-yellow-300 rounded-full -z-10"></div>
                         <div className="absolute bottom-1/4 right-1/3 w-40 h-40 bg-green-400 rounded-full -z-10"></div>
-                        <img src="/placeholder.svg?height=300&width=300" width={300} height={300} alt="Freelancer illustration" className="relative z-10" />
+                        {/* <img src={freelancerTools} width={300} height={300} alt="Freelancer illustration" className="relative z-10" /> */}
                     </div>
                 </div>
                 <div className="space-y-6">
