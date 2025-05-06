@@ -14,6 +14,7 @@ jobs:
     strategy:
       matrix:
         service:
+          - gateway
           - userService
           - postService
           - paymentService
@@ -34,14 +35,19 @@ jobs:
       - name: Build and push Docker image for ${{ matrix.service }}
         run: |
           SERVICE_NAME=$(echo "${{ matrix.service }}" | tr '[:upper:]' '[:lower:]')
-          docker build -t muhammadadhil/opportune-$SERVICE_NAME:latest ./backend/services/${{ matrix.service }}
-          docker push muhammadadhil/opportune-$SERVICE_NAME:latest
+          if [ "$SERVICE_NAME" == "gateway" ]; then
+            docker build -t muhammadadhil/opportune-additional-service:latest ./backend/gateway
+            docker push muhammadadhil/opportune-gateway:latest
+          else
+            docker build -t muhammadadhil/opportune-$SERVICE_NAME:latest ./backend/services/${{ matrix.service }}
+            docker push muhammadadhil/opportune-$SERVICE_NAME:latest
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
     strategy:
       matrix:
         service:
+          - gateway
           - user-service
           - post-service
           - payment-service
@@ -65,8 +71,8 @@ jobs:
         uses: 'google-github-actions/get-gke-credentials@v1'
         with:
           cluster_name: 'opportune-cluster'
-          location: 'asia-south1-a'
-          project_id: 'opportune-freelance-app'
+          location: 'us-central1-a'
+          project_id: 'opportune-backend'
 
       - name: Deploy ${{ matrix.service }}
         run: |
