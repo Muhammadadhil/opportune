@@ -37,7 +37,7 @@ jobs:
           docker build -t muhammadadhil/opportune-$SERVICE_NAME:latest ./backend/services/${{ matrix.service }}
           docker push muhammadadhil/opportune-$SERVICE_NAME:latest
 
-  # Separate job to build and push gateway
+  # Separate job to build and push gateway 
   build-and-push-additional:
     runs-on: ubuntu-latest
     steps:
