@@ -35,15 +35,33 @@ jobs:
       - name: Build and push Docker image for ${{ matrix.service }}
         run: |
           SERVICE_NAME=$(echo "${{ matrix.service }}" | tr '[:upper:]' '[:lower:]')
-          if [ "$SERVICE_NAME" == "gateway" ]; then
-            docker build -t muhammadadhil/opportune-gateway:latest ./backend/gateway
-            docker push muhammadadhil/opportune-gateway:latest
-          else
-            docker build -t muhammadadhil/opportune-$SERVICE_NAME:latest ./backend/services/${{ matrix.service }}
-            docker push muhammadadhil/opportune-$SERVICE_NAME:latest
+          docker build -t muhammadadhil/opportune-$SERVICE_NAME:latest ./backend/services/${{ matrix.service }}
+          docker push muhammadadhil/opportune-$SERVICE_NAME:latest
+
+  # Separate job to build and push gateway if needed
+  build-and-push-additional:
+    runs-on: ubuntu-latest
+    # Only run this job if you need to build gateway separately 
+    # Uncomment the next line if you want this job to only run when not building gateway in the matrix
+    # if: ${{ !contains(matrix.service, 'gateway') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push additional Docker image
+        run: |
+          docker build -t muhammadadhil/opportune-gateway:latest ./backend/gateway
+          docker push muhammadadhil/opportune-gateway:latest
+
   deploy:
     runs-on: ubuntu-latest
-    needs: build-and-push
+    needs: [build-and-push, build-and-push-additional]
     strategy:
       matrix:
         service:
@@ -80,4 +98,3 @@ jobs:
           kubectl set image deployment/${SERVICE_NAME} ${SERVICE_NAME}=muhammadadhil/opportune-$SERVICE_NAME:latest
           kubectl rollout restart deployment/${SERVICE_NAME}
           kubectl rollout status deployment/${SERVICE_NAME}
-          
