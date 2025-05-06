@@ -11,7 +11,6 @@ class CategoryController {
 
     async getAllCategories(req: Request, res: Response, next: NextFunction){
         try {
-            console.log('here in category geting')
             const categories=await this.categoryService.getCategories();
             res.status(200).json(categories);
 

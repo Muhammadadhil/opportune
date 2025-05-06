@@ -13,7 +13,7 @@ data:
   MESSAGING_BASE_URL: "http://messaging-service:3060/"
   LOCAL_ORIGIN: 'http://localhost:5173'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
-  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.site/'
 
 
 
@@ -33,7 +33,7 @@ data:
   RABBITMQ_URL: "amqp://rabbitmq:5672"
   LOCAL_ORIGIN: 'http://localhost:5173'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
-  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.site/'
 
 ---
 
@@ -50,7 +50,7 @@ data:
   CONTRACT_SERVICE_URL: 'http://contract-service:3030'
   LOCAL_ORIGIN: 'http://localhost:5173'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
-  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.site/'
   RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
 
   
@@ -70,7 +70,7 @@ data:
   RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
   LOCAL_ORIGIN: 'http://localhost:5173'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
-  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.site/'
 
 ---
 
@@ -84,7 +84,7 @@ data:
   RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
   LOCAL_ORIGIN: 'http://localhost:5173'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
-  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.site/'
 
 
 ---
@@ -99,7 +99,7 @@ data:
   RABBITMQ_CONNECTION_URL: "amqp://rabbitmq:5672"
   LOCAL_ORIGIN: 'http://localhost:5173'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
-  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.site/'
 
 
 ---
@@ -117,7 +117,7 @@ data:
   PAYMENT_SERVICE_URL: "http://payment-service:3040"
   LOCAL_ORIGIN: 'http://localhost:5173'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
-  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.site/'
   RABBITMQ_CONNECTION_URL: '"amqp://rabbitmq:5672"'
 
 
@@ -138,4 +138,4 @@ data:
   PAYMENT_SERVICE_URL: "http://payment-service:3040"
   LOCAL_ORIGIN: 'http://localhost:5173'
   VERCEL_ORIGIN: 'https://opportune-three.vercel.app/'
-  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.online/'
+  PRODUCTION_ORIGIN: 'https://opportune.muhammadadhil.site/'

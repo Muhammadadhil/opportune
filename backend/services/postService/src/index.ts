@@ -11,6 +11,9 @@ import { InitialiseConsumers } from "./events/rabbitmq/InitialiseConsumers";
 const app = express();
 dotenv.config();
 
+
+console.log("rabbitmq connection url ----------------" , process.env.RABBITMQ_CONNECTION_URL);
+
 const allowedOrigins = [process.env.LOCAL_ORIGIN?.replace(/\/$/, ""), process.env.VERCEL_ORIGIN?.replace(/\/$/, ""), process.env.PRODUCTION_ORIGIN?.replace(/\/$/, "")];
 
 app.use(
@@ -34,6 +37,7 @@ app.use("/", router);
 app.use(errorHandler);
 
 connectMongoDB(process.env.MONGODB_URL!, "posts");
+
 
 const PORT = process.env.PORT || 3020;
 

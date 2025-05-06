@@ -23,8 +23,6 @@ export default function ExplorePage() {
         sort: "newest",
     });
 
-    console.log("filterState:", filterState);
-
     const updateFilterState = (key: string, value: string | number | null) => {
         setFilterState((prev) => ({ ...prev, [key]: value }));
     };

@@ -78,7 +78,7 @@ app.use(
 
 app.use(
     "/api/post",
-    verifyToken(process.env.JWT_SECRET!),
+    // verifyToken(process.env.JWT_SECRET!),
     createProxyMiddleware({
         target: targets.posts,
         changeOrigin: true,

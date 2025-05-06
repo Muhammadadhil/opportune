@@ -1,8 +1,8 @@
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import { ObjectId } from "mongoose";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 dotenv.config();
 
@@ -10,8 +10,6 @@ const bucketName = process.env.BUCKET_NAME;
 const region = process.env.BUCKET_REGION;
 const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
-
-console.log('accessKeyId::::::::', accessKeyId);
 
 if (!accessKeyId || !secretAccessKey) {
     throw new Error("AWS credentials are not set");

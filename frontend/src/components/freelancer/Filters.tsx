@@ -63,10 +63,6 @@ export const Filters:React.FC<FiltersProps> = ({onChange,filterState}) => {
                                             onChange("category", checked ? category?.name : "");
                                         }}
                                         checked={filterState.category === category?.name}
-                                        // onClick={(e) => {
-                                        //     console.log("checkbox clicked", e.target);
-                                        //     onChange("category", category.name);
-                                        // }}
                                     />
                                     <Label htmlFor={category._id}>{category?.name}</Label>
                                 </div>

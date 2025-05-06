@@ -16,10 +16,10 @@ spec:
   ingressClassName: "nginx"
   tls:
   - hosts:
-    - api.opportune.muhammadadhil.online
+    - api.opportune.muhammadadhil.site
     secretName: backend-tls-secret        # Secret name for the TLS certificate
   rules:
-  - host: api.opportune.muhammadadhil.online
+  - host: api.opportune.muhammadadhil.site
     http:
       paths:
       - path: /
