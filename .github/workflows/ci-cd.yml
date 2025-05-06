@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         service:
-          - gateway
           - userService
           - postService
           - paymentService
@@ -38,12 +37,9 @@ jobs:
           docker build -t muhammadadhil/opportune-$SERVICE_NAME:latest ./backend/services/${{ matrix.service }}
           docker push muhammadadhil/opportune-$SERVICE_NAME:latest
 
-  # Separate job to build and push gateway if needed
+  # Separate job to build and push gateway
   build-and-push-additional:
     runs-on: ubuntu-latest
-    # Only run this job if you need to build gateway separately 
-    # Uncomment the next line if you want this job to only run when not building gateway in the matrix
-    # if: ${{ !contains(matrix.service, 'gateway') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -61,7 +57,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [build-and-push, build-and-push-additional]
+    needs: [build-and-push, build-and-push-gateway]
     strategy:
       matrix:
         service:
