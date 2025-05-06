@@ -38,7 +38,7 @@ jobs:
           docker push muhammadadhil/opportune-$SERVICE_NAME:latest
 
   # Separate job to build and push gateway 
-  build-and-push-additional:
+  build-and-push-gateway:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
