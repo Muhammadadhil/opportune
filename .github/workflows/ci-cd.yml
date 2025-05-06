@@ -33,7 +33,7 @@ jobs:
 
       - name: Build and push Docker image for ${{ matrix.service }}
         run: |
-          # SERVICE_NAME=$(echo "${{ matrix.service }}" | tr '[:upper:]' '[:lower:]')
+          SERVICE_NAME=$(echo "${{ matrix.service }}" | tr '[:upper:]' '[:lower:]')
           docker build -t muhammadadhil/opportune-$SERVICE_NAME:latest ./backend/services/${{ matrix.service }}
           docker push muhammadadhil/opportune-$SERVICE_NAME:latest
 
