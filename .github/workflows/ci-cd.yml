@@ -37,7 +37,7 @@ jobs:
           docker build -t muhammadadhil/opportune-$SERVICE_NAME:latest ./backend/services/${{ matrix.service }}
           docker push muhammadadhil/opportune-$SERVICE_NAME:latest
 
-  # Separate job to build and push gateway if needed
+  # Separate job to build and push gateway
   build-and-push-gateway:
     runs-on: ubuntu-latest
     steps:
@@ -60,15 +60,23 @@ jobs:
     needs: [build-and-push, build-and-push-gateway]
     strategy:
       matrix:
-        service:
-          - gateway
-          - userservice
-          - postservice
-          - paymentservice
-          - notificationservice
-          - messagingservice
-          - manageservice
-          - contractservice
+        include:
+          - k8s_name: gateway
+            docker_name: gateway
+          - k8s_name: user-service
+            docker_name: userservice
+          - k8s_name: post-service
+            docker_name: postservice
+          - k8s_name: payment-service
+            docker_name: paymentservice
+          - k8s_name: notification-service
+            docker_name: notificationservice
+          - k8s_name: messaging-service
+            docker_name: messagingservice
+          - k8s_name: manage-service
+            docker_name: manageservice
+          - k8s_name: contract-service
+            docker_name: contractservice
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -88,9 +96,11 @@ jobs:
           location: 'us-central1-a'
           project_id: 'opportune-backend'
 
-      - name: Deploy ${{ matrix.service }}
+      - name: Deploy ${{ matrix.k8s_name }}
         run: |
-          SERVICE_NAME=${{ matrix.service }}
-          kubectl set image deployment/${SERVICE_NAME} ${SERVICE_NAME}=muhammadadhil/opportune-$SERVICE_NAME:latest
-          kubectl rollout restart deployment/${SERVICE_NAME}
-          kubectl rollout status deployment/${SERVICE_NAME}
+          # k8s_name is the name of the Kubernetes deployment (with hyphens)
+          # docker_name is the name of the Docker image (without hyphens)
+          
+          kubectl set image deployment/${{ matrix.k8s_name }} ${{ matrix.k8s_name }}=muhammadadhil/opportune-${{ matrix.docker_name }}:latest
+          kubectl rollout restart deployment/${{ matrix.k8s_name }}
+          kubectl rollout status deployment/${{ matrix.k8s_name }}
