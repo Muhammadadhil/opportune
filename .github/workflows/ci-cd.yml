@@ -14,13 +14,13 @@ jobs:
     strategy:
       matrix:
         service:
-          - user-service
-          - post-service
-          - payment-service
-          - notification-service
-          - messaging-service
-          - manage-service
-          - contract-service
+          - userService
+          - postService
+          - paymentService
+          - notificationService
+          - messagingService
+          - manageService
+          - contractService
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -62,13 +62,13 @@ jobs:
       matrix:
         service:
           - gateway
-          - user-service
-          - post-service
-          - payment-service
-          - notification-service
-          - messaging-service
-          - manage-service
-          - contract-service
+          - userservice
+          - postservice
+          - paymentservice
+          - notificationservice
+          - messagingservice
+          - manageservice
+          - contractservice
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
