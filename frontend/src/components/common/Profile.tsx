@@ -151,7 +151,7 @@ export default function Profile() {
                                 {/* Action Buttons */}
                                 {isOwnProfile && (
                                     <div className="flex gap-3 mt-4">
-                                        {displayUser?.role === "freelancer" && !freelancer ? (
+                                        {displayUser?.role === "freelancer" && Object.keys(freelancer).length < 1 ? (
                                             <Button className="bg-green-600 text-white hover:bg-green-500" onClick={() => navigate("/fr/complete-profile")} variant="secondary">
                                                 Complete your profile
                                             </Button>
@@ -182,7 +182,7 @@ export default function Profile() {
                                     <span>{displayUser?.email}</span>
                                 </div>
                                 <div className="flex flex-wrap">
-                                    {displayUser?.role === "freelancer" && (
+                                    {displayUser?.role === "freelancer" && Object.keys(freelancer).length > 1 && (
                                         <>
                                             <User className="w-5 h-5 text-muted-foreground mt-1" />
                                             <p className="">{displayFreelancer?.title}</p>
@@ -279,17 +279,18 @@ export default function Profile() {
                                 {portfolios?.map((portfolio, index) => (
                                     <PortfolioCard key={index} portfolio={portfolio} />
                                 ))}
-                                {userInfo?.role === "freelancer" && <div
-                                    className=" h-40 p-2 border border-slate-500 rounded-xl flex justify-center items-center cursor-pointer border-dashed group transition duration-300 ease-in-out hover:bg-zinc-100 "
-                                    onClick={() => navigate("/fr/portfolio")}
-                                >
-                                    <h2 className="group-hover:text-green-900 transition duration-300 ease-in-out text-green-600">Add a portfolio project</h2>
-                                </div>}
+                                {userInfo?.role === "freelancer" && (
+                                    <div
+                                        className=" h-40 p-2 border border-slate-500 rounded-xl flex justify-center items-center cursor-pointer border-dashed group transition duration-300 ease-in-out hover:bg-zinc-100 "
+                                        onClick={() => navigate("/fr/portfolio")}
+                                    >
+                                        <h2 className="group-hover:text-green-900 transition duration-300 ease-in-out text-green-600">Add a portfolio project</h2>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
                 </div>
-
 
                 <div className="mt-6">
                     {displayUser?.role === "client" && (
@@ -310,7 +311,6 @@ export default function Profile() {
                 </div>
 
                 <div className="mt-6">
-
                     <div>
                         <h2 className="text-xl font-semibold mb-4 text-zinc-600"> Reviews</h2>
                         {(!reviews || reviews.length === 0) && <p className="text-muted-foreground mb-7">No Reviews to list.</p>}
@@ -320,9 +320,7 @@ export default function Profile() {
                                 <ReviewCard key={index} review={review} />
                             </div>
                         ))}
-
                     </div>
-
                 </div>
             </div>
         </div>

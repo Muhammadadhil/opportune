@@ -123,25 +123,23 @@ export class UserService implements IUserService {
         let freelancerDetails = await this.freelancerRepository.findOne({ userId });
         const imageName = freelancerDetails?.image;
 
-        if (!imageName) {
-            throw new Error("No image in database!");
+        let imageUrl;
+        if(imageName){
+            imageUrl = await this.fileUploader.generateDownloadPresignedUrl(imageName);
         }
 
-        const imageUrl = await this.fileUploader.generateDownloadPresignedUrl(imageName);
-
         const result = {
-            accounts: freelancerDetails.accounts,
-            _id: freelancerDetails._id,
-            userId: freelancerDetails.userId,
-            title: freelancerDetails.title,
-            skills: freelancerDetails.skills,
-            image: freelancerDetails.image,
-            prefferedJobs: freelancerDetails.prefferedJobs,
+            accounts: freelancerDetails?.accounts,
+            _id: freelancerDetails?._id,
+            userId: freelancerDetails?.userId,
+            title: freelancerDetails?.title,
+            skills: freelancerDetails?.skills,
+            image: freelancerDetails?.image,
+            prefferedJobs: freelancerDetails?.prefferedJobs,
             imageUrl: imageUrl,
         };
 
         console.log("freelancer detailsss  result:", result);
-
         return result as IFreelancer;
     }
 

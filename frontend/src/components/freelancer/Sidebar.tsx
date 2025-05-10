@@ -27,10 +27,10 @@ const Sidebar = () => {
                         </div>
                     </div>
                     <div className="mt-4  ">
-                        {freelancerData != null ? (
+                        {freelancerData && Object.keys(freelancerData).length !== 0 ? (
                             <p className="text-sm text-gray-700 ">{freelancerData?.title}</p>
                         ) : (
-                            <div>   
+                            <div>
                                 <Button variant="outline" className="w-full border-green-600" onClick={() => navigate("/fr/complete-profile")}>
                                     Complete your profile
                                 </Button>
@@ -42,8 +42,6 @@ const Sidebar = () => {
                     </div>
                 </div>
             </div>
-
-            
         </>
     );
 };
