@@ -187,7 +187,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
                     </div>
                 )}
                 <p className="text-gray-700 dark:text-gray-300 mb-2 text-sm">{job.subCategory}</p>
-                <p className="text-gray-600 dark:text-gray-400 mb-2 text-sm">{job.description}</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-2 text-sm">{job.description.slice(0,100)}</p>
                 <div className="flex flex-wrap gap-2 mb-2">
                     {job.skillsRequired.map((skill, index) => (
                         <span key={index} className="bg-gray-100 dark:bg-black text-gray-700 dark:text-gray-300 rounded-full px-3 py-1 text-sm border dark:border-gray-800">

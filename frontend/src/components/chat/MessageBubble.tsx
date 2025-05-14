@@ -9,10 +9,7 @@ interface MessageBubbleProps {
     type: string;
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({sender, timestamp, message, type, isSender }) => {
-
-    console.log('MessageBubble props:', { sender, timestamp, message, type, isSender });
-    
+const MessageBubble: React.FC<MessageBubbleProps> = ({sender, timestamp, message, type, isSender }) => {    
     const formatTime = (date: string | Date) => {
         return new Date(date).toLocaleTimeString("en-US", {
             hour: "2-digit",

@@ -221,7 +221,7 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                             </div>
                             <div>
                                 <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Job Description</h3>
-                                <p className="text-gray-700 dark:text-gray-300">{job.description}</p>
+                                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{job.description}</p>
                             </div>
                             <div>
                                 <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Requirements</h3>

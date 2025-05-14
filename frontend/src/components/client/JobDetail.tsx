@@ -28,7 +28,7 @@ export const JobDetail: React.FC = () => {
                     <div className="space-y-6"> 
                         <div>
                             <h3 className="text-lg font-semibold mb-2">Job Description</h3>
-                            <p className="text-gray-700 dark:text-gray-300">{job.description}</p>
+                            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{job.description}</p>
                         </div>
                         <Separator />
                         <div>
