@@ -8,7 +8,7 @@ import morgan from "morgan";
 import { createStream } from "rotating-file-stream";
 import path from "path";
 import { verifyToken } from "./verifyToken";
-import { errorHandler } from '@_opportune/common'
+import { errorHandler } from "@_opportune/common";
 
 dotenv.config();
 
@@ -24,11 +24,15 @@ const targets = {
     messaging: process.env.MESSAGING_BASE_URL,
 };
 
+const DEFAULT_TIMEOUT = 60000; 
+
 app.use(
     "/api/payment",
     createProxyMiddleware({
         target: targets.payment,
         changeOrigin: true,
+        proxyTimeout: DEFAULT_TIMEOUT,
+        timeout: DEFAULT_TIMEOUT,
     })
 );
 
@@ -37,42 +41,43 @@ app.use(cookieParser());
 const allowedOrigins = [process.env.LOCAL_ORIGIN?.replace(/\/$/, ""), process.env.VERCEL_ORIGIN?.replace(/\/$/, ""), process.env.PRODUCTION_ORIGIN?.replace(/\/$/, "")];
 
 app.use(
-  cors({
-    origin: (origin, callback) => { 
-        if(!origin || allowedOrigins.includes(origin)){
-            callback(null, true);
-        }else{
-            callback(new Error("Not allowed by CORS")); 
-        }
-    },
-    credentials: true, 
-  })
+    cors({
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+    })
 );
 
-// const logStream = fs.createWriteStream(path.join(__dirname, "access.log"), { flags: "a" });
-
-const logStream= createStream("access.log", {
+const logStream = createStream("access.log", {
     interval: "10d",
-    path: path.join(process.cwd(),"logs"),
-    maxSize: "10M"
+    path: path.join(process.cwd(), "logs"),
+    maxSize: "10M",
 });
 
-app.use(morgan("combined",{stream:logStream}));
-
+app.use(morgan("combined", { stream: logStream }));
 
 app.use(
     "/api/user",
     createProxyMiddleware({
         target: targets.user,
         changeOrigin: true,
+        proxyTimeout: DEFAULT_TIMEOUT,
+        timeout: DEFAULT_TIMEOUT,
     })
 );
- 
+
 app.use(
     "/api/manage",
     createProxyMiddleware({
         target: targets.manage,
         changeOrigin: true,
+        proxyTimeout: DEFAULT_TIMEOUT,
+        timeout: DEFAULT_TIMEOUT,
     })
 );
 
@@ -82,6 +87,8 @@ app.use(
     createProxyMiddleware({
         target: targets.posts,
         changeOrigin: true,
+        proxyTimeout: DEFAULT_TIMEOUT,
+        timeout: DEFAULT_TIMEOUT,
     })
 );
 
@@ -91,6 +98,8 @@ app.use(
     createProxyMiddleware({
         target: targets.contract,
         changeOrigin: true,
+        proxyTimeout: DEFAULT_TIMEOUT,
+        timeout: DEFAULT_TIMEOUT,
     })
 );
 
@@ -99,6 +108,8 @@ app.use(
     createProxyMiddleware({
         target: targets.notification,
         changeOrigin: true,
+        proxyTimeout: DEFAULT_TIMEOUT,
+        timeout: DEFAULT_TIMEOUT,
     })
 );
 
@@ -108,12 +119,13 @@ app.use(
     createProxyMiddleware({
         target: targets.messaging,
         changeOrigin: true,
+        proxyTimeout: DEFAULT_TIMEOUT,
+        timeout: DEFAULT_TIMEOUT,
     })
 );
 
 app.use(errorHandler);
 
 const port = process.env.APIGATEWAY_PORT;
-
 
 app.listen(port, () => console.log(`APIGateway server running on http://localhost:${port}`));
