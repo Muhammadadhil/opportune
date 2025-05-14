@@ -8,8 +8,8 @@ const Freelancer: React.FC = () => {
 
     return (
         <div className="min-h-screen">
-            <div className="container mx-auto p-4 space-y-4">
-                <h1 className="text-2xl font-bold mb-6 text-gray-600 mt-10 tracking-tight">Available Freelancers</h1>
+            <div className="container mx-auto p-4 space-y-4 max-w-[1200px]">
+                <h1 className="text-2xl font-bold mb-6 flex justify-items-center text-gray-600 mt-10 tracking-tight">Available Freelancers</h1>
                 {freelancers?.map((freelancer: any, index: number) => (
                     <FreelancerCard key={index} userInfo={freelancer.userInfo} freelancerInfo={freelancer.freelancerDetails} />
                 ))}

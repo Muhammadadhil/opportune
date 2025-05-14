@@ -127,7 +127,7 @@ export default function ClientJobs() {
                                     </div>
                                 </div>
 
-                                <p className="text-gray-600 dark:text-gray-400 mb-2 mt-2">{job.description}</p>
+                                <p className="text-gray-600 dark:text-gray-400 mb-2 mt-2">{job.description.slice(0,150)}</p>
                                 <div className="flex flex-wrap gap-2 mb-2">
                                     {job.searchTags?.map((tag, idx) => (
                                         <span key={idx} className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-full px-3 py-1 text-sm">

@@ -151,7 +151,7 @@ export default function Profile() {
                                 {/* Action Buttons */}
                                 {isOwnProfile && (
                                     <div className="flex gap-3 mt-4">
-                                        {displayUser?.role === "freelancer" && Object.keys(freelancer).length < 1 ? (
+                                        {displayUser?.role === "freelancer" && freelancer && Object.keys(freelancer).length < 1 ? (
                                             <Button className="bg-green-600 text-white hover:bg-green-500" onClick={() => navigate("/fr/complete-profile")} variant="secondary">
                                                 Complete your profile
                                             </Button>
@@ -182,7 +182,7 @@ export default function Profile() {
                                     <span>{displayUser?.email}</span>
                                 </div>
                                 <div className="flex flex-wrap">
-                                    {displayUser?.role === "freelancer" && Object.keys(freelancer).length > 1 && (
+                                    {displayUser?.role === "freelancer" && freelancer && Object.keys(freelancer).length > 1 && (
                                         <>
                                             <User className="w-5 h-5 text-muted-foreground mt-1" />
                                             <p className="">{displayFreelancer?.title}</p>
