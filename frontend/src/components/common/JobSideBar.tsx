@@ -21,6 +21,7 @@ import { getCV,getUploadSignedUrl,saveCVDetails } from "@/api/cv";
 import { getApplicationDetails } from "@/api/job";
 import axios from "axios";
 import { formatDate } from "@/utils/dateFormatter";
+import { handleApiError } from "@/api/errorHandler";
 
 interface JobSideBarProps {
     job: IJob;
@@ -161,9 +162,15 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                 if (onApply) onApply();
             } catch (error) {
                 console.log("Error in apply job:", error);
-                const axiosError = error as AxiosError;
-                const data = axiosError.response?.data as { message: string };
-                toast.error(data?.message || "An error occurred while applying");
+                // const axiosError = error as AxiosError;
+                // const data = axiosError.response?.data as { message: string };
+                // console.log('dataL',data)
+                if (error.response?.status === 422) {
+                    toast.error("Please complete your profile first");
+                    return false;
+                }
+                const errorMessage = handleApiError(error);
+                toast.error(errorMessage);
             } finally {
                 setIsUploading(false);
             }
@@ -296,9 +303,9 @@ const JobSideBar: React.FC<JobSideBarProps> = ({ job, sheetOpen, setSheetOpen, o
                                     </div>
 
                                     <Label>
-                                        Your Message <span className="text-xs text-gray-500">* optional</span>
+                                        Cover Letter <span className="text-xs text-gray-500">* optional</span>
                                     </Label>
-                                    <Textarea placeholder="Enter your message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
+                                    <Textarea placeholder="Leave your cover letter here" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
                                     <Label>
                                         Your Price <span className="text-xs text-gray-500">* optional</span>
                                     </Label>

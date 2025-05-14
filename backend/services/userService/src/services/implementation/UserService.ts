@@ -14,7 +14,7 @@ import { FreelancerRepository } from "../../repositories/implementation/Freelanc
 import { LoginUserResponse, RegisterUserResponse } from "../../interfaces/IAuthResponse";
 import IUserService from "../interfaces/IUserService";
 import { RabbitMQProducer } from "../../events/rabbitmq/producer";
-import { Unauthorised } from "@_opportune/common";
+import { CustomError, Unauthorised } from "@_opportune/common";
 import { FreelancerResponseDTO } from "../../dto/user/user-response.dto";
 
 export class UserService implements IUserService {
@@ -192,44 +192,10 @@ export class UserService implements IUserService {
                 freelancerData.freelancerDetails.imageUrl = await this.fileUploader.generateDownloadPresignedUrl(freelancerData.freelancerDetails.image);
             }
             console.log("freelancerData:", freelancerData);
-
-            // const responseDTO: FreelancerResponseDTO = {
-            //     _id: freelancerData?._id.toString() || ,
-            //     firstname: freelancerData?.firstname || "",
-            //     lastname: freelancerData?.lastname || "",
-            //     email: freelancerData?.email || "",
-            //     country: freelancerData?.country || "",
-            //     role: freelancerData?.role || "",
-            //     isVerified: freelancerData?.isVerified || false,
-            //     isBlocked: freelancerData?.isBlocked || false,
-            //     averageRating: freelancerData?.averageRating || 0,
-            //     reviewCount: freelancerData?.reviewCount || 0,
-            //     freelancerDetails: freelancerData?.freelancerDetails
-            //         ? {
-            //               _id: freelancerData?.freelancerDetails._id.toString(),
-            //               userId: freelancerData?.freelancerDetails.userId.toString(), // Convert ObjectId to string
-            //               title: freelancerData?.freelancerDetails.title || "",
-            //               skills: freelancerData?.freelancerDetails.skills || [],
-            //               accounts: freelancerData?.freelancerDetails.accounts || {
-            //                   linkedin: "",
-            //                   github: "",
-            //                   other: "",
-            //               },
-            //               imageUrl: freelancerData?.freelancerDetails.imageUrl || "",
-            //               prefferedJobs: freelancerData?.freelancerDetails.prefferedJobs || [],
-            //           }
-            //         : undefined,
-            // };
-
-            // return responseDTO;
-
-            //  const { walletAmount, walletHistory, ...userDataWithoutWallet } = freelancerData;
-            //  return userDataWithoutWallet;
             return freelancerData;
             
         } else if (userData && userData.role === "client") {
             const clientData = await this.userRepository.findUserWithClientDetails(userId);
-            // console.log("clientData:", clientData);
             return clientData 
         }
 
@@ -269,12 +235,11 @@ export class UserService implements IUserService {
     async saveCVDetails(userId: string, cvKey: string, fileName: string, fileType: string): Promise<IFreelancer | null> {
         const freelancer = await this.freelancerRepository.findOne({ userId });
         if (!freelancer) {
-            throw new Error('Freelancer not found');
+            throw new CustomError("Freelancer details not found. Please complete your profile first.", 422); 
+            // 422  - unprocessible entity 
         }
 
         return await this.freelancerRepository.saveNewCV(userId,cvKey , fileName, fileType);
-
-        // return await this.freelancerRepository.updateById(freelancer._id as string, updateData);
     }
 
     async getCVUrl(userId: string): Promise<{ cvs: Array<{ url: string, cvDetails: any }> }> {

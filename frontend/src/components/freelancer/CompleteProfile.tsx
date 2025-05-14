@@ -53,6 +53,7 @@ const CompleteProfile = () => {
 
     const onSubmit = async (data: any) => {
         try {
+            setIsLoading(true);
             const file = data.image;
             const presignedData = await getUploadSignedUrl(data.image.name, data.image.type);
 
@@ -71,7 +72,6 @@ const CompleteProfile = () => {
                 prefferedJobs,
             };
 
-            setIsLoading(true);
             await completeProfle(uploadData);
             navigate(-1);
         } catch (error) {
@@ -97,9 +97,7 @@ const CompleteProfile = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-background/80 py-8">
-            {isLoading ? (
-                <LoadingSpinner />
-            ) : (
+            
                 <div className="max-w-4xl mx-auto bg-card rounded-xl shadow-lg p-8">
                     <div className=" mb-8">
                         <h2 className="text-2xl font-semibold ">Complete Your Professional Profile</h2>
@@ -175,13 +173,14 @@ const CompleteProfile = () => {
                             <Button
                                 type="submit"
                                 className="bg-primary hover:bg-primary/90 bg-green-600 text-white py-4  rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02]"
+                                disabled={isLoading}
                             >
-                                Complete Profile
+                                {isLoading ? "Submitting..." : "Complete Profile"}
                             </Button>
                         </div>
                     </form>
                 </div>
-            )}
+            
         </div>
     );
 };

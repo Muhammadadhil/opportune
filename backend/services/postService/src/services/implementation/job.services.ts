@@ -95,14 +95,6 @@ export class JobService implements IJobService {
     async applyJob(data: IApplyJob) {
         await this.producer.connect();
 
-        // const response = await axios.get(`${this.contractServiceUrl}/application`, {
-        //     params: { jobId: data.jobId, freelancerId: data.freelancerId },
-        // });
-
-        // if (response.data.exists) {
-        //     throw new CustomError("You have already applied for this job", 400);
-        // }
-
         console.log("In service layer: going to publish the message with data:", data);
         const trackingId = new mongoose.Types.ObjectId().toString();
 

@@ -48,7 +48,7 @@ export const handleErrorResponseInterceptor = async (error: AxiosError) => {
         logoutTheUser();
         await logout();
         return Promise.reject(error);
-    }
+    } 
     
     return Promise.reject(error);
 }
