@@ -24,9 +24,9 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
     const [open, setOpen] = useState(false);
     const [sheetOpen, setSheetOpen] = useState(false);
     const [deactivate, setDeactivate] = useState(false);
-    const [activate,setActivate] = useState(false);
-    const [flag,setFlag] = useState(false);
-    const [unflag,setUnFlag] = useState(false);
+    const [activate, setActivate] = useState(false);
+    const [flag, setFlag] = useState(false);
+    const [unflag, setUnFlag] = useState(false);
 
     const { userInfo, isAdminAuthenticated } = useSelector((state: RootState) => state.user);
 
@@ -50,25 +50,22 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
     };
 
     const isClient = userInfo?.role == "client";
-    const isAdmin =  isAdminAuthenticated;
-
+    const isAdmin = isAdminAuthenticated;
 
     const queryClient = useQueryClient();
     // admin change job status
-    const handleChangeStatus = async (jobId:string,status:string) => {
+    const handleChangeStatus = async (jobId: string, status: string) => {
         try {
-             await changeJobStatus(jobId,status);
-            setDeactivate(false)
-            queryClient.invalidateQueries({queryKey:["jobs"]});
-
-            
+            await changeJobStatus(jobId, status);
+            setDeactivate(false);
+            queryClient.invalidateQueries({ queryKey: ["jobs"] });
         } catch (error) {
             console.log(error);
-            toast.error('Error in deactivating job')
+            toast.error("Error in deactivating job");
         }
     };
 
-    console.log('isAdmin:',isAdmin );
+    console.log("isAdmin:", isAdmin);
 
     return (
         <div onClick={() => setSheetOpen(true)}>
@@ -110,10 +107,13 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
 
                     {isAdmin && job.isActive && (
                         <div className="flex ">
-                            <Button onClick={(e) =>{
-                                e.stopPropagation();
-                                setDeactivate(true)
-                            }} className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800">
+                            <Button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeactivate(true);
+                                }}
+                                className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800"
+                            >
                                 Deactivate job
                             </Button>
                         </div>
@@ -170,7 +170,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
                     id={job._id!}
                 />
 
-                {isClient && (
+                {isClient && job.clientId?._id == userInfo._id && (
                     <div>
                         <button onClick={() => handleEditClick(job)} className="h-8 w-8 p-0">
                             <Pencil size={16} />
@@ -187,7 +187,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply }) => {
                     </div>
                 )}
                 <p className="text-gray-700 dark:text-gray-300 mb-2 text-sm">{job.subCategory}</p>
-                <p className="text-gray-600 dark:text-gray-400 mb-2 text-sm">{job.description.slice(0,100)}</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-2 text-sm">{job.description.slice(0, 100)}</p>
                 <div className="flex flex-wrap gap-2 mb-2">
                     {job.skillsRequired.map((skill, index) => (
                         <span key={index} className="bg-gray-100 dark:bg-black text-gray-700 dark:text-gray-300 rounded-full px-3 py-1 text-sm border dark:border-gray-800">

@@ -43,7 +43,7 @@ export class SubmissionController {
 
     getSubmission = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { contractId, milestoneId } = req.params;
+            const { contractId, milestoneId } = req.params; 
             const submissions = await this._submissionService.getSubmissions(contractId, milestoneId);
             return res.status(200).json(submissions);
         } catch (error) {
